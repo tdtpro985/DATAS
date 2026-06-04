@@ -1,0 +1,51 @@
+﻿/* =============================================================
+   admin_login.css -- Admin Portal login overrides
+   =============================================================
+   Extends login.css with admin-specific visual treatment.
+   Uses blue accent instead of orange to visually distinguish
+   the admin portal from the standard user login.
+   ============================================================= */
+
+/* Blue accent for admin portal card border */
+.login-card {
+    border-color: rgba(59, 130, 246, 0.25);
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(59, 130, 246, 0.06) inset;
+}
+
+/* Admin portal badge shown in logo section */
+.admin-portal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    color: #60a5fa;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    margin-top: 0.5rem;
+}
+
+/* Blue submit button for admin portal */
+#submitBtn,
+#submitMfaBtn {
+    background: #2563eb;
+}
+
+#submitBtn:hover:not(:disabled),
+#submitMfaBtn:hover:not(:disabled) {
+    background: #1d4ed8;
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+}
+
+/* Blue focus ring on inputs */
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}

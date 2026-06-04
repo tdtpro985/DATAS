@@ -1,0 +1,7 @@
+Put your priority-alert.mp3 file here.
+
+This is a placeholder file. Replace it with the actual priority-alert.mp3 sound file.
+The sound should be a clear, attention-grabbing alert sound that plays when priority projects are detected.
+
+Expected filename: priority-alert.mp3
+Location: static/sounds/priority-alert.mp3

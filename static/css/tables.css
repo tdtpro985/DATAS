@@ -1,0 +1,166 @@
+﻿/* =============================================================
+   MODERN TABLES - TDT Powersteel
+   ============================================================= */
+.table-wrapper {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: auto;
+    min-height: 0;
+    padding-right: 4px;
+    scrollbar-width: thin;
+    scrollbar-color: var(--orange-500) transparent;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+    background: var(--bg-card-alt);
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gradient-primary);
+    border-radius: 10px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #FF9933 0%, #FFB366 100%);
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: clamp(0.65rem, 0.75vw, 1rem);
+}
+
+.data-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.data-table th {
+    background: var(--bg-card-alt);
+    color: var(--orange-400);
+    padding: clamp(0.4rem, 0.5vw, 0.7rem) clamp(0.5rem, 0.6vw, 0.9rem);
+    text-align: left;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: clamp(0.55rem, 0.65vw, 0.85rem);
+    border-bottom: 2px solid rgba(255, 128, 0, 0.3);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.data-table td {
+    padding: clamp(0.4rem, 0.5vw, 0.7rem) clamp(0.5rem, 0.6vw, 0.9rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    transition: all 0.2s ease;
+}
+
+.data-table td:last-child {
+    text-align: right;
+    padding-right: 16px;
+    min-width: 80px;
+    font-weight: 600;
+}
+
+.data-table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.data-table tbody tr:hover {
+    background: rgba(255, 128, 0, 0.08);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(255, 128, 0, 0.1);
+}
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.data-table tbody tr:nth-child(even):hover {
+    background: rgba(255, 128, 0, 0.08);
+}
+
+/* RANKING SPECIFIC */
+.rank-num {
+    color: var(--orange-400);
+    font-weight: 800;
+    min-width: 30px;
+    text-align: center;
+    font-size: clamp(0.7rem, 0.85vw, 1.1rem);
+}
+
+/* Top 3 rankings with special styling */
+.data-table tbody tr:nth-child(1) .rank-num {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: clamp(0.85rem, 1vw, 1.3rem);
+}
+
+.data-table tbody tr:nth-child(2) .rank-num {
+    background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.data-table tbody tr:nth-child(3) .rank-num {
+    background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* KPI DETAIL TABLE (Category Breakdown) */
+.kpi-detail-table {
+    width: 98%;
+    max-width: 700px;
+    margin: 0 auto !important;
+}
+
+.kpi-detail-table th,
+.kpi-detail-table td {
+    text-align: center !important;
+    vertical-align: middle !important;
+    padding: clamp(0.4rem, 0.55vw, 0.8rem) !important;
+}
+
+.kpi-detail-table th {
+    color: var(--text-muted);
+    border-bottom: 2px solid rgba(255, 128, 0, 0.3) !important;
+}
+
+.pct-bar {
+    display: inline-block;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--gradient-primary);
+    vertical-align: middle;
+    margin-left: 6px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-glow);
+}
+
+/* Loading state */
+.loading-text {
+    text-align: center;
+    color: var(--text-muted);
+    padding: var(--sp-6);
+    font-style: italic;
+    animation: pulse 2s ease-in-out infinite;
+}
+

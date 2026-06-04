@@ -1,0 +1,63 @@
+Options -Indexes
+RewriteEngine On
+
+# ── API requests → router.php ──────────────────────────────
+# All /api/v1/* requests go to the central router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^api/v1/(.*)$ api/router.php [QSA,L]
+
+# ── Page routes → PHP page files ──────────────────────────
+# /login → pages/login.php
+RewriteRule ^login/?$ pages/login.php [QSA,L]
+
+# /logout → pages/logout.php
+RewriteRule ^logout/?$ pages/logout.php [QSA,L]
+
+# /admin/login → pages/admin-login.php
+RewriteRule ^admin/login/?$ pages/admin-login.php [QSA,L]
+
+# /admin → pages/admin.php (requires auth — handled in PHP)
+RewriteRule ^admin/?$ pages/admin.php [QSA,L]
+
+# /sales-reps → pages/sales-reps.php (admin/superadmin only)
+RewriteRule ^sales-reps/?$ pages/sales-reps.php [QSA,L]
+
+# /users → pages/users.php (admin/superadmin only)
+RewriteRule ^users/?$ pages/users.php [QSA,L]
+
+# /encode/non-priority → pages/encode/non-priority.php
+RewriteRule ^encode/non-priority/?$ pages/encode/non-priority.php [QSA,L]
+
+# /encode/priority → pages/encode/priority.php
+RewriteRule ^encode/priority/?$ pages/encode/priority.php [QSA,L]
+
+# /encode → pages/encode.php (encoder role only)
+RewriteRule ^encode/?$ pages/encode.php [QSA,L]
+
+# /encode-platforms → pages/encode-platforms.php (encoder/admin/superadmin only)
+RewriteRule ^encode-platforms/?$ pages/encode-platforms.php [QSA,L]
+
+# /projects → pages/projects.php (all authenticated users)
+RewriteRule ^projects/?$ pages/projects.php [QSA,L]
+
+# /platforms → pages/platforms.php (all authenticated users)
+RewriteRule ^platforms/?$ pages/platforms.php [QSA,L]
+
+# /projects-management → pages/projects-management.php (admin/superadmin only)
+RewriteRule ^projects-management/?$ pages/projects-management.php [QSA,L]
+
+# /projects-by-form → pages/projects-by-form.php (dynamic custom form submissions view)
+RewriteRule ^projects-by-form/?$ pages/projects-by-form.php [QSA,L]
+
+# /my-projects → pages/my-projects.php (sales rep only)
+RewriteRule ^my-projects/?$ pages/my-projects.php [QSA,L]
+
+RewriteRule ^reports/?$ pages/reports.php [QSA,L]
+
+# / (root) → pages/projects.php (redirect to projects instead of reports)
+RewriteRule ^$ pages/projects.php [QSA,L]
+RewriteRule ^index\.html?$ pages/projects.php [QSA,L]
+
+# ── Static files pass through unchanged ───────────────────
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^ - [L]

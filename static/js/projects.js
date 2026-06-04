@@ -1,0 +1,1428 @@
+/* ============================================================
+   projects.js — Projects Table View Page JavaScript
+   ============================================================ */
+
+// Projects Page JavaScript
+const ProjectsPage = {
+    type: window.PROJECT_TYPE || 'all',
+    currentPage: 1,
+    pageSize: 50,
+    totalProjects: 0,
+    allProjects: [],
+    filteredProjects: [],
+
+    async init() {
+        // Initialize role manager
+        await RoleManager.init();
+        
+        // Validate session
+        const user = await Auth.checkAuth();
+        if (!user) return;
+
+        // Load projects
+        await this.loadProjects();
+
+        // Setup event listeners
+        this.setupEventListeners();
+
+        console.log('[PROJECTS] Page initialized');
+    },
+
+    setupEventListeners() {
+        // Search
+        document.getElementById('search-input').addEventListener('input', (e) => {
+            this.filterProjects();
+        });
+
+        // Region filter
+        document.getElementById('region-filter').addEventListener('change', () => {
+            this.filterProjects();
+        });
+
+        // Source filter
+        document.getElementById('source-filter').addEventListener('change', () => {
+            this.filterProjects();
+        });
+
+        // Sort filter
+        document.getElementById('sort-filter').addEventListener('change', () => {
+            this.filterProjects();
+        });
+
+        // Refresh button
+        document.getElementById('refresh-btn').addEventListener('click', () => {
+            this.loadProjects();
+        });
+    },
+
+    async loadProjects() {
+        try {
+            const response = await fetch(BASE + '/api/v1/projects?size=1000', {
+                credentials: 'include'
+            });
+
+            if (!response.ok) throw new Error('Failed to load projects');
+
+            const data = await response.json();
+            this.allProjects = data.projects || [];
+            this.totalProjects = this.allProjects.length;
+
+            // Filter by type
+            if (this.type === 'priority') {
+                this.allProjects = this.allProjects.filter(p => 
+                    String(p.status || '').trim().toLowerCase() === 'priority'
+                );
+            } else if (this.type === 'non-priority') {
+                this.allProjects = this.allProjects.filter(p => 
+                    String(p.status || '').trim().toLowerCase() !== 'priority'
+                );
+            }
+
+            // Update summary cards
+            this.updateSummaryCards();
+
+            // Populate region filter
+            this.populateRegionFilter();
+
+            // Initial filter
+            this.filterProjects();
+
+        } catch (error) {
+            console.error('[PROJECTS] Load error:', error);
+            this.showError('Failed to load projects. Please try again.');
+        }
+    },
+
+    updateSummaryCards() {
+        // Total Projects
+        const totalProjects = this.allProjects.length;
+        document.getElementById('totalProjects').textContent = totalProjects.toLocaleString();
+
+        // Total Unique Contractors
+        const uniqueContractors = new Set(
+            this.allProjects
+                .map(p => (p.contractor_name || '').trim())
+                .filter(name => name.length > 0)
+        );
+        document.getElementById('totalContractors').textContent = uniqueContractors.size.toLocaleString();
+
+        // Pipeline Value (sum of all project values)
+        const pipelineValue = this.allProjects.reduce((sum, p) => {
+            return sum + (parseFloat(p.project_value) || 0);
+        }, 0);
+        document.getElementById('pipelineValue').textContent = '₱' + pipelineValue.toLocaleString('en-PH', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    },
+
+    populateRegionFilter() {
+        const regions = [...new Set(this.allProjects.map(p => p.region).filter(Boolean))];
+        regions.sort();
+
+        const select = document.getElementById('region-filter');
+        const currentValue = select.value;
+        
+        select.innerHTML = '<option value="">All Regions</option>';
+        regions.forEach(region => {
+            const option = document.createElement('option');
+            option.value = region;
+            option.textContent = region;
+            select.appendChild(option);
+        });
+
+        select.value = currentValue;
+    },
+
+    filterProjects() {
+        const searchTerm = document.getElementById('search-input').value.toLowerCase();
+        const regionFilter = document.getElementById('region-filter').value;
+        const sourceFilter = document.getElementById('source-filter').value;
+        const sortFilter = document.getElementById('sort-filter').value;
+
+        this.filteredProjects = this.allProjects.filter(project => {
+            // Search filter
+            const matchesSearch = !searchTerm || 
+                (project.contractor_name || '').toLowerCase().includes(searchTerm) ||
+                (project.project_name || '').toLowerCase().includes(searchTerm) ||
+                (project.region || '').toLowerCase().includes(searchTerm);
+
+            // Region filter
+            const matchesRegion = !regionFilter || project.region === regionFilter;
+
+            // Source filter
+            const matchesSource = !sourceFilter || project.source === sourceFilter;
+
+            return matchesSearch && matchesRegion && matchesSource;
+        });
+
+        // Apply sorting
+        this.sortProjects(sortFilter);
+
+        this.currentPage = 1;
+        this.renderProjects();
+    },
+
+    sortProjects(sortBy) {
+        if (!sortBy) return;
+
+        const [field, direction] = sortBy.split('_');
+        const isAsc = direction === 'asc';
+
+        this.filteredProjects.sort((a, b) => {
+            let valueA, valueB;
+
+            switch (field) {
+                case 'created':
+                    valueA = new Date(a.created_at || 0);
+                    valueB = new Date(b.created_at || 0);
+                    break;
+                case 'contractor':
+                    valueA = (a.contractor_name || '').toLowerCase();
+                    valueB = (b.contractor_name || '').toLowerCase();
+                    break;
+                case 'project':
+                    valueA = (a.project_name || '').toLowerCase();
+                    valueB = (b.project_name || '').toLowerCase();
+                    break;
+                case 'project_value':
+                    valueA = parseFloat(a.project_value || 0);
+                    valueB = parseFloat(b.project_value || 0);
+                    break;
+                case 'region':
+                    valueA = (a.region || '').toLowerCase();
+                    valueB = (b.region || '').toLowerCase();
+                    break;
+                case 'status':
+                    valueA = (a.status || '').toLowerCase();
+                    valueB = (b.status || '').toLowerCase();
+                    break;
+                case 'tracking':
+                    valueA = (a.sales_tracking_status || 'Not Started').toLowerCase();
+                    valueB = (b.sales_tracking_status || 'Not Started').toLowerCase();
+                    // Custom order for tracking status
+                    const statusOrder = { 'not started': 0, 'in progress': 1, 'complete': 2 };
+                    valueA = statusOrder[valueA] ?? 0;
+                    valueB = statusOrder[valueB] ?? 0;
+                    break;
+                default:
+                    return 0;
+            }
+
+            // Handle different data types
+            if (typeof valueA === 'string' && typeof valueB === 'string') {
+                return isAsc ? valueA.localeCompare(valueB) : valueB.localeCompare(valueA);
+            } else if (typeof valueA === 'number' && typeof valueB === 'number') {
+                return isAsc ? valueA - valueB : valueB - valueA;
+            } else if (valueA instanceof Date && valueB instanceof Date) {
+                return isAsc ? valueA - valueB : valueB - valueA;
+            }
+
+            return 0;
+        });
+    },
+
+    renderProjects() {
+        const tbody = document.getElementById('projects-tbody');
+        const start = (this.currentPage - 1) * this.pageSize;
+        const end = start + this.pageSize;
+        const pageProjects = this.filteredProjects.slice(start, end);
+
+        if (this.filteredProjects.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8" class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No Projects Found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </td>
+                </tr>
+            `;
+            this.updatePagination();
+            return;
+        }
+
+        tbody.innerHTML = pageProjects.map((project, index) => {
+            // Format date and time
+            let dateTimeStr = '—';
+            if (project.created_at) {
+                const dt = new Date(project.created_at);
+                const date = dt.toLocaleDateString('en-PH', {
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric'
+                });
+                const time = dt.toLocaleTimeString('en-PH', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                });
+                dateTimeStr = `${date}<br><small style="color: var(--text-muted); font-size: 0.75rem;">${time}</small>`;
+            }
+            
+            const value = project.project_value !== null && project.project_value !== undefined
+                ? formatCurrency(project.project_value)
+                : '—';
+            const status = project.status || '—';
+            const statusClass = this.getStatusClass(status);
+            
+            // Get sales tracking status
+            const trackingStatus = this.getSalesTrackingStatus(project);
+            const trackingBadge = this.getTrackingBadge(trackingStatus);
+
+            return `
+                <tr data-project-id="${project.id}" onclick="ProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
+                    <td title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
+                    <td title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
+                    <td>${this.escapeHtml(project.region || '—')}</td>
+                    <td>${this.escapeHtml(project.source || '—')}</td>
+                    <td><span class="status-badge ${statusClass}">${this.escapeHtml(status)}</span></td>
+                    <td class="col-value">${value}</td>
+                    <td class="col-tracking">${trackingBadge}</td>
+                    <td class="col-date">${dateTimeStr}</td>
+                </tr>
+            `;
+        }).join('');
+
+        this.updatePagination();
+    },
+
+    updatePagination() {
+        const total = this.filteredProjects.length;
+        const totalPages = Math.ceil(total / this.pageSize);
+        const start = (this.currentPage - 1) * this.pageSize + 1;
+        const end = Math.min(this.currentPage * this.pageSize, total);
+
+        // Update info
+        document.getElementById('pagination-info').textContent = 
+            total > 0 ? `Showing ${start}-${end} of ${total} projects` : 'No projects to display';
+
+        // Update controls
+        const controls = document.getElementById('pagination-controls');
+        controls.innerHTML = '';
+
+        if (totalPages <= 1) return;
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'pagination-btn';
+        prevBtn.textContent = '← Previous';
+        prevBtn.disabled = this.currentPage === 1;
+        prevBtn.addEventListener('click', () => {
+            if (this.currentPage > 1) {
+                this.currentPage--;
+                this.renderProjects();
+            }
+        });
+        controls.appendChild(prevBtn);
+
+        // Page numbers
+        for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = 'pagination-btn' + (i === this.currentPage ? ' active' : '');
+            pageBtn.textContent = i;
+            pageBtn.addEventListener('click', () => {
+                this.currentPage = i;
+                this.renderProjects();
+            });
+            controls.appendChild(pageBtn);
+        }
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'pagination-btn';
+        nextBtn.textContent = 'Next →';
+        nextBtn.disabled = this.currentPage === totalPages;
+        nextBtn.addEventListener('click', () => {
+            if (this.currentPage < totalPages) {
+                this.currentPage++;
+                this.renderProjects();
+            }
+        });
+        controls.appendChild(nextBtn);
+    },
+
+    getStatusClass(status) {
+        const lower = String(status).trim().toLowerCase();
+        if (lower === 'priority') return 'priority';
+        if (lower === 'awarded') return 'awarded';
+        if (lower === 'for execution') return 'for-execution';
+        if (lower === 'for bidding') return 'for-bidding';
+        return '';
+    },
+
+    escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    },
+
+    buildCompleteAddress(type, project) {
+        // Build complete address from individual components
+        const prefix = type === 'contract' ? 'contract_' : 'project_';
+        
+        const components = [
+            project[prefix + 'blk_lot'],
+            project[prefix + 'street'],
+            project[prefix + 'barangay'],
+            this.getFullLocationName(project[prefix + 'city'], 'city'),
+            this.getFullLocationName(project[prefix + 'province'], 'province'),
+            this.getFullLocationName(project[prefix + 'region'], 'region'),
+            this.getFullLocationName(project[prefix + 'country'], 'country')
+        ].filter(component => component && component.trim() !== '');
+        
+        return components.length > 0 ? components.join(', ') : null;
+    },
+
+    getFullLocationName(code, type) {
+        if (!code) return null;
+        
+        // Location code mappings - convert acronyms to full names
+        const locationMappings = {
+            // Countries
+            'PH': 'Philippines',
+            
+            // Regions
+            'NCR': 'National Capital Region (NCR)',
+            'CAR': 'Cordillera Administrative Region (CAR)',
+            'I': 'Ilocos Region (Region I)',
+            'II': 'Cagayan Valley (Region II)',
+            'III': 'Central Luzon (Region III)',
+            'IV-A': 'CALABARZON (Region IV-A)',
+            'IV-B': 'MIMAROPA (Region IV-B)',
+            'V': 'Bicol Region (Region V)',
+            'VI': 'Western Visayas (Region VI)',
+            'VII': 'Central Visayas (Region VII)',
+            'VIII': 'Eastern Visayas (Region VIII)',
+            'IX': 'Zamboanga Peninsula (Region IX)',
+            'X': 'Northern Mindanao (Region X)',
+            'XI': 'Davao Region (Region XI)',
+            'XII': 'SOCCSKSARGEN (Region XII)',
+            'XIII': 'Caraga (Region XIII)',
+            'BARMM': 'Bangsamoro Autonomous Region in Muslim Mindanao (BARMM)',
+            
+            // Common Provinces
+            'NEG': 'Negros Occidental',
+            'CEB': 'Cebu',
+            'ILO': 'Iloilo',
+            'BAT': 'Batangas',
+            'CAV': 'Cavite',
+            'LAG': 'Laguna',
+            'RIZ': 'Rizal',
+            'BUL': 'Bulacan',
+            'PAM': 'Pampanga',
+            'TAR': 'Tarlac',
+            'NE': 'Nueva Ecija',
+            'ZAM': 'Zambales',
+            'QUE': 'Quezon',
+            'ALB': 'Albay',
+            'CAS': 'Camarines Sur',
+            'CAN': 'Camarines Norte',
+            'SOR': 'Sorsogon',
+            'MAS': 'Masbate',
+            'CAT': 'Catanduanes',
+            'ILN': 'Ilocos Norte',
+            'ILS': 'Ilocos Sur',
+            'LU': 'La Union',
+            'PAN': 'Pangasinan',
+            'ISA': 'Isabela',
+            'CAG': 'Cagayan',
+            'NV': 'Nueva Vizcaya',
+            'QUI': 'Quirino',
+            'BAT': 'Batanes',
+            'AUR': 'Aurora',
+            'KAL': 'Kalinga',
+            'MAR': 'Marinduque',
+            'OCC': 'Occidental Mindoro',
+            'ORI': 'Oriental Mindoro',
+            'PAL': 'Palawan',
+            'ROM': 'Romblon',
+            'AKL': 'Aklan',
+            'ANT': 'Antique',
+            'CAP': 'Capiz',
+            'GUI': 'Guimaras',
+            'BOH': 'Bohol',
+            'SIQ': 'Siquijor',
+            'BIL': 'Biliran',
+            'EAS': 'Eastern Samar',
+            'LEY': 'Leyte',
+            'NOR': 'Northern Samar',
+            'SAM': 'Samar',
+            'SOU': 'Southern Leyte',
+            'ZAN': 'Zamboanga del Norte',
+            'ZAS': 'Zamboanga del Sur',
+            'ZSI': 'Zamboanga Sibugay',
+            'BUK': 'Bukidnon',
+            'CAM': 'Camiguin',
+            'LAN': 'Lanao del Norte',
+            'MIS': 'Misamis Occidental',
+            'MOR': 'Misamis Oriental',
+            'COM': 'Compostela Valley',
+            'DAO': 'Davao del Norte',
+            'DAS': 'Davao del Sur',
+            'DAV': 'Davao Oriental',
+            'COT': 'Cotabato',
+            'SAR': 'Sarangani',
+            'SCO': 'South Cotabato',
+            'SUL': 'Sultan Kudarat',
+            'AGU': 'Agusan del Norte',
+            'AGS': 'Agusan del Sur',
+            'DIN': 'Dinagat Islands',
+            'SUR': 'Surigao del Norte',
+            'SUS': 'Surigao del Sur',
+            'ABR': 'Abra',
+            'APY': 'Apayao',
+            'BEN': 'Benguet',
+            'IFU': 'Ifugao',
+            'KAL': 'Kalinga',
+            'MOU': 'Mountain Province',
+            'BAS': 'Basilan',
+            'MAG': 'Maguindanao',
+            'TAW': 'Tawi-Tawi',
+            
+            // Common Cities
+            'BAC': 'Bacolod City',
+            'ILO': 'Iloilo City',
+            'CEB': 'Cebu City',
+            'DAV': 'Davao City',
+            'MNL': 'Manila',
+            'QC': 'Quezon City',
+            'CCN': 'Caloocan',
+            'LAS': 'Las Piñas',
+            'MAK': 'Makati',
+            'MAL': 'Malabon',
+            'MAN': 'Mandaluyong',
+            'MAR': 'Marikina',
+            'MUN': 'Muntinlupa',
+            'NAV': 'Navotas',
+            'PAR': 'Parañaque',
+            'PAS': 'Pasay',
+            'PAT': 'Pateros',
+            'SJU': 'San Juan',
+            'TAF': 'Taguig',
+            'VAL': 'Valenzuela',
+            'PSG': 'Pasig',
+            'LIG': 'Ligao City',
+            'LEG': 'Legazpi City',
+            'NAG': 'Naga City',
+            'TAB': 'Tabuk City',
+            'TABACO': 'Tabaco City',
+            'SOL': 'Sorsogon City',
+            'MAS': 'Masbate City',
+            'VIG': 'Vigan City',
+            'LAO': 'Laoag City',
+            'SFE': 'San Fernando City',
+            'BAG': 'Baguio City',
+            'TUG': 'Tuguegarao City',
+            'ILG': 'Ilagan City',
+            'CAB': 'Cabanatuan City',
+            'SJO': 'San Jose City',
+            'TRL': 'Tarlac City',
+            'OLO': 'Olongapo City',
+            'BAL': 'Balanga City',
+            'BAT': 'Batangas City',
+            'LIP': 'Lipa City',
+            'TAN': 'Tanauan City',
+            'CAV': 'Cavite City',
+            'DAS': 'Dasmariñas City',
+            'IMS': 'Imus City',
+            'BCR': 'Bacoor City',
+            'CAL': 'Calamba City',
+            'STA': 'Santa Rosa City',
+            'BIN': 'Biñan City',
+            'SPE': 'San Pedro City',
+            'CBY': 'Cabuyao City',
+            'ANT': 'Antipolo City',
+            'TAY': 'Taytay',
+            'CAI': 'Cainta',
+            'MOR': 'Morong',
+            'TER': 'Teresa',
+            'BIC': 'Binangonan',
+            'PIL': 'Pililla',
+            'JAL': 'Jala-jala',
+            'TNY': 'Tanay',
+            'BAR': 'Baras',
+            'ROD': 'Rodriguez',
+            'SMA': 'San Mateo'
+        };
+        
+        return locationMappings[code] || code;
+    },
+
+    showError(message) {
+        const tbody = document.getElementById('projects-tbody');
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="8" class="empty-state">
+                    <h3>Error</h3>
+                    <p>${this.escapeHtml(message)}</p>
+                </td>
+            </tr>
+        `;
+    },
+
+    viewProject(projectId) {
+        const project = this.allProjects.find(p => p.id === projectId);
+        if (!project) return;
+
+        // Debug: Log the project data to see what fields are available
+        console.log('[DEBUG] Project data:', project);
+        console.log('[DEBUG] Contract country:', project.contract_country);
+        console.log('[DEBUG] Project region:', project.project_region);
+        console.log('[DEBUG] Address field:', project.address);
+        console.log('[DEBUG] City Province field:', project.city_province);
+
+        const modal = document.getElementById('detailsModal');
+        const modalBody = document.getElementById('detailsModalBody');
+
+        // Format values
+        const value = project.project_value !== null && project.project_value !== undefined
+            ? formatCurrency(project.project_value)
+            : '—';
+        
+        const dateTime = project.created_at 
+            ? new Date(project.created_at).toLocaleString('en-PH', {
+                month: 'long',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            })
+            : '—';
+
+        modalBody.innerHTML = `
+            <!-- First Group -->
+            <div class="detail-section">
+                <div class="detail-section-title">📋 Basic Information</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Published Date</div>
+                        <div class="detail-value">${project.publication_date || '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Source</div>
+                        <div class="detail-value">${this.escapeHtml(project.source || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contract ID</div>
+                        <div class="detail-value">${this.escapeHtml(project.contractor_id || project.contract_id || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contractor Name</div>
+                        <div class="detail-value">${this.escapeHtml(project.contractor_name || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contact Person</div>
+                        <div class="detail-value">${this.escapeHtml(project.contact_person || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contact Number</div>
+                        <div class="detail-value">${this.escapeHtml(project.contact_number || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contractor Location Details -->
+            <div class="detail-section">
+                <div class="detail-section-title">📍 Contractor Location</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.contract_country, 'country') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Region</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.contract_region, 'region') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Province</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.contract_province, 'province') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">City</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.contract_city, 'city') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Barangay</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_barangay || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Street</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_street || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">BLK/LOT#</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_blk_lot || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Coordinates</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_coordinates || '—')}</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Complete Address</div>
+                        <div class="detail-value">${this.escapeHtml(project.address || this.buildCompleteAddress('contract', project) || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Second Group -->
+            <div class="detail-section">
+                <div class="detail-section-title">🏗️ Project Details</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Project ID</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_id || project.id || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Project Name</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_name || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Location Details -->
+            <div class="detail-section">
+                <div class="detail-section-title">📍 Project Location</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.project_country, 'country') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Region</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.project_region || project.region, 'region') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Province</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.project_province, 'province') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">City</div>
+                        <div class="detail-value">${this.escapeHtml(this.getFullLocationName(project.project_city, 'city') || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Barangay</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_barangay || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Street</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_street || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">BLK/LOT#</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_blk_lot || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Coordinates</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_coordinates || '—')}</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Complete Address</div>
+                        <div class="detail-value">${this.escapeHtml(this.buildCompleteAddress('project', project) || this.getFullLocationName(project.city_province, 'city') || this.getFullLocationName(project.region, 'region') || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project Value and Status -->
+            <div class="detail-section">
+                <div class="detail-section-title">💰 Project Information</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Project Value</div>
+                        <div class="detail-value large">${value}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Project Status</div>
+                        <div class="detail-value">
+                            <span class="status-badge ${this.getStatusClass(project.status)}">${this.escapeHtml(project.status || '—')}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Third Group - Materials -->
+            <div class="detail-section">
+                <div class="detail-section-title">🔧 Materials</div>
+                <div class="detail-grid">
+                    ${project.status && project.status.toLowerCase() === 'priority' ? `
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">Sheet Pile Type</div>
+                        <div class="detail-value">${this.escapeHtml(project.sheet_pile_type || '—')}</div>
+                    </div>
+                    <div class="detail-item" style="grid-column: 1 / -1;">
+                        <div class="detail-label">DRBs Type</div>
+                        <div class="detail-value">${this.escapeHtml(project.drbs || '—')}</div>
+                    </div>
+                    ` : ''}
+                    <div class="detail-item">
+                        <div class="detail-label">DRBS (Amount)</div>
+                        <div class="detail-value">${project.drbs_value ? formatCurrency(project.drbs_value) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Sheet Pile (Amount)</div>
+                        <div class="detail-value">${project.sheet_pile_amount ? formatCurrency(project.sheet_pile_amount) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">MS Plate (Amount)</div>
+                        <div class="detail-value">${project.ms_plate ? formatCurrency(project.ms_plate) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Angle Bars (Amount)</div>
+                        <div class="detail-value">${project.angle_bars ? formatCurrency(project.angle_bars) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Channel Bars (Amount)</div>
+                        <div class="detail-value">${project.channel_bars ? formatCurrency(project.channel_bars) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Wide Flange (Amount)</div>
+                        <div class="detail-value">${project.wide_flange ? formatCurrency(project.wide_flange) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">GI/BI (Amount)</div>
+                        <div class="detail-value">${project.gi_bi ? formatCurrency(project.gi_bi) : '—'}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Tracking Section (Hidden for Encoders) -->
+            <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
+                <div class="sales-tracking-title">📊 Sales Tracking</div>
+                <div class="sales-form-grid">
+                    <!-- Left Column -->
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Contacted</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Quoted</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Sales Qualified Leads</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
+                        </div>
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">To Win</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column - Only for Superadmin/Admin -->
+                    <div class="sales-form-group" data-role-access="superadmin,admin">
+                        <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
+                        <select class="sales-form-select" id="sales-rep-select">
+                            <option value="">Select SR...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="sales-form-group" data-role-access="superadmin,admin">
+                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
+                        <input type="text" class="sales-form-input" id="branch-input" readonly placeholder="Auto-filled from SR">
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color: #ff7070; display: none;">*</span></label>
+                        <input type="number" class="sales-form-input" id="wl-amount-input" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Remarks <span style="color: #ff7070;">*</span></label>
+                        <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..."></textarea>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Store current project ID for future use
+        modal.dataset.projectId = projectId;
+        
+        // Setup yes/no button handlers with progressive validation
+        setTimeout(() => {
+            this.setupProgressiveFields();
+            
+            // Handle role-based visibility
+            const userRole = document.body.dataset.role;
+            this.setupRoleBasedVisibility(userRole);
+            
+            // Load sales reps only for superadmin and admin
+            if (userRole === 'superadmin' || userRole === 'admin') {
+                this.loadSalesReps();
+            }
+            
+            // Load existing sales tracking data to restore button states
+            this.loadSalesTrackingData(projectId);
+            
+            // Reset save button text (in case it was stuck on "Saving...")
+            const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
+            if (saveBtn) {
+                saveBtn.textContent = '💾 Save Sales Tracking';
+                saveBtn.disabled = false;
+            }
+        }, 0);
+        
+        modal.classList.add('active');
+    },
+    
+    async loadSalesReps() {
+        try {
+            const response = await fetch(BASE + '/api/v1/users/sales-reps', {
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                console.error('[PROJECTS] Sales reps API error:', response.status);
+                return;
+            }
+            
+            const result = await response.json();
+            console.log('[PROJECTS] Sales reps response:', result);
+            
+            const select = document.getElementById('sales-rep-select');
+            const branchInput = document.getElementById('branch-input');
+            
+            if (!select) return;
+            
+            select.innerHTML = '<option value="">Select SR...</option>';
+            
+            // The API returns data in result.data, not result.sales_reps
+            const salesReps = result.data || [];
+            
+            salesReps.forEach(sr => {
+                const option = document.createElement('option');
+                option.value = sr.id;
+                option.textContent = sr.full_name;
+                option.dataset.branch = sr.branch || 'N/A';
+                select.appendChild(option);
+            });
+            
+            console.log('[PROJECTS] Added', salesReps.length, 'sales reps to dropdown');
+            
+            // Auto-fill branch when SR is selected
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                if (branchInput && selectedOption) {
+                    branchInput.value = selectedOption.dataset.branch || '';
+                }
+            });
+        } catch (error) {
+            console.error('[PROJECTS] Load sales reps error:', error);
+        }
+    },
+
+    async loadSalesTrackingData(projectId) {
+        try {
+            console.log('[PROJECTS] Loading sales tracking data for project:', projectId);
+            
+            const response = await fetch(BASE + `/api/v1/projects/${projectId}/sales-tracking`, {
+                method: 'GET',
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                console.error('[PROJECTS] Sales tracking API error:', response.status);
+                return;
+            }
+            
+            const result = await response.json();
+            console.log('[PROJECTS] Sales tracking response:', result);
+            
+            if (result.exists && result.data) {
+                const data = result.data;
+                
+                // Restore button states
+                this.restoreButtonStates(data);
+                
+                // Restore form field values
+                this.restoreFormFields(data);
+                
+                console.log('[PROJECTS] Sales tracking data restored successfully');
+            } else {
+                console.log('[PROJECTS] No existing sales tracking data found');
+            }
+            
+        } catch (error) {
+            console.error('[PROJECTS] Load sales tracking error:', error);
+        }
+    },
+
+    restoreButtonStates(data) {
+        // First, clear all button states - no defaults
+        document.querySelectorAll('.yes-no-btn').forEach(btn => {
+            btn.classList.remove('active', 'yes', 'no');
+        });
+        
+        // Restore yes/no button states only if there's actual saved data
+        const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+        
+        fields.forEach(field => {
+            const value = data[field];
+            console.log(`[PROJECTS] Field ${field} value:`, value, typeof value);
+            
+            // Only set button state if there's a definitive true/false value (not null/undefined)
+            if (value === true) {
+                const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
+                if (button) {
+                    button.classList.add('active', 'yes');
+                    console.log(`[PROJECTS] Restored button: ${field} = yes`);
+                }
+            } else if (value === false) {
+                const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
+                if (button) {
+                    button.classList.add('active', 'no');
+                    console.log(`[PROJECTS] Restored button: ${field} = no`);
+                }
+            } else {
+                // value is null/undefined - leave buttons unselected
+                console.log(`[PROJECTS] Field ${field} is unset - leaving buttons unselected`);
+            }
+        });
+        
+        // Update field states after restoring buttons
+        this.updateFieldStates();
+    },
+
+    restoreFormFields(data) {
+        // Restore sales rep selection
+        const salesRepSelect = document.getElementById('sales-rep-select');
+        if (salesRepSelect && data.sales_rep_id) {
+            salesRepSelect.value = data.sales_rep_id;
+            
+            // Trigger change event to update branch
+            const event = new Event('change');
+            salesRepSelect.dispatchEvent(event);
+        }
+        
+        // Restore branch (if not auto-filled from sales rep)
+        const branchInput = document.getElementById('branch-input');
+        if (branchInput && data.branch) {
+            branchInput.value = data.branch;
+        }
+        
+        // Restore W/L amount
+        const wlAmountInput = document.getElementById('wl-amount-input');
+        if (wlAmountInput && data.wa_amount) {
+            wlAmountInput.value = data.wa_amount;
+        }
+        
+        // Restore remarks
+        const remarksTextarea = document.getElementById('remarks-textarea');
+        if (remarksTextarea && data.notes) {
+            remarksTextarea.value = data.notes;
+        }
+    },
+
+    getSalesTrackingStatus(project) {
+        // Use the status from API if available
+        if (project.sales_tracking_status) {
+            return project.sales_tracking_status;
+        }
+        
+        // Fallback: Check if project has sales tracking data
+        if (!project.sales_tracking) {
+            return 'Not Started';
+        }
+        
+        const tracking = project.sales_tracking;
+        
+        // Count filled fields (excluding remarks which is optional)
+        const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win', 'wa_amount'];
+        const filledFields = fields.filter(field => {
+            const value = tracking[field];
+            return value !== null && value !== undefined && value !== '';
+        });
+        
+        if (filledFields.length === 0) {
+            return 'Not Started';
+        } else if (filledFields.length === fields.length) {
+            return 'Complete';
+        } else {
+            return 'In Progress';
+        }
+    },
+
+    getTrackingBadge(status) {
+        const statusClass = status.toLowerCase().replace(/\s+/g, '-');
+        return `<span class="tracking-badge ${statusClass}">${status}</span>`;
+    },
+
+    setupRoleBasedVisibility(userRole) {
+        // Hide/show elements based on role access
+        document.querySelectorAll('[data-role-access]').forEach(element => {
+            const allowedRoles = element.dataset.roleAccess.split(',');
+            if (!allowedRoles.includes(userRole)) {
+                element.style.display = 'none';
+            } else {
+                element.style.display = '';
+            }
+        });
+    },
+
+    setupProgressiveFields() {
+        const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+        
+        // Clear all button states first - no defaults
+        document.querySelectorAll('.yes-no-btn').forEach(btn => {
+            btn.classList.remove('active', 'yes', 'no');
+        });
+        
+        // Initially disable all fields except the first one
+        this.updateFieldStates();
+        
+        // Setup button handlers
+        document.querySelectorAll('.yes-no-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const field = e.target.dataset.field;
+                const value = e.target.dataset.value;
+                
+                // Check if this field is allowed to be clicked
+                if (!this.isFieldEnabled(field)) {
+                    this.showModernNotification('Please complete the previous fields first', 'warning');
+                    return;
+                }
+                
+                // Update button states
+                const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+                buttons.forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.remove('yes', 'no'); // Remove old classes
+                });
+                
+                // Add active class and value class
+                e.target.classList.add('active');
+                e.target.classList.add(value); // Add 'yes' or 'no' class
+                
+                // Show/hide W/L Amount required asterisk based on "To Win" selection
+                if (field === 'to_win') {
+                    const wlAmountRequired = document.getElementById('wl-amount-required');
+                    if (wlAmountRequired) {
+                        if (value === 'yes') {
+                            wlAmountRequired.style.display = 'inline';
+                        } else {
+                            wlAmountRequired.style.display = 'none';
+                        }
+                    }
+                }
+                
+                console.log(`[PROJECTS] Button clicked: ${field} = ${value}`);
+                console.log(`[PROJECTS] Button classes:`, e.target.classList.toString());
+                
+                // Update field states after selection
+                this.updateFieldStates();
+            });
+        });
+    },
+
+    isFieldEnabled(field) {
+        const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+        const currentIndex = fieldOrder.indexOf(field);
+        
+        if (currentIndex === 0) return true; // First field is always enabled
+        
+        // Check if all previous fields are filled
+        for (let i = 0; i < currentIndex; i++) {
+            const prevField = fieldOrder[i];
+            const hasSelection = document.querySelector(`.yes-no-btn[data-field="${prevField}"].active`);
+            if (!hasSelection) return false;
+        }
+        
+        return true;
+    },
+
+    updateFieldStates() {
+        const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+        
+        fieldOrder.forEach(field => {
+            const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+            const isEnabled = this.isFieldEnabled(field);
+            
+            buttons.forEach(btn => {
+                if (isEnabled) {
+                    btn.classList.remove('disabled');
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                } else {
+                    btn.classList.add('disabled');
+                    btn.style.opacity = '0.4';
+                    btn.style.cursor = 'not-allowed';
+                }
+            });
+        });
+        
+        // W/L Amount and Remarks are always enabled - user can fill them anytime
+        const wlAmountInput = document.getElementById('wl-amount-input');
+        const remarksTextarea = document.getElementById('remarks-textarea');
+        
+        if (wlAmountInput) {
+            wlAmountInput.disabled = false;
+            wlAmountInput.style.opacity = '1';
+        }
+        
+        if (remarksTextarea) {
+            remarksTextarea.disabled = false;
+            remarksTextarea.style.opacity = '1';
+        }
+    },
+
+    showModernNotification(message, type = 'info') {
+        // Remove existing notifications
+        const existing = document.querySelector('.modern-notification');
+        if (existing) existing.remove();
+        
+        // Create notification
+        const notification = document.createElement('div');
+        notification.className = `modern-notification ${type}`;
+        notification.innerHTML = `
+            <div class="notification-content">
+                <div class="notification-icon">
+                    ${type === 'warning' ? '⚠️' : type === 'error' ? '❌' : type === 'success' ? '✅' : 'ℹ️'}
+                </div>
+                <div class="notification-message">${message}</div>
+                <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+            </div>
+        `;
+        
+        // Add to page
+        document.body.appendChild(notification);
+        
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            if (notification.parentElement) {
+                notification.remove();
+            }
+        }, 4000);
+        
+        // Animate in
+        setTimeout(() => notification.classList.add('show'), 10);
+    },
+
+    async saveSalesTracking(projectId) {
+        // Collect sales tracking data
+        const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
+        const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
+        const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
+        const quoted = document.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value;
+        const salesRepId = document.getElementById('sales-rep-select')?.value;
+        const branch = document.getElementById('branch-input')?.value;
+        const wlAmount = document.getElementById('wl-amount-input')?.value;
+        const remarks = document.getElementById('remarks-textarea')?.value;
+        
+        // Progressive validation - dengan required fields yang baru
+        const errors = [];
+        
+        // Always required fields
+        if (!salesRepId) {
+            errors.push('Please select a Sales Representative');
+        }
+        
+        if (!branch || branch.trim() === '') {
+            errors.push('Please enter Branch information');
+        }
+        
+        if (!remarks || remarks.trim() === '') {
+            errors.push('Please enter Remarks');
+        }
+        
+        // Only validate if may nagsimula na sa progressive fields
+        if (!contacted && !quoted && !sql && !toWin && !wlAmount && !remarks) {
+            this.showModernNotification('Please fill at least one field to save', 'warning');
+            return;
+        }
+        
+        // Validate progressive order - kung may next field na filled, dapat yung previous filled din
+        if (quoted && !contacted) {
+            errors.push('Please fill "Contacted" first before "Quoted"');
+        }
+        if (sql && (!contacted || !quoted)) {
+            errors.push('Please fill "Contacted" and "Quoted" first before "Sales Qualified Leads"');
+        }
+        if (toWin && (!contacted || !quoted || !sql)) {
+            errors.push('Please fill previous fields first before "To Win"');
+        }
+        
+        // W/L Amount is required if "To Win" is "Yes"
+        if (toWin === 'yes' && (!wlAmount || parseFloat(wlAmount) <= 0)) {
+            errors.push('W/L Amount is required when "To Win" is Yes');
+        }
+        
+        if (errors.length > 0) {
+            this.showModernNotification(errors[0], 'warning');
+            return;
+        }
+        
+        const data = {
+            contacted: contacted === 'yes' ? true : (contacted === 'no' ? false : null),
+            quoted: quoted === 'yes' ? true : (quoted === 'no' ? false : null),
+            sales_qualified: sql === 'yes' ? true : (sql === 'no' ? false : null),
+            to_win: toWin === 'yes' ? true : (toWin === 'no' ? false : null),
+            sales_rep_id: salesRepId ? parseInt(salesRepId) : null,
+            branch: branch || null,
+            wl_amount: wlAmount ? parseFloat(wlAmount) : null,
+            remarks: remarks ? remarks.trim() : null
+        };
+        
+        console.log('[PROJECTS] Saving sales tracking data:', data);
+        console.log('[PROJECTS] API URL:', BASE + `/api/v1/projects/${projectId}/sales-tracking`);
+        
+        try {
+            // Show loading state
+            const saveBtn = document.querySelector('.btn-save') || document.querySelector('button[onclick="saveSalesTracking()"]');
+            let originalText = '💾 Save Sales Tracking';
+            
+            if (saveBtn) {
+                originalText = saveBtn.textContent;
+                saveBtn.textContent = 'Saving...';
+                saveBtn.disabled = true;
+            }
+            
+            const response = await fetch(BASE + `/api/v1/projects/${projectId}/sales-tracking`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(data)
+            });
+            
+            if (response.ok) {
+                this.showModernNotification('Sales tracking saved successfully!', 'success');
+                
+                // Restore button state immediately before closing modal
+                if (saveBtn) {
+                    saveBtn.textContent = originalText;
+                    saveBtn.disabled = false;
+                }
+                
+                // Close modal after short delay
+                setTimeout(() => {
+                    const modal = document.getElementById('detailsModal');
+                    if (modal) {
+                        modal.classList.remove('active');
+                    }
+                }, 1500);
+                
+                // Reload projects to show updated status
+                this.loadProjects();
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.detail || 'Failed to save sales tracking');
+            }
+            
+        } catch (error) {
+            console.error('[PROJECTS] Save sales tracking error:', error);
+            this.showModernNotification('Failed to save sales tracking. Please try again.', 'error');
+            
+            // Restore button state on error
+            const saveBtn = document.querySelector('.btn-save') || document.querySelector('button[onclick="saveSalesTracking()"]');
+            if (saveBtn) {
+                saveBtn.textContent = '💾 Save Sales Tracking';
+                saveBtn.disabled = false;
+            }
+        }
+    },
+
+    editProject(projectId) {
+        // TODO: Implement edit functionality
+        alert(`Edit project #${projectId}\n\nThis feature will be implemented soon.`);
+    },
+
+    async deleteProject(projectId) {
+        const project = this.allProjects.find(p => p.id === projectId);
+        if (!project) return;
+
+        const confirmed = confirm(
+            `Are you sure you want to delete this project?\n\n` +
+            `Contractor: ${project.contractor_name}\n` +
+            `Project: ${project.project_name}\n\n` +
+            `This action cannot be undone.`
+        );
+
+        if (!confirmed) return;
+
+        try {
+            const response = await fetch(BASE + `/api/v1/projects/${projectId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+
+            if (response.ok) {
+                alert('Project deleted successfully!');
+                this.loadProjects(); // Reload the list
+            } else {
+                throw new Error('Failed to delete project');
+            }
+        } catch (error) {
+            console.error('[PROJECTS] Delete error:', error);
+            alert('Failed to delete project. Please try again.');
+        }
+    }
+};
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', () => {
+    ProjectsPage.init();
+    
+    // Modal close handlers
+    const modal = document.getElementById('detailsModal');
+    
+    // Close modal on overlay click
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    }
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+            modal.classList.remove('active');
+        }
+    });
+});
+
+// Global functions for modal controls
+function closeDetailsModal() {
+    const modal = document.getElementById('detailsModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function openAssignModal() {
+    // TODO: Implement assignment modal functionality
+    alert('Assignment functionality will be implemented soon.');
+}
+
+function openTrackingModal() {
+    // TODO: Implement tracking modal functionality  
+    alert('Sales tracking functionality will be implemented soon.');
+}
+
+function saveSalesTracking() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = parseInt(modal.dataset.projectId);
+    if (projectId) {
+        ProjectsPage.saveSalesTracking(projectId);
+    }
+}

@@ -1,0 +1,611 @@
+/* =============================================================
+   MODERN LOGIN PAGE - TDT Powersteel
+   Enhanced with animations and modern design
+   ============================================================= */
+
+/* -- Design tokens ------------------------------------------ */
+:root {
+    --login-bg:          #0D0F12;
+    --login-card-bg:     #1A1D23;
+    --login-border:      rgba(255, 128, 0, 0.15);
+    --login-input-bg:    #22252C;
+    --login-input-focus: #FF8000;
+    --login-accent:      #FF8000;
+    --login-accent-dark: #CC6600;
+    --login-text:        #FFFFFF;
+    --login-text-dim:    #ADB5BD;
+    --login-text-muted:  #6C757D;
+    --login-danger:      #EF4444;
+    --login-success:     #10B981;
+    --login-font:        'Inter', 'Segoe UI', system-ui, sans-serif;
+    --login-radius:      12px;
+    --login-radius-lg:   20px;
+}
+
+/* -- Reset -------------------------------------------------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* -- Body / Page -------------------------------------------- */
+body {
+    background: var(--login-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--login-font);
+    color: var(--login-text);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animated Background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 128, 0, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 128, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 128, 0, 0.03) 0%, transparent 40%);
+    animation: backgroundPulse 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Floating particles effect */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(255, 128, 0, 0.3), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(255, 128, 0, 0.2), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(255, 128, 0, 0.3), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(255, 128, 0, 0.2), transparent);
+    background-size: 200% 200%;
+    animation: particleFloat 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes particleFloat {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+}
+
+/* -- Page container ----------------------------------------- */
+.login-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* -- Login card --------------------------------------------- */
+.login-card {
+    background: var(--login-card-bg);
+    border-radius: var(--login-radius-lg);
+    padding: 48px 40px;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 128, 0, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--login-border);
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #FF8000 0%, #FF9933 50%, #FF8000 100%);
+    background-size: 200% 100%;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* -- Logo / header section ---------------------------------- */
+.logo-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-section img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    margin: 0 auto 24px;
+    display: block;
+    filter: drop-shadow(0 4px 12px rgba(255, 128, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.logo-section h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #FF8000 0%, #FF9933 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-section h1 span {
+    background: linear-gradient(135deg, #FF8000 0%, #FF9933 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.logo-section p {
+    font-size: 14px;
+    color: var(--login-text-dim);
+    font-weight: 500;
+}
+
+/* -- Admin portal badge ------------------------------------- */
+.admin-portal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 128, 0, 0.15);
+    border: 1px solid rgba(255, 128, 0, 0.3);
+    color: var(--login-accent);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-top: 8px;
+}
+
+/* -- Form groups -------------------------------------------- */
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--login-text);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* -- Input wrapper ------------------------------------------ */
+.input-wrapper {
+    position: relative;
+}
+
+/* -- Inputs ------------------------------------------------- */
+input[type="text"],
+input[type="password"],
+input[type="email"] {
+    width: 100%;
+    background: var(--login-input-bg);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--login-radius);
+    padding: 14px 16px;
+    color: var(--login-text);
+    font-family: var(--login-font);
+    font-size: 15px;
+    outline: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder,
+input[type="email"]::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus {
+    border-color: var(--login-accent);
+    box-shadow: 0 0 0 4px rgba(255, 128, 0, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+input[type="text"]:hover,
+input[type="password"]:hover,
+input[type="email"]:hover {
+    border-color: rgba(255, 128, 0, 0.3);
+}
+
+/* Password field */
+#password {
+    padding-right: 48px;
+}
+
+/* -- Password toggle ---------------------------------------- */
+.password-toggle {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--login-text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    z-index: 2;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.password-toggle:hover {
+    color: var(--login-accent);
+}
+
+/* -- Submit button ------------------------------------------ */
+button[type="submit"],
+button#submitBtn,
+button#submitMfaBtn,
+button#submitResetBtn {
+    width: 100%;
+    background: linear-gradient(135deg, #FF8000 0%, #FF9933 100%);
+    color: white;
+    border: none;
+    border-radius: var(--login-radius);
+    padding: 16px;
+    font-family: var(--login-font);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    box-shadow: 0 4px 15px rgba(255, 128, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+button[type="submit"]::before,
+button#submitBtn::before,
+button#submitMfaBtn::before,
+button#submitResetBtn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+button[type="submit"]:hover::before,
+button#submitBtn:hover::before,
+button#submitMfaBtn:hover::before,
+button#submitResetBtn:hover::before {
+    left: 100%;
+}
+
+button[type="submit"]:hover:not(:disabled),
+button#submitBtn:hover:not(:disabled),
+button#submitMfaBtn:hover:not(:disabled),
+button#submitResetBtn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(255, 128, 0, 0.5);
+}
+
+button[type="submit"]:active:not(:disabled),
+button#submitBtn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+button[type="submit"]:disabled,
+button#submitBtn:disabled,
+button#submitMfaBtn:disabled,
+button#submitResetBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* -- Secondary button --------------------------------------- */
+button.btn-secondary,
+button#cancelResetBtn {
+    width: 100%;
+    background: transparent;
+    color: var(--login-text-dim);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--login-radius);
+    padding: 14px;
+    font-family: var(--login-font);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 0;
+}
+
+button.btn-secondary:hover,
+button#cancelResetBtn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 128, 0, 0.3);
+    color: var(--login-text);
+}
+
+/* -- Loader spinner ----------------------------------------- */
+.loader {
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 0.8s linear infinite;
+    display: none;
+    flex-shrink: 0;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* -- Error / success messages ------------------------------- */
+.error-message {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #ff6b6b;
+    padding: 12px 16px;
+    border-radius: var(--login-radius);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: none;
+    text-align: center;
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+.success-message {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #6ee7b7;
+    padding: 12px 16px;
+    border-radius: var(--login-radius);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* -- Links -------------------------------------------------- */
+a.login-link,
+#forgotPasswordLink,
+#backToLoginLink,
+#adminPortalLink {
+    color: var(--login-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+    font-weight: 500;
+}
+
+a.login-link:hover,
+#forgotPasswordLink:hover,
+#backToLoginLink:hover {
+    color: var(--login-accent);
+}
+
+#adminPortalLink {
+    color: #60a5fa;
+    display: none;
+    margin-top: 8px;
+    text-align: center;
+}
+
+#adminPortalLink:hover {
+    color: #93c5fd;
+}
+
+/* -- Divider ------------------------------------------------ */
+.login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    color: var(--login-text-muted);
+    font-size: 13px;
+}
+
+.login-divider::before,
+.login-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* -- MFA step ----------------------------------------------- */
+#mfaStep h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--login-text);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+#mfaStep p,
+#mfaInstructions {
+    color: var(--login-text-dim);
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+#qrCodeImg {
+    max-width: 180px;
+    border-radius: 12px;
+    border: 3px solid rgba(255, 128, 0, 0.3);
+    display: block;
+    margin: 0 auto;
+    box-shadow: 0 4px 12px rgba(255, 128, 0, 0.2);
+}
+
+#totpCode {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 8px;
+    font-weight: 700;
+    padding: 14px;
+}
+
+/* -- Forgot password modal ---------------------------------- */
+.reset-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 15, 18, 0.9);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.reset-modal-content {
+    background: var(--login-card-bg);
+    border: 1px solid var(--login-border);
+    border-radius: var(--login-radius-lg);
+    padding: 32px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+}
+
+.reset-modal-content h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--login-text);
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.reset-modal-content > p {
+    color: var(--login-text-dim);
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+/* -- Page loader overlay ------------------------------------ */
+.page-loader {
+    position: fixed;
+    inset: 0;
+    background: var(--login-bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease;
+}
+
+.page-loader.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+    width: 44px;
+    height: 44px;
+    border: 3px solid rgba(255, 128, 0, 0.2);
+    border-radius: 50%;
+    border-top-color: var(--login-accent);
+    animation: spin 0.9s ease-in-out infinite;
+}
+
+/* -- Footer text -------------------------------------------- */
+.login-footer {
+    text-align: center;
+    margin-top: 24px;
+    font-size: 13px;
+    color: var(--login-text-muted);
+}
+
+/* -- Responsive --------------------------------------------- */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 16px;
+    }
+
+    .login-card {
+        padding: 32px 24px;
+    }
+
+    .logo-section img {
+        max-width: 150px;
+    }
+
+    .logo-section h1 {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,270 @@
+﻿/* ============================================================
+   TDT Powersteel Dashboard â€” dashboard_v15.css
+   Fully responsive: mobile â†’ tablet â†’ desktop â†’ TV / 4K
+   Fluid typography via clamp() â€” scales continuously
+   ============================================================ */
+
+/* ---------- Design Tokens - TDT Powersteel Modern ---------- */
+:root {
+    /* Orange Palette - Based on TDT Logo */
+    --orange-50: #FFF5EB;
+    --orange-100: #FFE4CC;
+    --orange-200: #FFCC99;
+    --orange-300: #FFB366;
+    --orange-400: #FF9933;
+    --orange-500: #FF8000;  /* Primary Orange */
+    --orange-600: #E67300;
+    --orange-700: #CC6600;
+    --orange-800: #B35900;
+    --orange-900: #994D00;
+
+    /* Dark/Gray Palette - Based on TDT Logo */
+    --gray-50: #F8F9FA;
+    --gray-100: #E9ECEF;
+    --gray-200: #DEE2E6;
+    --gray-300: #CED4DA;
+    --gray-400: #ADB5BD;
+    --gray-500: #6C757D;
+    --gray-600: #495057;
+    --gray-700: #343A40;
+    --gray-800: #212529;
+    --gray-900: #0D0F12;
+
+    /* Background Colors - Modern Dark Theme */
+    --bg-dark: #0D0F12;
+    --bg-card: #1A1D23;
+    --bg-card-hover: #22252C;
+    --bg-card-alt: #14171C;
+    --bg-input: #22252C;
+    --bg-overlay: rgba(13, 15, 18, 0.95);
+
+    /* Text Colors */
+    --text-primary: #FFFFFF;
+    --text-secondary: #ADB5BD;
+    --text-accent: #FF8000;
+    --text-muted: #6C757D;
+
+    /* Status Colors */
+    --success: #10B981;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --info: #3B82F6;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, #FF8000 0%, #FF9933 100%);
+    --gradient-dark: linear-gradient(135deg, #1A1D23 0%, #14171C 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(13, 15, 18, 0) 0%, rgba(13, 15, 18, 0.8) 100%);
+
+    /* Shadows - Modern Depth */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 20px rgba(255, 128, 0, 0.3);
+    --shadow-glow-strong: 0 0 30px rgba(255, 128, 0, 0.5);
+
+    /* Spacing */
+    --sp-1: 0.25rem;
+    --sp-2: 0.4rem;
+    --sp-3: 0.65rem;
+    --sp-4: 0.9rem;
+    --sp-5: 1.2rem;
+    --sp-6: 1.5rem;
+    --sp-8: 2rem;
+
+    --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+
+    /* â”€â”€ Fluid type scale (clamp) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+       Scales smoothly from ~360px mobile to 3840px 4K.
+       Formula: preferred = (target_px / 1920) * 100vw
+    â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+    --text-2xs: clamp(0.5rem, 0.55vw, 0.72rem);
+    --text-xs: clamp(0.62rem, 0.68vw, 0.88rem);
+    --text-sm: clamp(0.72rem, 0.82vw, 1.05rem);
+    --text-base: clamp(0.82rem, 0.95vw, 1.22rem);
+    --text-lg: clamp(0.95rem, 1.15vw, 1.5rem);
+    --text-xl: clamp(1.05rem, 1.4vw, 1.9rem);
+    --text-2xl: clamp(1.2rem, 1.8vw, 2.5rem);
+    --text-3xl: clamp(1.5rem, 2.6vw, 3.8rem);
+
+    --radius-sm: 5px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    color-scheme: dark;
+}
+
+/* ---------- Reset ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    /* Root font fluid: 12px @ 360px â†’ 18px @ 1920px â†’ 22px @ 3840px */
+    font-size: clamp(12px, 0.9vw + 0.2vh, 22px);
+    overflow-x: hidden;
+    height: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--bg-dark);
+    font-family: var(--font);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Modern Background Pattern */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(255, 128, 0, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 128, 0, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+body > * {
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 1024px) {
+    body {
+        overflow: hidden;
+    }
+}
+
+img,
+canvas,
+svg {
+    max-width: 100%;
+    height: auto;
+}
+
+.flex-center {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+}
+
+
+/* ---------- Auth & Profile ---------- */
+.user-profile {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    padding: var(--sp-2) var(--sp-4);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.2s;
+    margin-left: var(--sp-4);
+}
+
+.user-profile:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#user-name {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.user-role-badge {
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+}
+
+.role-admin {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.role-user {
+    background: rgba(148, 163, 184, 0.2);
+    color: #cbd5e1;
+}
+
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 160px;
+    background: var(--bg-card);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    display: none !important;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 9999;
+}
+
+.user-profile.active .user-dropdown {
+    display: flex !important;
+}
+
+#admin-link {
+    display: none;
+}
+
+.user-dropdown a,
+.user-dropdown button {
+    padding: 0.75rem 1rem;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.user-dropdown a:hover,
+.user-dropdown button:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.user-dropdown button {
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    color: #f87171;
+}
+
+@media (max-width: 768px) {
+    .user-profile {
+        margin-left: 0;
+        padding: var(--sp-1);
+    }
+
+    .user-info {
+        display: none;
+    }
+}

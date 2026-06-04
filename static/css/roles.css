@@ -1,0 +1,171 @@
+﻿/* ============================================================
+   roles.css â€” Role-Based Visibility Rules
+   ============================================================
+   Controls which UI sections are visible based on the
+   authenticated user's role. Works in tandem with roles.js,
+   which sets the [data-role] attribute on <body> after
+   fetching the user's role from GET /api/v1/auth/me.
+
+   PATTERN:
+     Elements with class .role-only--<role> are hidden by default.
+     They become visible only when <body> carries the matching
+     data-role attribute (e.g. body[data-role="sales_rep"]).
+
+   ROLE CODES (from backend):
+     superadmin  â€” full access
+     admin       â€” read-only monitoring
+     encoder     â€” data entry only
+     sales_rep   â€” full dashboard + status updates
+
+   APPLIED BY:
+     js/roles.js â†’ RoleManager.applyRoleToDOM(role)
+   ============================================================ */
+
+
+/* â”€â”€ Default: hide all role-specific elements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/*
+ * All .role-only--<role> elements are invisible until the
+ * matching data-role is set on <body>. This prevents flash of
+ * wrong-role content before roles.js has run.
+ */
+.role-only--superadmin,
+.role-only--admin,
+.role-only--encoder,
+.role-only--sales_rep { display: none !important; }
+
+
+/* â”€â”€ Per-role show rules â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/*
+ * When RoleManager sets body[data-role], the matching
+ * .role-only--<role> elements revert to their natural display.
+ * `display: revert` restores the browser/stylesheet default
+ * rather than hard-coding a specific display value.
+ */
+body[data-role="superadmin"] .role-only--superadmin { display: revert !important; }
+body[data-role="admin"]      .role-only--admin      { display: revert !important; }
+body[data-role="encoder"]    .role-only--encoder    { display: revert !important; }
+body[data-role="sales_rep"]  .role-only--sales_rep  { display: revert !important; }
+
+
+/* â”€â”€ Encoder: hide full dashboard, show data entry panel â”€â”€â”€â”€â”€â”€ */
+/*
+ * Encoders only see the data entry panel â€” the full analytics
+ * dashboard is hidden. .dashboard-main-sections wraps all KPI,
+ * map, chart, and ranking sections in index.html.
+ */
+body[data-role="encoder"] .dashboard-main-sections { display: none !important; }
+body[data-role="encoder"] #data-entry-panel        { display: block !important; }
+
+/* ── Encoder: hide Sales Tracking section ────────────────── */
+/*
+ * Encoders should not see Sales Tracking sections in project modals.
+ * Only superadmin, admin, and sales_rep can access sales tracking.
+ */
+body[data-role="encoder"] .sales-tracking-section { display: none !important; }
+
+
+/* â”€â”€ Default: data entry panel hidden for all non-encoder roles */
+/*
+ * #data-entry-panel is hidden by default so it never flashes
+ * for non-encoder roles even before roles.js has run.
+ */
+#data-entry-panel { display: none; }
+
+
+/* â”€â”€ Role badge â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/*
+ * .role-badge is injected into #role-badge-container in the
+ * header by RoleManager.renderRoleBadge(). A modifier class
+ * (.role-badge--<role>) sets the background and text color.
+ *
+ * Structure:
+ *   <div class="role-badge role-badge--sales_rep">
+ *     <span class="role-badge-icon">ðŸ‘¤</span>
+ *     <span class="role-badge-name">Juan Dela Cruz</span>
+ *     <span class="role-badge-label">Sales Rep</span>
+ *   </div>
+ */
+.role-badge {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+/* Icon glyph inside the badge */
+.role-badge-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* User's full name â€” truncated if too long */
+.role-badge-name {
+    font-weight: 500;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Role label (e.g. "SALES REP") â€” small caps above the name */
+.role-badge-label {
+    font-size: 0.7rem;
+    opacity: 0.85;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Per-role badge color variants */
+.role-badge--superadmin { background: #f59e0b; color: #000; }
+.role-badge--admin      { background: #3b82f6; color: #fff; }
+.role-badge--encoder    { background: #10b981; color: #fff; }
+.role-badge--sales_rep  { background: #8b5cf6; color: #fff; }
+
+
+/* â”€â”€ Update Status button â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/*
+ * Small icon-only button injected into the ranking table's
+ * action column by StatusUpdate.injectButtonsIntoTable().
+ * Visible only for sales_rep and superadmin roles (controlled
+ * via .role-only--sales_rep / .role-only--superadmin classes).
+ */
+.update-status-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    transition: opacity 0.2s;
+    padding: 0;
+    line-height: 1;
+}
+
+.update-status-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* â”€â”€ Action cell (ranking table 4th column) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/*
+ * Wraps the .update-status-btn in the contractor ranking table.
+ * Kept narrow so it doesn't disrupt the existing column layout.
+ */
+.action-cell {
+    text-align: center;
+    width: 40px;
+    padding: 4px;
+}
+

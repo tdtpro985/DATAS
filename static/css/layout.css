@@ -1,0 +1,139 @@
+﻿/* =============================================================
+   LAYOUT.CSS - UNIFIED GRID SYSTEM v2.0
+   Works with sidebar wrapper (.ap-shell + .ap-main)
+   Clean, simple, no conflicts
+   ============================================================= */
+
+/* Dashboard container - works inside .ap-main */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap: var(--sp-3);
+    width: 100%;
+    padding: var(--sp-3);
+    min-height: 100vh;
+    /* NO background here - handled by body/ap-shell */
+}
+
+/* Mobile - single column, simple stack */
+@media (max-width: 767px) {
+    .dashboard {
+        padding: var(--sp-2);
+        gap: var(--sp-2);
+    }
+}
+
+/* All sections span full width on mobile */
+.header,
+.kpi-section,
+.target-section,
+.map,
+.funnel,
+.ranking,
+.pie-section,
+.rotating-card,
+.kpi-table,
+.col-1-wrapper,
+.col-3-wrapper {
+    grid-column: 1 / -1;
+}
+
+/* Tablet - 2 columns */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--sp-3);
+    }
+    
+    .header,
+    .map {
+        grid-column: 1 / -1;
+    }
+}
+
+/* Desktop - 3 column grid */
+@media (min-width: 1024px) {
+    .dashboard {
+        grid-template-columns: minmax(300px, 1.2fr) 1.3fr minmax(300px, 1.2fr);
+        grid-template-rows: auto auto 1fr auto;
+        gap: var(--sp-3);
+        padding: var(--sp-4);
+        height: calc(100vh - 2rem);
+        overflow: hidden;
+    }
+
+    /* Row 1: Header spans all */
+    .header {
+        grid-area: 1 / 1 / 2 / 4;
+    }
+
+    /* Row 2: KPI + Target + Map/Funnel wrapper */
+    .kpi-section {
+        grid-area: 2 / 1 / 3 / 2;
+    }
+
+    .target-section {
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .col-3-wrapper {
+        grid-area: 2 / 3 / 5 / 4;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+        min-height: 0;
+    }
+
+    .map,
+    .funnel {
+        flex: 1;
+        min-height: 0;
+    }
+
+    /* Row 3: Ranking + Rotating Card */
+    .col-1-wrapper {
+        grid-area: 3 / 1 / 5 / 2;
+        display: flex;
+        flex-direction: column;
+        gap: var(--sp-3);
+        min-height: 0;
+    }
+
+    .ranking,
+    .pie-section {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .rotating-card {
+        grid-area: 3 / 2 / 4 / 3;
+    }
+
+    /* Row 4: Category table */
+    .kpi-table {
+        grid-area: 4 / 2 / 5 / 3;
+        max-height: 250px;
+    }
+}
+
+/* Large desktop - more breathing room */
+@media (min-width: 1440px) {
+    .dashboard {
+        gap: var(--sp-4);
+        padding: var(--sp-5);
+    }
+}
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--sp-3);
+}
+
+@media (min-width: 600px) {
+    .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
