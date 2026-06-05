@@ -96,7 +96,7 @@ try {
 ob_end_flush();
 
 /* ============================================================
-   GET - List all sales representatives
+   GET - List all sales representatives WITH ENHANCED RECOMMENDATIONS
    ============================================================ */
 function handleGet($pdo) {
     // Get optional filters from query parameters
@@ -104,7 +104,7 @@ function handleGet($pdo) {
     $province = $_GET['province'] ?? '';
     $city = $_GET['city'] ?? '';
     
-    // Simple approach: get all sales reps first, then calculate match scores in PHP
+    // Get assigned project count for workload balancing
     $stmt = $pdo->prepare("
         SELECT 
             u.id, 
@@ -126,7 +126,12 @@ function handleGet($pdo) {
                 SELECT MAX(last_activity) 
                 FROM user_sessions 
                 WHERE user_id = u.id
-            ) as last_seen
+            ) as last_seen,
+            (
+                SELECT COUNT(*) 
+                FROM projects 
+                WHERE assigned_to = u.id
+            ) as assigned_count
         FROM users u
         WHERE u.role = 'sales_rep'
         ORDER BY u.created_at DESC
@@ -135,49 +140,132 @@ function handleGet($pdo) {
     $stmt->execute();
     $salesReps = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    // Calculate match scores in PHP for better debugging
+    // Calculate match scores with enhanced algorithm
     foreach ($salesReps as &$rep) {
         $rep['is_online'] = (bool)$rep['is_online'];
         $rep['match_score'] = 0;
         $rep['is_suggested'] = false;
+        $rep['match_reason'] = '';
         
         $branch = strtolower($rep['branch'] ?? '');
         $regionLower = strtolower($region);
         $provinceLower = strtolower($province);
         $cityLower = strtolower($city);
         
-        // Calculate match score
-        if (!empty($region) && strpos($branch, strtolower($region)) !== false) {
-            $rep['match_score'] = 100;
-        } elseif (!empty($province) && strpos($branch, strtolower($province)) !== false) {
-            $rep['match_score'] = 90;
-        } elseif (!empty($city) && strpos($branch, strtolower($city)) !== false) {
-            $rep['match_score'] = 80;
-        }
-        
-        // Special Manila/NCR matching
-        if (stripos($regionLower, 'ncr') !== false || stripos($regionLower, 'manila') !== false || 
-            stripos($cityLower, 'manila') !== false || stripos($provinceLower, 'manila') !== false) {
-            
-            if (stripos($branch, 'manila') !== false) {
-                $rep['match_score'] = max($rep['match_score'], 100);
-            } elseif (stripos($branch, 'ncr') !== false) {
-                $rep['match_score'] = max($rep['match_score'], 95);
-            } elseif (stripos($branch, 'metro manila') !== false) {
-                $rep['match_score'] = max($rep['match_score'], 90);
-            } elseif (stripos($branch, 'makati') !== false || stripos($branch, 'quezon') !== false) {
-                $rep['match_score'] = max($rep['match_score'], 85);
+        // Primary matching: Province (most specific and important)
+        if (!empty($province)) {
+            // Exact province match
+            if (strpos($branch, strtolower($province)) !== false) {
+                $rep['match_score'] = 100;
+                $rep['match_reason'] = 'Branch matches project province';
+            }
+            // Partial province match (e.g., "Laguna" in "Laguna de Bay Branch")
+            elseif (stripos($branch, $province) !== false) {
+                $rep['match_score'] = 95;
+                $rep['match_reason'] = 'Branch located in project province';
             }
         }
         
-        $rep['is_suggested'] = $rep['match_score'] > 0;
+        // Secondary matching: Region
+        if ($rep['match_score'] === 0 && !empty($region)) {
+            if (stripos($branch, $region) !== false) {
+                $rep['match_score'] = 85;
+                $rep['match_reason'] = 'Branch matches project region';
+            }
+        }
+        
+        // Tertiary matching: City
+        if ($rep['match_score'] === 0 && !empty($city)) {
+            if (stripos($branch, $city) !== false) {
+                $rep['match_score'] = 75;
+                $rep['match_reason'] = 'Branch matches project city';
+            }
+        }
+        
+        // ===== SPECIAL CASES =====
+        
+        // Manila/NCR special handling (many naming variations)
+        $isNCRProject = (
+            stripos($regionLower, 'ncr') !== false || 
+            stripos($regionLower, 'manila') !== false ||
+            stripos($regionLower, 'national capital') !== false ||
+            stripos($provinceLower, 'manila') !== false || 
+            stripos($provinceLower, 'metro manila') !== false ||
+            stripos($cityLower, 'manila') !== false ||
+            stripos($cityLower, 'quezon') !== false ||
+            stripos($cityLower, 'makati') !== false ||
+            stripos($cityLower, 'caloocan') !== false
+        );
+        
+        if ($isNCRProject) {
+            if (stripos($branch, 'manila') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 100);
+                $rep['match_reason'] = 'Manila branch - perfect match for NCR project';
+            } elseif (stripos($branch, 'ncr') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 100);
+                $rep['match_reason'] = 'NCR branch - perfect match';
+            } elseif (stripos($branch, 'metro manila') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 95);
+                $rep['match_reason'] = 'Metro Manila branch';
+            } elseif (stripos($branch, 'makati') !== false || stripos($branch, 'quezon') !== false || 
+                      stripos($branch, 'taguig') !== false || stripos($branch, 'pasig') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 90);
+                $rep['match_reason'] = 'Located in NCR area';
+            }
+        }
+        
+        // Cebu special cases
+        if (stripos($provinceLower, 'cebu') !== false || stripos($cityLower, 'cebu') !== false) {
+            if (stripos($branch, 'cebu') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 100);
+                $rep['match_reason'] = 'Cebu branch - perfect match';
+            } elseif (stripos($branch, 'visayas') !== false || stripos($branch, 'central visayas') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 85);
+                $rep['match_reason'] = 'Central Visayas branch';
+            }
+        }
+        
+        // Davao special cases
+        if (stripos($provinceLower, 'davao') !== false || stripos($cityLower, 'davao') !== false) {
+            if (stripos($branch, 'davao') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 100);
+                $rep['match_reason'] = 'Davao branch - perfect match';
+            } elseif (stripos($branch, 'mindanao') !== false) {
+                $rep['match_score'] = max($rep['match_score'], 80);
+                $rep['match_reason'] = 'Mindanao branch';
+            }
+        }
+        
+        // Workload balancing adjustment (slight boost for less loaded reps)
+        if ($rep['match_score'] > 0) {
+            $assignedCount = (int)($rep['assigned_count'] ?? 0);
+            
+            // Give small bonus to reps with fewer assignments
+            if ($assignedCount === 0) {
+                $rep['match_score'] = min(100, $rep['match_score'] + 5);
+                $rep['match_reason'] .= ' (Available)';
+            } elseif ($assignedCount < 5) {
+                $rep['match_score'] = min(100, $rep['match_score'] + 2);
+            }
+        }
+        
+        // Mark as suggested if score > 70 (good match threshold)
+        $rep['is_suggested'] = $rep['match_score'] >= 70;
     }
     
-    // Sort by match score (highest first), then by creation date
+    // Sort by match score (highest first), then by workload (fewest first), then by creation date
     usort($salesReps, function($a, $b) {
         if ($a['match_score'] !== $b['match_score']) {
             return $b['match_score'] - $a['match_score'];
         }
+        
+        // If same score, prefer rep with fewer assignments
+        $aAssigned = (int)($a['assigned_count'] ?? 0);
+        $bAssigned = (int)($b['assigned_count'] ?? 0);
+        if ($aAssigned !== $bAssigned) {
+            return $aAssigned - $bAssigned;
+        }
+        
         return strtotime($b['created_at']) - strtotime($a['created_at']);
     });
     

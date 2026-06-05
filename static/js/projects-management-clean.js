@@ -404,13 +404,13 @@ function viewProject(projectId) {
 // CLEAN ASSIGNMENT FUNCTIONALITY
 // ============================================================================
 
-// Open Sales Rep Selection Modal
+// Open Sales Rep Selection Modal (simplified - no location params needed)
 async function openSalesRepModal() {
     console.log('[PM] openSalesRepModal called');
     
     const modal = document.getElementById('salesRepModal');
     if (!modal) {
-        console.error('[PM] Sales Rep modal element not found with ID: salesRepModal');
+        console.error('[PM] Sales Rep modal element not found');
         return;
     }
     
@@ -419,10 +419,8 @@ async function openSalesRepModal() {
     selectedSalesRepId = null;
     isProjectSelectionMode = false;
     
-    console.log('[PM] State reset - selectedSalesRepId:', selectedSalesRepId);
-    
     try {
-        // Load sales reps using original function
+        // Load sales reps (no location filtering needed)
         await loadSalesRepsInModal();
         
         // Show modal
@@ -433,7 +431,69 @@ async function openSalesRepModal() {
     }
 }
 
-// Load Sales Reps in Modal (original function)
+// Extract location data from visible projects for recommendations
+function extractLocationDataFromProjects() {
+    console.log('[PM] Extracting location data from projects...');
+    
+    const projectRows = document.querySelectorAll('#pm-table-body tr[data-project]');
+    console.log('[PM] Found project rows:', projectRows.length);
+    
+    const locations = {
+        regions: new Set(),
+        provinces: new Set(),
+        cities: new Set()
+    };
+    
+    projectRows.forEach((row, index) => {
+        try {
+            // Get project data from data attribute
+            const projectJson = row.getAttribute('data-project');
+            if (projectJson) {
+                const project = JSON.parse(decodeURIComponent(projectJson));
+                
+                // Extract region
+                if (project.region && project.region !== '—' && project.region !== '-') {
+                    locations.regions.add(project.region);
+                }
+                
+                // Extract province from various fields
+                const province = project.project_province || project.province || project.city_province;
+                if (province && province !== '—' && province !== '-') {
+                    locations.provinces.add(province);
+                }
+                
+                // Extract city
+                const city = project.project_city || project.city;
+                if (city && city !== '—' && city !== '-') {
+                    locations.cities.add(city);
+                }
+                
+                console.log(`[PM] Project ${index + 1}:`, {
+                    region: project.region,
+                    province: province,
+                    city: city
+                });
+            }
+        } catch (e) {
+            console.error('[PM] Error parsing project data:', e);
+        }
+    });
+    
+    const result = {
+        region: Array.from(locations.regions)[0] || '',
+        province: Array.from(locations.provinces)[0] || '',
+        city: Array.from(locations.cities)[0] || '',
+        // Debug info
+        allRegions: Array.from(locations.regions),
+        allProvinces: Array.from(locations.provinces),
+        allCities: Array.from(locations.cities)
+    };
+    
+    console.log('[PM] Extracted location data:', result);
+    return result;
+}
+
+// Load Sales Reps in Modal (simple - no filtering)
 async function loadSalesRepsInModal() {
     try {
         const grid = document.getElementById('salesRepsGrid');
@@ -450,11 +510,8 @@ async function loadSalesRepsInModal() {
             </div>
         `;
 
-        console.log('[PM] Making request to:', `${_B}/api/v1/users/sales-reps`);
         const response = await fetch(`${_B}/api/v1/users/sales-reps`, { credentials: 'include' });
         
-        console.log('[PM] Response status:', response.status);
-
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
@@ -462,30 +519,19 @@ async function loadSalesRepsInModal() {
         const data = await response.json();
         const salesReps = data.users || data.data || data || [];
 
-        console.log('[PM] Loaded sales reps:', salesReps);
-
         if (salesReps.length === 0) {
             grid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: var(--text-secondary);">
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">👤</div>
                     <p><strong>No Sales Representatives</strong></p>
                     <p>Please create sales representatives to enable project assignment.</p>
-                    <a href="users" style="display: inline-block; margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-500); color: white; text-decoration: none; border-radius: 0.5rem;">Manage Users</a>
                 </div>
             `;
             return;
         }
 
-        // Render sales reps using original function
-        renderSalesReps(salesReps);
-
-        // Setup search functionality
-        const searchInput = document.getElementById('srSearchInput');
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                filterSalesReps(e.target.value, salesReps);
-            });
-        }
+        // Render simple list (no recommendations at this stage)
+        renderSalesRepsSimple(salesReps);
 
     } catch (error) {
         console.error('[PM] Error loading sales reps:', error);
@@ -496,47 +542,44 @@ async function loadSalesRepsInModal() {
                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">❌</div>
                     <p><strong>Error Loading Sales Representatives</strong></p>
                     <p>${error.message}</p>
-                    <button onclick="loadSalesRepsInModal()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary-500); color: white; border: none; border-radius: 0.5rem; cursor: pointer;">Retry</button>
                 </div>
             `;
         }
     }
 }
 
-// Render Sales Reps (original function)
-function renderSalesReps(salesReps) {
+// Simple SR rendering (no recommendations)
+function renderSalesRepsSimple(salesReps) {
     const grid = document.getElementById('salesRepsGrid');
     if (!grid) return;
-
+    
     grid.innerHTML = '';
-
+    
     salesReps.forEach(rep => {
         const repCard = document.createElement('div');
-        repCard.className = 'sr-card';
         repCard.style.cssText = `
             background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.75rem;
             padding: 1.5rem;
             cursor: pointer;
             transition: all 0.2s ease;
-            position: relative;
         `;
         
         repCard.innerHTML = `
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
                     ${(rep.full_name || rep.email).charAt(0).toUpperCase()}
                 </div>
                 <div style="flex: 1;">
-                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">
+                    <div style="font-weight: 700; font-size: 1.05rem; color: var(--text-primary);">
                         ${rep.full_name || rep.email}
                     </div>
-                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
-                        ${rep.email}
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                        📧 ${rep.email}
                     </div>
-                    <div style="font-size: 0.875rem; color: var(--text-dim);">
-                        📍 ${rep.branch || 'No branch specified'}
+                    <div style="font-size: 0.875rem; color: #fbbf24; font-weight: 600;">
+                        📍 ${rep.branch || 'No branch'}
                     </div>
                 </div>
             </div>
@@ -544,18 +587,186 @@ function renderSalesReps(salesReps) {
         
         repCard.addEventListener('click', () => selectSalesRepForAssignment(rep.id, rep.full_name || rep.email, rep.branch));
         repCard.addEventListener('mouseenter', () => {
-            repCard.style.borderColor = 'var(--primary-400)';
-            repCard.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+            repCard.style.borderColor = '#3b82f6';
             repCard.style.transform = 'translateY(-2px)';
+            repCard.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
         });
         repCard.addEventListener('mouseleave', () => {
             repCard.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            repCard.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
             repCard.style.transform = 'translateY(0)';
+            repCard.style.boxShadow = 'none';
         });
         
         grid.appendChild(repCard);
     });
+}
+
+// Render Sales Reps (original function WITH RECOMMENDATIONS)
+function renderSalesReps(salesReps) {
+    const grid = document.getElementById('salesRepsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '';
+    
+    // Separate recommended and other reps
+    const recommendedReps = salesReps.filter(rep => rep.is_suggested && rep.match_score >= 85);
+    const otherReps = salesReps.filter(rep => !rep.is_suggested || rep.match_score < 85);
+
+    // Add recommendations header if there are recommended reps
+    if (recommendedReps.length > 0) {
+        const recommendationsHeader = document.createElement('div');
+        recommendationsHeader.style.cssText = `
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+            border: 2px solid rgba(251, 191, 36, 0.3);
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        `;
+        recommendationsHeader.innerHTML = `
+            <span style="font-size: 1.5rem;">✨</span>
+            <div>
+                <div style="font-weight: 700; color: #fbbf24; font-size: 1rem; margin-bottom: 0.25rem;">
+                    Recommended Sales Representatives
+                </div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                    ${recommendedReps.length} sales ${recommendedReps.length === 1 ? 'rep' : 'reps'} matched based on branch location and project province
+                </div>
+            </div>
+        `;
+        grid.appendChild(recommendationsHeader);
+    }
+
+    // Render recommended reps first
+    recommendedReps.forEach(rep => renderSalesRepCard(rep, grid, true));
+    
+    // Add separator if there are both recommended and other reps
+    if (recommendedReps.length > 0 && otherReps.length > 0) {
+        const separator = document.createElement('div');
+        separator.style.cssText = `
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        `;
+        separator.innerHTML = `
+            <div style="flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1);"></div>
+            <span style="color: var(--text-muted); font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
+                Other Sales Representatives
+            </span>
+            <div style="flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1);"></div>
+        `;
+        grid.appendChild(separator);
+    }
+    
+    // Render other reps
+    otherReps.forEach(rep => renderSalesRepCard(rep, grid, false));
+}
+
+// Helper function to render individual sales rep card
+function renderSalesRepCard(rep, container, isRecommended) {
+    const repCard = document.createElement('div');
+    repCard.className = 'sr-card' + (isRecommended ? ' recommended' : '');
+    
+    // Different styling for recommended reps
+    const baseStyle = `
+        background: rgba(15, 23, 42, 0.9);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+    `;
+    
+    const recommendedStyle = `
+        background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05));
+        border: 2px solid rgba(251, 191, 36, 0.4);
+        box-shadow: 0 4px 12px rgba(251, 191, 36, 0.15);
+    `;
+    
+    repCard.style.cssText = isRecommended ? baseStyle + recommendedStyle : baseStyle;
+    
+    // Show recommendation badge and match reason
+    const recommendationBadge = isRecommended ? `
+        <div style="position: absolute; top: -10px; right: -10px; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #000; font-size: 0.75rem; font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 999px; box-shadow: 0 2px 8px rgba(251, 191, 36, 0.4); z-index: 10; text-transform: uppercase; letter-spacing: 0.025em;">
+            ⭐ ${rep.match_score}% Match
+        </div>
+    ` : '';
+    
+    const matchReason = (isRecommended && rep.match_reason) ? `
+        <div style="margin-top: 0.75rem; padding: 0.5rem 0.75rem; background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 0.5rem; font-size: 0.75rem; color: #fbbf24; font-weight: 600;">
+            💡 ${rep.match_reason}
+        </div>
+    ` : '';
+    
+    const workloadInfo = rep.assigned_count !== undefined ? `
+        <div style="margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem;">
+            📊 ${rep.assigned_count} ${rep.assigned_count === 1 ? 'project' : 'projects'} assigned
+        </div>
+    ` : '';
+    
+    const onlineStatus = rep.is_online ? `
+        <div style="display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.5rem; background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 999px; font-size: 0.7rem; color: #6ee7b7; font-weight: 600; margin-top: 0.5rem;">
+            <span style="width: 6px; height: 6px; background: #10b981; border-radius: 50%; display: inline-block; animation: pulse 2s ease-in-out infinite;"></span>
+            Online
+        </div>
+    ` : '';
+    
+    repCard.innerHTML = `
+        ${recommendationBadge}
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div style="width: 56px; height: 56px; background: linear-gradient(135deg, ${isRecommended ? '#fbbf24, #f59e0b' : '#3b82f6, #1d4ed8'}); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: ${isRecommended ? '#000' : 'white'}; font-weight: 700; font-size: 1.5rem; box-shadow: 0 4px 12px ${isRecommended ? 'rgba(251, 191, 36, 0.3)' : 'rgba(59, 130, 246, 0.3)'};">
+                ${(rep.full_name || rep.email).charAt(0).toUpperCase()}
+            </div>
+            <div style="flex: 1;">
+                <div style="font-weight: 700; font-size: 1.05rem; color: var(--text-primary); margin-bottom: 0.35rem;">
+                    ${rep.full_name || rep.email}
+                </div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
+                    📧 ${rep.email}
+                </div>
+                <div style="font-size: 0.875rem; color: ${isRecommended ? '#fbbf24' : 'var(--text-dim)'}; font-weight: ${isRecommended ? '600' : '400'};">
+                    📍 ${rep.branch || 'No branch specified'}
+                </div>
+                ${workloadInfo}
+                ${onlineStatus}
+            </div>
+        </div>
+        ${matchReason}
+    `;
+    
+    repCard.addEventListener('click', () => selectSalesRepForAssignment(rep.id, rep.full_name || rep.email, rep.branch));
+    repCard.addEventListener('mouseenter', () => {
+        if (isRecommended) {
+            repCard.style.borderColor = '#f59e0b';
+            repCard.style.backgroundColor = 'rgba(251, 191, 36, 0.15)';
+            repCard.style.transform = 'translateY(-4px)';
+            repCard.style.boxShadow = '0 8px 24px rgba(251, 191, 36, 0.25)';
+        } else {
+            repCard.style.borderColor = 'var(--primary-400)';
+            repCard.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
+            repCard.style.transform = 'translateY(-2px)';
+        }
+    });
+    repCard.addEventListener('mouseleave', () => {
+        if (isRecommended) {
+            repCard.style.borderColor = 'rgba(251, 191, 36, 0.4)';
+            repCard.style.backgroundColor = 'linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(245, 158, 11, 0.05))';
+            repCard.style.transform = 'translateY(0)';
+            repCard.style.boxShadow = '0 4px 12px rgba(251, 191, 36, 0.15)';
+        } else {
+            repCard.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            repCard.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+            repCard.style.transform = 'translateY(0)';
+        }
+    });
+    
+    container.appendChild(repCard);
 }
 
 // Filter Sales Reps (original function)
@@ -588,62 +799,16 @@ function filterSalesReps(searchTerm, salesReps) {
     renderSalesReps(filteredReps);
 }
 
-// Populate the sales rep modal with data
+// Populate the sales rep modal with data (using new render function)
 function populateSalesRepModal(salesReps) {
-    const container = document.getElementById('salesRepsGrid'); // Use original container ID
+    const container = document.getElementById('salesRepsGrid');
     if (!container) {
         console.error('[Assignment] Sales rep grid container not found');
         return;
     }
     
-    container.innerHTML = '';
-    
-    salesReps.forEach(rep => {
-        const repCard = document.createElement('div');
-        repCard.className = 'sr-card';
-        repCard.style.cssText = `
-            background: rgba(15, 23, 42, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
-        `;
-        
-        repCard.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 1.2rem;">
-                    ${(rep.full_name || rep.email).charAt(0).toUpperCase()}
-                </div>
-                <div style="flex: 1;">
-                    <div style="font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem;">
-                        ${rep.full_name || rep.email}
-                    </div>
-                    <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">
-                        ${rep.email}
-                    </div>
-                    <div style="font-size: 0.875rem; color: var(--text-dim);">
-                        📍 ${rep.branch || 'No branch specified'}
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        repCard.addEventListener('click', () => selectSalesRepForAssignment(rep.id, rep.full_name || rep.email, rep.branch));
-        repCard.addEventListener('mouseenter', () => {
-            repCard.style.borderColor = 'var(--primary-400)';
-            repCard.style.backgroundColor = 'rgba(59, 130, 246, 0.1)';
-            repCard.style.transform = 'translateY(-2px)';
-        });
-        repCard.addEventListener('mouseleave', () => {
-            repCard.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            repCard.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
-            repCard.style.transform = 'translateY(0)';
-        });
-        
-        container.appendChild(repCard);
-    });
+    // Use the enhanced renderSalesReps function
+    renderSalesReps(salesReps);
 }
 
 // Select Sales Rep for Assignment (using original function name)
@@ -651,18 +816,19 @@ function selectSalesRepForAssignment(salesRepId, salesRepName, salesRepBranch) {
     console.log('[PM] selectSalesRep called with:', salesRepId, salesRepName, salesRepBranch);
     
     selectedSalesRepId = salesRepId;
-    selectedSalesRepName = salesRepName; // Make sure to store the name
+    selectedSalesRepName = salesRepName;
     
     console.log('[PM] State after selection:', {
         selectedSalesRepId: selectedSalesRepId,
-        selectedSalesRepName: selectedSalesRepName
+        selectedSalesRepName: selectedSalesRepName,
+        selectedSalesRepBranch: salesRepBranch
     });
     
     // Close the modal
     closeSalesRepModal();
     
-    // Start project selection using original function
-    startProjectSelectionMode(salesRepName);
+    // Start project selection with branch-based recommendations
+    startProjectSelectionMode(salesRepName, salesRepBranch);
 }
 
 // Close Sales Rep Modal
@@ -743,9 +909,9 @@ function enableProjectSelection() {
     });
 }
 
-// Start Project Selection Mode (original function)
-function startProjectSelectionMode(salesRepName) {
-    console.log('[PM] startProjectSelectionMode called with salesRepName:', salesRepName);
+// Start Project Selection Mode (with recommendations)
+function startProjectSelectionMode(salesRepName, salesRepBranch) {
+    console.log('[PM] startProjectSelectionMode called with:', salesRepName, salesRepBranch);
     console.log('[PM] selectedSalesRepId at start:', selectedSalesRepId);
     
     isProjectSelectionMode = true;
@@ -753,11 +919,164 @@ function startProjectSelectionMode(salesRepName) {
     // Show project selection banner and controls
     showProjectSelectionBanner(salesRepName);
     
-    // Add checkboxes to project rows
-    addProjectCheckboxes();
+    // Add checkboxes to project rows WITH recommendations
+    addProjectCheckboxesWithRecommendations(salesRepBranch);
     
     // Show bulk action buttons
     showBulkActionButtons('assign', salesRepName);
+}
+
+// Add checkboxes with recommendations based on SR branch
+function addProjectCheckboxesWithRecommendations(salesRepBranch) {
+    const tbody = document.getElementById('pm-table-body');
+    if (!tbody) return;
+    
+    const rows = Array.from(tbody.querySelectorAll('tr[data-project]'));
+    
+    // Calculate match scores for all projects
+    const projectsWithScores = rows.map(row => {
+        const projectJson = row.getAttribute('data-project');
+        let matchScore = 0;
+        let isRecommended = false;
+        
+        if (projectJson && salesRepBranch) {
+            try {
+                const project = JSON.parse(decodeURIComponent(projectJson));
+                const result = calculateProjectMatch(project, salesRepBranch);
+                isRecommended = result.isRecommended;
+                matchScore = result.matchScore;
+            } catch (e) {
+                console.error('[PM] Error parsing project:', e);
+            }
+        }
+        
+        return { row, matchScore, isRecommended };
+    });
+    
+    // Sort: recommended first (by score DESC), then others
+    projectsWithScores.sort((a, b) => {
+        if (a.isRecommended && !b.isRecommended) return -1;
+        if (!a.isRecommended && b.isRecommended) return 1;
+        if (a.isRecommended && b.isRecommended) return b.matchScore - a.matchScore;
+        return 0;
+    });
+    
+    // Clear tbody and re-add in sorted order
+    tbody.innerHTML = '';
+    
+    projectsWithScores.forEach(({ row, matchScore, isRecommended }) => {
+        // Add recommended styling
+        if (isRecommended) {
+            row.style.background = 'linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1))';
+            row.style.border = '2px solid rgba(251, 191, 36, 0.3)';
+            
+            // Add badge to first cell
+            const firstCell = row.querySelector('td');
+            if (firstCell && !firstCell.querySelector('.match-badge')) {
+                const badge = document.createElement('span');
+                badge.className = 'match-badge';
+                badge.style.cssText = `
+                    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+                    color: #000;
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 999px;
+                    margin-right: 0.5rem;
+                    display: inline-block;
+                `;
+                badge.textContent = `⭐ ${matchScore}%`;
+                firstCell.insertBefore(badge, firstCell.firstChild);
+            }
+        }
+        
+        // Add checkbox
+        const firstCell = row.querySelector('td');
+        if (firstCell && !row.querySelector('.bulk-select-checkbox')) {
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'bulk-select-checkbox';
+            checkbox.style.cssText = `
+                width: 18px;
+                height: 18px;
+                margin-right: 0.75rem;
+                cursor: pointer;
+            `;
+            
+            checkbox.addEventListener('change', () => {
+                const projectData = JSON.parse(decodeURIComponent(row.getAttribute('data-project')));
+                const projectId = projectData.id;
+                if (checkbox.checked) {
+                    selectedProjects.add(projectId);
+                } else {
+                    selectedProjects.delete(projectId);
+                }
+                updateSelectedCount();
+            });
+            
+            firstCell.insertBefore(checkbox, firstCell.firstChild);
+        }
+        
+        // Add back to tbody
+        tbody.appendChild(row);
+    });
+}
+
+// Calculate if project matches SR branch
+function calculateProjectMatch(project, salesRepBranch) {
+    const branch = (salesRepBranch || '').toLowerCase();
+    const province = (project.project_province || project.province || project.city_province || '').toLowerCase();
+    const region = (project.region || '').toLowerCase();
+    const city = (project.project_city || project.city || '').toLowerCase();
+    
+    let matchScore = 0;
+    let isRecommended = false;
+    
+    // Province match (highest priority)
+    if (province && branch.includes(province)) {
+        matchScore = 100;
+        isRecommended = true;
+    } else if (province && province.includes(branch)) {
+        matchScore = 95;
+        isRecommended = true;
+    }
+    
+    // Region match
+    if (matchScore === 0 && region && branch.includes(region)) {
+        matchScore = 85;
+        isRecommended = true;
+    }
+    
+    // City match
+    if (matchScore === 0 && city && branch.includes(city)) {
+        matchScore = 75;
+        isRecommended = true;
+    }
+    
+    // Special NCR/Manila handling
+    const isNCRProject = region.includes('ncr') || region.includes('manila') || region.includes('national capital') ||
+                         province.includes('manila') || province.includes('metro manila');
+    const isNCRBranch = branch.includes('manila') || branch.includes('ncr') || branch.includes('metro manila') ||
+                        branch.includes('makati') || branch.includes('quezon') || branch.includes('taguig');
+    
+    if (isNCRProject && isNCRBranch) {
+        matchScore = Math.max(matchScore, 90);
+        isRecommended = true;
+    }
+    
+    // Special Cebu handling
+    if ((province.includes('cebu') || region.includes('cebu')) && branch.includes('cebu')) {
+        matchScore = 100;
+        isRecommended = true;
+    }
+    
+    // Special Davao handling
+    if ((province.includes('davao') || region.includes('davao')) && branch.includes('davao')) {
+        matchScore = 100;
+        isRecommended = true;
+    }
+    
+    return { matchScore, isRecommended };
 }
 
 // Show project selection banner

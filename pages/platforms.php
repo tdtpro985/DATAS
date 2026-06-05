@@ -224,6 +224,45 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
+        
+        /* Yes/No Toggle Buttons */
+        .yes-no-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .yes-no-btn {
+            flex: 1;
+            padding: 0.625rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: var(--font);
+        }
+        
+        .yes-no-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .yes-no-btn.active.yes {
+            background: rgba(16, 185, 129, 0.2) !important;
+            border-color: rgba(16, 185, 129, 0.6) !important;
+            color: #10b981 !important;
+            font-weight: 700;
+        }
+        
+        .yes-no-btn.active.no {
+            background: rgba(239, 68, 68, 0.2) !important;
+            border-color: rgba(239, 68, 68, 0.6) !important;
+            color: #ef4444 !important;
+            font-weight: 700;
+        }
 
         /* Platform Leads Table Card */
         .platforms-card {
@@ -394,15 +433,15 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             }
         }
 
-        /* Modal Styles */
+        /* Modal Styles - Centered in Main Content (excluding sidebar) */
         .modal-overlay {
             display: none;
             position: fixed;
             top: 0;
-            left: 0;
+            left: 240px; /* Sidebar width */
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
@@ -420,15 +459,46 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 1rem;
             max-width: 800px;
-            width: 100%;
-            max-height: 90vh;
+            width: 90%;
+            max-height: 85vh;
             overflow-y: auto;
             animation: slideInUp 0.3s ease;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            margin: auto;
         }
 
         .modal-large {
             max-width: 900px;
+        }
+
+        /* Responsive Modal */
+        @media (max-width: 768px) {
+            .modal-overlay {
+                left: 0; /* Full width on mobile (sidebar hidden) */
+            }
+            
+            .modal-content {
+                width: 95%;
+                max-height: 90vh;
+                border-radius: 0.75rem;
+            }
+            
+            .modal-large {
+                max-width: 95%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .modal-content {
+                width: 98%;
+                max-height: 95vh;
+                border-radius: 0.5rem;
+                padding: 0;
+            }
+            
+            .modal-overlay {
+                padding: 0.5rem;
+            }
         }
 
         .modal-header {
@@ -437,6 +507,12 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             justify-content: space-between;
             padding: 1.5rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        
+        @media (max-width: 480px) {
+            .modal-header {
+                padding: 1rem;
+            }
         }
 
         .modal-header h2 {
@@ -447,6 +523,12 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             align-items: center;
             gap: 0.5rem;
             margin: 0;
+        }
+        
+        @media (max-width: 480px) {
+            .modal-header h2 {
+                font-size: 1rem;
+            }
         }
 
         .modal-close {
@@ -801,6 +883,72 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
                     </div>
                 </div>
             </div>
+            
+            <!-- Sales Tracking Section -->
+            <div class="detail-section" style="background: rgba(255, 128, 0, 0.05); border: 1px solid rgba(255, 128, 0, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-top: 1.5rem;">
+                <div class="detail-section-title" style="color: var(--orange-500); margin-bottom: 1rem;">📊 SALES TRACKING</div>
+                
+                <!-- Sales Representative Section -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Sales Representative *</label>
+                    <select id="salesRepSelect" required style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem;">
+                        <option value="">Select SR...</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Branch *</label>
+                    <input type="text" id="branchField" readonly placeholder="Auto-filled from SR" style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem; cursor: not-allowed;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Contacted</div>
+                        <div class="yes-no-buttons">
+                            <button class="yes-no-btn" data-field="contacted" data-value="Yes">Yes</button>
+                            <button class="yes-no-btn" data-field="contacted" data-value="No">No</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Quoted</div>
+                        <div class="yes-no-buttons">
+                            <button class="yes-no-btn" data-field="quoted" data-value="Yes">Yes</button>
+                            <button class="yes-no-btn" data-field="quoted" data-value="No">No</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Sales Qualified Leads</div>
+                        <div class="yes-no-buttons">
+                            <button class="yes-no-btn" data-field="sales_qualified" data-value="Yes">Yes</button>
+                            <button class="yes-no-btn" data-field="sales_qualified" data-value="No">No</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">To Win</div>
+                        <div class="yes-no-buttons">
+                            <button class="yes-no-btn" data-field="to_win" data-value="Yes">Yes</button>
+                            <button class="yes-no-btn" data-field="to_win" data-value="No">No</button>
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">W/L AMOUNT (₱)</div>
+                        <input type="number" id="waAmount" placeholder="0.00" step="0.01" style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem;">
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Remarks *</label>
+                    <textarea id="trackingNotes" placeholder="Enter remarks..." style="width: 100%; min-height: 80px; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem; resize: vertical; font-family: var(--font);"></textarea>
+                </div>
+                
+                <button type="button" class="btn-action btn-primary" onclick="savePlatformTracking()" style="width: 100%;">
+                    💾 Save Sales Tracking
+                </button>
+            </div>
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-action btn-edit" onclick="editPlatform()" id="editBtn">
@@ -990,7 +1138,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // View platform details (enhanced with modal)
-    window.viewPlatformDetails = function(platformId) {
+    window.viewPlatformDetails = async function(platformId) {
         const platform = platforms.find(p => p.id === platformId);
         if (!platform) return;
         
@@ -1018,6 +1166,65 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Store current platform ID for edit/archive operations
         window.currentPlatformId = platformId;
+        
+        // Load sales reps for dropdown
+        try {
+            const response = await fetch('<?= $base ?>/api/v1/users/sales-reps');
+            const salesReps = await response.json();
+            const select = document.getElementById('salesRepSelect');
+            select.innerHTML = '<option value="">Select SR...</option>';
+            salesReps.forEach(sr => {
+                const option = document.createElement('option');
+                option.value = sr.id;
+                option.textContent = `${sr.full_name} - ${sr.branch || 'N/A'}`;
+                option.dataset.branch = sr.branch || '';
+                select.appendChild(option);
+            });
+            
+            // Auto-fill branch on SR selection
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                document.getElementById('branchField').value = selectedOption.dataset.branch || '';
+            });
+        } catch (error) {
+            console.error('Error loading sales reps:', error);
+        }
+        
+        // Load sales tracking data
+        try {
+            const response = await fetch(`<?= $base ?>/api/v1/platforms/tracking?platform_id=${platformId}`);
+            const tracking = await response.json();
+            
+            // Reset all Yes/No buttons
+            document.querySelectorAll('.yes-no-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Set Sales Rep and Branch
+            if (tracking.sales_rep_id) {
+                document.getElementById('salesRepSelect').value = tracking.sales_rep_id;
+                document.getElementById('branchField').value = tracking.branch || '';
+            }
+            
+            // Set tracked values
+            if (tracking.contacted) {
+                document.querySelector(`.yes-no-btn[data-field="contacted"][data-value="${tracking.contacted}"]`)?.classList.add('active');
+            }
+            if (tracking.quoted) {
+                document.querySelector(`.yes-no-btn[data-field="quoted"][data-value="${tracking.quoted}"]`)?.classList.add('active');
+            }
+            if (tracking.sales_qualified) {
+                document.querySelector(`.yes-no-btn[data-field="sales_qualified"][data-value="${tracking.sales_qualified}"]`)?.classList.add('active');
+            }
+            if (tracking.to_win) {
+                document.querySelector(`.yes-no-btn[data-field="to_win"][data-value="${tracking.to_win}"]`)?.classList.add('active');
+            }
+            
+            // Set WA Amount and Notes
+            document.getElementById('waAmount').value = tracking.wa_amount || '0.00';
+            document.getElementById('trackingNotes').value = tracking.notes || '';
+            
+        } catch (error) {
+            console.error('Error loading tracking data:', error);
+        }
         
         // Show modal
         document.getElementById('platformDetailsModal').classList.add('active');
@@ -1118,6 +1325,59 @@ document.addEventListener('DOMContentLoaded', function() {
             saveBtn.innerHTML = '💾 Save Changes';
         }
     };
+    
+    // Save platform sales tracking
+    window.savePlatformTracking = async function() {
+        if (!window.currentPlatformId) return;
+        
+        const trackingData = {
+            platform_id: window.currentPlatformId,
+            contacted: document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value || null,
+            quoted: document.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value || null,
+            sales_qualified: document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value || null,
+            to_win: document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value || null,
+            wa_amount: document.getElementById('waAmount').value || null,
+            notes: document.getElementById('trackingNotes').value || null
+        };
+        
+        try {
+            const response = await fetch('<?= $base ?>/api/v1/platforms/tracking', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(trackingData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showSuccessModal('Sales tracking saved successfully!');
+            } else {
+                throw new Error(result.message || 'Failed to save tracking');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            showErrorModal('Error saving sales tracking: ' + error.message);
+        }
+    };
+    
+    // Handle yes/no button clicks
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('yes-no-btn')) {
+            const field = e.target.dataset.field;
+            const value = e.target.dataset.value;
+            
+            // Remove active from siblings
+            const siblings = e.target.parentElement.querySelectorAll('.yes-no-btn');
+            siblings.forEach(btn => {
+                btn.classList.remove('active', 'yes', 'no');
+            });
+            
+            // Add active to clicked button
+            e.target.classList.add('active', value.toLowerCase());
+        }
+    });
     
     // Archive platform
     window.archivePlatform = async function() {

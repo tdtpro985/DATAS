@@ -505,12 +505,9 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <div class="form-grid">
                             <div class="form-group">
                                 <label for="source" data-required=" *">Source</label>
-                                <select id="source" name="source" required>
-                                    <option value="">Select source</option>
-                                    <option value="DPWH">DPWH</option>
-                                    <option value="BCI">BCI</option>
-                                    <option value="EGOV">EGOV</option>
-                                </select>
+                                <input type="text" id="source" name="source" required placeholder="Type source (e.g., Facebook, DPWH, BCI)" list="sourceSuggestions" autocomplete="off">
+                                <datalist id="sourceSuggestions">
+                                </datalist>
                             </div>
                             
                             <div class="form-group">
@@ -582,10 +579,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submitBtn');
     const clearBtn = document.getElementById('clearBtn');
     const successMessage = document.getElementById('successMessage');
+    const sourceInput = document.getElementById('source');
+    const sourceSuggestions = document.getElementById('sourceSuggestions');
+    
+    // Load and populate source suggestions from localStorage
+    function loadSourceSuggestions() {
+        const savedSources = JSON.parse(localStorage.getItem('platformSources') || '[]');
+        sourceSuggestions.innerHTML = savedSources.map(src => `<option value="${src}">`).join('');
+    }
+    
+    // Save new source to localStorage
+    function saveSourceSuggestion(source) {
+        if (!source || source.trim().length < 2) return;
+        
+        const savedSources = JSON.parse(localStorage.getItem('platformSources') || '[]');
+        const trimmedSource = source.trim();
+        
+        if (!savedSources.includes(trimmedSource)) {
+            savedSources.push(trimmedSource);
+            localStorage.setItem('platformSources', JSON.stringify(savedSources));
+            loadSourceSuggestions();
+        }
+    }
+    
+    // Load suggestions on page load
+    loadSourceSuggestions();
+    
+    // Save source on blur
+    sourceInput.addEventListener('blur', function() {
+        saveSourceSuggestion(this.value);
+    });
     
     // Form submission
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
+        
+        // Save source before submitting
+        saveSourceSuggestion(sourceInput.value);
         
         // Validate required fields
         const requiredFields = ['source', 'contactPerson', 'contactNumber', 'emailAddress'];
