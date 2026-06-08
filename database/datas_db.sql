@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2026 at 07:27 AM
+-- Generation Time: Jun 08, 2026 at 08:47 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -621,27 +621,6 @@ INSERT INTO `platform_leads` (`id`, `source`, `company_name`, `contact_person`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `platform_tracking`
---
-
-CREATE TABLE `platform_tracking` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `platform_id` int(11) NOT NULL,
-  `sales_rep_id` int(10) UNSIGNED DEFAULT NULL,
-  `contacted` enum('Yes','No') DEFAULT NULL COMMENT 'Has the lead been contacted?',
-  `quoted` enum('Yes','No') DEFAULT NULL COMMENT 'Has a quote been provided?',
-  `sales_qualified` enum('Yes','No') DEFAULT NULL COMMENT 'Is this a Sales Qualified Lead?',
-  `to_win` enum('Yes','No') DEFAULT NULL COMMENT 'Is this lead won?',
-  `wa_amount` decimal(18,2) DEFAULT 0.00 COMMENT 'Weighted Amount',
-  `notes` text DEFAULT NULL COMMENT 'Sales tracking notes',
-  `branch` varchar(100) DEFAULT NULL COMMENT 'Sales rep branch',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `priority_alerts`
 --
 
@@ -661,7 +640,8 @@ INSERT INTO `priority_alerts` (`id`, `project_id`, `alerted_at`) VALUES
 (3, 10, '2026-06-03 09:56:31'),
 (4, 11, '2026-06-03 11:00:12'),
 (5, 12, '2026-06-03 11:07:52'),
-(9, 13, '2026-06-03 11:24:48');
+(9, 13, '2026-06-03 11:24:48'),
+(23, 28, '2026-06-05 13:41:50');
 
 -- --------------------------------------------------------
 
@@ -831,7 +811,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `full_name`, `password_hash`, `role`, `branch`, `totp_secret`, `reset_requested`, `created_at`, `updated_at`) VALUES
-(1, 'superadmin@tdtpowersteel.com', 'System Administrator', '$2y$12$Tj.fscI5lyErHx.JRysj/OLgbWVQFSkh2000qKYPCRK2HqEJuH82C', 'superadmin', NULL, NULL, 0, '2026-05-28 16:14:50', '2026-06-05 13:25:23'),
+(1, 'superadmin@tdtpowersteel.com', 'System Administrator', '$2y$12$Tj.fscI5lyErHx.JRysj/OLgbWVQFSkh2000qKYPCRK2HqEJuH82C', 'superadmin', NULL, NULL, 0, '2026-05-28 16:14:50', '2026-06-08 08:17:32'),
 (2, 'encoder@tdtpowersteel.com', 'Sample Encoder', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'encoder', NULL, NULL, 0, '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
 (3, 'sales@tdtpowersteel.com', 'Sample Sales Rep', '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'sales_rep', 'Manila Branch', NULL, 0, '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
 (4, 'akotosijek@gmail.com', 'Jaderick Austria', '$2y$12$PZHi8YaYKNDvihgoP1gznOT7AdTn3LLeNhknBHKy1ugaVGF4kY6yq', 'encoder', NULL, NULL, 0, '2026-05-28 16:48:27', '2026-06-01 09:00:53');
@@ -885,7 +865,9 @@ INSERT INTO `user_sessions` (`id`, `user_id`, `session_id`, `ip_address`, `user_
 (26, 1, 'dtdpj5m2tc7va8m8p979f1grtf', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-03 13:13:22', '2026-06-03 13:13:22'),
 (27, 1, 'g2bdoo4ektoef9491i4k9edjsm', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-03 13:13:30', '2026-06-03 13:13:30'),
 (28, 1, 'lctt2p60mktk58of0oujbl3b94', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-03 15:31:14', '2026-06-03 15:31:14'),
-(29, 1, '6rolmfeb4lhdf5n1r7u10ebnaf', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-05 13:25:23', '2026-06-05 13:25:23');
+(29, 1, '6rolmfeb4lhdf5n1r7u10ebnaf', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-05 13:25:23', '2026-06-05 13:25:23'),
+(30, 1, 'ptt9rl57lf8vuur9a1cmlah6i7', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/148.0.0.0 Safari/537.36', '2026-06-05 15:50:27', '2026-06-05 15:50:27'),
+(31, 1, 'eubie4452am2r534va48dru7s5', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36', '2026-06-08 08:17:32', '2026-06-08 08:17:32');
 
 --
 -- Indexes for dumped tables
@@ -1025,7 +1007,7 @@ ALTER TABLE `platform_leads`
 -- AUTO_INCREMENT for table `priority_alerts`
 --
 ALTER TABLE `priority_alerts`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `projects`
@@ -1055,7 +1037,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `user_sessions`
 --
 ALTER TABLE `user_sessions`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- Constraints for dumped tables
