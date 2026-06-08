@@ -34,9 +34,10 @@ $db = getDB();
 $where = [];
 $params = [];
 
-// Core logic: Projects that are assigned but have NO sales tracking data
+// Core logic: Projects that are assigned but have NO sales tracking data and are not archived
 $where[] = 'p.assigned_to IS NOT NULL';  // Must be assigned
 $where[] = 'st.project_id IS NULL';      // Must have NO sales tracking data
+$where[] = 'p.archived_at IS NULL';      // Not archived
 
 // Additional filters
 if ($status && $status !== 'all') {

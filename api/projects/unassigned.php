@@ -27,8 +27,8 @@ $search = qp('search', '');
 
 $db = getDB();
 
-// Build WHERE clause - check if project has NO assignment (assigned_to IS NULL)
-$where = ['p.assigned_to IS NULL']; // No assignment
+// Build WHERE clause - check if project has NO assignment (assigned_to IS NULL) and is not archived
+$where = ['p.assigned_to IS NULL', 'p.archived_at IS NULL']; // No assignment and not archived
 $params = [];
 
 if ($status && $status !== 'all') {

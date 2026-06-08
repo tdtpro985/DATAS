@@ -1164,6 +1164,14 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+            
+            <!-- Archive/Restore Button for Admins and Superadmins -->
+            <button type="button" class="btn-delete role-only--admin role-only--superadmin" 
+                    onclick="toggleProjectArchive()" id="archiveBtn" 
+                    style="display: none;">
+                🗄️ Archive Project
+            </button>
+            
             <button type="button" class="btn-primary btn-save role-only--superadmin role-only--admin role-only--sales_rep" onclick="saveSalesTracking()">💾 Save Sales Tracking</button>
         </div>
     </div>

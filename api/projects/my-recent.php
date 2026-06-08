@@ -24,7 +24,8 @@ $stmt = $db->prepare("
         project_value,
         created_at
     FROM projects
-    WHERE encoded_by = :uid
+    WHERE encoded_by = :uid 
+    AND archived_at IS NULL
     ORDER BY created_at DESC
     LIMIT 10
 ");

@@ -35,6 +35,12 @@ if ($role === 'sales_rep') {
     header('Location: ' . $base . '/');
     exit;
 }
+
+// Only admins and superadmins can view archived projects
+if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
+    header('Location: ' . $base . '/projects-management?view=unassigned');
+    exit;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -982,7 +988,8 @@ if ($role === 'sales_rep') {
                     'unassigned' => 'Projects without assigned sales representative',
                     'assigned' => 'Projects with assigned sales representative',
                     'unprocessed' => 'Projects without sales tracking',
-                    'processed' => 'Projects with sales tracking'
+                    'processed' => 'Projects with sales tracking',
+                    'archived' => 'Archived projects (admin/superadmin only)'
                 ];
                 echo $viewTitles[$currentView] ?? 'Manage project assignments and sales tracking';
                 ?>
@@ -1203,6 +1210,14 @@ if ($role === 'sales_rep') {
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+            
+            <!-- Archive/Restore Button for Admins and Superadmins -->
+            <button type="button" class="btn-delete role-only--admin role-only--superadmin" 
+                    onclick="toggleProjectArchive()" id="archiveBtn" 
+                    style="display: none;">
+                🗄️ Archive Project
+            </button>
+            
             <button type="button" class="btn-primary role-only--superadmin role-only--admin role-only--sales_rep" onclick="saveSalesTracking()">💾 Save Sales Tracking</button>
             <button type="button" class="btn-primary" onclick="openAssignModal()" id="assignBtn" style="display: none;">Assign to Sales Rep</button>
             <button type="button" class="btn-primary role-only--superadmin role-only--admin role-only--sales_rep" onclick="openTrackingModal()" id="trackingBtn" style="display: none;">Sales Tracking</button>

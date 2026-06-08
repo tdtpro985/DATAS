@@ -34,8 +34,9 @@ $db = getDB();
 $where = [];
 $params = [];
 
-// Core logic: Projects that have sales tracking data (any tracking activity)
+// Core logic: Projects that have sales tracking data (any tracking activity) and are not archived
 $where[] = 'st.project_id IS NOT NULL';  // Must have sales tracking data
+$where[] = 'p.archived_at IS NULL';      // Not archived
 
 // Additional filters
 if ($status && $status !== 'all') {

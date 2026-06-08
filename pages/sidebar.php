@@ -107,6 +107,9 @@ try {
                     <a href="<?= $base ?>/projects-management?view=processed" class="ap-nav-dropdown-item">
                         <span class="ap-nav-label">Processed Projects</span>
                     </a>
+                    <a href="<?= $base ?>/projects-management?view=archived" class="ap-nav-dropdown-item role-only--admin role-only--superadmin">
+                        <span class="ap-nav-label">🗄️ Archived Projects</span>
+                    </a>
                 </div>
             </div>
             
@@ -325,6 +328,8 @@ function updatePageTitle() {
             pageTitle.textContent = 'Unprocessed Projects';
         } else if (search.includes('view=processed')) {
             pageTitle.textContent = 'Processed Projects';
+        } else if (search.includes('view=archived')) {
+            pageTitle.textContent = 'Archived Projects';
         } else {
             pageTitle.textContent = 'Project Management';
         }

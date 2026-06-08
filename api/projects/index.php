@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $db = getDB();
 
-        // Get total count
-        $countStmt = $db->query('SELECT COUNT(*) as cnt FROM projects');
+        // Get total count (exclude archived projects)
+        $countStmt = $db->query('SELECT COUNT(*) as cnt FROM projects WHERE archived_at IS NULL');
         $countRow = $countStmt->fetch();
         $total = (int)$countRow['cnt'];
 
@@ -38,6 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $db->prepare("
             SELECT p.*
             FROM projects p
+            WHERE p.archived_at IS NULL
             ORDER BY p.created_at DESC
             LIMIT :size OFFSET :offset
         ");

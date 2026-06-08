@@ -880,6 +880,29 @@ const ProjectsPage = {
             }
         }, 0);
         
+        // Show/Hide Archive Button based on user role and project archive status
+        const archiveBtn = document.getElementById('archiveBtn');
+        const userRole = document.body.dataset.role || '';
+        
+        if (archiveBtn && (userRole === 'admin' || userRole === 'superadmin')) {
+            const isArchived = project.archived_at !== null && project.archived_at !== undefined;
+            
+            if (isArchived) {
+                archiveBtn.innerHTML = '📤 Restore Project';
+                archiveBtn.className = 'btn-action btn-secondary';
+                archiveBtn.title = `Archived on ${project.archived_at}`;
+            } else {
+                archiveBtn.innerHTML = '🗄️ Archive Project';
+                archiveBtn.className = 'btn-action btn-delete';
+                archiveBtn.title = 'Move project to archive';
+            }
+            
+            archiveBtn.style.display = 'inline-flex';
+            
+            // Store project ID for archive function
+            modal.dataset.projectId = projectId;
+        }
+        
         modal.classList.add('active');
     },
     
@@ -1425,4 +1448,272 @@ function saveSalesTracking() {
     if (projectId) {
         ProjectsPage.saveSalesTracking(projectId);
     }
+}
+
+// ============================================================================
+// ARCHIVE FUNCTIONALITY FOR PROJECTS.JS
+// ============================================================================
+
+/**
+ * Toggle project archive/restore
+ */
+async function toggleProjectArchive() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = modal?.dataset?.projectId;
+    
+    if (!projectId) {
+        console.error('No project ID found');
+        return;
+    }
+    
+    // Find the project to check current archive status
+    const project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    
+    if (!project) {
+        console.error('Project not found');
+        return;
+    }
+    
+    const isArchived = project.archived_at !== null && project.archived_at !== undefined;
+    const action = isArchived ? 'restore' : 'archive';
+    const actionText = isArchived ? 'Restore' : 'Archive';
+    
+    // Show confirmation dialog
+    const confirmed = await showConfirmationModal(
+        `${actionText} Project`,
+        `Are you sure you want to ${action} "${project.project_name || 'this project'}"?`,
+        isArchived ? 'warning' : 'danger'
+    );
+    
+    if (!confirmed) return;
+    
+    try {
+        // Show loading state
+        const archiveBtn = document.getElementById('archiveBtn');
+        if (archiveBtn) {
+            archiveBtn.innerHTML = '⏳ Processing...';
+            archiveBtn.disabled = true;
+        }
+        
+        // Call archive API
+        const method = isArchived ? 'PUT' : 'POST';
+        const response = await fetch(`${BASE}/api/v1/projects/archive`, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ project_id: parseInt(projectId) })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success notification
+            showNotificationToast(
+                `Project ${isArchived ? 'restored' : 'archived'} successfully`,
+                'success'
+            );
+            
+            // Close modal
+            closeDetailsModal();
+            
+            // Refresh the projects list
+            ProjectsPage.loadProjects();
+            
+        } else {
+            throw new Error(result.message || `Failed to ${action} project`);
+        }
+        
+    } catch (error) {
+        console.error('Archive error:', error);
+        
+        // Show error notification
+        showNotificationToast(
+            `Failed to ${action} project: ${error.message}`,
+            'error'
+        );
+        
+        // Reset button state
+        const archiveBtn = document.getElementById('archiveBtn');
+        if (archiveBtn) {
+            archiveBtn.innerHTML = isArchived ? '📤 Restore Project' : '🗄️ Archive Project';
+            archiveBtn.disabled = false;
+        }
+    }
+}
+
+/**
+ * Show notification toast
+ */
+function showNotificationToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 10000;
+        max-width: 400px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        border-radius: 0.75rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        font-weight: 600;
+        font-size: 0.9rem;
+    `;
+    
+    // Add icon based on type
+    const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+    toast.innerHTML = `${icon} ${message}`;
+    
+    // Add to document
+    document.body.appendChild(toast);
+    
+    // Animate in
+    setTimeout(() => {
+        toast.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Remove after 5 seconds
+    setTimeout(() => {
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }, 5000);
+}
+
+/**
+ * Show confirmation modal
+ */
+function showConfirmationModal(title, message, type = 'warning') {
+    return new Promise((resolve) => {
+        // Create modal elements
+        const overlay = document.createElement('div');
+        overlay.className = 'confirmation-modal-overlay';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            animation: fadeIn 0.2s ease;
+        `;
+        
+        const modal = document.createElement('div');
+        modal.style.cssText = `
+            background: #1e293b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            max-width: 400px;
+            width: 100%;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideInUp 0.3s ease;
+        `;
+        
+        const iconColor = type === 'danger' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6';
+        const icon = type === 'danger' ? '🗑️' : type === 'warning' ? '⚠️' : 'ℹ️';
+        
+        modal.innerHTML = `
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">${icon}</div>
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: white; margin-bottom: 0.5rem;">
+                    ${title}
+                </h3>
+                <p style="color: #94a3b8; line-height: 1.5;">
+                    ${message}
+                </p>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="confirm-cancel-btn" style="
+                    flex: 1;
+                    padding: 0.75rem 1.5rem;
+                    background: rgba(107, 114, 128, 0.2);
+                    border: 1px solid rgba(107, 114, 128, 0.4);
+                    border-radius: 0.75rem;
+                    color: white;
+                    font-size: 0.9rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                ">Cancel</button>
+                
+                <button class="confirm-action-btn" style="
+                    flex: 1;
+                    padding: 0.75rem 1.5rem;
+                    background: ${iconColor};
+                    border: 1px solid ${iconColor};
+                    border-radius: 0.75rem;
+                    color: white;
+                    font-size: 0.9rem;
+                    font-weight: 700;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                ">${title}</button>
+            </div>
+        `;
+        
+        // Add event listeners
+        const cancelBtn = modal.querySelector('.confirm-cancel-btn');
+        const actionBtn = modal.querySelector('.confirm-action-btn');
+        
+        cancelBtn.addEventListener('click', () => {
+            overlay.remove();
+            resolve(false);
+        });
+        
+        actionBtn.addEventListener('click', () => {
+            overlay.remove();
+            resolve(true);
+        });
+        
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+                resolve(false);
+            }
+        });
+        
+        // Add hover effects
+        cancelBtn.addEventListener('mouseenter', () => {
+            cancelBtn.style.background = 'rgba(107, 114, 128, 0.3)';
+        });
+        cancelBtn.addEventListener('mouseleave', () => {
+            cancelBtn.style.background = 'rgba(107, 114, 128, 0.2)';
+        });
+        
+        actionBtn.addEventListener('mouseenter', () => {
+            actionBtn.style.transform = 'translateY(-2px)';
+            actionBtn.style.boxShadow = `0 4px 12px ${iconColor}40`;
+        });
+        actionBtn.addEventListener('mouseleave', () => {
+            actionBtn.style.transform = 'translateY(0)';
+            actionBtn.style.boxShadow = 'none';
+        });
+        
+        // Add to document
+        overlay.appendChild(modal);
+        document.body.appendChild(overlay);
+    });
 }

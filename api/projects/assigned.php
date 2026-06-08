@@ -33,8 +33,8 @@ if ($region && $region !== 'all' && !preg_match('/^[a-zA-Z0-9\s\-,\.\(\)]+$/', $
     jsonError('Invalid region format', 422);
 }
 
-// Build WHERE clause - check if project HAS assignment (assigned_to IS NOT NULL)
-$where = ['p.assigned_to IS NOT NULL']; // Assignment exists
+// Build WHERE clause - check if project HAS assignment and is not archived
+$where = ['p.assigned_to IS NOT NULL', 'p.archived_at IS NULL']; // Assignment exists and not archived
 $params = [];
 
 if ($status && $status !== 'all') {

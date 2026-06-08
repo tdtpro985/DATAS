@@ -85,6 +85,8 @@ elseif (preg_match('#^projects/(\d+)/assign$#', $path, $m))             { $_GET[
 elseif (preg_match('#^projects/(\d+)/unassign$#', $path, $m))           { $_GET['id'] = $m[1]; require __DIR__ . '/projects/unassign.php'; }
 elseif ($path === 'projects/bulk-assign' && $method === 'POST')          { require __DIR__ . '/projects/bulk-assign.php'; }
 elseif ($path === 'projects/bulk-unassign' && $method === 'POST')        { require __DIR__ . '/projects/bulk-unassign.php'; }
+elseif ($path === 'projects/archive' && in_array($method, ['POST', 'PUT']))  { require __DIR__ . '/projects/archive.php'; }
+elseif ($path === 'projects/archived' && $method === 'GET')                  { require __DIR__ . '/projects/archived.php'; }
 elseif (preg_match('#^projects/(\d+)/sales-tracking$#', $path, $m))     { $_GET['id'] = $m[1]; require __DIR__ . '/projects/sales-tracking.php'; }
 elseif ($path === 'users' && in_array($method, ['GET','POST'], true))    { require __DIR__ . '/users/index.php'; }
 elseif (preg_match('#^users/(\d+)$#', $path, $m))                       { $_GET['id'] = $m[1]; require __DIR__ . '/users/user.php'; }
