@@ -26,11 +26,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $page = max(1, (int)qp('page', 1));
         $size = min(500, max(1, (int)qp('size', 50)));
         $offset = ($page - 1) * $size;
+        
+        // Get type filter (for compatibility with frontend calls)
+        $type = trim($_GET['type'] ?? '');
 
         $db = getDB();
 
+        // Build WHERE clause based on type parameter
+        $whereConditions = ['p.archived_at IS NULL'];
+        $params = [];
+        
+        if ($type === 'priority') {
+            $whereConditions[] = "LOWER(TRIM(p.status)) = 'priority'";
+        } elseif ($type === 'non-priority') {
+            $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+        } elseif ($type === 'leads') {
+            // Handle leads type (same as non-priority for compatibility)
+            $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+        }
+        
+        $whereClause = implode(' AND ', $whereConditions);
+
         // Get total count (exclude archived projects)
-        $countStmt = $db->query('SELECT COUNT(*) as cnt FROM projects WHERE archived_at IS NULL');
+        $countQuery = "SELECT COUNT(*) as cnt FROM projects p WHERE " . $whereClause;
+        $countStmt = $db->prepare($countQuery);
+        foreach ($params as $key => $value) {
+            $countStmt->bindValue($key, $value);
+        }
+        $countStmt->execute();
         $countRow = $countStmt->fetch();
         $total = (int)$countRow['cnt'];
 
@@ -38,10 +61,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $db->prepare("
             SELECT p.*
             FROM projects p
-            WHERE p.archived_at IS NULL
+            WHERE " . $whereClause . "
             ORDER BY p.created_at DESC
             LIMIT :size OFFSET :offset
         ");
+        
+        // Bind parameters
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value);
+        }
         $stmt->bindValue(':size', $size, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
