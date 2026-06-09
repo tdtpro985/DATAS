@@ -2071,17 +2071,10 @@ async function toggleProjectArchive() {
                 'success'
             );
             
-            // Close modal
-            closeDetailsModal();
-            
-            // Refresh the projects list
-            loadProjects();
-            
-            // Re-enable button for next action
-            const archiveBtn = document.getElementById('archiveBtn');
-            if (archiveBtn) {
-                archiveBtn.disabled = false;
-            }
+            // Reload the page to refresh everything
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
             
         } else {
             throw new Error(result.message || `Failed to ${action} project`);
