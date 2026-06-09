@@ -1600,7 +1600,17 @@ async function proceedWithBulkUnassignment() {
         return;
     }
     
-    // Proceed directly with unassignment (no confirmation)
+    // Show confirmation modal
+    const confirmed = await showConfirmationModal(
+        'Confirm Bulk Unassignment',
+        `Are you sure you want to unassign ${selectedProjects.size} project(s)? This will remove sales rep assignments.`,
+        'warning'
+    );
+    
+    if (!confirmed) {
+        return;
+    }
+    
     try {
         const unassignmentData = {
             project_ids: Array.from(selectedProjects)
@@ -1629,8 +1639,11 @@ async function proceedWithBulkUnassignment() {
             
             // Exit selection mode and reload projects
             exitProjectSelectionMode();
-            loadProjects();
-            loadCounts();
+            
+            // Reload page after a short delay
+            setTimeout(() => {
+                window.location.reload();
+            }, 1500);
             
         } else {
             const errorData = await response.json();
