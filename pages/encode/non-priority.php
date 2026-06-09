@@ -56,8 +56,9 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
         }
 
         html, body {
-            overflow: hidden;
-            height: 100vh;
+            overflow: auto;
+            height: auto;
+            min-height: 100vh;
             margin: 0;
             padding: 0;
         }
@@ -66,9 +67,9 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
         .dashboard { 
             display: flex; 
             flex-direction: column; 
-            height: 100vh; 
+            min-height: 100vh; 
             padding: 0.1rem; 
-            overflow: hidden;
+            overflow: visible;
             margin-left: 0;
         }
         
@@ -76,8 +77,8 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             flex: 1; 
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 0.2rem);
-            overflow: hidden;
+            min-height: calc(100vh - 0.2rem);
+            overflow: visible;
             padding: 0.3rem;
             margin: 0;
         }
@@ -156,22 +157,22 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             z-index: -1;
         }
 
-        /* Form container with minimal scroll */
+        /* Form container with scroll enabled */
         form {
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            height: calc(100% - 4rem); /* Account for header and step indicator */
+            overflow: visible;
+            min-height: calc(100% - 4rem); /* Account for header and step indicator */
         }
 
         .form-step { 
             display: none; 
             opacity: 0; 
             flex: 1;
-            overflow-y: auto;
+            overflow-y: visible;
             padding-right: 0.3rem;
-            height: 100%;
+            min-height: 100%;
         }
         .form-step.active { 
             display: flex;
@@ -374,12 +375,28 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                 grid-template-columns: repeat(4, 1fr);
                 gap: 1rem;
             }
+            
+            .dashboard { 
+                padding: 1rem; 
+            }
+            
+            .card {
+                padding: 1.5rem;
+            }
         }
 
         @media (min-width: 768px) and (max-width: 1199px) {
             .form-grid {
                 grid-template-columns: repeat(3, 1fr);
                 gap: 0.8rem;
+            }
+            
+            .dashboard { 
+                padding: 0.5rem; 
+            }
+            
+            .card {
+                padding: 1rem;
             }
         }
 
@@ -388,51 +405,113 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.6rem;
             }
+            
+            .dashboard { 
+                padding: 0.5rem; 
+            }
+            
+            .card {
+                padding: 0.8rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .page-header p {
+                font-size: 0.8rem;
+            }
         }
 
         /* Mobile ultra-compact adjustments */
         @media (max-width: 479px) {
+            html, body {
+                overflow-x: hidden;
+            }
+            
             .form-grid {
                 grid-template-columns: 1fr;
-                gap: 0.3rem;
+                gap: 0.5rem;
             }
             
             .dashboard {
-                padding: 0.1rem;
+                padding: 0.5rem;
+                min-height: 100vh;
             }
             
             .card {
-                padding: 0.4rem;
+                padding: 0.8rem;
+            }
+            
+            .page-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .page-header p {
+                font-size: 0.75rem;
+            }
+            
+            .step-indicator {
+                gap: 0.5rem;
+                padding: 0.5rem 0;
+            }
+            
+            .step-badge {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
             }
             
             .form-section {
-                padding: 0.6rem;
-                margin-bottom: 0.3rem;
+                padding: 0.8rem;
+                margin-bottom: 0.5rem;
+            }
+            
+            .form-section h2 {
+                font-size: 0.9rem;
+                margin-bottom: 0.8rem;
             }
             
             .form-group {
-                min-height: 45px;
+                min-height: 50px;
+                gap: 0.25rem;
+            }
+            
+            .form-group label {
+                font-size: 0.7rem;
+                margin-bottom: 0.2rem;
             }
             
             .form-group input,
             .form-group select {
-                min-height: 28px;
-                padding: 0.3rem 0.5rem;
-                font-size: 0.75rem;
+                min-height: 32px;
+                padding: 0.4rem 0.6rem;
+                font-size: 0.8rem;
+            }
+            
+            .form-group select {
+                background-size: 12px;
+                padding-right: 1.8rem;
             }
             
             .btn-primary, .btn-secondary, .btn-success {
-                padding: 0.3rem 0.8rem;
-                font-size: 0.7rem;
+                padding: 0.4rem 1rem;
+                font-size: 0.75rem;
+                min-height: 36px;
             }
             
             .form-buttons {
-                padding: 0.4rem;
-                margin-top: 0.5rem;
+                padding: 0.6rem;
+                margin-top: 0.8rem;
+                gap: 0.6rem;
+            }
+            
+            .form-step {
+                padding-right: 0.5rem;
             }
         }
 
-        /* Scrollbar styling */
+        /* Scrollbar styling - only for very large content */
         .form-step::-webkit-scrollbar {
             width: 6px;
         }
@@ -455,11 +534,36 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             font-size: 0.7rem;
             line-height: 1.3;
         }
-
-        /* Hide empty form groups on mobile */
+        
         @media (max-width: 479px) {
-            .form-group:empty {
-                display: none;
+            .form-step[data-step="3"] .form-section p {
+                font-size: 0.75rem;
+                margin-bottom: 0.8rem;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .page-header h1 {
+                font-size: 1.4rem;
+            }
+            
+            .page-header p {
+                font-size: 0.85rem;
+            }
+            
+            .form-section h2 {
+                font-size: 0.95rem;
+            }
+            
+            .form-group label {
+                font-size: 0.7rem;
+            }
+            
+            .form-group input,
+            .form-group select {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.6rem;
             }
         }
     </style>
