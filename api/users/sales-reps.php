@@ -47,7 +47,7 @@ $pdo = getDB();
 
 // Parse ID from URL if present
 $requestUri = $_SERVER['REQUEST_URI'];
-$pattern = '#/api/users/sales-reps/(\d+)#';
+$pattern = '#/api/v1/users/sales-reps/(\d+)#';
 $userId = null;
 if (preg_match($pattern, $requestUri, $matches)) {
     $userId = (int)$matches[1];
