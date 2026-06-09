@@ -41,11 +41,6 @@ try {
                         }
                         ?>
                     </div>
-                    <?php if ($role === 'superadmin'): ?>
-                    <button type="button" class="credits-btn" onclick="showCreditsModal()" title="Development Team Credits">
-                        <span>ℹ️</span>
-                    </button>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -303,6 +298,7 @@ try {
                 </div>
                 <div class="credits-footer">
                     <p>© 2025 TDT PowerSteel I.S. All rights reserved.</p>
+                    <p style="margin-top: 0.5rem; font-weight: 600; color: var(--orange-500);">SILEP System Version 3.1</p>
                 </div>
             </div>
         </div>
@@ -320,6 +316,11 @@ try {
                     <span class="role-badge-<?= $role ?>" style="padding: 0.25rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
                         <?= $role === 'superadmin' ? 'Superadmin' : ($role === 'admin' ? 'Admin' : ($role === 'encoder' ? 'Encoder' : 'Sales Rep')) ?>
                     </span>
+                    <?php if ($role === 'superadmin'): ?>
+                    <button type="button" class="credits-btn topbar-credits-btn" onclick="showCreditsModal()" title="Development Team Credits">
+                        <span>ℹ️</span>
+                    </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
