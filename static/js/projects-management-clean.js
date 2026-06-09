@@ -395,7 +395,59 @@ function viewProject(projectId) {
     // Simple modal content
     modalBody.innerHTML = `
         <div class="detail-section">
-            <div class="detail-section-title">📋 Project Information</div>
+            <div class="detail-section-title">📋 Basic Information</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Published Date</div>
+                    <div class="detail-value">${project.publication_date || '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Source</div>
+                    <div class="detail-value">${escapeHtml(project.source || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contract ID</div>
+                    <div class="detail-value">${escapeHtml(project.contractor_id || project.contract_id || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contractor Name</div>
+                    <div class="detail-value">${escapeHtml(project.contractor_name || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contact Person</div>
+                    <div class="detail-value">${escapeHtml(project.contact_person || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contact Number</div>
+                    <div class="detail-value">${escapeHtml(project.contact_number || '—')}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-section-title">📍 Contractor Location</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Country</div>
+                    <div class="detail-value">${escapeHtml(project.contract_country || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Region</div>
+                    <div class="detail-value">${escapeHtml(project.contract_region || project.region || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Province</div>
+                    <div class="detail-value">${escapeHtml(project.contract_province || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">City</div>
+                    <div class="detail-value">${escapeHtml(project.contract_city || '—')}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-section-title">🏗️ Project Information</div>
             <div class="detail-grid">
                 <div class="detail-item">
                     <div class="detail-label">Contractor</div>
