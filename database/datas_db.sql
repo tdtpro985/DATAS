@@ -698,8 +698,12 @@ CREATE TABLE `projects` (
   `processed_at` datetime DEFAULT NULL,
   `processed_by` int(10) UNSIGNED DEFAULT NULL,
   `encoded_by` int(10) UNSIGNED DEFAULT NULL,
+  `archived_at` datetime DEFAULT NULL,
+  `archived_by` int(10) UNSIGNED DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  KEY `idx_archived_at` (`archived_at`),
+  KEY `idx_archived_by` (`archived_by`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
