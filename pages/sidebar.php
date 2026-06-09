@@ -175,131 +175,69 @@ try {
     </div>
 
     <!-- Credits Modal -->
-    <div class="modal-overlay" id="creditsModal">
-        <div class="modal-content credits-modal">
-            <div class="modal-header credits-header-section">
-                <div class="credits-header">
-                    <div class="tdt-logo">
-                        <span class="tdt-text">TDT</span><span class="powersteel-text">POWERSTEEL</span>
-                    </div>
-                    <div class="silep-subtitle">Sales Intelligence and Leads Enhancement Program</div>
+    <div class="credits-modal-overlay" id="creditsModal">
+        <div class="credits-modal-container">
+            <button type="button" class="credits-close-btn" onclick="closeCreditsModal()">
+                <span>×</span>
+            </button>
+            
+            <!-- Header Section -->
+            <div class="credits-header">
+                <div class="credits-logo">
+                    <span class="logo-tdt">TDT</span><span class="logo-powersteel">POWERSTEEL</span>
                 </div>
-                <button type="button" class="modal-close" onclick="closeCreditsModal()">×</button>
+                <div class="credits-subtitle">SILEP</div>
+                <div class="credits-tagline">Sales Intelligence and Leads Enhancement Program</div>
             </div>
-            <div class="modal-body">
-                <div class="credits-content">
-                    <div class="development-team-section">
-                        <h3 class="section-title">DEVELOPMENT TEAM</h3>
-                        <div class="team-grid">
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Charles Miranda</div>
-                                    <div class="member-role">DEVELOPER</div>
-                                    <div class="member-contact">📱 09851738149</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Julian IV Florentino</div>
-                                    <div class="member-role">LEAD DEVELOPER</div>
-                                    <div class="member-contact">📱 09950974457</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Jayvee Oozun</div>
-                                    <div class="member-role">UI/UX</div>
-                                    <div class="member-contact">📱 09527857018</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Lord Mungcal</div>
-                                    <div class="member-role">QA</div>
-                                    <div class="member-contact">📱 09948857652</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Jude Aguirre</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09954546234</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Aeron Rodriguez</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09945046234</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Joshua Espinoza</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09519486794</div>
-                                </div>
-                            </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👩‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Azylel Soria</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09565589260</div>
-                                </div>
+            
+            <!-- Team Section -->
+            <div class="credits-body">
+                <div class="team-section">
+                    <h3 class="team-title">DEPLOYMENT TEAM 1</h3>
+                    <div class="team-members">
+                        <div class="member-card">
+                            <div class="member-icon">👨‍💻</div>
+                            <div class="member-info">
+                                <div class="member-name">Homer B. Dela Cruz</div>
+                                <div class="member-role">DATA MINING</div>
+                                <div class="member-contact">09542036542</div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <div class="deployment-team-section">
-                        <h3 class="section-title">DEPLOYMENT TEAM 1</h3>
-                        <div class="team-grid">
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Homer B. Dela Cruz</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09542036542</div>
-                                </div>
+                        
+                        <div class="member-card">
+                            <div class="member-icon">👨‍💻</div>
+                            <div class="member-info">
+                                <div class="member-name">Jaderick Austria</div>
+                                <div class="member-role">DATA MINING</div>
+                                <div class="member-contact">09654525265</div>
                             </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Jaderick Austria</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09654525265</div>
-                                </div>
+                        </div>
+                        
+                        <div class="member-card">
+                            <div class="member-icon">👨‍💻</div>
+                            <div class="member-info">
+                                <div class="member-name">Adrian Carl L. Labutong</div>
+                                <div class="member-role">DATA MINING</div>
+                                <div class="member-contact">09597155554</div>
                             </div>
-                            <div class="team-member">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Adrian Carl L. Labutong</div>
-                                    <div class="member-role">DATA MINING</div>
-                                    <div class="member-contact">📱 09597155554</div>
-                                </div>
-                            </div>
-                            <div class="team-member highlighted">
-                                <div class="member-avatar">👨‍💻</div>
-                                <div class="member-info">
-                                    <div class="member-name">Genless Vivas</div>
-                                    <div class="member-role">DEVELOPER / QA</div>
-                                    <div class="member-contact">📱 09959572648</div>
-                                </div>
+                        </div>
+                        
+                        <div class="member-card featured">
+                            <div class="member-icon">👨‍💻</div>
+                            <div class="member-info">
+                                <div class="member-name">Genless Vivas</div>
+                                <div class="member-role">DEVELOPER / QA</div>
+                                <div class="member-contact">09959572648</div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="credits-footer">
-                    <p>© 2025 TDT PowerSteel I.S. All rights reserved.</p>
-                    <p style="margin-top: 0.5rem; font-weight: 600; color: var(--orange-500);">SILEP System Version 3.1</p>
-                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="credits-footer">
+                <div class="footer-copyright">© 2025 TDT PowerSteel I.S. All rights reserved.</div>
+                <div class="footer-version">SILEP System Version 3.2</div>
             </div>
         </div>
     </div>

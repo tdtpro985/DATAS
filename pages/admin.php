@@ -52,7 +52,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=2">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
 </head>
 
 <body data-role="<?= $role ?>">
