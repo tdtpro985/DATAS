@@ -6,6 +6,10 @@
  * PUT  - Restore an archived project  
  */
 
+// Enable error logging
+error_reporting(E_ALL);
+ini_set('log_errors', '1');
+
 require_once '../db.php';
 require_once '../helpers.php';
 
@@ -15,7 +19,14 @@ try {
     
     $method = $_SERVER['REQUEST_METHOD'];
     $userId = $user['id'];
-    $db = getDB();
+    
+    // Get database connection
+    try {
+        $db = getDB();
+    } catch (Exception $e) {
+        error_log('Archive API - Failed to get database connection: ' . $e->getMessage());
+        jsonError('Database connection failed', 500);
+    }
     
     if ($method === 'POST') {
         handleArchive($db, $userId);
@@ -27,6 +38,7 @@ try {
     
 } catch (Exception $e) {
     error_log('Archive API error: ' . $e->getMessage());
+    error_log('Stack trace: ' . $e->getTraceAsString());
     jsonError('Internal server error: ' . $e->getMessage(), 500);
 }
 
