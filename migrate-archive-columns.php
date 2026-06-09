@@ -1,4 +1,4 @@
-<?php
+`<?php
 /**
  * Migration Script: Add Archive Columns to Projects Table
  * 

@@ -499,6 +499,66 @@ function viewProject(projectId) {
                 </div>
             </div>
         </div>
+
+        <!-- Sales Tracking Section -->
+        <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
+            <div class="sales-tracking-title">📊 Sales Tracking</div>
+            <div class="sales-form-grid">
+                <div class="sales-form-group">
+                    <label class="sales-form-label">Contacted</label>
+                    <div class="yes-no-buttons">
+                        <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
+                        <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
+                    </div>
+                </div>
+                
+                <div class="sales-form-group">
+                    <label class="sales-form-label">Quoted</label>
+                    <div class="yes-no-buttons">
+                        <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
+                        <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
+                    </div>
+                </div>
+                
+                <div class="sales-form-group">
+                    <label class="sales-form-label">Sales Qualified Leads</label>
+                    <div class="yes-no-buttons">
+                        <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="yes">Yes</button>
+                        <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
+                    </div>
+                </div>
+                
+                <div class="sales-form-group">
+                    <label class="sales-form-label">To Win</label>
+                    <div class="yes-no-buttons">
+                        <button type="button" class="yes-no-btn" data-field="to_win" data-value="yes">Yes</button>
+                        <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
+                    </div>
+                </div>
+                
+                <div class="sales-form-group" data-role-access="superadmin,admin">
+                    <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
+                    <select class="sales-form-select" id="sales-rep-select">
+                        <option value="">Select SR...</option>
+                    </select>
+                </div>
+                
+                <div class="sales-form-group" data-role-access="superadmin,admin">
+                    <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
+                    <input type="text" class="sales-form-input" id="branch-input" readonly placeholder="Auto-filled from SR">
+                </div>
+                
+                <div class="sales-form-group">
+                    <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color: #ff7070; display: none;">*</span></label>
+                    <input type="number" class="sales-form-input" id="wl-amount-input" placeholder="0.00" step="0.01" min="0">
+                </div>
+                
+                <div class="sales-form-group">
+                    <label class="sales-form-label">Remarks <span style="color: #ff7070;">*</span></label>
+                    <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..."></textarea>
+                </div>
+            </div>
+        </div>
     `;
 
     // Show/Hide Archive Button based on user role and project archive status
