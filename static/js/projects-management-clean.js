@@ -424,6 +424,9 @@ function viewProject(projectId) {
     if (archiveBtn && (userRole === 'admin' || userRole === 'superadmin')) {
         const isArchived = project.archived_at !== null && project.archived_at !== undefined;
         
+        // Reset button state
+        archiveBtn.disabled = false;
+        
         if (isArchived) {
             archiveBtn.innerHTML = '📤 Restore Project';
             archiveBtn.className = 'btn-action btn-secondary';
@@ -2066,6 +2069,12 @@ async function toggleProjectArchive() {
             
             // Refresh the projects list
             loadProjects();
+            
+            // Re-enable button for next action
+            const archiveBtn = document.getElementById('archiveBtn');
+            if (archiveBtn) {
+                archiveBtn.disabled = false;
+            }
             
         } else {
             throw new Error(result.message || `Failed to ${action} project`);
