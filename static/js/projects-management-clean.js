@@ -392,7 +392,9 @@ function viewProject(projectId) {
         return;
     }
 
-    // Simple modal content
+    const value = (project.project_value || 0).toLocaleString('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
+    
+    // Complete modal content matching projects.js
     modalBody.innerHTML = `
         <div class="detail-section">
             <div class="detail-section-title">📋 Basic Information</div>
@@ -433,7 +435,7 @@ function viewProject(projectId) {
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Region</div>
-                    <div class="detail-value">${escapeHtml(project.contract_region || project.region || '—')}</div>
+                    <div class="detail-value">${escapeHtml(project.contract_region || '—')}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Province</div>
@@ -447,23 +449,53 @@ function viewProject(projectId) {
         </div>
 
         <div class="detail-section">
-            <div class="detail-section-title">🏗️ Project Information</div>
+            <div class="detail-section-title">🏗️ Project Details</div>
             <div class="detail-grid">
                 <div class="detail-item">
-                    <div class="detail-label">Contractor</div>
-                    <div class="detail-value">${escapeHtml(project.contractor_name || '—')}</div>
+                    <div class="detail-label">Project ID</div>
+                    <div class="detail-value">${escapeHtml(project.project_id || project.id || '—')}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Project Name</div>
                     <div class="detail-value">${escapeHtml(project.project_name || '—')}</div>
                 </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-section-title">📍 Project Location</div>
+            <div class="detail-grid">
                 <div class="detail-item">
-                    <div class="detail-label">Region</div>
-                    <div class="detail-value">${escapeHtml(project.region || '—')}</div>
+                    <div class="detail-label">Country</div>
+                    <div class="detail-value">${escapeHtml(project.project_country || '—')}</div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">Status</div>
-                    <div class="detail-value">${escapeHtml(project.status || '—')}</div>
+                    <div class="detail-label">Region</div>
+                    <div class="detail-value">${escapeHtml(project.project_region || project.region || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Province</div>
+                    <div class="detail-value">${escapeHtml(project.project_province || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">City</div>
+                    <div class="detail-value">${escapeHtml(project.project_city || '—')}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="detail-section">
+            <div class="detail-section-title">💰 Project Information</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Project Value</div>
+                    <div class="detail-value large">${value}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Project Status</div>
+                    <div class="detail-value">
+                        <span class="status-badge status-${(project.status || '').toLowerCase().replace(/\s+/g, '-')}">${escapeHtml(project.status || '—')}</span>
+                    </div>
                 </div>
             </div>
         </div>
