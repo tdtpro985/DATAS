@@ -84,13 +84,36 @@ body.modal-open {
     width: 100%;
     max-width: 920px;
     max-height: 90vh;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
     animation: modalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 
         0 30px 60px rgba(0, 0, 0, 0.9),
         0 0 0 1px rgba(218, 139, 85, 0.1),
         inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Custom Scrollbar */
+.credits-modal-container::-webkit-scrollbar {
+    width: 8px;
+}
+
+.credits-modal-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+.credits-modal-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(218, 139, 85, 0.6) 0%, rgba(218, 139, 85, 0.4) 100%);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.credits-modal-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(218, 139, 85, 0.8) 0%, rgba(218, 139, 85, 0.6) 100%);
 }
 
 @keyframes modalSlideIn {
@@ -150,6 +173,7 @@ body.modal-open {
     text-align: center;
     position: relative;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
 .credits-header::before {
@@ -209,7 +233,7 @@ body.modal-open {
     font-size: 1.8rem;
     font-weight: 800;
     color: #fff;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.3em;
     margin-bottom: 16px;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(10px);
@@ -230,6 +254,7 @@ body.modal-open {
     padding: 50px 40px;
     background: linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
     position: relative;
+    flex: 1;
 }
 
 .credits-body::before {
@@ -474,6 +499,7 @@ body.modal-open {
     border-top: 2px solid rgba(218, 139, 85, 0.2);
     padding: 28px 40px;
     position: relative;
+    flex-shrink: 0;
 }
 
 .credits-footer::before {

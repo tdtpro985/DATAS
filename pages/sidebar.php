@@ -189,7 +189,7 @@ try {
                     <div class="credits-logo">
                         <span class="logo-tdt">TDT</span><span class="logo-powersteel">POWERSTEEL</span>
                     </div>
-                    <div class="credits-badge">SILEP</div>
+                    <div class="credits-badge">DATAS</div>
                 </div>
                 <div class="credits-tagline">Sales Intelligence and Leads Enhancement Program</div>
             </div>
@@ -281,7 +281,7 @@ try {
                     </div>
                     <div class="footer-version">
                         <span class="version-label">DATAS</span>
-                        <span class="version-number">V3.4</span>
+                        <span class="version-number">V3.5</span>
                     </div>
                 </div>
             </div>
