@@ -191,7 +191,7 @@ try {
                     </div>
                     <div class="credits-badge">DATAS</div>
                 </div>
-                <div class="credits-tagline">Sales Intelligence and Leads Enhancement Program</div>
+                <div class="credits-tagline">Data-Allocation, Tracking and Assigning System</div>
             </div>
             
             <!-- Team Section -->
@@ -204,6 +204,26 @@ try {
                     </div>
                     
                     <div class="team-members">
+                        <div class="member-card featured">
+                            <div class="member-icon">
+                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="16" cy="12" r="5" fill="currentColor"/>
+                                    <path d="M6 26C6 21 10 18 16 18C22 18 26 21 26 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <div class="member-info">
+                                <div class="member-name">Genless Vivas</div>
+                                <div class="member-role">DEVELOPER / QA</div>
+                                <div class="member-contact">09959572648</div>
+                            </div>
+                            <div class="member-shine"></div>
+                            <div class="featured-badge">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                                    <path d="M8 1L10 6H15L11 9L13 14L8 11L3 14L5 9L1 6H6L8 1Z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        
                         <div class="member-card">
                             <div class="member-icon">
                                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -248,26 +268,6 @@ try {
                             </div>
                             <div class="member-shine"></div>
                         </div>
-                        
-                        <div class="member-card featured">
-                            <div class="member-icon">
-                                <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="16" cy="12" r="5" fill="currentColor"/>
-                                    <path d="M6 26C6 21 10 18 16 18C22 18 26 21 26 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                            </div>
-                            <div class="member-info">
-                                <div class="member-name">Genless Vivas</div>
-                                <div class="member-role">DEVELOPER / QA</div>
-                                <div class="member-contact">09959572648</div>
-                            </div>
-                            <div class="member-shine"></div>
-                            <div class="featured-badge">
-                                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                                    <path d="M8 1L10 6H15L11 9L13 14L8 11L3 14L5 9L1 6H6L8 1Z"/>
-                                </svg>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -281,7 +281,7 @@ try {
                     </div>
                     <div class="footer-version">
                         <span class="version-label">DATAS</span>
-                        <span class="version-number">V3.5</span>
+                        <span class="version-number">V3.6</span>
                     </div>
                 </div>
             </div>
