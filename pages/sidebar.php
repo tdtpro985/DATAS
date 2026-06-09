@@ -237,7 +237,7 @@ try {
             <!-- Footer -->
             <div class="credits-footer">
                 <div class="footer-copyright">© 2025 TDT PowerSteel I.S. All rights reserved.</div>
-                <div class="footer-version">SILEP System Version 3.2</div>
+                <div class="footer-version">SILEP System Version 3.3</div>
             </div>
         </div>
     </div>

@@ -55,6 +55,7 @@ $currentView = $_GET['view'] ?? 'assigned';
     <link rel="stylesheet" href="<?= $base ?>/static/css/roles.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     
     <style>
         /* ── Modal Styling (matching projects.php and projects-management.php) ── */

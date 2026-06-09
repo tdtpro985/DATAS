@@ -66,6 +66,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     
     <style>
         /* ── Project Details Modal Styling (matching projects.php) ── */

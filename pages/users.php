@@ -38,6 +38,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=23">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <style>
         .password-field {
             position: relative;
