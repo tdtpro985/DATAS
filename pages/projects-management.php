@@ -1214,7 +1214,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             
             <!-- Archive/Restore Button for Admins and Superadmins -->
             <button type="button" class="btn-delete role-only--admin role-only--superadmin" 
-                    onclick="toggleProjectArchive()" id="archiveBtn" 
+                    id="archiveBtn" 
                     style="display: none;">
                 🗄️ Archive Project
             </button>

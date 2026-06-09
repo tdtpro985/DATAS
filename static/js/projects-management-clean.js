@@ -424,20 +424,27 @@ function viewProject(projectId) {
     if (archiveBtn && (userRole === 'admin' || userRole === 'superadmin')) {
         const isArchived = project.archived_at !== null && project.archived_at !== undefined;
         
+        // Remove old click handler and add fresh one
+        const newArchiveBtn = archiveBtn.cloneNode(true);
+        archiveBtn.parentNode.replaceChild(newArchiveBtn, archiveBtn);
+        
         // Reset button state
-        archiveBtn.disabled = false;
+        newArchiveBtn.disabled = false;
         
         if (isArchived) {
-            archiveBtn.innerHTML = '📤 Restore Project';
-            archiveBtn.className = 'btn-action btn-secondary';
-            archiveBtn.title = `Archived on ${project.archived_at}`;
+            newArchiveBtn.innerHTML = '📤 Restore Project';
+            newArchiveBtn.className = 'btn-action btn-secondary';
+            newArchiveBtn.title = `Archived on ${project.archived_at}`;
         } else {
-            archiveBtn.innerHTML = '🗄️ Archive Project';
-            archiveBtn.className = 'btn-action btn-delete';
-            archiveBtn.title = 'Move project to archive';
+            newArchiveBtn.innerHTML = '🗄️ Archive Project';
+            newArchiveBtn.className = 'btn-action btn-delete';
+            newArchiveBtn.title = 'Move project to archive';
         }
         
-        archiveBtn.style.display = 'inline-flex';
+        newArchiveBtn.style.display = 'inline-flex';
+        
+        // Add click handler
+        newArchiveBtn.addEventListener('click', toggleProjectArchive);
     }
 
     modal.dataset.projectId = projectId;
