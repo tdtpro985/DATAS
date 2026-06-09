@@ -529,10 +529,12 @@ function updatePageTitle() {
 
 // Credits modal functions
 function showCreditsModal() {
+    document.body.classList.add('modal-open');
     document.getElementById('creditsModal').classList.add('active');
 }
 
 function closeCreditsModal() {
+    document.body.classList.remove('modal-open');
     document.getElementById('creditsModal').classList.remove('active');
 }
 
