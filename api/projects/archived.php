@@ -5,48 +5,29 @@
  * GET - List archived projects (admin/superadmin only)
  */
 
-require_once '../db.php';
-require_once '../helpers.php';
+require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../helpers.php';
 
-header('Content-Type: application/json');
-setCORSHeaders();
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Check authentication
-session_start();
-if (!isset($_SESSION['user']) || !$_SESSION['user']) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-    exit();
-}
-
-$user = $_SESSION['user'];
-$userRole = $user['role'];
+$user = requireAuth();
+$userRole = $user['role'] ?? '';
 
 // Only admins and superadmins can view archived projects
-if (!in_array($userRole, ['admin', 'superadmin'])) {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Access denied']);
-    exit();
+if (!in_array($userRole, ['admin', 'superadmin'], true)) {
+    jsonError('Access denied', 403);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    handleGetArchived();
-} else {
-    http_response_code(405);
-    echo json_encode(['success' => false, 'message' => 'Method not allowed']);
+if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+    jsonError('Method not allowed', 405);
 }
+
+handleGetArchived();
 
 /**
  * Get archived projects with pagination and filtering
  */
 function handleGetArchived() {
     try {
-        $pdo = getDbConnection();
+        $pdo = getDB();
         
         // Get pagination parameters
         $page = max(1, (int)($_GET['page'] ?? 1));
@@ -140,8 +121,8 @@ function handleGetArchived() {
         
     } catch (Exception $e) {
         error_log('Archived projects API error: ' . $e->getMessage());
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Internal server error']);
+        error_log('Stack trace: ' . $e->getTraceAsString());
+        jsonError('Internal server error: ' . $e->getMessage(), 500);
     }
 }
 ?>
