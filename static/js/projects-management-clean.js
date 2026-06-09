@@ -593,6 +593,11 @@ function viewProject(projectId) {
 
     modal.dataset.projectId = projectId;
     modal.classList.add('active');
+    
+    // Setup sales tracking functionality (matching projects.js)
+    setTimeout(() => {
+        setupProjectModalSalesTracking(projectId);
+    }, 0);
 }
 
 // ============================================================================
@@ -2476,4 +2481,285 @@ function showConfirmationModal(title, message, type = 'warning') {
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
     });
+}
+
+
+// ============================================================================
+// SALES TRACKING FUNCTIONS (Copied from projects.js)
+// ============================================================================
+
+async function setupProjectModalSalesTracking(projectId) {
+    // Setup yes/no buttons
+    setupProgressiveFieldsPM();
+    
+    // Load sales reps for admin/superadmin
+    const userRole = document.body.dataset.role;
+    if (userRole === 'admin' || userRole === 'superadmin') {
+        await loadSalesRepsPM();
+    }
+    
+    // Load existing sales tracking data
+    await loadSalesTrackingDataPM(projectId);
+}
+
+function setupProgressiveFieldsPM() {
+    const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+    
+    // Clear all button states first
+    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+        btn.classList.remove('active', 'yes', 'no');
+    });
+    
+    // Update field states
+    updateFieldStatesPM();
+    
+    // Setup button handlers
+    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const field = e.target.dataset.field;
+            const value = e.target.dataset.value;
+            
+            // Check if field is enabled
+            if (!isFieldEnabledPM(field)) {
+                showNotificationModal('Warning', 'Please complete the previous fields first', 'warning');
+                return;
+            }
+            
+            // Update button states
+            const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+            buttons.forEach(b => {
+                b.classList.remove('active', 'yes', 'no');
+            });
+            
+            e.target.classList.add('active', value);
+            
+            // Show/hide W/L Amount required
+            if (field === 'to_win') {
+                const wlAmountRequired = document.getElementById('wl-amount-required');
+                if (wlAmountRequired) {
+                    wlAmountRequired.style.display = value === 'yes' ? 'inline' : 'none';
+                }
+            }
+            
+            updateFieldStatesPM();
+        });
+    });
+}
+
+function isFieldEnabledPM(field) {
+    const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+    const currentIndex = fieldOrder.indexOf(field);
+    
+    if (currentIndex === 0) return true;
+    
+    for (let i = 0; i < currentIndex; i++) {
+        const prevField = fieldOrder[i];
+        const hasSelection = document.querySelector(`.yes-no-btn[data-field="${prevField}"].active`);
+        if (!hasSelection) return false;
+    }
+    
+    return true;
+}
+
+function updateFieldStatesPM() {
+    const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+    
+    fieldOrder.forEach(field => {
+        const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+        const isEnabled = isFieldEnabledPM(field);
+        
+        buttons.forEach(btn => {
+            if (isEnabled) {
+                btn.classList.remove('disabled');
+                btn.style.opacity = '1';
+                btn.style.cursor = 'pointer';
+            } else {
+                btn.classList.add('disabled');
+                btn.style.opacity = '0.4';
+                btn.style.cursor = 'not-allowed';
+            }
+        });
+    });
+}
+
+async function loadSalesRepsPM() {
+    try {
+        const response = await fetch(`${_B}/api/v1/users/sales-reps`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) return;
+        
+        const result = await response.json();
+        const select = document.getElementById('sales-rep-select');
+        const branchInput = document.getElementById('branch-input');
+        
+        if (!select) return;
+        
+        select.innerHTML = '<option value="">Select SR...</option>';
+        
+        const salesReps = result.data || result.users || [];
+        
+        salesReps.forEach(sr => {
+            const option = document.createElement('option');
+            option.value = sr.id;
+            option.textContent = sr.full_name;
+            option.dataset.branch = sr.branch || 'N/A';
+            select.appendChild(option);
+        });
+        
+        // Auto-fill branch when SR is selected
+        select.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            if (branchInput && selectedOption) {
+                branchInput.value = selectedOption.dataset.branch || '';
+            }
+        });
+    } catch (error) {
+        console.error('Load sales reps error:', error);
+    }
+}
+
+async function loadSalesTrackingDataPM(projectId) {
+    try {
+        const response = await fetch(`${_B}/api/v1/projects/${projectId}/sales-tracking`, {
+            method: 'GET',
+            credentials: 'include'
+        });
+        
+        if (!response.ok) return;
+        
+        const result = await response.json();
+        
+        if (result.exists && result.data) {
+            const data = result.data;
+            
+            // Restore button states
+            const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
+            fields.forEach(field => {
+                const value = data[field];
+                if (value === true) {
+                    const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
+                    if (button) button.classList.add('active', 'yes');
+                } else if (value === false) {
+                    const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
+                    if (button) button.classList.add('active', 'no');
+                }
+            });
+            
+            // Restore form fields
+            const salesRepSelect = document.getElementById('sales-rep-select');
+            if (salesRepSelect && data.sales_rep_id) {
+                salesRepSelect.value = data.sales_rep_id;
+                salesRepSelect.dispatchEvent(new Event('change'));
+            }
+            
+            const branchInput = document.getElementById('branch-input');
+            if (branchInput && data.branch) {
+                branchInput.value = data.branch;
+            }
+            
+            const wlAmountInput = document.getElementById('wl-amount-input');
+            if (wlAmountInput && data.wa_amount) {
+                wlAmountInput.value = data.wa_amount;
+            }
+            
+            const remarksTextarea = document.getElementById('remarks-textarea');
+            if (remarksTextarea && data.notes) {
+                remarksTextarea.value = data.notes;
+            }
+            
+            updateFieldStatesPM();
+        }
+    } catch (error) {
+        console.error('Load sales tracking error:', error);
+    }
+}
+
+async function saveSalesTracking() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = parseInt(modal.dataset.projectId);
+    
+    if (!projectId) return;
+    
+    // Collect data
+    const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
+    const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
+    const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
+    const quoted = document.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value;
+    const salesRepId = document.getElementById('sales-rep-select')?.value;
+    const branch = document.getElementById('branch-input')?.value;
+    const wlAmount = document.getElementById('wl-amount-input')?.value;
+    const remarks = document.getElementById('remarks-textarea')?.value;
+    
+    // Validation
+    const errors = [];
+    
+    if (!salesRepId) errors.push('Please select a Sales Representative');
+    if (!branch || branch.trim() === '') errors.push('Please enter Branch information');
+    if (!remarks || remarks.trim() === '') errors.push('Please enter Remarks');
+    
+    if (toWin === 'yes' && (!wlAmount || parseFloat(wlAmount) <= 0)) {
+        errors.push('W/L Amount is required when "To Win" is Yes');
+    }
+    
+    if (errors.length > 0) {
+        showNotificationModal('Validation Error', errors[0], 'warning');
+        return;
+    }
+    
+    const data = {
+        contacted: contacted === 'yes' ? true : (contacted === 'no' ? false : null),
+        quoted: quoted === 'yes' ? true : (quoted === 'no' ? false : null),
+        sales_qualified: sql === 'yes' ? true : (sql === 'no' ? false : null),
+        to_win: toWin === 'yes' ? true : (toWin === 'no' ? false : null),
+        sales_rep_id: salesRepId ? parseInt(salesRepId) : null,
+        branch: branch || null,
+        wl_amount: wlAmount ? parseFloat(wlAmount) : null,
+        remarks: remarks ? remarks.trim() : null
+    };
+    
+    try {
+        const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
+        if (saveBtn) {
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+        }
+        
+        const response = await fetch(`${_B}/api/v1/projects/${projectId}/sales-tracking`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(data)
+        });
+        
+        if (response.ok) {
+            showNotificationModal('Success', 'Sales tracking saved successfully!', 'success');
+            
+            if (saveBtn) {
+                saveBtn.textContent = '💾 Save Sales Tracking';
+                saveBtn.disabled = false;
+            }
+            
+            setTimeout(() => {
+                closeDetailsModal();
+                loadProjects();
+            }, 1500);
+        } else {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Failed to save sales tracking');
+        }
+        
+    } catch (error) {
+        console.error('Save sales tracking error:', error);
+        showNotificationModal('Error', 'Failed to save sales tracking. Please try again.', 'error');
+        
+        const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
+        if (saveBtn) {
+            saveBtn.textContent = '💾 Save Sales Tracking';
+            saveBtn.disabled = false;
+        }
+    }
 }
