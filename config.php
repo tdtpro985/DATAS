@@ -6,11 +6,11 @@
  * This file should NOT be committed to version control
  */
 
-// Database Configuration
-define('DB_HOST', '127.0.0.1');
-define('DB_NAME', 'datas_db');
-define('DB_USER', 'root');
-define('DB_PASS', '');  // XAMPP default: empty password
+// Database Configuration - Production Settings
+define('DB_HOST', 'localhost');        // Usually 'localhost' for same server
+define('DB_NAME', 'datas_db');         // Database name you created
+define('DB_USER', 'datas_user');       // Database user you created  
+define('DB_PASS', 'password'); // Replace with actual password
 define('DB_CHARSET', 'utf8mb4');
 
 // Security Configuration
@@ -35,8 +35,8 @@ define('MAX_FILE_SIZE', 5242880); // 5MB
 define('UPLOAD_DIR', __DIR__ . '/uploads');
 define('ALLOWED_IMAGE_MIMES', ['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
 
-// CORS Configuration (Fixed: Changed from '*' to specific origin for security)
-define('CORS_ORIGIN', 'http://localhost');
+// CORS Configuration - Update with your domain
+define('CORS_ORIGIN', 'https://your-domain.com'); // Replace with your actual domain
 
 // Pagination
 define('DEFAULT_PAGE_SIZE', 50);
