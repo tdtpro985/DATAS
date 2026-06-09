@@ -1287,6 +1287,12 @@ function toggleProjectSelection(projectId, isSelected) {
 function updateSelectedCount() {
     console.log('[PM] updateSelectedCount called');
     
+    // If in unassign mode, use the unassign counter function
+    if (isBulkUnassignMode) {
+        updateUnassignSelectedCount();
+        return;
+    }
+    
     // Use a small delay to ensure DOM elements are ready
     setTimeout(() => {
         const countElement = document.getElementById('selectedCount');
@@ -1543,51 +1549,95 @@ function showBulkUnassignButtons() {
         existingButtons.remove();
     }
     
+    // Hide the "Bulk Unassign Projects" button bar
+    const bulkUnassignBar = document.getElementById('bulkUnassignButtonBar');
+    if (bulkUnassignBar) {
+        bulkUnassignBar.style.display = 'none';
+    }
+    
     const buttonsContainer = document.createElement('div');
     buttonsContainer.id = 'bulkActionButtons';
     buttonsContainer.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        padding: 1.5rem;
         display: flex;
-        gap: 1rem;
         align-items: center;
-        z-index: 1000;
+        gap: 1rem;
+        padding: 1rem 1.5rem;
+        background: rgba(220, 38, 38, 0.1);
+        border: 2px solid rgba(220, 38, 38, 0.3);
+        border-radius: 0.75rem;
+        margin-bottom: 1rem;
     `;
     
     buttonsContainer.innerHTML = `
-        <div style="color: var(--text-secondary); font-size: 0.9rem;">
-            <span id="proceedCount">0</span> project(s) selected
+        <div style="flex: 1;">
+            <div style="font-weight: 700; color: #dc2626; font-size: 1.1rem; margin-bottom: 0.25rem;">
+                🗑️ Unassign Mode: <span id="proceedCount" style="color: #ef4444;">0</span> project(s) selected
+            </div>
+            <div style="font-size: 0.85rem; color: var(--text-secondary);">
+                Select projects below to remove their sales rep assignments
+            </div>
         </div>
-        <button id="proceedBtn" class="btn-secondary" data-can-click="false" style="padding: 0.75rem 2rem; opacity: 0.5; cursor: not-allowed; background: #dc2626; color: white;">
-            <span>Unassign Projects (<span id="proceedCount">0</span>)</span>
-        </button>
+        <div style="display: flex; gap: 0.75rem;">
+            <button onclick="exitProjectSelectionMode()" class="btn-secondary" style="padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+                Cancel
+            </button>
+            <button id="proceedBtn" class="btn-delete" data-can-click="false" style="padding: 0.75rem 2rem; background: #dc2626; border-color: #dc2626; color: white; opacity: 0.5; cursor: not-allowed;">
+                Unassign Projects (<span id="proceedBtnCount">0</span>)
+            </button>
+        </div>
     `;
     
-    document.body.appendChild(buttonsContainer);
+    // Insert before the filters section
+    const filtersSection = document.querySelector('.pm-filters');
+    if (filtersSection) {
+        filtersSection.parentNode.insertBefore(buttonsContainer, filtersSection);
+    }
     
     // Add click handler for unassign
     const proceedBtn = document.getElementById('proceedBtn');
     if (proceedBtn) {
         proceedBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
             console.log('[PM] Unassign button clicked!');
             const canClick = this.getAttribute('data-can-click') === 'true';
             
-            if (canClick) {
+            if (canClick && selectedProjects.size > 0) {
                 console.log('[PM] Proceeding with bulk unassignment');
                 proceedWithBulkUnassignment();
             } else {
-                console.log('[PM] Button not clickable');
+                console.log('[PM] Button not clickable or no projects selected');
             }
         });
     }
     
-    // Update button state using the new inline design
-    updateSelectedCount();
+    // Update button state
+    updateUnassignSelectedCount();
+}
+
+// Update unassign selected count
+function updateUnassignSelectedCount() {
+    const count = selectedProjects.size;
+    const countElements = document.querySelectorAll('#proceedCount, #proceedBtnCount');
+    const proceedBtn = document.getElementById('proceedBtn');
+    
+    countElements.forEach(el => {
+        if (el) el.textContent = count;
+    });
+    
+    if (proceedBtn) {
+        if (count > 0) {
+            proceedBtn.disabled = false;
+            proceedBtn.style.opacity = '1';
+            proceedBtn.style.cursor = 'pointer';
+            proceedBtn.setAttribute('data-can-click', 'true');
+        } else {
+            proceedBtn.disabled = true;
+            proceedBtn.style.opacity = '0.5';
+            proceedBtn.style.cursor = 'not-allowed';
+            proceedBtn.setAttribute('data-can-click', 'false');
+        }
+    }
 }
 
 // Proceed with bulk unassignment
