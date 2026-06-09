@@ -27,18 +27,25 @@ try {
             <div class="ap-sidebar-avatar"><?= strtoupper(substr($fullName, 0, 1)) ?></div>
             <div class="ap-sidebar-user-info">
                 <div class="ap-sidebar-user-name"><?= htmlspecialchars($fullName) ?></div>
-                <div class="ap-sidebar-user-role role-badge-<?= $role ?>">
-                    <?php
-                    if ($role === 'superadmin') {
-                        echo 'SUPERADMIN';
-                    } elseif ($role === 'admin') {
-                        echo 'ADMIN';
-                    } elseif ($role === 'sales_rep') {
-                        echo 'SALES REP';
-                    } else {
-                        echo 'ENCODER';
-                    }
-                    ?>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <div class="ap-sidebar-user-role role-badge-<?= $role ?>">
+                        <?php
+                        if ($role === 'superadmin') {
+                            echo 'SUPERADMIN';
+                        } elseif ($role === 'admin') {
+                            echo 'ADMIN';
+                        } elseif ($role === 'sales_rep') {
+                            echo 'SALES REP';
+                        } else {
+                            echo 'ENCODER';
+                        }
+                        ?>
+                    </div>
+                    <?php if ($role === 'superadmin'): ?>
+                    <button type="button" class="credits-btn" onclick="showCreditsModal()" title="Development Team Credits">
+                        <span>ℹ️</span>
+                    </button>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -168,6 +175,135 @@ try {
                 <button type="button" class="btn-danger" id="confirmLogoutBtn">
                     Logout
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Credits Modal -->
+    <div class="modal-overlay" id="creditsModal">
+        <div class="modal-content credits-modal">
+            <div class="modal-header credits-header-section">
+                <div class="credits-header">
+                    <div class="tdt-logo">
+                        <span class="tdt-text">TDT</span><span class="powersteel-text">POWERSTEEL</span>
+                    </div>
+                    <div class="silep-subtitle">Sales Intelligence and Leads Enhancement Program</div>
+                </div>
+                <button type="button" class="modal-close" onclick="closeCreditsModal()">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="credits-content">
+                    <div class="development-team-section">
+                        <h3 class="section-title">DEVELOPMENT TEAM</h3>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Charles Miranda</div>
+                                    <div class="member-role">DEVELOPER</div>
+                                    <div class="member-contact">📱 09851738149</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Julian IV Florentino</div>
+                                    <div class="member-role">LEAD DEVELOPER</div>
+                                    <div class="member-contact">📱 09950974457</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Jayvee Oozun</div>
+                                    <div class="member-role">UI/UX</div>
+                                    <div class="member-contact">📱 09527857018</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Lord Mungcal</div>
+                                    <div class="member-role">QA</div>
+                                    <div class="member-contact">📱 09948857652</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Jude Aguirre</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09954546234</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Aeron Rodriguez</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09945046234</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Joshua Espinoza</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09519486794</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👩‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Azylel Soria</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09565589260</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="deployment-team-section">
+                        <h3 class="section-title">DEPLOYMENT TEAM 1</h3>
+                        <div class="team-grid">
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Homer B. Dela Cruz</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09542036542</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Jaderick Austria</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09654525265</div>
+                                </div>
+                            </div>
+                            <div class="team-member">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Adrian Carl L. Labutong</div>
+                                    <div class="member-role">DATA MINING</div>
+                                    <div class="member-contact">📱 09597155554</div>
+                                </div>
+                            </div>
+                            <div class="team-member highlighted">
+                                <div class="member-avatar">👨‍💻</div>
+                                <div class="member-info">
+                                    <div class="member-name">Genless Vivas</div>
+                                    <div class="member-role">DEVELOPER / QA</div>
+                                    <div class="member-contact">📱 09959572648</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="credits-footer">
+                    <p>© 2025 TDT PowerSteel I.S. All rights reserved.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -389,4 +525,37 @@ function updatePageTitle() {
         }
     }
 }
+
+// Credits modal functions
+function showCreditsModal() {
+    document.getElementById('creditsModal').classList.add('active');
+}
+
+function closeCreditsModal() {
+    document.getElementById('creditsModal').classList.remove('active');
+}
+
+// Add event listeners for credits modal when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Credits modal functionality
+    const creditsModal = document.getElementById('creditsModal');
+    
+    // Close modal on overlay click
+    if (creditsModal) {
+        creditsModal.addEventListener('click', function(e) {
+            if (e.target === creditsModal) {
+                closeCreditsModal();
+            }
+        });
+    }
+    
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && creditsModal && creditsModal.classList.contains('active')) {
+            closeCreditsModal();
+        }
+    });
+});
 </script>
