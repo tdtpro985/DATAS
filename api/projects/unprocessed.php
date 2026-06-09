@@ -30,13 +30,13 @@ $assignedOnly = qp('assigned_only', ''); // Filter for assigned unprocessed proj
 $db = getDB();
 
 // Build WHERE clause
-// UPDATED LOGIC: "Unprocessed" means assigned projects with NO sales tracking activity
+// UPDATED LOGIC: "Unprocessed" means assigned projects with NO sales tracking activity OR tracking_status = 'Not Started'
 $where = [];
 $params = [];
 
-// Core logic: Projects that are assigned but have NO sales tracking data and are not archived
+// Core logic: Projects that are assigned and either have NO sales tracking data OR have tracking_status = 'Not Started'
 $where[] = 'p.assigned_to IS NOT NULL';  // Must be assigned
-$where[] = 'st.project_id IS NULL';      // Must have NO sales tracking data
+$where[] = '(st.project_id IS NULL OR st.tracking_status = "Not Started" OR st.tracking_status IS NULL)';  // No tracking OR explicitly Not Started
 $where[] = 'p.archived_at IS NULL';      // Not archived
 
 // Additional filters

@@ -30,12 +30,14 @@ $salesRepId = qp('sales_rep_id', '');
 $db = getDB();
 
 // Build WHERE clause
-// UPDATED LOGIC: "Processed" means projects with sales tracking activity (including "In Progress")
+// UPDATED LOGIC: "Processed" means projects with sales tracking activity (any status EXCEPT 'Not Started')
 $where = [];
 $params = [];
 
-// Core logic: Projects that have sales tracking data (any tracking activity) and are not archived
+// Core logic: Projects that have sales tracking data with active tracking (not "Not Started") and are not archived
 $where[] = 'st.project_id IS NOT NULL';  // Must have sales tracking data
+$where[] = 'st.tracking_status IS NOT NULL';  // Must have a tracking status
+$where[] = 'st.tracking_status != "Not Started"';  // Must NOT be "Not Started"
 $where[] = 'p.archived_at IS NULL';      // Not archived
 
 // Additional filters
