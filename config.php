@@ -8,7 +8,7 @@
 
 // Database Configuration - Production Settings
 define('DB_HOST', 'localhost');        // Usually 'localhost' for same server
-define('DB_NAME', 'datas_db');         // Database name you created
+define('DB_NAME', 'root');         // Database name you created
 define('DB_USER', 'datas_user');       // Database user you created  
 define('DB_PASS', 'password'); // Replace with actual password
 define('DB_CHARSET', 'utf8mb4');
