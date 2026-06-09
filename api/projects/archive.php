@@ -9,159 +9,118 @@
 require_once '../db.php';
 require_once '../helpers.php';
 
-header('Content-Type: application/json');
-setCORSHeaders();
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
-}
-
-// Check authentication
-session_start();
-if (!isset($_SESSION['user']) || !$_SESSION['user']) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
-    exit();
-}
-
-$user = $_SESSION['user'];
-$userId = $user['id'];
-$userRole = $user['role'];
-
-// Only admins and superadmins can archive/restore projects
-if (!in_array($userRole, ['admin', 'superadmin'])) {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'message' => 'Access denied']);
-    exit();
-}
-
 try {
-    $pdo = getDbConnection();
+    // Authenticate and require admin/superadmin role
+    $user = requireRole(['admin', 'superadmin']);
     
-    switch ($_SERVER['REQUEST_METHOD']) {
-        case 'POST':
-            handleArchive($pdo, $userId);
-            break;
-        case 'PUT':
-            handleRestore($pdo, $userId);
-            break;
-        default:
-            http_response_code(405);
-            echo json_encode(['success' => false, 'message' => 'Method not allowed']);
-            break;
+    $method = $_SERVER['REQUEST_METHOD'];
+    $userId = $user['id'];
+    $db = getDB();
+    
+    if ($method === 'POST') {
+        handleArchive($db, $userId);
+    } elseif ($method === 'PUT') {
+        handleRestore($db, $userId);
+    } else {
+        jsonError('Method not allowed', 405);
     }
+    
 } catch (Exception $e) {
     error_log('Archive API error: ' . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Internal server error']);
+    jsonError('Internal server error: ' . $e->getMessage(), 500);
 }
 
 /**
  * Archive a project (soft delete)
  */
-function handleArchive($pdo, $userId) {
-    $input = json_decode(file_get_contents('php://input'), true);
+function handleArchive($db, $userId) {
+    $body = getJsonBody();
     
-    if (!isset($input['project_id'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Project ID is required']);
-        return;
+    if (!$body || !isset($body['project_id'])) {
+        jsonError('Project ID is required', 400);
     }
     
-    $projectId = (int)$input['project_id'];
+    $projectId = (int)$body['project_id'];
     
     // Check if project exists and is not already archived
-    $stmt = $pdo->prepare("
+    $stmt = $db->prepare("
         SELECT id, contractor_name, project_name, archived_at 
         FROM projects 
-        WHERE id = ? AND archived_at IS NULL
+        WHERE id = :id AND archived_at IS NULL
     ");
-    $stmt->execute([$projectId]);
+    $stmt->execute([':id' => $projectId]);
     $project = $stmt->fetch();
     
     if (!$project) {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Project not found or already archived']);
-        return;
+        jsonError('Project not found or already archived', 404);
     }
     
     // Archive the project
-    $stmt = $pdo->prepare("
+    $stmt = $db->prepare("
         UPDATE projects 
-        SET archived_at = NOW(), archived_by = ?
-        WHERE id = ?
+        SET archived_at = NOW(), archived_by = :user_id
+        WHERE id = :id
     ");
     
-    $success = $stmt->execute([$userId, $projectId]);
+    $success = $stmt->execute([
+        ':user_id' => $userId,
+        ':id' => $projectId
+    ]);
     
     if ($success) {
-        echo json_encode([
-            'success' => true, 
+        jsonResponse([
+            'id' => $projectId,
             'message' => 'Project archived successfully',
-            'data' => [
-                'project_id' => $projectId,
-                'contractor_name' => $project['contractor_name'],
-                'project_name' => $project['project_name']
-            ]
+            'contractor_name' => $project['contractor_name'],
+            'project_name' => $project['project_name']
         ]);
     } else {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to archive project']);
+        jsonError('Failed to archive project', 500);
     }
 }
 
 /**
  * Restore an archived project
  */
-function handleRestore($pdo, $userId) {
-    $input = json_decode(file_get_contents('php://input'), true);
+function handleRestore($db, $userId) {
+    $body = getJsonBody();
     
-    if (!isset($input['project_id'])) {
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Project ID is required']);
-        return;
+    if (!$body || !isset($body['project_id'])) {
+        jsonError('Project ID is required', 400);
     }
     
-    $projectId = (int)$input['project_id'];
+    $projectId = (int)$body['project_id'];
     
     // Check if project exists and is archived
-    $stmt = $pdo->prepare("
+    $stmt = $db->prepare("
         SELECT id, contractor_name, project_name, archived_at 
         FROM projects 
-        WHERE id = ? AND archived_at IS NOT NULL
+        WHERE id = :id AND archived_at IS NOT NULL
     ");
-    $stmt->execute([$projectId]);
+    $stmt->execute([':id' => $projectId]);
     $project = $stmt->fetch();
     
     if (!$project) {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'message' => 'Archived project not found']);
-        return;
+        jsonError('Archived project not found', 404);
     }
     
     // Restore the project
-    $stmt = $pdo->prepare("
+    $stmt = $db->prepare("
         UPDATE projects 
         SET archived_at = NULL, archived_by = NULL
-        WHERE id = ?
+        WHERE id = :id
     ");
     
-    $success = $stmt->execute([$projectId]);
+    $success = $stmt->execute([':id' => $projectId]);
     
     if ($success) {
-        echo json_encode([
-            'success' => true, 
+        jsonResponse([
+            'id' => $projectId,
             'message' => 'Project restored successfully',
-            'data' => [
-                'project_id' => $projectId,
-                'contractor_name' => $project['contractor_name'],
-                'project_name' => $project['project_name']
-            ]
+            'contractor_name' => $project['contractor_name'],
+            'project_name' => $project['project_name']
         ]);
     } else {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'message' => 'Failed to restore project']);
+        jsonError('Failed to restore project', 500);
     }
 }
-?>
