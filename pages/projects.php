@@ -740,39 +740,61 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             }
         }
 
-        /* ── Status Badge ── */
-        .status-badge {
+        /* ── Status Circle ── */
+        .status-circle {
             display: inline-block;
-            padding: 0.35rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid;
         }
 
-        .status-badge.priority {
-            background: rgba(239, 68, 68, 0.15);
-            color: #fca5a5;
-            border: 1px solid rgba(239, 68, 68, 0.3);
+        .status-circle.priority {
+            background: #ef4444;
+            border-color: #fca5a5;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
         }
 
-        .status-badge.awarded {
-            background: rgba(16, 185, 129, 0.15);
-            color: #6ee7b7;
-            border: 1px solid rgba(16, 185, 129, 0.3);
+        .status-circle.awarded {
+            background: #10b981;
+            border-color: #6ee7b7;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
         }
 
-        .status-badge.for-execution {
-            background: rgba(59, 130, 246, 0.15);
-            color: #93c5fd;
-            border: 1px solid rgba(59, 130, 246, 0.3);
+        .status-circle.for-execution {
+            background: #3b82f6;
+            border-color: #93c5fd;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
         }
 
-        .status-badge.for-bidding {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fcd34d;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+        .status-circle.for-bidding {
+            background: #f59e0b;
+            border-color: #fcd34d;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+        }
+
+        /* ── Status Legend ── */
+        .status-legend {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .status-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status-legend-item .status-circle {
+            flex-shrink: 0;
         }
 
         /* ── Sales Tracking Status Badges ── */
@@ -1057,35 +1079,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <?php if ($role === 'sales_rep'): ?>
     <!-- Sales Rep Dashboard -->
     <div style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-            <span>📊</span>System Overview
-        </h2>
-        <div class="summary-cards" id="systemSummaryCards">
-            <div class="summary-card">
-                <div class="summary-card-icon">📊</div>
-                <div class="summary-card-content">
-                    <div class="summary-card-label">Total Projects</div>
-                    <div class="summary-card-value" id="systemTotalProjects">—</div>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-card-icon">🏢</div>
-                <div class="summary-card-content">
-                    <div class="summary-card-label">Total Contractors</div>
-                    <div class="summary-card-value" id="systemTotalContractors">—</div>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-card-icon">💰</div>
-                <div class="summary-card-content">
-                    <div class="summary-card-label">Pipeline Value</div>
-                    <div class="summary-card-value" id="systemPipelineValue">—</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div style="margin-bottom: 2rem;">
         <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--orange-500); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
             <span>👤</span>My Projects
         </h2>
@@ -1109,6 +1102,20 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                 <div class="summary-card-content">
                     <div class="summary-card-label">My Pipeline Value</div>
                     <div class="summary-card-value" id="myPipelineValue">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">📄</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Non-Priority</div>
+                    <div class="summary-card-value" id="myNonPriorityProjects">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">⭐</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Priority</div>
+                    <div class="summary-card-value" id="myPriorityProjects">—</div>
                 </div>
             </div>
         </div>
@@ -1178,6 +1185,26 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 
     <!-- Projects Table -->
     <div class="projects-card">
+        <!-- Status Legend -->
+        <div class="status-legend">
+            <div class="status-legend-item">
+                <span class="status-circle priority"></span>
+                <span>Priority</span>
+            </div>
+            <div class="status-legend-item">
+                <span class="status-circle awarded"></span>
+                <span>Awarded</span>
+            </div>
+            <div class="status-legend-item">
+                <span class="status-circle for-execution"></span>
+                <span>For Execution</span>
+            </div>
+            <div class="status-legend-item">
+                <span class="status-circle for-bidding"></span>
+                <span>For Bidding</span>
+            </div>
+        </div>
+        
         <div class="table-wrapper">
             <table class="projects-table">
                 <thead>

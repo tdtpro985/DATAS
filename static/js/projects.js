@@ -118,25 +118,6 @@ const ProjectsPage = {
                 parseInt(p.assigned_to) === userId && !p.archived_at
             );
             
-            // System-wide stats (all non-archived projects)
-            const systemProjects = this.allProjects.filter(p => !p.archived_at);
-            const systemUniqueContractors = new Set(
-                systemProjects
-                    .map(p => (p.contractor_name || '').trim())
-                    .filter(name => name.length > 0)
-            );
-            const systemPipelineValue = systemProjects.reduce((sum, p) => {
-                return sum + (parseFloat(p.project_value) || 0);
-            }, 0);
-            
-            // Update system cards
-            document.getElementById('systemTotalProjects').textContent = systemProjects.length.toLocaleString();
-            document.getElementById('systemTotalContractors').textContent = systemUniqueContractors.size.toLocaleString();
-            document.getElementById('systemPipelineValue').textContent = '₱' + systemPipelineValue.toLocaleString('en-PH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
-            
             // My stats (projects assigned to me, excluding archived)
             const myUniqueContractors = new Set(
                 myProjects
@@ -147,6 +128,14 @@ const ProjectsPage = {
                 return sum + (parseFloat(p.project_value) || 0);
             }, 0);
             
+            // Count by priority status
+            const myNonPriority = myProjects.filter(p => 
+                String(p.status || '').trim().toLowerCase() !== 'priority'
+            ).length;
+            const myPriority = myProjects.filter(p => 
+                String(p.status || '').trim().toLowerCase() === 'priority'
+            ).length;
+            
             // Update my cards
             document.getElementById('myTotalProjects').textContent = myProjects.length.toLocaleString();
             document.getElementById('myTotalContractors').textContent = myUniqueContractors.size.toLocaleString();
@@ -154,6 +143,8 @@ const ProjectsPage = {
                 minimumFractionDigits: 2,
                 maximumFractionDigits: 2
             });
+            document.getElementById('myNonPriorityProjects').textContent = myNonPriority.toLocaleString();
+            document.getElementById('myPriorityProjects').textContent = myPriority.toLocaleString();
         } else {
             // Admin/Other roles - show all non-archived projects
             const activeProjects = this.allProjects.filter(p => !p.archived_at);
@@ -340,7 +331,7 @@ const ProjectsPage = {
                     <td title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
                     <td>${this.escapeHtml(project.region || '—')}</td>
                     <td>${this.escapeHtml(project.source || '—')}</td>
-                    <td><span class="status-badge ${statusClass}">${this.escapeHtml(status)}</span></td>
+                    <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
                     <td class="col-value">${value}</td>
                     <td class="col-tracking">${trackingBadge}</td>
                     <td class="col-date">${dateStr}</td>
