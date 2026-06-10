@@ -112,6 +112,9 @@ try {
                     <a href="<?= $base ?>/projects-management?view=archived" class="ap-nav-dropdown-item role-only--admin role-only--superadmin">
                         <span class="ap-nav-label">🗄️ Archived Projects</span>
                     </a>
+                    <a href="<?= $base ?>/illegitimate-projects" class="ap-nav-dropdown-item" data-role-access="admin,superadmin,sales_rep">
+                        <span class="ap-nav-label">🚫 Illegitimate Projects</span>
+                    </a>
                 </div>
             </div>
             
