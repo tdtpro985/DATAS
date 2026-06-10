@@ -940,14 +940,17 @@ const ProjectsPage = {
             
             // Load sales reps only for superadmin and admin
             if (userRole === 'superadmin' || userRole === 'admin') {
-                this.loadSalesReps().then(() => {
-                    // Load sales tracking data AFTER sales reps are loaded
-                    this.loadSalesTrackingData(projectId);
-                });
-            } else {
-                // For sales_rep role, load tracking data directly
-                this.loadSalesTrackingData(projectId);
+                this.loadSalesReps();
+                // TEMPORARILY DISABLED - sales tracking load causing errors
+                // this.loadSalesReps().then(() => {
+                //     this.loadSalesTrackingData(projectId);
+                // });
             }
+            
+            // TEMPORARILY DISABLED - sales tracking load causing errors  
+            // else {
+            //     this.loadSalesTrackingData(projectId);
+            // }
             
             // Reset save button text (in case it was stuck on "Saving...")
             const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
