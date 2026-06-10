@@ -1270,30 +1270,27 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <!-- Content will be inserted here -->
         </div>
         <div class="modal-actions">
-            <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+            <button type="button" class="btn-action btn-secondary" onclick="closeDetailsModal()">Close</button>
             
             <!-- Edit Button -->
-            <button type="button" class="btn-primary role-only--admin role-only--superadmin role-only--encoder" 
-                    onclick="editProject()" id="editProjectBtn" 
-                    style="display: none;">
+            <button type="button" class="btn-action btn-primary role-only--admin role-only--superadmin role-only--encoder" 
+                    onclick="editProject()" id="editProjectBtn">
                 ✏️ Edit Project
             </button>
             
             <!-- Clear Sales Tracking Button -->
-            <button type="button" class="btn-warning role-only--admin role-only--superadmin" 
-                    onclick="clearSalesTracking()" id="clearTrackingBtn" 
-                    style="display: none;">
+            <button type="button" class="btn-action btn-warning role-only--admin role-only--superadmin" 
+                    onclick="clearSalesTracking()" id="clearTrackingBtn">
                 🗑️ Clear Sales Tracking
             </button>
             
             <!-- Archive/Restore Button for Admins and Superadmins -->
-            <button type="button" class="btn-delete role-only--admin role-only--superadmin" 
-                    onclick="toggleProjectArchive()" id="archiveBtn" 
-                    style="display: none;">
+            <button type="button" class="btn-action btn-delete role-only--admin role-only--superadmin" 
+                    onclick="toggleProjectArchive()" id="archiveBtn">
                 🗄️ Archive Project
             </button>
             
-            <button type="button" class="btn-primary btn-save role-only--superadmin role-only--admin role-only--sales_rep" onclick="saveSalesTracking()">💾 Save Sales Tracking</button>
+            <button type="button" class="btn-action btn-primary btn-save role-only--superadmin role-only--admin role-only--sales_rep" onclick="saveSalesTracking()">💾 Save Sales Tracking</button>
         </div>
     </div>
 </div>

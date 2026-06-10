@@ -960,24 +960,12 @@ const ProjectsPage = {
                 archiveBtn.title = 'Move project to archive';
             }
             
-            archiveBtn.style.display = 'inline-flex';
-            
             // Store project ID for archive function
             modal.dataset.projectId = projectId;
         }
         
-        // Show Edit button for admin, superadmin, and encoder
-        const editProjectBtn = document.getElementById('editProjectBtn');
-        if (editProjectBtn && (userRole === 'admin' || userRole === 'superadmin' || userRole === 'encoder')) {
-            editProjectBtn.style.display = 'inline-flex';
-            modal.dataset.projectId = projectId;
-        }
-        
-        // Show Clear Sales Tracking button for admin and superadmin
-        const clearTrackingBtn = document.getElementById('clearTrackingBtn');
-        if (clearTrackingBtn && (userRole === 'admin' || userRole === 'superadmin')) {
-            clearTrackingBtn.style.display = 'inline-flex';
-        }
+        // Store project ID for other functions
+        modal.dataset.projectId = projectId;
         
         modal.classList.add('active');
     },
@@ -1958,12 +1946,8 @@ async function clearSalesTracking() {
         return;
     }
     
-    const confirmed = await showConfirmDialog(
-        'Clear Sales Tracking',
-        'Are you sure you want to clear all sales tracking data for this project? This action cannot be undone.',
-        'Clear',
-        'destructive'
-    );
+    // Simple confirmation dialog
+    const confirmed = confirm('Are you sure you want to clear all sales tracking data for this project?\n\nThis action cannot be undone.');
     
     if (!confirmed) return;
     
@@ -1975,7 +1959,7 @@ async function clearSalesTracking() {
         
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.detail || 'Failed to clear sales tracking');
+            throw new Error(error.detail || error.message || 'Failed to clear sales tracking');
         }
         
         Toast.success('Sales tracking cleared successfully');
