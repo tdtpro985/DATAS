@@ -1272,24 +1272,24 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         </div>
         <div class="modal-actions">
             <!-- Edit Button -->
-            <button type="button" class="btn-action btn-primary role-only--admin role-only--superadmin role-only--encoder" 
+            <button type="button" class="btn-action btn-primary" 
                     id="editProjectBtn">
                 ✏️ Edit Project
             </button>
             
-            <!-- Clear Sales Tracking Button -->
-            <button type="button" class="btn-action btn-warning role-only--admin role-only--superadmin" 
+            <!-- Clear Sales Tracking Button (Superadmin, Admin, Sales Rep only) -->
+            <button type="button" class="btn-action btn-warning role-only--admin role-only--superadmin role-only--sales_rep" 
                     id="clearTrackingBtn">
                 🗑️ Clear Tracking
             </button>
             
-            <!-- Archive/Restore Button for Admins and Superadmins -->
-            <button type="button" class="btn-action btn-delete role-only--admin role-only--superadmin" 
+            <!-- Archive/Restore Button -->
+            <button type="button" class="btn-action btn-delete" 
                     id="archiveBtn">
                 🗄️ Archive Project
             </button>
             
-            <button type="button" class="btn-action btn-primary btn-save role-only--superadmin role-only--admin role-only--sales_rep" id="saveTrackingBtn">💾 Save Sales Tracking</button>
+            <button type="button" class="btn-action btn-primary btn-save" id="saveTrackingBtn">💾 Save Sales Tracking</button>
             
             <button type="button" class="btn-action btn-secondary" id="closeModalBtn">Close</button>
         </div>
