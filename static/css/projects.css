@@ -356,17 +356,26 @@ html {
     display: none;
     position: fixed;
     top: 0;
-    left: 0; /* Cover entire viewport including sidebar */
+    left: var(--sidebar-w); /* Start AFTER sidebar - main content area only */
     right: 0;
     bottom: 0;
+    width: calc(100% - var(--sidebar-w)); /* Width = viewport minus sidebar */
     background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px); /* Increased blur for better effect */
+    backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
-    z-index: 99999; /* Very high to cover everything including sidebar */
+    z-index: 99999;
     align-items: center;
     justify-content: center;
     padding: 1rem;
     animation: fadeIn 0.2s ease;
+}
+
+/* On mobile, cover full screen since sidebar is hidden */
+@media (max-width: 768px) {
+    .modal-overlay {
+        left: 0;
+        width: 100%;
+    }
 }
 
 .modal-overlay.active {
@@ -383,14 +392,7 @@ html {
     overflow-y: auto;
     animation: slideInUp 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    margin-left: calc(var(--sidebar-w) / 2); /* Push to the right to avoid sidebar */
-}
-
-/* Reset margin on mobile */
-@media (max-width: 768px) {
-    .modal-content {
-        margin-left: 0;
-    }
+    /* No margin needed - overlay handles positioning */
 }
 
 .modal-header {
