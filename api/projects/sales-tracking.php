@@ -273,6 +273,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'auto_assigned' => ($project && $project['assigned_to'] === null && $salesRepId) ? true : false
     ]);
     
+    } catch (PDOException $e) {
+        // Log database error
+        error_log('[SALES_TRACKING] POST Database error: ' . $e->getMessage());
+        error_log('[SALES_TRACKING] POST Stack trace: ' . $e->getTraceAsString());
+        jsonError('Database error: Unable to save sales tracking data', 500);
+    } catch (Exception $e) {
+        // Log general error
+        error_log('[SALES_TRACKING] POST General error: ' . $e->getMessage());
+        error_log('[SALES_TRACKING] POST Stack trace: ' . $e->getTraceAsString());
+        jsonError('Error: ' . $e->getMessage(), 500);
+    }
+    
     return;
 }
 

@@ -61,9 +61,27 @@ async function saveSalesTracking() {
             body: JSON.stringify(payload)
         });
         
+        console.log('[SALES TRACKING] Response status:', response.status);
+        
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || error.message || 'Failed to save');
+            let errorMessage = 'Failed to save sales tracking';
+            
+            try {
+                // Try to parse as JSON
+                const error = await response.json();
+                errorMessage = error.detail || error.message || errorMessage;
+            } catch (e) {
+                // If not JSON, try to get text
+                try {
+                    const errorText = await response.text();
+                    console.error('[SALES TRACKING] Error response:', errorText);
+                    errorMessage = errorText.substring(0, 100) || errorMessage;
+                } catch (e2) {
+                    console.error('[SALES TRACKING] Could not read error response');
+                }
+            }
+            
+            throw new Error(errorMessage);
         }
         
         const result = await response.json();
@@ -88,6 +106,7 @@ async function saveSalesTracking() {
         
     } catch (error) {
         console.error('[SALES TRACKING] Save error:', error);
+        console.error('[SALES TRACKING] Error stack:', error.stack);
         if (typeof Toast !== 'undefined') {
             Toast.error(error.message || 'Failed to save sales tracking');
         } else {
