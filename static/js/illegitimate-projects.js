@@ -140,7 +140,7 @@ const IllegalitimateProjectsPage = {
             }
             
             const value = project.project_value !== null && project.project_value !== undefined
-                ? formatCurrency(project.project_value)
+                ? '₱' + parseFloat(project.project_value).toLocaleString('en-PH', { minimumFractionDigits: 2 })
                 : '—';
             const status = project.status || '—';
             const statusClass = this.getStatusClass(status);
