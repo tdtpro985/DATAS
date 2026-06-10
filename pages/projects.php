@@ -724,6 +724,18 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
         }
         
+        .btn-warning {
+            border-color: rgba(251, 191, 36, 0.3);
+            background: rgba(251, 191, 36, 0.1);
+            color: #fbbf24;
+        }
+        
+        .btn-warning:hover {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.5);
+            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+        }
+        
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -1259,6 +1271,20 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+            
+            <!-- Edit Button -->
+            <button type="button" class="btn-primary role-only--admin role-only--superadmin role-only--encoder" 
+                    onclick="editProject()" id="editProjectBtn" 
+                    style="display: none;">
+                ✏️ Edit Project
+            </button>
+            
+            <!-- Clear Sales Tracking Button -->
+            <button type="button" class="btn-warning role-only--admin role-only--superadmin" 
+                    onclick="clearSalesTracking()" id="clearTrackingBtn" 
+                    style="display: none;">
+                🗑️ Clear Sales Tracking
+            </button>
             
             <!-- Archive/Restore Button for Admins and Superadmins -->
             <button type="button" class="btn-delete role-only--admin role-only--superadmin" 

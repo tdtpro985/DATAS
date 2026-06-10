@@ -966,6 +966,19 @@ const ProjectsPage = {
             modal.dataset.projectId = projectId;
         }
         
+        // Show Edit button for admin, superadmin, and encoder
+        const editProjectBtn = document.getElementById('editProjectBtn');
+        if (editProjectBtn && (userRole === 'admin' || userRole === 'superadmin' || userRole === 'encoder')) {
+            editProjectBtn.style.display = 'inline-flex';
+            modal.dataset.projectId = projectId;
+        }
+        
+        // Show Clear Sales Tracking button for admin and superadmin
+        const clearTrackingBtn = document.getElementById('clearTrackingBtn');
+        if (clearTrackingBtn && (userRole === 'admin' || userRole === 'superadmin')) {
+            clearTrackingBtn.style.display = 'inline-flex';
+        }
+        
         modal.classList.add('active');
     },
     
@@ -1915,4 +1928,64 @@ function showConfirmationModal(title, message, type = 'warning') {
         overlay.appendChild(modal);
         document.body.appendChild(overlay);
     });
+}
+
+
+// Edit Project Function
+function editProject() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = modal.dataset.projectId;
+    
+    if (!projectId) {
+        Toast.error('Project ID not found');
+        return;
+    }
+    
+    // Close current modal
+    closeDetailsModal();
+    
+    // Redirect to edit page (you'll need to create this page)
+    window.location.href = `${BASE}/projects/edit/${projectId}`;
+}
+
+// Clear Sales Tracking Function
+async function clearSalesTracking() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = modal.dataset.projectId;
+    
+    if (!projectId) {
+        Toast.error('Project ID not found');
+        return;
+    }
+    
+    const confirmed = await showConfirmDialog(
+        'Clear Sales Tracking',
+        'Are you sure you want to clear all sales tracking data for this project? This action cannot be undone.',
+        'Clear',
+        'destructive'
+    );
+    
+    if (!confirmed) return;
+    
+    try {
+        const response = await fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Failed to clear sales tracking');
+        }
+        
+        Toast.success('Sales tracking cleared successfully');
+        
+        // Reload project details
+        closeDetailsModal();
+        ProjectsPage.loadProjects();
+        
+    } catch (error) {
+        console.error('[PROJECTS] Clear tracking error:', error);
+        Toast.error(error.message || 'Failed to clear sales tracking');
+    }
 }

@@ -75,9 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 
 // Handle POST request - save sales tracking data
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    jsonError('Method not allowed', 405);
-}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $body = getJsonBody();
 if (!$body) {
@@ -235,6 +233,33 @@ try {
         'auto_assigned' => ($project && $project['assigned_to'] === null && $salesRepId) ? true : false
     ]);
     
-} catch (Exception $e) {
-    jsonError('Database error: ' . $e->getMessage(), 500);
+    return;
 }
+
+// Handle DELETE request - clear sales tracking data
+if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    try {
+        $db = getDB();
+        
+        // Verify project exists
+        $projectStmt = $db->prepare('SELECT id FROM projects WHERE id = :id LIMIT 1');
+        $projectStmt->execute([':id' => $projectId]);
+        if (!$projectStmt->fetch()) {
+            jsonError('Project not found', 404);
+        }
+        
+        // Delete sales tracking record
+        $deleteStmt = $db->prepare('DELETE FROM sales_tracking WHERE project_id = :project_id');
+        $deleteStmt->execute([':project_id' => $projectId]);
+        
+        jsonResponse([
+            'message' => 'Sales tracking cleared successfully'
+        ]);
+        
+    } catch (Exception $e) {
+        jsonError('Database error: ' . $e->getMessage(), 500);
+    }
+    return;
+}
+
+jsonError('Method not allowed', 405);
