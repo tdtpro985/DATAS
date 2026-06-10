@@ -1061,8 +1061,8 @@ const ProjectsPage = {
                     console.error('[PROJECTS] Raw error:', errorText);
                 }
                 
-                // Show user-friendly error
-                showToast('Failed to load sales tracking data. Please refresh and try again.', 'error');
+                // Don't show toast - just log the error
+                // The modal can still be used even if tracking data fails to load
                 return;
             }
             
@@ -1088,7 +1088,7 @@ const ProjectsPage = {
         } catch (error) {
             console.error('[PROJECTS] Load sales tracking error:', error);
             console.error('[PROJECTS] Error stack:', error.stack);
-            showToast('Network error while loading sales tracking data', 'error');
+            // Don't show toast - silent failure is acceptable for optional data
         }
     },
 

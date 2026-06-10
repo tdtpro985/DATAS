@@ -3,13 +3,30 @@
    GET/POST /api/v1/projects/{id}/sales-tracking — Get/Save sales tracking data
    ============================================================ */
 
+// Set error handling to prevent output
+error_reporting(E_ALL);
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+
 // Clean any existing output buffers
 while (ob_get_level() > 0) {
     ob_end_clean();
 }
 
-require_once __DIR__ . '/../db.php';
-require_once __DIR__ . '/../helpers.php';
+// Start new output buffer
+ob_start();
+
+try {
+    require_once __DIR__ . '/../db.php';
+    require_once __DIR__ . '/../helpers.php';
+} catch (Exception $e) {
+    // Clean output buffer
+    ob_end_clean();
+    http_response_code(500);
+    header('Content-Type: application/json');
+    echo json_encode(['detail' => 'Failed to load required files: ' . $e->getMessage()]);
+    exit;
+}
 
 try {
     $user = requireRole(['superadmin', 'admin', 'sales_rep']);
