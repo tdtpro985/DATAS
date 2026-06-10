@@ -21,48 +21,63 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
 }
 
-$db     = getDB();
-$date   = buildDateFilter('p.publication_date');
-$region = getRegion();
+try {
+    $db     = getDB();
+    $date   = buildDateFilter('p.publication_date');
+    $region = getRegion();
 
-$regionSql    = '';
-$regionParams = [];
-if ($region !== null) {
-    $regionSql    = ' AND p.region = :region';
-    $regionParams = [':region' => $region];
+    $regionSql    = '';
+    $regionParams = [];
+    if ($region !== null) {
+        $regionSql    = ' AND p.region = :region';
+        $regionParams = [':region' => $region];
+    }
+
+    $params = array_merge($date['params'], $regionParams);
+    $where  = 'WHERE ' . $date['sql'] . $regionSql;
+
+    // Exclude archived and illegitimate projects
+    $where .= " AND (p.archived_at IS NULL OR p.archived_at = '') AND (p.is_actual_project IS NULL OR p.is_actual_project != 'no')";
+
+    // Get total projects (Prospects - raw projects, di pa nagagalaw)
+    $stmt = $db->prepare("
+        SELECT COUNT(*) as count
+        FROM projects p
+        $where
+    ");
+    $stmt->execute($params);
+    $totalProjects = $stmt->fetch()['count'];
+
+    // Get projects with sales tracking data
+    $stmt = $db->prepare("
+        SELECT 
+            COUNT(*) as total_tracked,
+            SUM(CASE WHEN st.contacted = 'Yes' THEN 1 ELSE 0 END) as contacted,
+            SUM(CASE WHEN st.sales_qualified = 'Yes' THEN 1 ELSE 0 END) as sql_yes,
+            SUM(CASE WHEN st.sales_qualified = 'No' THEN 1 ELSE 0 END) as sql_no,
+            SUM(CASE WHEN st.quoted = 'Yes' THEN 1 ELSE 0 END) as quoted,
+            SUM(CASE WHEN st.to_win = 'Yes' AND st.wa_amount > 0 THEN 1 ELSE 0 END) as win
+        FROM projects p
+        LEFT JOIN sales_tracking st ON p.id = st.project_id
+        $where
+        AND st.id IS NOT NULL
+    ");
+    $stmt->execute($params);
+    $trackingData = $stmt->fetch();
+} catch (Exception $e) {
+    error_log("Funnel API error: " . $e->getMessage());
+    jsonResponse([
+        'stages' => [
+            ['name' => 'Prospects', 'color' => '#64748B', 'count' => 0, 'description' => 'Raw projects', 'conversion' => null],
+            ['name' => 'Contacted', 'color' => '#3B82F6', 'count' => 0, 'description' => 'Contacted', 'conversion' => null],
+            ['name' => 'Sales Qualified Leads', 'color' => '#10B981', 'count' => 0, 'description' => 'SQL Yes', 'conversion' => null],
+            ['name' => 'Not Sales Qualified Leads', 'color' => '#EF4444', 'count' => 0, 'description' => 'SQL No', 'conversion' => null],
+            ['name' => 'Quoted', 'color' => '#F59E0B', 'count' => 0, 'description' => 'Quoted Yes', 'conversion' => null],
+            ['name' => 'Win', 'color' => '#8B5CF6', 'count' => 0, 'description' => 'Win', 'conversion' => null]
+        ]
+    ]);
+    exit;
 }
-
-$params = array_merge($date['params'], $regionParams);
-$where  = 'WHERE ' . $date['sql'] . $regionSql;
-
-// Exclude archived and illegitimate projects
-$where .= " AND (p.archived_at IS NULL OR p.archived_at = '') AND (p.is_actual_project IS NULL OR p.is_actual_project != 'no')";
-
-// Get total projects (Prospects - raw projects, di pa nagagalaw)
-$stmt = $db->prepare("
-    SELECT COUNT(*) as count
-    FROM projects p
-    $where
-");
-$stmt->execute($params);
-$totalProjects = $stmt->fetch()['count'];
-
-// Get projects with sales tracking data
-$stmt = $db->prepare("
-    SELECT 
-        COUNT(*) as total_tracked,
-        SUM(CASE WHEN st.contacted = 'Yes' THEN 1 ELSE 0 END) as contacted,
-        SUM(CASE WHEN st.sales_qualified = 'Yes' THEN 1 ELSE 0 END) as sql_yes,
-        SUM(CASE WHEN st.sales_qualified = 'No' THEN 1 ELSE 0 END) as sql_no,
-        SUM(CASE WHEN st.quoted = 'Yes' THEN 1 ELSE 0 END) as quoted,
-        SUM(CASE WHEN st.to_win = 'Yes' AND st.wa_amount > 0 THEN 1 ELSE 0 END) as win
-    FROM projects p
-    LEFT JOIN sales_tracking st ON p.id = st.project_id
-    $where
-    AND st.id IS NOT NULL
-");
-$stmt->execute($params);
-$trackingData = $stmt->fetch();
 
 // Build funnel stages based on your requirements
 $stages = [

@@ -15,49 +15,62 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
 }
 
-$db     = getDB();
-$date   = buildDateFilter('publication_date');
-$region = getRegion();
+try {
+    $db     = getDB();
+    $date   = buildDateFilter('publication_date');
+    $region = getRegion();
 
-// Build region clause
-$regionSql    = '';
-$regionParams = [];
-if ($region !== null) {
-    $regionSql    = ' AND region = :region';
-    $regionParams = [':region' => $region];
+    // Build region clause
+    $regionSql    = '';
+    $regionParams = [];
+    if ($region !== null) {
+        $regionSql    = ' AND region = :region';
+        $regionParams = [':region' => $region];
+    }
+
+    $params = array_merge($date['params'], $regionParams);
+    $where  = 'WHERE ' . $date['sql'] . $regionSql;
+
+    // Exclude archived and illegitimate projects
+    $where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
+
+    // ── Total projects, contractors, pipeline value ────────────
+    $stmt = $db->prepare("
+        SELECT
+            COUNT(*)                        AS projects_encoded,
+            COUNT(DISTINCT contractor_name) AS contractors_identified,
+            COALESCE(SUM(project_value), 0) AS total_pipeline_value
+        FROM projects
+        $where
+    ");
+    $stmt->execute($params);
+    $totals = $stmt->fetch();
+
+    // ── Category breakdown by status ──────────────────────────
+    $stmt2 = $db->prepare("
+        SELECT
+            status,
+            COUNT(*)                        AS cnt,
+            COALESCE(SUM(project_value), 0) AS val
+        FROM projects
+        $where
+        GROUP BY status
+        ORDER BY val DESC
+    ");
+    $stmt2->execute($params);
+    $categories = $stmt2->fetchAll();
+} catch (Exception $e) {
+    error_log("KPI API error: " . $e->getMessage());
+    jsonResponse([
+        'data' => [
+            'projects_encoded' => 0,
+            'contractors_identified' => 0,
+            'total_pipeline_value' => 0,
+            'pipeline_value' => 0
+        ]
+    ]);
+    exit;
 }
-
-$params = array_merge($date['params'], $regionParams);
-$where  = 'WHERE ' . $date['sql'] . $regionSql;
-
-// Exclude archived and illegitimate projects
-$where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
-
-// ── Total projects, contractors, pipeline value ────────────
-$stmt = $db->prepare("
-    SELECT
-        COUNT(*)                        AS projects_encoded,
-        COUNT(DISTINCT contractor_name) AS contractors_identified,
-        COALESCE(SUM(project_value), 0) AS total_pipeline_value
-    FROM projects
-    $where
-");
-$stmt->execute($params);
-$totals = $stmt->fetch();
-
-// ── Category breakdown by status ──────────────────────────
-$stmt2 = $db->prepare("
-    SELECT
-        status,
-        COUNT(*)                        AS cnt,
-        COALESCE(SUM(project_value), 0) AS val
-    FROM projects
-    $where
-    GROUP BY status
-    ORDER BY val DESC
-");
-$stmt2->execute($params);
-$categories = $stmt2->fetchAll();
 
 // Build category map keyed by snake_case status name
 $categoryMap = [];
