@@ -1054,6 +1054,67 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 
 <main class="projects-container">
     <!-- Summary Cards -->
+    <?php if ($role === 'sales_rep'): ?>
+    <!-- Sales Rep Dashboard -->
+    <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>📊</span>System Overview
+        </h2>
+        <div class="summary-cards" id="systemSummaryCards">
+            <div class="summary-card">
+                <div class="summary-card-icon">📊</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Total Projects</div>
+                    <div class="summary-card-value" id="systemTotalProjects">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">🏢</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Total Contractors</div>
+                    <div class="summary-card-value" id="systemTotalContractors">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">💰</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Pipeline Value</div>
+                    <div class="summary-card-value" id="systemPipelineValue">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--orange-500); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>👤</span>My Projects
+        </h2>
+        <div class="summary-cards" id="mySummaryCards">
+            <div class="summary-card">
+                <div class="summary-card-icon">📋</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">Assigned to Me</div>
+                    <div class="summary-card-value" id="myTotalProjects">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">🏗️</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">My Contractors</div>
+                    <div class="summary-card-value" id="myTotalContractors">—</div>
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-card-icon">💵</div>
+                <div class="summary-card-content">
+                    <div class="summary-card-label">My Pipeline Value</div>
+                    <div class="summary-card-value" id="myPipelineValue">—</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php else: ?>
+    <!-- Admin/Other Roles Dashboard -->
     <div class="summary-cards" id="summaryCards">
         <div class="summary-card">
             <div class="summary-card-icon">📊</div>
@@ -1077,6 +1138,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             </div>
         </div>
     </div>
+    <?php endif; ?>
 
     <!-- Toolbar -->
     <div class="projects-toolbar">

@@ -94,26 +94,80 @@ const ProjectsPage = {
     },
 
     updateSummaryCards() {
-        // Total Projects
-        const totalProjects = this.allProjects.length;
-        document.getElementById('totalProjects').textContent = totalProjects.toLocaleString();
+        // Check if user is sales_rep
+        const userRole = document.body.dataset.role;
+        const isSalesRep = userRole === 'sales_rep';
+        
+        if (isSalesRep) {
+            // Get current user ID from cached user data
+            const user = Auth.getUser();
+            const userId = user ? parseInt(user.id) : 0;
+            
+            // Filter projects assigned to current user (excluding archived)
+            const myProjects = this.allProjects.filter(p => 
+                parseInt(p.assigned_to) === userId && !p.archived_at
+            );
+            
+            // System-wide stats (all non-archived projects)
+            const systemProjects = this.allProjects.filter(p => !p.archived_at);
+            const systemUniqueContractors = new Set(
+                systemProjects
+                    .map(p => (p.contractor_name || '').trim())
+                    .filter(name => name.length > 0)
+            );
+            const systemPipelineValue = systemProjects.reduce((sum, p) => {
+                return sum + (parseFloat(p.project_value) || 0);
+            }, 0);
+            
+            // Update system cards
+            document.getElementById('systemTotalProjects').textContent = systemProjects.length.toLocaleString();
+            document.getElementById('systemTotalContractors').textContent = systemUniqueContractors.size.toLocaleString();
+            document.getElementById('systemPipelineValue').textContent = '₱' + systemPipelineValue.toLocaleString('en-PH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+            
+            // My stats (projects assigned to me, excluding archived)
+            const myUniqueContractors = new Set(
+                myProjects
+                    .map(p => (p.contractor_name || '').trim())
+                    .filter(name => name.length > 0)
+            );
+            const myPipelineValue = myProjects.reduce((sum, p) => {
+                return sum + (parseFloat(p.project_value) || 0);
+            }, 0);
+            
+            // Update my cards
+            document.getElementById('myTotalProjects').textContent = myProjects.length.toLocaleString();
+            document.getElementById('myTotalContractors').textContent = myUniqueContractors.size.toLocaleString();
+            document.getElementById('myPipelineValue').textContent = '₱' + myPipelineValue.toLocaleString('en-PH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        } else {
+            // Admin/Other roles - show all non-archived projects
+            const activeProjects = this.allProjects.filter(p => !p.archived_at);
+            
+            // Total Projects
+            document.getElementById('totalProjects').textContent = activeProjects.length.toLocaleString();
 
-        // Total Unique Contractors
-        const uniqueContractors = new Set(
-            this.allProjects
-                .map(p => (p.contractor_name || '').trim())
-                .filter(name => name.length > 0)
-        );
-        document.getElementById('totalContractors').textContent = uniqueContractors.size.toLocaleString();
+            // Total Unique Contractors
+            const uniqueContractors = new Set(
+                activeProjects
+                    .map(p => (p.contractor_name || '').trim())
+                    .filter(name => name.length > 0)
+            );
+            document.getElementById('totalContractors').textContent = uniqueContractors.size.toLocaleString();
 
-        // Pipeline Value (sum of all project values)
-        const pipelineValue = this.allProjects.reduce((sum, p) => {
-            return sum + (parseFloat(p.project_value) || 0);
-        }, 0);
-        document.getElementById('pipelineValue').textContent = '₱' + pipelineValue.toLocaleString('en-PH', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+            // Pipeline Value (sum of all project values)
+            const pipelineValue = activeProjects.reduce((sum, p) => {
+                return sum + (parseFloat(p.project_value) || 0);
+            }, 0);
+            document.getElementById('pipelineValue').textContent = '₱' + pipelineValue.toLocaleString('en-PH', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
     },
 
     populateRegionFilter() {
