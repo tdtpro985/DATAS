@@ -78,6 +78,16 @@ const ProjectsPage = {
                 );
             }
 
+            // Filter for sales rep - show only assigned projects
+            const userRole = document.body.dataset.role;
+            if (userRole === 'sales_rep') {
+                const user = Auth.getUser();
+                const userId = user ? parseInt(user.id) : 0;
+                this.allProjects = this.allProjects.filter(p => 
+                    parseInt(p.assigned_to) === userId && !p.archived_at
+                );
+            }
+
             // Update summary cards
             this.updateSummaryCards();
 
@@ -218,15 +228,21 @@ const ProjectsPage = {
     },
 
     sortProjects(sortBy) {
-        if (!sortBy) return;
+        if (!sortBy) sortBy = 'publication_date_desc';
 
-        const [field, direction] = sortBy.split('_');
+        const parts = sortBy.split('_');
+        const direction = parts[parts.length - 1];
+        const field = parts.slice(0, -1).join('_');
         const isAsc = direction === 'asc';
 
         this.filteredProjects.sort((a, b) => {
             let valueA, valueB;
 
             switch (field) {
+                case 'publication':
+                    valueA = new Date(a.publication_date || 0);
+                    valueB = new Date(b.publication_date || 0);
+                    break;
                 case 'created':
                     valueA = new Date(a.created_at || 0);
                     valueB = new Date(b.created_at || 0);
@@ -297,21 +313,15 @@ const ProjectsPage = {
         }
 
         tbody.innerHTML = pageProjects.map((project, index) => {
-            // Format date and time
-            let dateTimeStr = '—';
-            if (project.created_at) {
-                const dt = new Date(project.created_at);
-                const date = dt.toLocaleDateString('en-PH', {
+            // Format publication date
+            let dateStr = '—';
+            if (project.publication_date) {
+                const dt = new Date(project.publication_date);
+                dateStr = dt.toLocaleDateString('en-PH', {
                     month: 'short', 
                     day: 'numeric', 
                     year: 'numeric'
                 });
-                const time = dt.toLocaleTimeString('en-PH', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: true
-                });
-                dateTimeStr = `${date}<br><small style="color: var(--text-muted); font-size: 0.75rem;">${time}</small>`;
             }
             
             const value = project.project_value !== null && project.project_value !== undefined
@@ -333,7 +343,7 @@ const ProjectsPage = {
                     <td><span class="status-badge ${statusClass}">${this.escapeHtml(status)}</span></td>
                     <td class="col-value">${value}</td>
                     <td class="col-tracking">${trackingBadge}</td>
-                    <td class="col-date">${dateTimeStr}</td>
+                    <td class="col-date">${dateStr}</td>
                 </tr>
             `;
         }).join('');

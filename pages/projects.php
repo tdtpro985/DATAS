@@ -1157,8 +1157,8 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <option value="Other">Other</option>
         </select>
         <select id="sort-filter" class="filter-select">
-            <option value="created_at_desc">📅 Newest First</option>
-            <option value="created_at_asc">📅 Oldest First</option>
+            <option value="publication_date_desc">📅 Newest First</option>
+            <option value="publication_date_asc">📅 Oldest First</option>
             <option value="contractor_name_asc">🏢 Contractor A-Z</option>
             <option value="contractor_name_desc">🏢 Contractor Z-A</option>
             <option value="project_name_asc">📋 Project A-Z</option>
@@ -1189,7 +1189,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         <th>Status</th>
                         <th class="col-value">Value (₱)</th>
                         <th>Sales Tracking</th>
-                        <th class="col-date">Date & Time</th>
+                        <th class="col-date">Published Date</th>
                     </tr>
                 </thead>
                 <tbody id="projects-tbody">
