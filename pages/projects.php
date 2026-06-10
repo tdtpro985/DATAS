@@ -1188,10 +1188,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         <!-- Status Legend -->
         <div class="status-legend">
             <div class="status-legend-item">
-                <span class="status-circle priority"></span>
-                <span>Priority</span>
-            </div>
-            <div class="status-legend-item">
                 <span class="status-circle awarded"></span>
                 <span>Awarded</span>
             </div>
