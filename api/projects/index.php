@@ -112,23 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                 $tracking = $trackingData[$project['id']] ?? null;
                 
                 if ($tracking) {
-                    // Determine tracking status based on filled fields
-                    $trackingFields = ['contacted', 'quoted', 'sales_qualified', 'to_win', 'wa_amount'];
-                    $filledFields = 0;
-                    
-                    foreach ($trackingFields as $field) {
-                        if (!empty($tracking[$field])) {
-                            $filledFields++;
-                        }
-                    }
-                    
-                    if ($filledFields === 0) {
-                        $project['sales_tracking_status'] = 'Not Started';
-                    } elseif ($filledFields === count($trackingFields)) {
-                        $project['sales_tracking_status'] = 'Complete';
-                    } else {
-                        $project['sales_tracking_status'] = 'In Progress';
-                    }
+                    // Use the tracking_status from database directly
+                    $project['sales_tracking_status'] = $tracking['tracking_status'] ?? 'Not Started';
                     
                     // Group sales tracking data
                     $project['sales_tracking'] = [

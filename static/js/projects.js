@@ -1118,14 +1118,14 @@ const ProjectsPage = {
         
         // Restore W/L amount
         const wlAmountInput = document.getElementById('wl-amount-input');
-        if (wlAmountInput && data.wa_amount) {
-            wlAmountInput.value = data.wa_amount;
+        if (wlAmountInput) {
+            wlAmountInput.value = data.wa_amount || '';
         }
         
         // Restore remarks
         const remarksTextarea = document.getElementById('remarks-textarea');
-        if (remarksTextarea && data.notes) {
-            remarksTextarea.value = data.notes;
+        if (remarksTextarea) {
+            remarksTextarea.value = data.notes || data.remarks || '';
         }
     },
 
@@ -2214,19 +2214,32 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
 document.addEventListener('DOMContentLoaded', () => {
     ProjectsPage.init();
     
-    // Set up event listeners for modal buttons using event delegation
-    document.addEventListener('click', (e) => {
-        const target = e.target;
+    // Set up global event delegation for all buttons
+    document.body.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
         
-        if (target.id === 'closeModalBtn' || target.closest('#closeModalBtn')) {
+        const btnId = target.id;
+        
+        if (btnId === 'closeModalBtn') {
+            e.preventDefault();
+            e.stopPropagation();
             closeDetailsModal();
-        } else if (target.id === 'editProjectBtn' || target.closest('#editProjectBtn')) {
+        } else if (btnId === 'editProjectBtn') {
+            e.preventDefault();
+            e.stopPropagation();
             editProject();
-        } else if (target.id === 'clearTrackingBtn' || target.closest('#clearTrackingBtn')) {
+        } else if (btnId === 'clearTrackingBtn') {
+            e.preventDefault();
+            e.stopPropagation();
             clearSalesTracking(e);
-        } else if (target.id === 'archiveBtn' || target.closest('#archiveBtn')) {
+        } else if (btnId === 'archiveBtn') {
+            e.preventDefault();
+            e.stopPropagation();
             toggleProjectArchive();
-        } else if (target.id === 'saveTrackingBtn' || target.closest('#saveTrackingBtn')) {
+        } else if (btnId === 'saveTrackingBtn') {
+            e.preventDefault();
+            e.stopPropagation();
             saveSalesTracking();
         }
     });
