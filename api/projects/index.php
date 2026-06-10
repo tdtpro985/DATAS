@@ -84,6 +84,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt->execute();
         $projects = $stmt->fetchAll();
         
+        // Convert numeric fields from string to proper numeric types
+        foreach ($projects as &$project) {
+            // Convert decimal/numeric fields to floats
+            $numericFields = [
+                'project_value', 'sheet_pile_amount', 'drbs_value', 'accomplishment_rate',
+                'ms_plate', 'angle_bars', 'channel_bars', 'wide_flange', 'gi_bi'
+            ];
+            
+            foreach ($numericFields as $field) {
+                if (isset($project[$field]) && $project[$field] !== null && $project[$field] !== '') {
+                    $project[$field] = (float) $project[$field];
+                } else {
+                    $project[$field] = null;
+                }
+            }
+        }
+        unset($project); // Break reference
+        
         // Check if sales tracking columns exist
         $hasTrackingColumns = false;
         try {
