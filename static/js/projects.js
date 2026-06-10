@@ -645,6 +645,12 @@ const ProjectsPage = {
 
         // Debug: Log the project data to see what fields are available
         console.log('[DEBUG] Project data:', project);
+        console.log('[DEBUG] Materials data:', {
+            drbs_value: project.drbs_value,
+            sheet_pile_amount: project.sheet_pile_amount,
+            ms_plate: project.ms_plate,
+            angle_bars: project.angle_bars
+        });
         console.log('[DEBUG] Contract country:', project.contract_country);
         console.log('[DEBUG] Project region:', project.project_region);
         console.log('[DEBUG] Address field:', project.address);

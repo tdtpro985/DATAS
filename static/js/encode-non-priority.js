@@ -498,7 +498,15 @@ const NonPriorityForm = {
             
             form_type: 'non-priority'
         };
-    }
+        
+        // Debug log to verify drbs_value is being sent
+        console.log('[NON-PRIORITY ENCODE] Payload materials:', {
+            drbs_value: payload.drbs_value,
+            sheet_pile_amount: payload.sheet_pile_amount,
+            ms_plate: payload.ms_plate
+        });
+        
+        return payload;
 };
 
 if (document.readyState === 'loading') {
