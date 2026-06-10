@@ -139,10 +139,7 @@ const ProjectsPage = {
             // Update my cards
             document.getElementById('myTotalProjects').textContent = myProjects.length.toLocaleString();
             document.getElementById('myTotalContractors').textContent = myUniqueContractors.size.toLocaleString();
-            document.getElementById('myPipelineValue').textContent = '₱' + myPipelineValue.toLocaleString('en-PH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
+            document.getElementById('myPipelineValue').textContent = this.formatShortCurrency(myPipelineValue);
             document.getElementById('myNonPriorityProjects').textContent = myNonPriority.toLocaleString();
             document.getElementById('myPriorityProjects').textContent = myPriority.toLocaleString();
         } else {
@@ -164,10 +161,19 @@ const ProjectsPage = {
             const pipelineValue = activeProjects.reduce((sum, p) => {
                 return sum + (parseFloat(p.project_value) || 0);
             }, 0);
-            document.getElementById('pipelineValue').textContent = '₱' + pipelineValue.toLocaleString('en-PH', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            });
+            document.getElementById('pipelineValue').textContent = this.formatShortCurrency(pipelineValue);
+        }
+    },
+
+    formatShortCurrency(value) {
+        if (value >= 1000000000) {
+            return '₱' + (value / 1000000000).toFixed(1) + 'B';
+        } else if (value >= 1000000) {
+            return '₱' + (value / 1000000).toFixed(1) + 'M';
+        } else if (value >= 1000) {
+            return '₱' + (value / 1000).toFixed(1) + 'K';
+        } else {
+            return '₱' + value.toFixed(2);
         }
     },
 
