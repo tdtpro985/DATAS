@@ -1940,12 +1940,10 @@ function editProject() {
         return;
     }
     
-    // Close current modal
-    closeDetailsModal();
-    
-    // Redirect to edit page (you'll need to create this page)
+    // Redirect to edit page
     window.location.href = `${BASE}/projects/edit/${projectId}`;
 }
+
 
 // Clear Sales Tracking Function
 async function clearSalesTracking(event) {
@@ -1994,6 +1992,111 @@ async function clearSalesTracking(event) {
     } catch (error) {
         console.error('[PROJECTS] Clear tracking error:', error);
         Toast.error(error.message || 'Failed to clear sales tracking');
+    }
+}
+
+// Save Sales Tracking Function
+async function saveSalesTracking() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = modal.dataset.projectId;
+    
+    if (!projectId) {
+        Toast.error('Project ID not found');
+        return;
+    }
+    
+    // Get form values
+    const contactedButtons = document.querySelectorAll('.yes-no-btn[data-field="contacted"]');
+    const quotedButtons = document.querySelectorAll('.yes-no-btn[data-field="quoted"]');
+    const salesQualifiedButtons = document.querySelectorAll('.yes-no-btn[data-field="sales_qualified"]');
+    const toWinButtons = document.querySelectorAll('.yes-no-btn[data-field="to_win"]');
+    
+    const getButtonValue = (buttons) => {
+        const yesBtn = Array.from(buttons).find(btn => btn.dataset.value === 'yes');
+        const noBtn = Array.from(buttons).find(btn => btn.dataset.value === 'no');
+        
+        if (yesBtn && yesBtn.classList.contains('active')) return true;
+        if (noBtn && noBtn.classList.contains('active')) return false;
+        return null;
+    };
+    
+    const contacted = getButtonValue(contactedButtons);
+    const quoted = getButtonValue(quotedButtons);
+    const salesQualified = getButtonValue(salesQualifiedButtons);
+    const toWin = getButtonValue(toWinButtons);
+    
+    const waAmount = document.getElementById('wl-amount-input')?.value || null;
+    const remarks = document.getElementById('remarks-textarea')?.value || null;
+    const salesRepId = document.getElementById('sales-rep-select')?.value || null;
+    const branch = document.getElementById('branch-input')?.value || null;
+    
+    // Build payload
+    const payload = {
+        contacted,
+        quoted,
+        sales_qualified: salesQualified,
+        to_win: toWin,
+        wa_amount: waAmount ? parseFloat(waAmount) : null,
+        remarks,
+        sales_rep_id: salesRepId ? parseInt(salesRepId) : null,
+        branch
+    };
+    
+    console.log('[PROJECTS] Saving sales tracking:', payload);
+    
+    // Disable save button
+    const saveBtn = document.getElementById('saveTrackingBtn');
+    if (saveBtn) {
+        saveBtn.textContent = '💾 Saving...';
+        saveBtn.disabled = true;
+    }
+    
+    try {
+        const response = await fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || error.message || 'Failed to save sales tracking');
+        }
+        
+        const result = await response.json();
+        console.log('[PROJECTS] Sales tracking saved:', result);
+        
+        Toast.success('Sales tracking saved successfully');
+        
+        // Reload projects to update table
+        await ProjectsPage.loadProjects();
+        
+        // Reload the modal to show updated data
+        closeDetailsModal();
+        setTimeout(() => {
+            ProjectsPage.viewProject(parseInt(projectId));
+        }, 500);
+        
+    } catch (error) {
+        console.error('[PROJECTS] Save sales tracking error:', error);
+        Toast.error(error.message || 'Failed to save sales tracking');
+    } finally {
+        // Re-enable save button
+        if (saveBtn) {
+            saveBtn.textContent = '💾 Save Sales Tracking';
+            saveBtn.disabled = false;
+        }
+    }
+}
+
+// Close Details Modal
+function closeDetailsModal() {
+    const modal = document.getElementById('detailsModal');
+    if (modal) {
+        modal.classList.remove('active');
     }
 }
 
