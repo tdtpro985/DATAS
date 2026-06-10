@@ -2696,11 +2696,11 @@ async function loadSalesTrackingDataPM(projectId) {
 
 function showActualProjectModalPM(projectId) {
     const overlay = document.createElement('div');
-    overlay.className = 'modal-overlay';
-    overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+    overlay.className = 'modal-overlay active';
+    overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.2s;';
     
     const modalBox = document.createElement('div');
-    modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);';
+    modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); animation: slideUp 0.3s;';
     
     modalBox.innerHTML = `
         <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -2711,8 +2711,8 @@ function showActualProjectModalPM(projectId) {
         
         <div style="background: rgba(255, 128, 0, 0.1); border: 2px solid rgba(255, 128, 0, 0.3); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
             <div class="yes-no-buttons" style="display: flex; gap: 1rem; justify-content: center;">
-                <button type="button" class="yes-no-btn" data-value="yes" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">Yes</button>
-                <button type="button" class="yes-no-btn" data-value="no" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">No</button>
+                <button type="button" class="actual-project-btn" data-value="yes" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">Yes</button>
+                <button type="button" class="actual-project-btn" data-value="no" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">No</button>
             </div>
             <small style="display: block; margin-top: 0.75rem; color: rgba(255,255,255,0.6); font-size: 0.75rem; text-align: center;">
                 Select "No" if this is spam, duplicate, or invalid.
@@ -2732,13 +2732,20 @@ function showActualProjectModalPM(projectId) {
     let selectedValue = null;
     const saveBtn = modalBox.querySelector('#actualProjectSaveBtn');
     
+    // Prevent overlay clicks from closing
+    overlay.addEventListener('click', (e) => {
+        e.stopPropagation();
+    });
+    
     // Button click handlers
-    modalBox.querySelectorAll('.yes-no-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
+    modalBox.querySelectorAll('.actual-project-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             selectedValue = btn.dataset.value;
             
             // Update button states
-            modalBox.querySelectorAll('.yes-no-btn').forEach(b => {
+            modalBox.querySelectorAll('.actual-project-btn').forEach(b => {
                 b.style.opacity = '0.5';
                 b.style.transform = 'scale(1)';
             });
@@ -2765,7 +2772,10 @@ function showActualProjectModalPM(projectId) {
     });
     
     // Save button handler
-    saveBtn.addEventListener('click', async () => {
+    saveBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        
         if (!selectedValue) return;
         
         saveBtn.textContent = 'Saving...';
@@ -2781,13 +2791,17 @@ function showActualProjectModalPM(projectId) {
             
             if (response.ok) {
                 showNotificationModal('Success', 'Project status saved successfully!', 'success');
+                
+                // Remove overlay
                 overlay.remove();
                 
                 // Close details modal
-                closeDetailsModal();
-                
-                // Reload projects
-                loadProjects();
+                setTimeout(() => {
+                    closeDetailsModal();
+                    
+                    // Reload projects
+                    loadProjects();
+                }, 1500);
             } else {
                 throw new Error('Failed to save');
             }
@@ -2796,13 +2810,6 @@ function showActualProjectModalPM(projectId) {
             showNotificationModal('Error', 'Failed to save. Please try again.', 'error');
             saveBtn.textContent = 'Save';
             saveBtn.disabled = false;
-        }
-    });
-    
-    // Close on overlay click
-    overlay.addEventListener('click', (e) => {
-        if (e.target === overlay) {
-            overlay.remove();
         }
     });
 }
