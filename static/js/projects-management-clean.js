@@ -2744,13 +2744,18 @@ function showActualProjectModalPM(projectId) {
             e.stopPropagation();
             selectedValue = btn.dataset.value;
             
-            // Update button states
+            console.log('[ACTUAL PROJECT] Selected:', selectedValue);
+            
+            // Update button states - keep visible
             modalBox.querySelectorAll('.actual-project-btn').forEach(b => {
-                b.style.opacity = '0.5';
+                b.style.opacity = '0.4';
                 b.style.transform = 'scale(1)';
+                b.style.borderWidth = '2px';
             });
             btn.style.opacity = '1';
             btn.style.transform = 'scale(1.05)';
+            btn.style.borderWidth = '3px';
+            btn.style.boxShadow = '0 0 20px ' + (selectedValue === 'yes' ? 'rgba(34, 197, 94, 0.5)' : 'rgba(239, 68, 68, 0.5)');
             
             // Enable save button
             saveBtn.disabled = false;
@@ -2776,12 +2781,20 @@ function showActualProjectModalPM(projectId) {
         e.preventDefault();
         e.stopPropagation();
         
-        if (!selectedValue) return;
+        if (!selectedValue) {
+            console.error('[ACTUAL PROJECT] No value selected');
+            return;
+        }
+        
+        console.log('[ACTUAL PROJECT] Saving:', selectedValue);
         
         saveBtn.textContent = 'Saving...';
         saveBtn.disabled = true;
+        saveBtn.style.opacity = '0.7';
         
         try {
+            console.log('[ACTUAL PROJECT] API URL:', `${_B}/api/v1/projects/${projectId}/actual-project`);
+            
             const response = await fetch(`${_B}/api/v1/projects/${projectId}/actual-project`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2789,13 +2802,21 @@ function showActualProjectModalPM(projectId) {
                 body: JSON.stringify({ is_actual_project: selectedValue })
             });
             
+            console.log('[ACTUAL PROJECT] Response status:', response.status);
+            
             if (response.ok) {
+                const result = await response.json();
+                console.log('[ACTUAL PROJECT] Success:', result);
+                
                 showNotificationModal('Success', 'Project status saved successfully!', 'success');
+                
+                // Wait a bit before closing
+                await new Promise(resolve => setTimeout(resolve, 500));
                 
                 // Remove overlay
                 overlay.remove();
                 
-                // Close details modal
+                // Close details modal and reload after notification shows
                 setTimeout(() => {
                     closeDetailsModal();
                     
@@ -2803,13 +2824,16 @@ function showActualProjectModalPM(projectId) {
                     loadProjects();
                 }, 1500);
             } else {
-                throw new Error('Failed to save');
+                const errorData = await response.json();
+                console.error('[ACTUAL PROJECT] Error response:', errorData);
+                throw new Error(errorData.detail || 'Failed to save');
             }
         } catch (error) {
-            console.error('Error saving actual project:', error);
+            console.error('[ACTUAL PROJECT] Error saving:', error);
             showNotificationModal('Error', 'Failed to save. Please try again.', 'error');
             saveBtn.textContent = 'Save';
             saveBtn.disabled = false;
+            saveBtn.style.opacity = '1';
         }
     });
 }

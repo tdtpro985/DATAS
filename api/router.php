@@ -88,6 +88,7 @@ elseif ($path === 'projects/bulk-unassign' && $method === 'POST')        { requi
 elseif ($path === 'projects/archive' && in_array($method, ['POST', 'PUT']))  { require __DIR__ . '/projects/archive.php'; }
 elseif ($path === 'projects/archived' && $method === 'GET')                  { require __DIR__ . '/projects/archived.php'; }
 elseif (preg_match('#^projects/(\d+)/sales-tracking$#', $path, $m))     { $_GET['id'] = $m[1]; require __DIR__ . '/projects/sales-tracking.php'; }
+elseif (preg_match('#^projects/(\d+)/actual-project$#', $path, $m))     { $_GET['id'] = $m[1]; require __DIR__ . '/projects/actual-project.php'; }
 elseif ($path === 'users' && in_array($method, ['GET','POST'], true))    { require __DIR__ . '/users/index.php'; }
 elseif (preg_match('#^users/(\d+)$#', $path, $m))                       { $_GET['id'] = $m[1]; require __DIR__ . '/users/user.php'; }
 elseif ($path === 'users/sales-reps-ranking')                            { require __DIR__ . '/users/sales-reps-ranking.php'; }
