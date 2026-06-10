@@ -26,6 +26,7 @@ $stmt = $db->prepare("
     FROM projects
     WHERE encoded_by = :uid 
     AND archived_at IS NULL
+    AND (is_actual_project IS NULL OR is_actual_project != 'no')
     ORDER BY created_at DESC
     LIMIT 10
 ");

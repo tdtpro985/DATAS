@@ -39,6 +39,7 @@ $where[] = 'st.project_id IS NOT NULL';  // Must have sales tracking data
 $where[] = 'st.tracking_status IS NOT NULL';  // Must have a tracking status
 $where[] = 'st.tracking_status != "Not Started"';  // Must NOT be "Not Started"
 $where[] = 'p.archived_at IS NULL';      // Not archived
+$where[] = "(p.is_actual_project IS NULL OR p.is_actual_project != 'no')";  // Not illegitimate
 
 // Additional filters
 if ($status && $status !== 'all') {

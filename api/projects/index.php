@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $db = getDB();
 
         // Build WHERE clause based on type parameter
-        $whereConditions = ['p.archived_at IS NULL'];
+        $whereConditions = ['p.archived_at IS NULL', "(p.is_actual_project IS NULL OR p.is_actual_project != 'no')"];
         $params = [];
         
         if ($type === 'priority') {
