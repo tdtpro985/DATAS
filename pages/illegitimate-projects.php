@@ -2,7 +2,9 @@
 session_start();
 require_once __DIR__ . '/../config.php';
 
-$base = BASE;
+$scriptDir = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
+$base = $scriptDir;
+
 $role = $_SESSION['role'] ?? null;
 $userId = $_SESSION['user_id'] ?? null;
 $fullName = $_SESSION['full_name'] ?? '';
