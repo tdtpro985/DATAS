@@ -507,6 +507,7 @@ const NonPriorityForm = {
         });
         
         return payload;
+    }
 };
 
 if (document.readyState === 'loading') {
