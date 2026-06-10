@@ -227,11 +227,25 @@ function buildDateFilter(string $dateColumn = 'publication_date'): array {
     $year   = getYear();
 
     // If no month/year specified, return a condition that matches all records
-    if ($month === null || $year === null) {
+    if ($month === null && $year === null) {
         return [
-            'sql'    => "$dateColumn IS NOT NULL",
+            'sql'    => "1=1",
             'params' => [],
         ];
+    }
+
+    // If only year is specified (no month)
+    if ($month === null && $year !== null) {
+        return [
+            'sql'    => "YEAR($dateColumn) = :year",
+            'params' => [':year' => $year],
+        ];
+    }
+
+    // If only month is specified (unlikely, but handle it)
+    if ($month !== null && $year === null) {
+        // Use current year as default
+        $year = (int) date('Y');
     }
 
     switch ($period) {
