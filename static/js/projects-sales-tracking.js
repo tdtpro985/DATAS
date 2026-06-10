@@ -103,73 +103,47 @@ async function saveSalesTracking() {
 
 // Clear Sales Tracking
 async function clearSalesTracking(event) {
-    // Prevent default and stop propagation
     if (event) {
         event.preventDefault();
         event.stopPropagation();
-        event.stopImmediatePropagation();
     }
     
     const modal = document.getElementById('detailsModal');
     const projectId = modal?.dataset?.projectId;
     
     if (!projectId) {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Project ID not found');
-        }
+        alert('Project ID not found');
         return;
     }
     
-    // Show confirmation
     const confirmed = await showClearTrackingConfirm();
     if (!confirmed) return;
     
     try {
         const response = await fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`, {
             method: 'DELETE',
-            credentials: 'include',
-            headers: {
-                'Accept': 'application/json'
-            }
+            credentials: 'include'
         });
         
-        // Get response text first to debug
-        const responseText = await response.text();
-        console.log('[SALES TRACKING] DELETE response:', responseText);
-        
-        let result;
-        try {
-            result = JSON.parse(responseText);
-        } catch (parseError) {
-            console.error('[SALES TRACKING] JSON parse error:', parseError);
-            throw new Error('Invalid response from server');
-        }
+        const result = await response.json();
         
         if (!response.ok) {
-            throw new Error(result.detail || result.message || 'Failed to clear');
+            throw new Error(result.detail || 'Failed to clear');
         }
-        
-        console.log('[SALES TRACKING] Cleared successfully');
         
         if (typeof Toast !== 'undefined') {
-            Toast.success('Sales tracking cleared successfully');
+            Toast.success('Sales tracking cleared');
         }
         
-        // Reload projects list
         if (typeof ProjectsPage !== 'undefined' && ProjectsPage.loadProjects) {
             await ProjectsPage.loadProjects();
         }
         
-        // Close modal
         closeDetailsModal();
         
     } catch (error) {
-        console.error('[SALES TRACKING] Clear error:', error);
-        if (typeof Toast !== 'undefined') {
-            Toast.error(error.message || 'Failed to clear sales tracking');
-        } else {
-            alert('Error: ' + (error.message || 'Failed to clear sales tracking'));
-        }
+        console.error('[CLEAR] Error:', error);
+        alert('Failed to clear: ' + error.message);
     }
 }
 
