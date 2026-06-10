@@ -206,7 +206,9 @@ const ProjectsPage = {
             const matchesSearch = !searchTerm || 
                 (project.contractor_name || '').toLowerCase().includes(searchTerm) ||
                 (project.project_name || '').toLowerCase().includes(searchTerm) ||
-                (project.region || '').toLowerCase().includes(searchTerm);
+                (project.region || '').toLowerCase().includes(searchTerm) ||
+                (project.project_id || '').toLowerCase().includes(searchTerm) ||
+                (project.contractor_id || '').toLowerCase().includes(searchTerm);
 
             // Region filter
             const matchesRegion = !regionFilter || project.region === regionFilter;
