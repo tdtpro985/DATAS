@@ -47,6 +47,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/roles.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
 
@@ -1419,6 +1420,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
+<script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=6"></script>
