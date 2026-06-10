@@ -710,6 +710,23 @@ if ($role === 'encoder') {
             grid-template-columns: 380px 500px 450px;
             gap: 0.8rem;
             min-height: 0;
+            overflow-x: auto; /* Allow horizontal scroll if needed */
+            overflow-y: hidden;
+        }
+        
+        /* Prevent horizontal overflow on smaller screens */
+        @media (max-width: 1400px) {
+            .main-grid {
+                grid-template-columns: 350px 450px 400px;
+                gap: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 1280px) {
+            .main-grid {
+                grid-template-columns: 320px 420px 380px;
+                gap: 0.5rem;
+            }
         }
         
         /* Left Column */
@@ -718,6 +735,14 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .left-column > * {
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         /* KPI Summary Left */
@@ -790,6 +815,14 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
+            overflow-x: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .center-column > * {
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         /* Target Section */
@@ -936,6 +969,15 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
+            overflow-x: hidden; /* Prevent horizontal overflow */
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        /* Ensure all child elements don't overflow */
+        .right-column > * {
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         /* Live Slideshow */
@@ -1132,6 +1174,8 @@ if ($role === 'encoder') {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+            width: 100%;
+            max-width: 100%;
         }
         
         .bar-graph-section::before {
@@ -1157,6 +1201,8 @@ if ($role === 'encoder') {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+            width: 100%;
+            max-width: 100%;
         }
         
         .pie-graph-section::before {
@@ -1514,6 +1560,14 @@ if ($role === 'encoder') {
             position: relative;
             min-height: 0;
             padding: 0.5rem;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden; /* Prevent chart overflow */
+        }
+        
+        .chart-container canvas {
+            max-width: 100% !important;
+            height: auto !important;
         }
         
         /* Category Items */
@@ -1911,11 +1965,33 @@ if ($role === 'encoder') {
         }
         
         /* Tablet Landscape (768px - 1023px) */
-        @media (max-width: 1023px) and (min-width: 768px) {
+        @media (max-width: 1023px) {
+            .dashboard-header {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 0.5rem;
+            }
+            
+            .header-controls {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .control-select {
+                min-width: 100px;
+                font-size: 0.7rem;
+            }
+            
+            .export-button {
+                font-size: 0.7rem;
+                padding: 0.35rem 0.8rem;
+            }
+            
             .main-grid {
                 grid-template-columns: 1fr 1fr;
                 grid-template-rows: auto auto;
                 gap: 0.6rem;
+                overflow-x: hidden;
             }
             
             .left-column {
@@ -1931,8 +2007,8 @@ if ($role === 'encoder') {
             .right-column {
                 grid-column: 2;
                 grid-row: 2;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
+                display: flex;
+                flex-direction: column;
                 gap: 0.6rem;
             }
             
@@ -2035,18 +2111,79 @@ if ($role === 'encoder') {
             }
         }
         
-        /* Tablet Portrait (600px - 767px) */
-        @media (max-width: 767px) and (min-width: 600px) {
+        /* Tablet Portrait & Mobile (max 767px) */
+        @media (max-width: 767px) {
+            html, body {
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+            
+            .dashboard-container {
+                overflow-y: auto;
+                overflow-x: hidden;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+                height: auto;
+                padding: 0.6rem;
+            }
+            
+            .header-left {
+                width: 100%;
+            }
+            
+            .header-right {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
+            }
+            
+            .header-controls {
+                width: 100%;
+                flex-wrap: wrap;
+                gap: 0.4rem;
+            }
+            
+            .control-group {
+                flex: 1;
+                min-width: 100px;
+            }
+            
+            .control-select {
+                width: 100%;
+                font-size: 0.7rem;
+            }
+            
+            .export-button {
+                width: 100%;
+                justify-content: center;
+                font-size: 0.75rem;
+            }
+            
+            .dashboard-content {
+                padding: 0.5rem;
+                max-height: none;
+                overflow-y: visible;
+                overflow-x: hidden;
+            }
+            
             .main-grid {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto;
                 gap: 0.5rem;
+                overflow: visible;
             }
             
             .left-column,
             .center-column,
             .right-column {
                 grid-column: 1;
+                width: 100%;
+                overflow-x: hidden;
             }
             
             .left-column {
