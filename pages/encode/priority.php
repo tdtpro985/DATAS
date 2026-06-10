@@ -926,7 +926,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <!-- Row 3 -->
                         <div class="form-group">
                             <label for="contractId" data-required=" *">Contract ID</label>
-                            <input type="text" id="contractId" name="contract_id" maxlength="8" placeholder="8 chars (L/N)" required>
+                            <input type="text" id="contractId" name="contract_id" maxlength="15" placeholder="Up to 15 chars" required>
                         </div>
                         <div class="form-group">
                             <label for="contractProvince" data-required=" *">Province</label>
@@ -1006,7 +1006,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <!-- Row 1: Project ID, Country, Barangay -->
                         <div class="form-group">
                             <label for="projectId">Project ID</label>
-                            <input type="text" id="projectId" name="project_id" maxlength="9" placeholder="9 digits" pattern="[0-9]*" inputmode="numeric">
+                            <input type="text" id="projectId" name="project_id" maxlength="15" placeholder="Up to 15 chars">
                         </div>
                         <div class="form-group">
                             <label for="projectCountry" data-required=" *">Country</label>
