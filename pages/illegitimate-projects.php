@@ -1,17 +1,25 @@
 <?php
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_strict_mode', 1);
 session_start();
+
 require_once __DIR__ . '/../config.php';
 
 $scriptDir = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 $base = $scriptDir;
 
-$role = $_SESSION['role'] ?? null;
-$userId = $_SESSION['user_id'] ?? null;
-$fullName = $_SESSION['full_name'] ?? '';
+if (empty($_SESSION['user'])) {
+    header('Location: ' . $base . '/login');
+    exit;
+}
+
+$role = $_SESSION['user']['role'] ?? '';
+$userId = $_SESSION['user']['id'] ?? null;
+$fullName = $_SESSION['user']['full_name'] ?? ($_SESSION['user']['username'] ?? 'User');
 
 // Role check
 if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
-    header('Location: ' . $base . '/login');
+    header('Location: ' . $base . '/');
     exit;
 }
 ?>
