@@ -12,22 +12,16 @@ const PriorityForm = {
         this.form = document.getElementById('encodeForm');
         if (!this.form) return;
 
-        // Event listeners for step navigation
-        document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
-        document.getElementById('prevBtn').addEventListener('click', () => this.prevStep());
-        
-        // Add event listeners for additional step buttons
-        const nextBtn2 = document.getElementById('nextBtn2');
-        const prevBtn2 = document.getElementById('prevBtn2');
-        const nextBtn3 = document.getElementById('nextBtn3');
-        const prevBtn3 = document.getElementById('prevBtn3');
-        const prevBtn4 = document.getElementById('prevBtn4');
-        
-        if (nextBtn2) nextBtn2.addEventListener('click', () => this.nextStep());
-        if (prevBtn2) prevBtn2.addEventListener('click', () => this.prevStep());
-        if (nextBtn3) nextBtn3.addEventListener('click', () => this.nextStep());
-        if (prevBtn3) prevBtn3.addEventListener('click', () => this.prevStep());
-        if (prevBtn4) prevBtn4.addEventListener('click', () => this.prevStep());
+        // Event listeners for step navigation - delegate to form
+        this.form.addEventListener('click', (e) => {
+            if (e.target.id && e.target.id.startsWith('nextBtn')) {
+                e.preventDefault();
+                this.nextStep();
+            } else if (e.target.id && e.target.id.startsWith('prevBtn')) {
+                e.preventDefault();
+                this.prevStep();
+            }
+        });
         
         this.form.addEventListener('submit', (e) => this.handleSubmit(e));
 

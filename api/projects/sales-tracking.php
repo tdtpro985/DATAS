@@ -76,13 +76,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
 // Handle POST request - save sales tracking data
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $body = getJsonBody();
+    if (!$body) {
+        jsonError('Request body is required', 400);
+    }
 
-$body = getJsonBody();
-if (!$body) {
-    jsonError('Request body is required', 400);
-}
-
-try {
+    try {
     $db = getDB();
     
     // Verify project exists
