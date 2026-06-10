@@ -21,6 +21,9 @@ $date = buildDateFilter('publication_date');
 $params = $date['params'];
 $where = 'WHERE ' . $date['sql'];
 
+// Exclude archived and illegitimate projects  
+$where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
+
 // Get regional statistics
 $stmt = $db->prepare("
     SELECT

@@ -29,6 +29,9 @@ if ($region !== null) {
 $params = array_merge($date['params'], $regionParams);
 $where  = 'WHERE ' . $date['sql'] . $regionSql;
 
+// Exclude archived and illegitimate projects
+$where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
+
 // Build slices from sheet_pile and drbs values
 // Each project contributes up to 2 material slices
 $stmt = $db->prepare("
