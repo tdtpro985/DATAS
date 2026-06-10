@@ -1946,8 +1946,13 @@ async function clearSalesTracking() {
         return;
     }
     
-    // Simple confirmation dialog
-    const confirmed = confirm('Are you sure you want to clear all sales tracking data for this project?\n\nThis action cannot be undone.');
+    // Create custom confirmation modal
+    const confirmed = await showCustomConfirm(
+        'Clear Sales Tracking',
+        'Are you sure you want to clear all sales tracking data for this project?\n\nThis action cannot be undone.',
+        'Clear Tracking',
+        'Cancel'
+    );
     
     if (!confirmed) return;
     
@@ -1972,4 +1977,59 @@ async function clearSalesTracking() {
         console.error('[PROJECTS] Clear tracking error:', error);
         Toast.error(error.message || 'Failed to clear sales tracking');
     }
+}
+
+// Custom Confirmation Modal
+function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText = 'Cancel') {
+    return new Promise((resolve) => {
+        // Create modal overlay
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.style.display = 'flex';
+        overlay.style.zIndex = '10000';
+        
+        // Create modal
+        const confirmModal = document.createElement('div');
+        confirmModal.className = 'modal-content';
+        confirmModal.style.maxWidth = '500px';
+        confirmModal.style.animation = 'slideInUp 0.3s ease';
+        
+        confirmModal.innerHTML = `
+            <div class="modal-header">
+                <h2>⚠️ ${title}</h2>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap;">${message}</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn-action btn-secondary" id="confirmCancel">${cancelText}</button>
+                <button type="button" class="btn-action btn-warning" id="confirmOk">${confirmText}</button>
+            </div>
+        `;
+        
+        overlay.appendChild(confirmModal);
+        document.body.appendChild(overlay);
+        
+        // Handle button clicks
+        const cancelBtn = document.getElementById('confirmCancel');
+        const okBtn = document.getElementById('confirmOk');
+        
+        cancelBtn.onclick = () => {
+            overlay.remove();
+            resolve(false);
+        };
+        
+        okBtn.onclick = () => {
+            overlay.remove();
+            resolve(true);
+        };
+        
+        // Close on overlay click
+        overlay.onclick = (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+                resolve(false);
+            }
+        };
+    });
 }
