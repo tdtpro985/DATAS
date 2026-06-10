@@ -29,12 +29,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $db = getDB();
         
+        // Debug logging if debug mode is enabled
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            error_log('[SALES_TRACKING] GET request for project ID: ' . $projectId);
+        }
+        
         // Verify project exists and get is_actual_project
         $projectStmt = $db->prepare('SELECT id, is_actual_project FROM projects WHERE id = :id LIMIT 1');
         $projectStmt->execute([':id' => $projectId]);
         $project = $projectStmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$project) {
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                error_log('[SALES_TRACKING] Project not found: ' . $projectId);
+            }
             jsonError('Project not found', 404);
         }
         
@@ -49,6 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $trackingStmt->execute([':project_id' => $projectId]);
         $tracking = $trackingStmt->fetch(PDO::FETCH_ASSOC);
         
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            error_log('[SALES_TRACKING] Query result: ' . ($tracking ? 'Found' : 'Not found'));
+        }
+        
         if (!$tracking) {
             // No tracking data exists yet
             jsonResponse([
@@ -62,14 +74,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $tracking['sales_qualified'] = $tracking['sales_qualified'] === 'Yes' ? true : ($tracking['sales_qualified'] === 'No' ? false : null);
             $tracking['to_win'] = $tracking['to_win'] === 'Yes' ? true : ($tracking['to_win'] === 'No' ? false : null);
             
+            if (defined('DEBUG_MODE') && DEBUG_MODE) {
+                error_log('[SALES_TRACKING] Returning data for project: ' . $projectId);
+            }
+            
             jsonResponse([
                 'exists' => true,
                 'data' => $tracking
             ]);
         }
         
+    } catch (PDOException $e) {
+        // Log database error
+        error_log('[SALES_TRACKING] Database error: ' . $e->getMessage());
+        error_log('[SALES_TRACKING] Stack trace: ' . $e->getTraceAsString());
+        jsonError('Database error: Unable to fetch sales tracking data', 500);
     } catch (Exception $e) {
-        jsonError('Database error: ' . $e->getMessage(), 500);
+        // Log general error
+        error_log('[SALES_TRACKING] General error: ' . $e->getMessage());
+        error_log('[SALES_TRACKING] Stack trace: ' . $e->getTraceAsString());
+        jsonError('Error: ' . $e->getMessage(), 500);
     }
     return;
 }

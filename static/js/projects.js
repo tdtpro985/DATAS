@@ -940,11 +940,14 @@ const ProjectsPage = {
             
             // Load sales reps only for superadmin and admin
             if (userRole === 'superadmin' || userRole === 'admin') {
-                this.loadSalesReps();
+                this.loadSalesReps().then(() => {
+                    // Load sales tracking data AFTER sales reps are loaded
+                    this.loadSalesTrackingData(projectId);
+                });
+            } else {
+                // For sales_rep role, load tracking data directly
+                this.loadSalesTrackingData(projectId);
             }
-            
-            // Load existing sales tracking data to restore button states
-            this.loadSalesTrackingData(projectId);
             
             // Reset save button text (in case it was stuck on "Saving...")
             const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
@@ -952,7 +955,7 @@ const ProjectsPage = {
                 saveBtn.textContent = '💾 Save Sales Tracking';
                 saveBtn.disabled = false;
             }
-        }, 0);
+        }, 100); // Increased delay to ensure DOM is ready
         
         // Show/Hide Archive Button based on user role and project archive status
         const archiveBtn = document.getElementById('archiveBtn');
@@ -1031,13 +1034,35 @@ const ProjectsPage = {
         try {
             console.log('[PROJECTS] Loading sales tracking data for project:', projectId);
             
-            const response = await fetch(BASE + `/api/v1/projects/${projectId}/sales-tracking`, {
+            const url = BASE + `/api/v1/projects/${projectId}/sales-tracking`;
+            console.log('[PROJECTS] Fetching from URL:', url);
+            
+            const response = await fetch(url, {
                 method: 'GET',
-                credentials: 'include'
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json'
+                }
             });
             
+            console.log('[PROJECTS] Response status:', response.status, response.statusText);
+            
             if (!response.ok) {
+                // Log the full response for debugging
+                const errorText = await response.text();
                 console.error('[PROJECTS] Sales tracking API error:', response.status);
+                console.error('[PROJECTS] Error response body:', errorText);
+                
+                // Try to parse as JSON if possible
+                try {
+                    const errorJson = JSON.parse(errorText);
+                    console.error('[PROJECTS] Error detail:', errorJson.detail || errorJson);
+                } catch (e) {
+                    console.error('[PROJECTS] Raw error:', errorText);
+                }
+                
+                // Show user-friendly error
+                showToast('Failed to load sales tracking data. Please refresh and try again.', 'error');
                 return;
             }
             
@@ -1047,25 +1072,45 @@ const ProjectsPage = {
             if (result.exists && result.data) {
                 const data = result.data;
                 
+                console.log('[PROJECTS] Sales tracking data exists, restoring...');
+                
                 // Restore button states
                 this.restoreButtonStates(data);
                 
                 // Restore form field values
                 this.restoreFormFields(data);
                 
-                console.log('[PROJECTS] Sales tracking data restored successfully');
+                console.log('[PROJECTS] ✓ Sales tracking data restored successfully');
             } else {
                 console.log('[PROJECTS] No existing sales tracking data found');
             }
             
         } catch (error) {
             console.error('[PROJECTS] Load sales tracking error:', error);
+            console.error('[PROJECTS] Error stack:', error.stack);
+            showToast('Network error while loading sales tracking data', 'error');
         }
     },
 
     restoreButtonStates(data) {
+        console.log('[PROJECTS] Starting restoreButtonStates with data:', data);
+        
+        // First, check if yes-no buttons exist in DOM
+        const allButtons = document.querySelectorAll('.yes-no-btn');
+        console.log('[PROJECTS] Found ' + allButtons.length + ' yes-no buttons in DOM');
+        
+        if (allButtons.length === 0) {
+            console.error('[PROJECTS] No yes-no buttons found in DOM! Modal might not be ready.');
+            // Retry after a short delay
+            setTimeout(() => {
+                console.log('[PROJECTS] Retrying button state restoration...');
+                this.restoreButtonStates(data);
+            }, 200);
+            return;
+        }
+        
         // First, clear all button states - no defaults
-        document.querySelectorAll('.yes-no-btn').forEach(btn => {
+        allButtons.forEach(btn => {
             btn.classList.remove('active', 'yes', 'no');
         });
         
@@ -1081,13 +1126,17 @@ const ProjectsPage = {
                 const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
                 if (button) {
                     button.classList.add('active', 'yes');
-                    console.log(`[PROJECTS] Restored button: ${field} = yes`);
+                    console.log(`[PROJECTS] ✓ Restored button: ${field} = yes`);
+                } else {
+                    console.error(`[PROJECTS] ✗ Button not found: ${field} = yes`);
                 }
             } else if (value === false) {
                 const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
                 if (button) {
                     button.classList.add('active', 'no');
-                    console.log(`[PROJECTS] Restored button: ${field} = no`);
+                    console.log(`[PROJECTS] ✓ Restored button: ${field} = no`);
+                } else {
+                    console.error(`[PROJECTS] ✗ Button not found: ${field} = no`);
                 }
             } else {
                 // value is null/undefined - leave buttons unselected
@@ -1097,6 +1146,7 @@ const ProjectsPage = {
         
         // Update field states after restoring buttons
         this.updateFieldStates();
+        console.log('[PROJECTS] Button state restoration complete');
     },
 
     restoreFormFields(data) {
