@@ -1034,6 +1034,10 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
                 <option value="PHILGEPS">PHILGEPS</option>
                 <option value="Other">Other</option>
             </select>
+            <select id="sortFilter" class="pm-filter">
+                <option value="desc">📅 Newest First</option>
+                <option value="asc">📅 Oldest First</option>
+            </select>
         </div>
 
         <!-- Bulk Actions Bar -->

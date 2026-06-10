@@ -11,7 +11,8 @@ let currentFilters = {
     search: '',
     region: '',
     status: '',
-    source: ''
+    source: '',
+    sort: 'desc'
 };
 let selectedProjectId = null;
 let salesReps = [];
@@ -88,6 +89,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadProjects();
         });
     }
+    
+    const sortFilter = document.getElementById('sortFilter');
+    if (sortFilter) {
+        sortFilter.addEventListener('change', () => {
+            currentFilters.sort = document.getElementById('sortFilter').value;
+            currentPage = 1;
+            loadProjects();
+        });
+    }
 });
 
 // Load projects
@@ -117,7 +127,15 @@ async function loadProjects() {
         if (!res.ok) throw new Error('Failed to load projects');
         
         const data = await res.json();
-        const projects = data.projects || [];
+        let projects = data.projects || [];
+        
+        // Sort by publication date
+        const sortOrder = currentFilters.sort || 'desc';
+        projects.sort((a, b) => {
+            const dateA = new Date(a.publication_date || a.published_date || a.published_at || 0);
+            const dateB = new Date(b.publication_date || b.published_date || b.published_at || 0);
+            return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
+        });
         
         // Store projects data globally for viewProject function
         window.currentProjectsData = data;
@@ -194,7 +212,7 @@ function getTableRow(p) {
         <td>${p.project_name || '—'}</td>
         <td>${p.region || '—'}</td>
         <td style="text-align:right;">₱${value}</td>
-        <td><span class="status-badge status-${statusClass}">${p.status || '—'}</span></td>
+        <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
     `;
     
     switch (currentView) {

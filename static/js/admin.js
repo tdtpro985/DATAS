@@ -59,7 +59,7 @@ async function loadDashboardStats() {
         const kpiData = await parseJson(kpiRes);
         const kpiMetrics = kpiData && (kpiData.data || kpiData);
         const pipelineValue = (kpiMetrics && typeof kpiMetrics.total_pipeline_value === 'number') ? kpiMetrics.total_pipeline_value : 0;
-        safeText('dash-pipeline-value', '₱' + pipelineValue.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+        safeText('dash-pipeline-value', formatShortCurrency(pipelineValue));
 
         // Load sales rep rankings
         loadSalesRepRankings();
@@ -644,3 +644,16 @@ document.addEventListener('DOMContentLoaded', () => {
         regionFilter.addEventListener('change', loadSalesRepRankings);
     }
 });
+
+// Helper function to format currency in short form
+function formatShortCurrency(value) {
+    if (value >= 1000000000) {
+        return '₱' + (value / 1000000000).toFixed(1) + 'B';
+    } else if (value >= 1000000) {
+        return '₱' + (value / 1000000).toFixed(1) + 'M';
+    } else if (value >= 1000) {
+        return '₱' + (value / 1000).toFixed(1) + 'K';
+    } else {
+        return '₱' + value.toFixed(2);
+    }
+}
