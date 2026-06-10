@@ -756,7 +756,7 @@ const ProjectsPage = {
                 <div class="detail-grid">
                     <div class="detail-item">
                         <div class="detail-label">Project ID</div>
-                        <div class="detail-value">${this.escapeHtml(project.project_id || project.id || '—')}</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_id || '—')}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Project Name</div>
