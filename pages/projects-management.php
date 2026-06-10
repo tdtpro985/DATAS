@@ -970,6 +970,63 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
         body[data-role="sales_rep"] [data-role-access]:not([data-role-access*="sales_rep"]) {
             display: none !important;
         }
+        
+        /* ── Status Circle ── */
+        .status-circle {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid;
+        }
+
+        .status-circle.priority {
+            background: #ef4444;
+            border-color: #fca5a5;
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.6);
+        }
+
+        .status-circle.awarded {
+            background: #10b981;
+            border-color: #6ee7b7;
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+        }
+
+        .status-circle.for-execution {
+            background: #3b82f6;
+            border-color: #93c5fd;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.6);
+        }
+
+        .status-circle.for-bidding {
+            background: #f59e0b;
+            border-color: #fcd34d;
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.6);
+        }
+
+        /* ── Status Legend ── */
+        .status-legend {
+            display: flex;
+            gap: 1.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .status-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .status-legend-item .status-circle {
+            flex-shrink: 0;
+        }
     </style>
 </head>
 
@@ -1068,6 +1125,22 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
 
         <!-- Content Area -->
         <div id="pm-content">
+            <!-- Status Legend -->
+            <div class="status-legend">
+                <div class="status-legend-item">
+                    <span class="status-circle awarded"></span>
+                    <span>Awarded</span>
+                </div>
+                <div class="status-legend-item">
+                    <span class="status-circle for-execution"></span>
+                    <span>For Execution</span>
+                </div>
+                <div class="status-legend-item">
+                    <span class="status-circle for-bidding"></span>
+                    <span>For Bidding</span>
+                </div>
+            </div>
+            
             <div class="table-wrapper" style="overflow-x: auto;">
                 <table class="data-table" style="width: 100%; min-width: 800px;">
                     <thead id="pm-table-head">
