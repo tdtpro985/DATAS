@@ -11,7 +11,6 @@ const IllegalitimateProjectsPage = {
     filteredProjects: [],
 
     async init() {
-        await RoleManager.init();
         const user = await Auth.checkAuth();
         if (!user) return;
 

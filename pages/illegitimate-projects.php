@@ -445,7 +445,6 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
 
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/role-manager.js"></script>
 <script src="<?= $base ?>/static/js/illegitimate-projects.js"></script>
 </body>
 </html>
