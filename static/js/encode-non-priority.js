@@ -488,7 +488,7 @@ const NonPriorityForm = {
             status: getFieldValue('projectStatus'),
             
             // Materials
-            drbs: getFieldNumber('drbs'),
+            drbs_value: getFieldNumber('drbs'), // Fixed: was saving to 'drbs' (text field for type) instead of 'drbs_value' (decimal amount)
             sheet_pile_amount: getFieldNumber('sheetPile'),
             ms_plate: getFieldNumber('msPlate'),
             angle_bars: getFieldNumber('angleBars'),
