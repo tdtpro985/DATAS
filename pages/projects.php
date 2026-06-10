@@ -1186,6 +1186,14 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <!-- Projects Table -->
     <div class="projects-card">
         <!-- Status Legend -->
+        <?php if ($type === 'priority'): ?>
+        <div class="status-legend">
+            <div class="status-legend-item">
+                <span class="status-circle priority"></span>
+                <span>Priority</span>
+            </div>
+        </div>
+        <?php else: ?>
         <div class="status-legend">
             <div class="status-legend-item">
                 <span class="status-circle awarded"></span>
@@ -1200,6 +1208,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                 <span>For Bidding</span>
             </div>
         </div>
+        <?php endif; ?>
         
         <div class="table-wrapper">
             <table class="projects-table">
