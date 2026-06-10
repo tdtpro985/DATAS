@@ -351,48 +351,72 @@ html {
     color: #fca5a5;
 }
 
-/* ── Project Details Modal ── */
+/* ── Project Details Modal - CENTERED IN MAIN CONTENT AREA ── */
 .modal-overlay {
     display: none;
     position: fixed;
     top: 0;
-    left: var(--sidebar-w); /* Start AFTER sidebar - main content area only */
+    left: 0;
     right: 0;
     bottom: 0;
-    width: calc(100% - var(--sidebar-w)); /* Width = viewport minus sidebar */
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: transparent;
     z-index: 99999;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
+    padding: 0;
     animation: fadeIn 0.2s ease;
 }
 
-/* On mobile, cover full screen since sidebar is hidden */
-@media (max-width: 768px) {
-    .modal-overlay {
-        left: 0;
-        width: 100%;
-    }
+.modal-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 250px; /* Exact sidebar width */
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
 }
 
 .modal-overlay.active {
-    display: flex;
+    display: block;
+}
+
+/* Container to center the modal in main content area */
+.modal-overlay > .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 250px; /* Start after sidebar */
+    right: 0;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    max-width: 800px;
+    width: calc(100% - 250px - 4rem); /* Full width minus sidebar minus padding */
+}
+
+/* On mobile, center normally */
+@media (max-width: 768px) {
+    .modal-overlay::before {
+        left: 0;
+    }
+    
+    .modal-overlay > .modal-content {
+        left: 2rem;
+        right: 2rem;
+        width: calc(100% - 4rem);
+    }
 }
 
 .modal-content {
+    position: relative;
     background: var(--bg-card);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 1rem;
-    max-width: 800px;
     width: 100%;
     max-height: 90vh;
     overflow-y: auto;
     animation: slideInUp 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    /* No margin needed - overlay handles positioning */
+    z-index: 1;
 }
 
 .modal-header {
