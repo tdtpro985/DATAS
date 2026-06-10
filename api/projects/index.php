@@ -29,6 +29,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         
         // Get type filter (for compatibility with frontend calls)
         $type = trim($_GET['type'] ?? '');
+        
+        // Get search parameter
+        $search = trim($_GET['search'] ?? '');
 
         $db = getDB();
 
@@ -43,6 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } elseif ($type === 'leads') {
             // Handle leads type (same as non-priority for compatibility)
             $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+        }
+        
+        // Add search filter
+        if (!empty($search)) {
+            $whereConditions[] = '(p.contractor_name LIKE :search OR p.project_name LIKE :search OR p.project_id LIKE :search OR p.contractor_id LIKE :search)';
+            $params[':search'] = '%' . $search . '%';
         }
         
         $whereClause = implode(' AND ', $whereConditions);

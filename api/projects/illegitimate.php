@@ -40,7 +40,7 @@ try {
     $params = [];
     
     if (!empty($search)) {
-        $where[] = "(p.contractor_name LIKE :search OR p.project_name LIKE :search OR p.region LIKE :search OR p.project_id LIKE :search OR p.contract_id LIKE :search)";
+        $where[] = "(p.contractor_name LIKE :search OR p.project_name LIKE :search OR p.region LIKE :search OR p.project_id LIKE :search OR p.contractor_id LIKE :search)";
         $params[':search'] = '%' . $search . '%';
     }
     
