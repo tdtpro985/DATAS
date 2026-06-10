@@ -686,8 +686,8 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         
                         <!-- Row 5 -->
                         <div class="form-group">
-                            <label for="contactPerson" data-required=" *">Contact Person</label>
-                            <input type="text" id="contactPerson" name="contact_person" required placeholder="Full name">
+                            <label for="contactPerson">Contact Person</label>
+                            <input type="text" id="contactPerson" name="contact_person" placeholder="Full name">
                         </div>
                         <div class="form-group"></div>
                         <div class="form-group"></div>
