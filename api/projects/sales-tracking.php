@@ -29,10 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $db = getDB();
         
-        // Verify project exists
-        $projectStmt = $db->prepare('SELECT id FROM projects WHERE id = :id LIMIT 1');
+        // Verify project exists and get is_actual_project
+        $projectStmt = $db->prepare('SELECT id, is_actual_project FROM projects WHERE id = :id LIMIT 1');
         $projectStmt->execute([':id' => $projectId]);
-        if (!$projectStmt->fetch()) {
+        $project = $projectStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$project) {
             jsonError('Project not found', 404);
         }
         
@@ -48,10 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $tracking = $trackingStmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$tracking) {
-            // No tracking data exists yet
+            // No tracking data exists yet, but include is_actual_project from projects table
             jsonResponse([
                 'exists' => false,
-                'data' => null
+                'data' => [
+                    'is_actual_project' => $project['is_actual_project']
+                ]
             ]);
         } else {
             // Convert Yes/No strings to boolean for frontend, preserve null for unset fields
@@ -59,6 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $tracking['quoted'] = $tracking['quoted'] === 'Yes' ? true : ($tracking['quoted'] === 'No' ? false : null);
             $tracking['sales_qualified'] = $tracking['sales_qualified'] === 'Yes' ? true : ($tracking['sales_qualified'] === 'No' ? false : null);
             $tracking['to_win'] = $tracking['to_win'] === 'Yes' ? true : ($tracking['to_win'] === 'No' ? false : null);
+            
+            // Add is_actual_project from projects table
+            $tracking['is_actual_project'] = $project['is_actual_project'];
             
             jsonResponse([
                 'exists' => true,
@@ -77,13 +84,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError('Method not allowed', 405);
 }
 
-// Get project ID from URL parameter
-$projectId = (int)($_GET['id'] ?? 0);
-
-if (!$projectId) {
-    jsonError('Project ID is required', 400);
-}
-
 $body = getJsonBody();
 if (!$body) {
     jsonError('Request body is required', 400);
@@ -97,6 +97,21 @@ try {
     $projectStmt->execute([':id' => $projectId]);
     if (!$projectStmt->fetch()) {
         jsonError('Project not found', 404);
+    }
+    
+    // Handle is_actual_project field - update in projects table
+    if (isset($body['is_actual_project'])) {
+        $isActualProject = $body['is_actual_project']; // 'yes' or 'no'
+        $updateProjectStmt = $db->prepare("
+            UPDATE projects SET 
+                is_actual_project = :is_actual_project,
+                updated_at = NOW()
+            WHERE id = :project_id
+        ");
+        $updateProjectStmt->execute([
+            ':is_actual_project' => $isActualProject,
+            ':project_id' => $projectId
+        ]);
     }
     
     // Prepare sales tracking data - properly handle null values

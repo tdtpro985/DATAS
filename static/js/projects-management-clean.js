@@ -521,6 +521,23 @@ function viewProject(projectId) {
         <!-- Sales Tracking Section -->
         <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
             <div class="sales-tracking-title">📊 Sales Tracking</div>
+            
+            <!-- Actual Project Field (Required, Always Visible First) -->
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 128, 0, 0.1); border: 2px solid rgba(255, 128, 0, 0.3); border-radius: 0.5rem;">
+                <div class="sales-form-group">
+                    <label class="sales-form-label" style="color: var(--orange-500); font-weight: 700;">
+                        <span style="color: #ef4444;">*</span> Actual Project
+                    </label>
+                    <div class="yes-no-buttons">
+                        <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="yes">Yes</button>
+                        <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="no">No</button>
+                    </div>
+                    <small style="display: block; margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.75rem;">
+                        Required: Is this a legitimate project? Select "No" if this is spam, duplicate, or invalid.
+                    </small>
+                </div>
+            </div>
+            
             <div class="sales-form-grid">
                 <div class="sales-form-group">
                     <label class="sales-form-label">Contacted</label>
@@ -2652,6 +2669,13 @@ async function loadSalesTrackingDataPM(projectId) {
         if (result.exists && result.data) {
             const data = result.data;
             
+            // Restore is_actual_project field
+            if (data.is_actual_project !== undefined && data.is_actual_project !== null) {
+                const value = data.is_actual_project === 'yes' ? 'yes' : 'no';
+                const button = document.querySelector(`.yes-no-btn[data-field="is_actual_project"][data-value="${value}"]`);
+                if (button) button.classList.add('active', value);
+            }
+            
             // Restore button states
             const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
             fields.forEach(field => {
@@ -2701,6 +2725,7 @@ async function saveSalesTracking() {
     if (!projectId) return;
     
     // Collect data
+    const isActualProject = document.querySelector('.yes-no-btn[data-field="is_actual_project"].active')?.dataset.value;
     const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
     const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
     const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
@@ -2712,6 +2737,11 @@ async function saveSalesTracking() {
     
     // Validation
     const errors = [];
+    
+    // IMMEDIATE REQUIRED: Actual Project field
+    if (!isActualProject) {
+        errors.push('⚠️ "Actual Project" is required and must be answered immediately');
+    }
     
     if (!salesRepId) errors.push('Please select a Sales Representative');
     if (!branch || branch.trim() === '') errors.push('Please enter Branch information');
@@ -2727,13 +2757,14 @@ async function saveSalesTracking() {
     }
     
     const data = {
+        is_actual_project: isActualProject,
         contacted: contacted === 'yes' ? true : (contacted === 'no' ? false : null),
         quoted: quoted === 'yes' ? true : (quoted === 'no' ? false : null),
         sales_qualified: sql === 'yes' ? true : (sql === 'no' ? false : null),
         to_win: toWin === 'yes' ? true : (toWin === 'no' ? false : null),
         sales_rep_id: salesRepId ? parseInt(salesRepId) : null,
         branch: branch || null,
-        wl_amount: wlAmount ? parseFloat(wlAmount) : null,
+        wa_amount: wlAmount ? parseFloat(wlAmount) : null,
         remarks: remarks ? remarks.trim() : null
     };
     

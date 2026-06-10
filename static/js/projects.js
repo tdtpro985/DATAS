@@ -854,6 +854,23 @@ const ProjectsPage = {
             <!-- Sales Tracking Section (Hidden for Encoders) -->
             <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
                 <div class="sales-tracking-title">📊 Sales Tracking</div>
+                
+                <!-- Actual Project Field (Required, Always Visible First) -->
+                <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 128, 0, 0.1); border: 2px solid rgba(255, 128, 0, 0.3); border-radius: 0.5rem;">
+                    <div class="sales-form-group">
+                        <label class="sales-form-label" style="color: var(--orange-500); font-weight: 700;">
+                            <span style="color: #ef4444;">*</span> Actual Project
+                        </label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="no">No</button>
+                        </div>
+                        <small style="display: block; margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.75rem;">
+                            Required: Is this a legitimate project? Select "No" if this is spam, duplicate, or invalid.
+                        </small>
+                    </div>
+                </div>
+                
                 <div class="sales-form-grid">
                     <!-- Left Column -->
                     <div class="sales-form-group">
@@ -1086,6 +1103,16 @@ const ProjectsPage = {
     },
 
     restoreFormFields(data) {
+        // Restore is_actual_project field
+        if (data.is_actual_project !== undefined && data.is_actual_project !== null) {
+            const value = data.is_actual_project === 'yes' ? 'yes' : 'no';
+            const button = document.querySelector(`.yes-no-btn[data-field="is_actual_project"][data-value="${value}"]`);
+            if (button) {
+                button.classList.add('active', value);
+                console.log(`[PROJECTS] Restored is_actual_project: ${value}`);
+            }
+        }
+        
         // Restore sales rep selection
         const salesRepSelect = document.getElementById('sales-rep-select');
         if (salesRepSelect && data.sales_rep_id) {
@@ -1301,6 +1328,7 @@ const ProjectsPage = {
 
     async saveSalesTracking(projectId) {
         // Collect sales tracking data
+        const isActualProject = document.querySelector('.yes-no-btn[data-field="is_actual_project"].active')?.dataset.value;
         const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
         const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
         const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
@@ -1312,6 +1340,11 @@ const ProjectsPage = {
         
         // Progressive validation - dengan required fields yang baru
         const errors = [];
+        
+        // IMMEDIATE REQUIRED: Actual Project field
+        if (!isActualProject) {
+            errors.push('⚠️ "Actual Project" is required and must be answered immediately');
+        }
         
         // Always required fields
         if (!salesRepId) {
@@ -1354,13 +1387,14 @@ const ProjectsPage = {
         }
         
         const data = {
+            is_actual_project: isActualProject,
             contacted: contacted === 'yes' ? true : (contacted === 'no' ? false : null),
             quoted: quoted === 'yes' ? true : (quoted === 'no' ? false : null),
             sales_qualified: sql === 'yes' ? true : (sql === 'no' ? false : null),
             to_win: toWin === 'yes' ? true : (toWin === 'no' ? false : null),
             sales_rep_id: salesRepId ? parseInt(salesRepId) : null,
             branch: branch || null,
-            wl_amount: wlAmount ? parseFloat(wlAmount) : null,
+            wa_amount: wlAmount ? parseFloat(wlAmount) : null,
             remarks: remarks ? remarks.trim() : null
         };
         
