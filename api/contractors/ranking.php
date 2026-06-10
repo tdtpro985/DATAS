@@ -47,12 +47,12 @@ try {
         LIMIT 500
     ");
     $stmt->execute($params);
+    $rows = $stmt->fetchAll();
 } catch (Exception $e) {
     error_log("Contractors ranking error: " . $e->getMessage());
     jsonResponse(['contractors' => []]);
     exit;
 }
-$rows = $stmt->fetchAll();
 
 // Cast types
 $contractors = array_map(function ($r) {

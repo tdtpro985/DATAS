@@ -58,6 +58,7 @@ try {
     }
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
+    $rankings = $stmt->fetchAll();
 } catch (Exception $e) {
     error_log("Sales reps ranking error: " . $e->getMessage());
     jsonResponse([
@@ -72,8 +73,6 @@ try {
     ]);
     exit;
 }
-
-$rankings = $stmt->fetchAll();
 
 // Cast numeric values to proper types
 $rankings = array_map(function ($r) {

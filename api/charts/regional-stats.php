@@ -37,6 +37,7 @@ try {
         ORDER BY total_value DESC
     ");
     $stmt->execute($params);
+    $rows = $stmt->fetchAll();
 } catch (Exception $e) {
     error_log("Regional stats error: " . $e->getMessage());
     jsonResponse([
@@ -46,7 +47,6 @@ try {
     ]);
     exit;
 }
-$rows = $stmt->fetchAll();
 
 $regions = [];
 $projectCounts = [];
