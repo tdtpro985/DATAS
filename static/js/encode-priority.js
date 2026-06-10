@@ -432,7 +432,6 @@ const PriorityForm = {
                     option.value = province.name; // Use name for display
                     provinceDatalist.appendChild(option);
                 });
-                });
             }
         } catch (error) {
             console.error('Error loading provinces:', error);

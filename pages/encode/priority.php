@@ -913,8 +913,8 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <div class="form-group">
                             <label for="contractRegion" data-required=" *">Region</label>
                             <input type="text" id="contractRegion" name="contract_region" 
-                                   list="regionList" placeholder="Type or select region" required>
-                            <datalist id="regionList">
+                                   list="contractRegionList" placeholder="Type or select region" required>
+                            <datalist id="contractRegionList">
                                 <!-- Options will be populated dynamically -->
                             </datalist>
                         </div>
@@ -931,8 +931,8 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <div class="form-group">
                             <label for="contractProvince" data-required=" *">Province</label>
                             <input type="text" id="contractProvince" name="contract_province" 
-                                   list="provinceList" placeholder="Type or select province" required>
-                            <datalist id="provinceList">
+                                   list="contractProvinceList" placeholder="Type or select province" required>
+                            <datalist id="contractProvinceList">
                                 <!-- Options will be populated dynamically -->
                             </datalist>
                         </div>
@@ -949,8 +949,8 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <div class="form-group">
                             <label for="contractCity" data-required=" *">City</label>
                             <input type="text" id="contractCity" name="contract_city" 
-                                   list="cityList" placeholder="Type or select city" required>
-                            <datalist id="cityList">
+                                   list="contractCityList" placeholder="Type or select city" required>
+                            <datalist id="contractCityList">
                                 <!-- Options will be populated dynamically -->
                             </datalist>
                         </div>
