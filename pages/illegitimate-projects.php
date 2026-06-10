@@ -167,3 +167,29 @@ function showToast(message, type = 'info') {
 </script>
 </body>
 </html>
+    <style>
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.2s ease; }
+        .modal-overlay.active { display: flex; }
+        .modal-content { background: var(--bg-card); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1rem; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; animation: slideInUp 0.3s ease; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5); }
+        .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+        .modal-header h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; margin: 0; }
+        .modal-close { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; font-size: 1.25rem; color: var(--text-secondary); }
+        .modal-close:hover { background: rgba(255, 255, 255, 0.1); color: var(--text-primary); }
+        .modal-body { padding: 1.5rem; }
+        .modal-actions { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.06); }
+        .detail-section { margin-bottom: 1.5rem; }
+        .detail-section-title { font-size: 0.9rem; font-weight: 700; color: var(--orange-500); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+        .detail-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.75rem; padding: 1rem; }
+        .detail-label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .detail-value { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); word-break: break-word; }
+        .detail-value.large { font-size: 1.25rem; color: #34d399; }
+        .btn-action { padding: 0.75rem 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: rgba(255, 255, 255, 0.05); color: var(--text-primary); display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+        .btn-primary { background: var(--orange-500); border-color: var(--orange-500); color: #000; }
+        .btn-primary:hover { background: var(--orange-600); box-shadow: 0 4px 16px rgba(255, 128, 0, 0.4); }
+        .btn-secondary { border-color: rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.05); color: var(--text-primary); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.3); }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
