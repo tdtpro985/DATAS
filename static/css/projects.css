@@ -383,6 +383,14 @@ html {
     overflow-y: auto;
     animation: slideInUp 0.3s ease;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    margin-left: calc(var(--sidebar-w) / 2); /* Push to the right to avoid sidebar */
+}
+
+/* Reset margin on mobile */
+@media (max-width: 768px) {
+    .modal-content {
+        margin-left: 0;
+    }
 }
 
 .modal-header {
