@@ -270,7 +270,7 @@ const PriorityForm = {
 
     validateStep(stepNum) {
         const requiredFields = {
-            1: ['source', 'contractId', 'contractorName', 'contactPerson', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
+            1: ['publishedDate', 'source', 'contractId', 'contractorName', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
             2: ['projectName', 'projectCountry', 'projectRegion', 'projectProvince', 'projectCity', 'projectValue', 'completionRate'],
             3: [], // Step 3 is optional
             4: []  // Step 4 is optional
