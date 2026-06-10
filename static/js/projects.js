@@ -854,23 +854,6 @@ const ProjectsPage = {
             <!-- Sales Tracking Section (Hidden for Encoders) -->
             <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
                 <div class="sales-tracking-title">📊 Sales Tracking</div>
-                
-                <!-- Actual Project Field (Required, Always Visible First) -->
-                <div style="margin-bottom: 1.5rem; padding: 1rem; background: rgba(255, 128, 0, 0.1); border: 2px solid rgba(255, 128, 0, 0.3); border-radius: 0.5rem;">
-                    <div class="sales-form-group">
-                        <label class="sales-form-label" style="color: var(--orange-500); font-weight: 700;">
-                            <span style="color: #ef4444;">*</span> Actual Project
-                        </label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="is_actual_project" data-value="no">No</button>
-                        </div>
-                        <small style="display: block; margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.75rem;">
-                            Required: Is this a legitimate project? Select "No" if this is spam, duplicate, or invalid.
-                        </small>
-                    </div>
-                </div>
-                
                 <div class="sales-form-grid">
                     <!-- Left Column -->
                     <div class="sales-form-group">
@@ -1103,16 +1086,6 @@ const ProjectsPage = {
     },
 
     restoreFormFields(data) {
-        // Restore is_actual_project field
-        if (data.is_actual_project !== undefined && data.is_actual_project !== null) {
-            const value = data.is_actual_project === 'yes' ? 'yes' : 'no';
-            const button = document.querySelector(`.yes-no-btn[data-field="is_actual_project"][data-value="${value}"]`);
-            if (button) {
-                button.classList.add('active', value);
-                console.log(`[PROJECTS] Restored is_actual_project: ${value}`);
-            }
-        }
-        
         // Restore sales rep selection
         const salesRepSelect = document.getElementById('sales-rep-select');
         if (salesRepSelect && data.sales_rep_id) {
@@ -1328,7 +1301,6 @@ const ProjectsPage = {
 
     async saveSalesTracking(projectId) {
         // Collect sales tracking data
-        const isActualProject = document.querySelector('.yes-no-btn[data-field="is_actual_project"].active')?.dataset.value;
         const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
         const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
         const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
@@ -1338,13 +1310,8 @@ const ProjectsPage = {
         const wlAmount = document.getElementById('wl-amount-input')?.value;
         const remarks = document.getElementById('remarks-textarea')?.value;
         
-        // Progressive validation - dengan required fields yang baru
+        // Progressive validation
         const errors = [];
-        
-        // IMMEDIATE REQUIRED: Actual Project field
-        if (!isActualProject) {
-            errors.push('⚠️ "Actual Project" is required and must be answered immediately');
-        }
         
         // Always required fields
         if (!salesRepId) {
@@ -1365,7 +1332,7 @@ const ProjectsPage = {
             return;
         }
         
-        // Validate progressive order - kung may next field na filled, dapat yung previous filled din
+        // Validate progressive order
         if (quoted && !contacted) {
             errors.push('Please fill "Contacted" first before "Quoted"');
         }
@@ -1387,7 +1354,6 @@ const ProjectsPage = {
         }
         
         const data = {
-            is_actual_project: isActualProject,
             contacted: contacted === 'yes' ? true : (contacted === 'no' ? false : null),
             quoted: quoted === 'yes' ? true : (quoted === 'no' ? false : null),
             sales_qualified: sql === 'yes' ? true : (sql === 'no' ? false : null),
@@ -1422,24 +1388,14 @@ const ProjectsPage = {
             });
             
             if (response.ok) {
-                this.showModernNotification('Sales tracking saved successfully!', 'success');
+                // Show Actual Project modal
+                this.showActualProjectModal(projectId);
                 
-                // Restore button state immediately before closing modal
+                // Restore button state
                 if (saveBtn) {
                     saveBtn.textContent = originalText;
                     saveBtn.disabled = false;
                 }
-                
-                // Close modal after short delay
-                setTimeout(() => {
-                    const modal = document.getElementById('detailsModal');
-                    if (modal) {
-                        modal.classList.remove('active');
-                    }
-                }, 1500);
-                
-                // Reload projects to show updated status
-                this.loadProjects();
             } else {
                 const errorData = await response.json();
                 throw new Error(errorData.detail || 'Failed to save sales tracking');
@@ -1461,6 +1417,122 @@ const ProjectsPage = {
     editProject(projectId) {
         // TODO: Implement edit functionality
         alert(`Edit project #${projectId}\n\nThis feature will be implemented soon.`);
+    },
+    
+    showActualProjectModal(projectId) {
+        const overlay = document.createElement('div');
+        overlay.className = 'modal-overlay';
+        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000;';
+        
+        const modalBox = document.createElement('div');
+        modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);';
+        
+        modalBox.innerHTML = `
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 0.5rem;">⚠️</div>
+                <h2 style="color: #ff8c00; font-size: 1.5rem; margin: 0 0 0.5rem 0;">Actual Project</h2>
+                <p style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin: 0;">Is this a legitimate project?</p>
+            </div>
+            
+            <div style="background: rgba(255, 128, 0, 0.1); border: 2px solid rgba(255, 128, 0, 0.3); border-radius: 0.5rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <div class="yes-no-buttons" style="display: flex; gap: 1rem; justify-content: center;">
+                    <button type="button" class="yes-no-btn" data-value="yes" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">Yes</button>
+                    <button type="button" class="yes-no-btn" data-value="no" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">No</button>
+                </div>
+                <small style="display: block; margin-top: 0.75rem; color: rgba(255,255,255,0.6); font-size: 0.75rem; text-align: center;">
+                    Select "No" if this is spam, duplicate, or invalid.
+                </small>
+            </div>
+            
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: white; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
+                    Save
+                </button>
+            </div>
+        `;
+        
+        overlay.appendChild(modalBox);
+        document.body.appendChild(overlay);
+        
+        let selectedValue = null;
+        const saveBtn = modalBox.querySelector('#actualProjectSaveBtn');
+        
+        // Button click handlers
+        modalBox.querySelectorAll('.yes-no-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                selectedValue = btn.dataset.value;
+                
+                // Update button states
+                modalBox.querySelectorAll('.yes-no-btn').forEach(b => {
+                    b.style.opacity = '0.5';
+                    b.style.transform = 'scale(1)';
+                });
+                btn.style.opacity = '1';
+                btn.style.transform = 'scale(1.05)';
+                
+                // Enable save button
+                saveBtn.disabled = false;
+                saveBtn.style.cursor = 'pointer';
+                saveBtn.style.opacity = '1';
+            });
+            
+            // Hover effects
+            btn.addEventListener('mouseenter', () => {
+                if (!btn.style.transform.includes('1.05')) {
+                    btn.style.transform = 'scale(1.02)';
+                }
+            });
+            btn.addEventListener('mouseleave', () => {
+                if (!btn.style.transform.includes('1.05')) {
+                    btn.style.transform = 'scale(1)';
+                }
+            });
+        });
+        
+        // Save button handler
+        saveBtn.addEventListener('click', async () => {
+            if (!selectedValue) return;
+            
+            saveBtn.textContent = 'Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                const response = await fetch(BASE + `/api/v1/projects/${projectId}/actual-project`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ is_actual_project: selectedValue })
+                });
+                
+                if (response.ok) {
+                    this.showModernNotification('Project status saved successfully!', 'success');
+                    overlay.remove();
+                    
+                    // Close details modal
+                    const detailsModal = document.getElementById('detailsModal');
+                    if (detailsModal) {
+                        detailsModal.classList.remove('active');
+                    }
+                    
+                    // Reload projects
+                    this.loadProjects();
+                } else {
+                    throw new Error('Failed to save');
+                }
+            } catch (error) {
+                console.error('Error saving actual project:', error);
+                this.showModernNotification('Failed to save. Please try again.', 'error');
+                saveBtn.textContent = 'Save';
+                saveBtn.disabled = false;
+            }
+        });
+        
+        // Close on overlay click
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.remove();
+            }
+        });
     },
 
     async deleteProject(projectId) {

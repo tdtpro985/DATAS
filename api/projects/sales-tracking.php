@@ -50,12 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $tracking = $trackingStmt->fetch(PDO::FETCH_ASSOC);
         
         if (!$tracking) {
-            // No tracking data exists yet, but include is_actual_project from projects table
+            // No tracking data exists yet
             jsonResponse([
                 'exists' => false,
-                'data' => [
-                    'is_actual_project' => $project['is_actual_project']
-                ]
+                'data' => null
             ]);
         } else {
             // Convert Yes/No strings to boolean for frontend, preserve null for unset fields
@@ -63,9 +61,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $tracking['quoted'] = $tracking['quoted'] === 'Yes' ? true : ($tracking['quoted'] === 'No' ? false : null);
             $tracking['sales_qualified'] = $tracking['sales_qualified'] === 'Yes' ? true : ($tracking['sales_qualified'] === 'No' ? false : null);
             $tracking['to_win'] = $tracking['to_win'] === 'Yes' ? true : ($tracking['to_win'] === 'No' ? false : null);
-            
-            // Add is_actual_project from projects table
-            $tracking['is_actual_project'] = $project['is_actual_project'];
             
             jsonResponse([
                 'exists' => true,
@@ -97,21 +92,6 @@ try {
     $projectStmt->execute([':id' => $projectId]);
     if (!$projectStmt->fetch()) {
         jsonError('Project not found', 404);
-    }
-    
-    // Handle is_actual_project field - update in projects table
-    if (isset($body['is_actual_project'])) {
-        $isActualProject = $body['is_actual_project']; // 'yes' or 'no'
-        $updateProjectStmt = $db->prepare("
-            UPDATE projects SET 
-                is_actual_project = :is_actual_project,
-                updated_at = NOW()
-            WHERE id = :project_id
-        ");
-        $updateProjectStmt->execute([
-            ':is_actual_project' => $isActualProject,
-            ':project_id' => $projectId
-        ]);
     }
     
     // Prepare sales tracking data - properly handle null values
