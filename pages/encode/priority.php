@@ -879,11 +879,26 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                 <div class="form-section">
                     <h2>Contractor Details</h2>
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                        <!-- Column 1: Left -->
+                        <!-- Row 1 -->
                         <div class="form-group">
                             <label for="publishedDate" data-required=" *">Published Date</label>
-                            <input type="date" id="publishedDate" name="published_date" required placeholder="mm/dd/yyyy">
+                            <input type="date" id="publishedDate" name="published_date" required>
                         </div>
+                        <div class="form-group">
+                            <label for="contractCountry" data-required=" *">Country</label>
+                            <input type="text" id="contractCountry" name="contract_country" 
+                                   list="countryList" placeholder="Type or select country" required value="Philippines">
+                            <datalist id="countryList">
+                                <option value="Philippines">
+                                <!-- More options will be populated dynamically -->
+                            </datalist>
+                        </div>
+                        <div class="form-group">
+                            <label for="contractBarangay">Barangay</label>
+                            <input type="text" id="contractBarangay" name="contract_barangay" placeholder="Optional">
+                        </div>
+                        
+                        <!-- Row 2 -->
                         <div class="form-group">
                             <label for="source" data-required=" *">Source</label>
                             <select id="source" name="source" required>
@@ -896,79 +911,71 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="contractId" data-required=" *">Contract ID</label>
-                            <input type="text" id="contractId" name="contract_id" maxlength="8" placeholder="8 chars (L/N)" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="contractorName" data-required=" *">Contractor Name</label>
-                            <input type="text" id="contractorName" name="contractor_name" required placeholder="Full contractor name">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactPerson">Contact Person</label>
-                            <input type="text" id="contactPerson" name="contact_person" placeholder="Full name">
-                        </div>
-                        <div class="form-group">
-                            <label for="contactNumber" data-required=" *">Contact Number</label>
-                            <input type="text" id="contactNumber" name="contact_number" placeholder="(555) 123-4567" required>
-                        </div>
-
-                        <!-- Column 2: Center -->
-                        <div class="form-group">
-                            <label for="contractCountry" data-required=" *">Country</label>
-                            <input type="text" id="contractCountry" name="contract_country" 
-                                   list="countryList" placeholder="Type or select country" required value="Philippines">
-                            <datalist id="countryList">
-                                <!-- Options will be populated dynamically -->
-                            </datalist>
-                        </div>
-                        <div class="form-group">
                             <label for="contractRegion" data-required=" *">Region</label>
                             <input type="text" id="contractRegion" name="contract_region" 
-                                   list="contractRegionList" placeholder="Type or select region" required>
-                            <datalist id="contractRegionList">
+                                   list="regionList" placeholder="Type or select region" required>
+                            <datalist id="regionList">
                                 <!-- Options will be populated dynamically -->
                             </datalist>
-                        </div>
-                        <div class="form-group">
-                            <label for="contractProvince" data-required=" *">Province</label>
-                            <input type="text" id="contractProvince" name="contract_province" 
-                                   list="contractProvinceList" placeholder="Type or select province" required>
-                            <datalist id="contractProvinceList">
-                                <!-- Options will be populated dynamically -->
-                            </datalist>
-                        </div>
-                        <div class="form-group">
-                            <label for="contractCity" data-required=" *">City</label>
-                            <input type="text" id="contractCity" name="contract_city" 
-                                   list="contractCityList" placeholder="Type or select city" required>
-                            <datalist id="contractCityList">
-                                <!-- Options will be populated dynamically -->
-                            </datalist>
-                        </div>
-                        <div class="form-group"></div>
-                        <div class="form-group"></div>
-
-                        <!-- Column 3: Right -->
-                        <div class="form-group">
-                            <label for="contractBarangay">Barangay</label>
-                            <input type="text" id="contractBarangay" name="contract_barangay" placeholder="Optional">
                         </div>
                         <div class="form-group">
                             <label for="contractStreet">Street</label>
                             <input type="text" id="contractStreet" name="contract_street" placeholder="Optional">
                         </div>
+                        
+                        <!-- Row 3 -->
+                        <div class="form-group">
+                            <label for="contractId" data-required=" *">Contract ID</label>
+                            <input type="text" id="contractId" name="contract_id" maxlength="8" placeholder="8 chars (L/N)" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contractProvince" data-required=" *">Province</label>
+                            <input type="text" id="contractProvince" name="contract_province" 
+                                   list="provinceList" placeholder="Type or select province" required>
+                            <datalist id="provinceList">
+                                <!-- Options will be populated dynamically -->
+                            </datalist>
+                        </div>
                         <div class="form-group">
                             <label for="contractBlkLot">Blk/Lot#</label>
                             <input type="text" id="contractBlkLot" name="contract_blk_lot" placeholder="Optional">
+                        </div>
+                        
+                        <!-- Row 4 -->
+                        <div class="form-group">
+                            <label for="contractorName" data-required=" *">Contractor Name</label>
+                            <input type="text" id="contractorName" name="contractor_name" required placeholder="Full contractor name">
+                        </div>
+                        <div class="form-group">
+                            <label for="contractCity" data-required=" *">City</label>
+                            <input type="text" id="contractCity" name="contract_city" 
+                                   list="cityList" placeholder="Type or select city" required>
+                            <datalist id="cityList">
+                                <!-- Options will be populated dynamically -->
+                            </datalist>
                         </div>
                         <div class="form-group">
                             <label for="contractCoords">Coordinates</label>
                             <input type="text" id="contractCoords" name="contract_coords" placeholder="e.g. 14.5994,120.9842">
                         </div>
+                        
+                        <!-- Row 5 -->
+                        <div class="form-group">
+                            <label for="contactPerson">Contact Person</label>
+                            <input type="text" id="contactPerson" name="contact_person" placeholder="Full name">
+                        </div>
                         <div class="form-group"></div>
                         <div class="form-group"></div>
                         
-                        <!-- Hidden conditional fields -->
+                        <!-- Row 6 -->
+                        <div class="form-group">
+                            <label for="contactNumber" data-required=" *">Contact Number</label>
+                            <input type="text" id="contactNumber" name="contact_number" placeholder="(555) 123-4567" required>
+                        </div>
+                        <div class="form-group"></div>
+                        <div class="form-group"></div>
+                        
+                        <!-- Hidden field for PHILGEPS notice -->
                         <div class="form-group" id="philgepsNoticeGroup" style="display: none; grid-column: 1 / -1;">
                             <label for="philgepsNotice" data-required=" *">Notice Reference Number</label>
                             <input type="text" id="philgepsNotice" name="notice_reference_number" 
@@ -976,6 +983,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                                    title="Enter exactly 5 digits">
                         </div>
                         
+                        <!-- Hidden field for source other -->
                         <div class="form-group" id="sourceOtherGroup" style="display: none; grid-column: 1 / -1;">
                             <label for="sourceOther" data-required=" *">Specify Source</label>
                             <input type="text" id="sourceOther" name="source_other" placeholder="Please specify">
@@ -994,33 +1002,30 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             <div class="form-step" data-step="2">
                 <div class="form-section">
                     <h2>Project Details</h2>
-                    <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 1rem;">
-                        <!-- Column 1: Left -->
-                        <div class="form-group">
-                            <label for="projectName" data-required=" *">Project Name</label>
-                            <input type="text" id="projectName" name="project_name" required placeholder="Full project name">
-                        </div>
+                    <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;">
+                        <!-- Row 1: Project ID, Country, Barangay -->
                         <div class="form-group">
                             <label for="projectId">Project ID</label>
-                            <input type="text" id="projectId" name="project_id" placeholder="Optional">
+                            <input type="text" id="projectId" name="project_id" maxlength="9" placeholder="9 digits" pattern="[0-9]*" inputmode="numeric">
                         </div>
-                        <div class="form-group">
-                            <label for="projectValue" data-required=" *">Project Value (Amount)</label>
-                            <input type="number" id="projectValue" name="project_value" min="0" step="0.01" required placeholder="0.00">
-                        </div>
-                        <div class="form-group">
-                            <label for="completionRate" data-required=" *">Completion Rate (%)</label>
-                            <input type="number" id="completionRate" name="completion_rate" min="0" max="100" step="0.01" required placeholder="0-100">
-                        </div>
-
-                        <!-- Column 2: Center -->
                         <div class="form-group">
                             <label for="projectCountry" data-required=" *">Country</label>
                             <input type="text" id="projectCountry" name="project_country" 
                                    list="projectCountryList" placeholder="Type or select country" required value="Philippines">
                             <datalist id="projectCountryList">
-                                <!-- Options will be populated dynamically -->
+                                <option value="Philippines">
+                                <!-- More options will be populated dynamically -->
                             </datalist>
+                        </div>
+                        <div class="form-group">
+                            <label for="projectBarangay">Barangay</label>
+                            <input type="text" id="projectBarangay" name="project_barangay" placeholder="Optional">
+                        </div>
+                        
+                        <!-- Row 2: Project Name, Region, Street -->
+                        <div class="form-group">
+                            <label for="projectName" data-required=" *">Project Name</label>
+                            <input type="text" id="projectName" name="project_name" required placeholder="Full project name">
                         </div>
                         <div class="form-group">
                             <label for="projectRegion" data-required=" *">Region</label>
@@ -1031,6 +1036,16 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                             </datalist>
                         </div>
                         <div class="form-group">
+                            <label for="projectStreet">Street</label>
+                            <input type="text" id="projectStreet" name="project_street" placeholder="Optional">
+                        </div>
+                        
+                        <!-- Row 3: Project Value, Province, Blk/Lot# -->
+                        <div class="form-group">
+                            <label for="projectValue" data-required=" *">Project Value</label>
+                            <input type="number" id="projectValue" name="project_value" min="0" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
                             <label for="projectProvince" data-required=" *">Province</label>
                             <input type="text" id="projectProvince" name="project_province" 
                                    list="projectProvinceList" placeholder="Type or select province" required>
@@ -1039,26 +1054,22 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                             </datalist>
                         </div>
                         <div class="form-group">
+                            <label for="projectBlkLot">Blk/Lot#</label>
+                            <input type="text" id="projectBlkLot" name="project_blk_lot" placeholder="Optional">
+                        </div>
+                        
+                        <!-- Row 4: Completion Rate, City, Coordinates -->
+                        <div class="form-group">
+                            <label for="completionRate" data-required=" *">Completion Rate (%)</label>
+                            <input type="number" id="completionRate" name="completion_rate" min="0" max="100" step="0.01" required placeholder="0-100">
+                        </div>
+                        <div class="form-group">
                             <label for="projectCity" data-required=" *">City</label>
                             <input type="text" id="projectCity" name="project_city" 
                                    list="projectCityList" placeholder="Type or select city" required>
                             <datalist id="projectCityList">
                                 <!-- Options will be populated dynamically -->
                             </datalist>
-                        </div>
-
-                        <!-- Column 3: Right -->
-                        <div class="form-group">
-                            <label for="projectBarangay">Barangay</label>
-                            <input type="text" id="projectBarangay" name="project_barangay" placeholder="Optional">
-                        </div>
-                        <div class="form-group">
-                            <label for="projectStreet">Street</label>
-                            <input type="text" id="projectStreet" name="project_street" placeholder="Optional">
-                        </div>
-                        <div class="form-group">
-                            <label for="projectBlkLot">Blk/Lot#</label>
-                            <input type="text" id="projectBlkLot" name="project_blk_lot" placeholder="Optional">
                         </div>
                         <div class="form-group">
                             <label for="projectCoords">Coordinates</label>
