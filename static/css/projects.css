@@ -356,23 +356,17 @@ html {
     display: none;
     position: fixed;
     top: 0;
-    left: var(--sidebar-w); /* Start after sidebar */
+    left: 0; /* Cover entire viewport including sidebar */
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
+    backdrop-filter: blur(8px); /* Increased blur for better effect */
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 99999; /* Very high to cover everything including sidebar */
     align-items: center;
     justify-content: center;
     padding: 1rem;
     animation: fadeIn 0.2s ease;
-}
-
-/* On mobile, cover full screen since sidebar is hidden */
-@media (max-width: 768px) {
-    .modal-overlay {
-        left: 0;
-    }
 }
 
 .modal-overlay.active {
