@@ -1690,6 +1690,16 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('active');
         }
     });
+    
+    // Archive button click handler
+    const archiveBtn = document.getElementById('archiveBtn');
+    if (archiveBtn) {
+        archiveBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleProjectArchive();
+        });
+    }
 });
 
 // Global functions for modal controls
@@ -1735,7 +1745,12 @@ async function toggleProjectArchive() {
     }
     
     // Find the project to check current archive status
-    const project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    let project = null;
+    if (ProjectsPage && ProjectsPage.allProjects) {
+        project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    } else if (window.currentProjectsData && window.currentProjectsData.projects) {
+        project = window.currentProjectsData.projects.find(p => p.id == projectId);
+    }
     
     if (!project) {
         console.error('Project not found');
