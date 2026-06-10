@@ -703,28 +703,28 @@ if ($role === 'encoder') {
             z-index: 1;
         }
         
-        /* Main Grid Layout - 3 Columns */
+        /* Main Grid Layout - 3 Columns - FULLY RESPONSIVE */
         .main-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: 380px 500px 450px;
+            grid-template-columns: minmax(280px, 0.28fr) minmax(350px, 0.4fr) minmax(300px, 0.32fr);
             gap: 0.8rem;
             min-height: 0;
-            overflow-x: auto; /* Allow horizontal scroll if needed */
-            overflow-y: hidden;
+            overflow: hidden; /* NO SCROLL */
+            width: 100%;
         }
         
-        /* Prevent horizontal overflow on smaller screens */
+        /* Scale down for smaller desktops */
         @media (max-width: 1400px) {
             .main-grid {
-                grid-template-columns: 350px 450px 400px;
+                grid-template-columns: minmax(250px, 0.28fr) minmax(320px, 0.4fr) minmax(280px, 0.32fr);
                 gap: 0.6rem;
             }
         }
         
         @media (max-width: 1280px) {
             .main-grid {
-                grid-template-columns: 320px 420px 380px;
+                grid-template-columns: minmax(220px, 0.28fr) minmax(300px, 0.4fr) minmax(260px, 0.32fr);
                 gap: 0.5rem;
             }
         }
@@ -735,14 +735,15 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
-            overflow-x: hidden;
+            overflow: hidden; /* NO SCROLL */
             width: 100%;
             max-width: 100%;
         }
         
         .left-column > * {
             max-width: 100%;
-            overflow-x: hidden;
+            overflow: hidden; /* NO SCROLL on children */
+            flex-shrink: 1;
         }
         
         /* KPI Summary Left */
@@ -815,14 +816,15 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
-            overflow-x: hidden;
+            overflow: hidden; /* NO SCROLL */
             width: 100%;
             max-width: 100%;
         }
         
         .center-column > * {
             max-width: 100%;
-            overflow-x: hidden;
+            overflow: hidden; /* NO SCROLL on children */
+            flex-shrink: 1;
         }
         
         /* Target Section */
@@ -969,7 +971,7 @@ if ($role === 'encoder') {
             flex-direction: column;
             gap: 0.6rem;
             min-height: 0;
-            overflow-x: hidden; /* Prevent horizontal overflow */
+            overflow: hidden; /* NO SCROLL */
             width: 100%;
             max-width: 100%;
         }
@@ -977,7 +979,8 @@ if ($role === 'encoder') {
         /* Ensure all child elements don't overflow */
         .right-column > * {
             max-width: 100%;
-            overflow-x: hidden;
+            overflow: hidden; /* NO SCROLL on children */
+            flex-shrink: 1;
         }
         
         /* Live Slideshow */
@@ -1312,8 +1315,9 @@ if ($role === 'encoder') {
         .contractors-table {
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
             min-height: 0;
-            max-height: calc(100vh - 300px);
+            max-height: 100%; /* Use available space within flex container */
         }
         
         .contractors-table::-webkit-scrollbar {
@@ -2114,13 +2118,13 @@ if ($role === 'encoder') {
         /* Tablet Portrait & Mobile (max 767px) */
         @media (max-width: 767px) {
             html, body {
-                overflow-x: hidden;
-                overflow-y: auto;
+                overflow: hidden; /* NO WINDOW SCROLL */
+                height: 100vh;
             }
             
             .dashboard-container {
-                overflow-y: auto;
-                overflow-x: hidden;
+                overflow: hidden; /* NO WINDOW SCROLL */
+                height: 100vh;
             }
             
             .dashboard-header {
@@ -2166,16 +2170,19 @@ if ($role === 'encoder') {
             
             .dashboard-content {
                 padding: 0.5rem;
-                max-height: none;
-                overflow-y: visible;
-                overflow-x: hidden;
+                max-height: calc(100vh - 100px); /* Account for header */
+                overflow: hidden; /* NO SCROLL */
+                display: flex;
+                flex-direction: column;
             }
             
             .main-grid {
                 grid-template-columns: 1fr;
                 grid-template-rows: auto auto auto;
                 gap: 0.5rem;
-                overflow: visible;
+                overflow: hidden; /* NO SCROLL */
+                flex: 1;
+                min-height: 0;
             }
             
             .left-column,
@@ -2183,7 +2190,8 @@ if ($role === 'encoder') {
             .right-column {
                 grid-column: 1;
                 width: 100%;
-                overflow-x: hidden;
+                overflow: hidden; /* NO SCROLL */
+                min-height: 0;
             }
             
             .left-column {
