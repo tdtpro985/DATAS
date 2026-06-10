@@ -1989,9 +1989,9 @@ async function clearSalesTracking(event) {
 // Custom Confirmation Modal
 function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText = 'Cancel') {
     return new Promise((resolve) => {
-        // Create modal overlay
+        // Create modal overlay with unique class to avoid conflicts
         const overlay = document.createElement('div');
-        overlay.className = 'modal-overlay';
+        overlay.className = 'confirm-modal-overlay';
         overlay.style.cssText = `
             display: flex !important;
             z-index: 10000 !important;
@@ -2003,71 +2003,93 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
             background: rgba(0, 0, 0, 0.75);
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
         `;
         
-        // Create modal
+        // Create modal with unique class
         const confirmModal = document.createElement('div');
-        confirmModal.className = 'modal-content';
+        confirmModal.className = 'confirm-modal-content';
         confirmModal.style.cssText = `
             max-width: 500px;
+            min-width: 400px;
             animation: slideInUp 0.3s ease;
             position: relative;
             z-index: 10001;
+            background: var(--card-bg, #1a1f2e);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            padding: 0;
         `;
         
         confirmModal.innerHTML = `
-            <div class="modal-header">
-                <h2>⚠️ ${title}</h2>
+            <div class="modal-header" style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                <h2 style="margin: 0; font-size: 1.25rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.5rem;">⚠️</span> ${title}
+                </h2>
             </div>
-            <div class="modal-body">
-                <p style="color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap;">${message}</p>
+            <div class="modal-body" style="padding: 1.5rem;">
+                <p style="color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; margin: 0;">${message}</p>
             </div>
-            <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
-                <button type="button" class="btn-action btn-secondary confirm-cancel-btn">${cancelText}</button>
-                <button type="button" class="btn-action btn-warning confirm-ok-btn">${confirmText}</button>
+            <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                <button type="button" class="btn-action btn-secondary confirm-cancel-btn" style="padding: 0.75rem 1.5rem;">${cancelText}</button>
+                <button type="button" class="btn-action btn-warning confirm-ok-btn" style="padding: 0.75rem 1.5rem;">${confirmText}</button>
             </div>
         `;
         
+        // Add to document first
         overlay.appendChild(confirmModal);
         document.body.appendChild(overlay);
         
-        // Prevent all clicks on modal from bubbling
+        let isResolved = false;
+        
+        // Prevent all clicks on modal from bubbling to overlay
         confirmModal.addEventListener('click', (e) => {
             e.stopPropagation();
-            e.stopImmediatePropagation();
         }, true);
         
-        // Handle button clicks with event capture
+        // Handle cancel button
         const cancelBtn = confirmModal.querySelector('.confirm-cancel-btn');
-        const okBtn = confirmModal.querySelector('.confirm-ok-btn');
-        
         if (cancelBtn) {
             cancelBtn.addEventListener('click', (e) => {
-                e.preventDefault();
                 e.stopPropagation();
-                e.stopImmediatePropagation();
-                overlay.remove();
-                resolve(false);
-            }, true);
+                if (!isResolved) {
+                    isResolved = true;
+                    overlay.remove();
+                    resolve(false);
+                }
+            });
         }
         
+        // Handle confirm button
+        const okBtn = confirmModal.querySelector('.confirm-ok-btn');
         if (okBtn) {
             okBtn.addEventListener('click', (e) => {
-                e.preventDefault();
                 e.stopPropagation();
-                e.stopImmediatePropagation();
-                overlay.remove();
-                resolve(true);
-            }, true);
+                if (!isResolved) {
+                    isResolved = true;
+                    overlay.remove();
+                    resolve(true);
+                }
+            });
         }
         
-        // Close on overlay click only
+        // Close on overlay click only (not modal content)
         overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) {
-                e.preventDefault();
-                e.stopPropagation();
+            if (e.target === overlay && !isResolved) {
+                isResolved = true;
                 overlay.remove();
                 resolve(false);
+            }
+        });
+        
+        // Prevent ESC key from closing if there's a handler
+        document.addEventListener('keydown', function escHandler(e) {
+            if (e.key === 'Escape' && !isResolved) {
+                isResolved = true;
+                overlay.remove();
+                resolve(false);
+                document.removeEventListener('keydown', escHandler);
             }
         });
     });
