@@ -1937,7 +1937,14 @@ function editProject() {
 }
 
 // Clear Sales Tracking Function
-async function clearSalesTracking() {
+async function clearSalesTracking(event) {
+    // Stop event propagation immediately
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+    }
+    
     const modal = document.getElementById('detailsModal');
     const projectId = modal.dataset.projectId;
     
@@ -1985,14 +1992,28 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
         // Create modal overlay
         const overlay = document.createElement('div');
         overlay.className = 'modal-overlay';
-        overlay.style.display = 'flex';
-        overlay.style.zIndex = '10000';
+        overlay.style.cssText = `
+            display: flex !important;
+            z-index: 10000 !important;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            align-items: center;
+            justify-content: center;
+        `;
         
         // Create modal
         const confirmModal = document.createElement('div');
         confirmModal.className = 'modal-content';
-        confirmModal.style.maxWidth = '500px';
-        confirmModal.style.animation = 'slideInUp 0.3s ease';
+        confirmModal.style.cssText = `
+            max-width: 500px;
+            animation: slideInUp 0.3s ease;
+            position: relative;
+            z-index: 10001;
+        `;
         
         confirmModal.innerHTML = `
             <div class="modal-header">
@@ -2001,49 +2022,53 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
             <div class="modal-body">
                 <p style="color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap;">${message}</p>
             </div>
-            <div class="modal-actions">
-                <button type="button" class="btn-action btn-secondary" id="confirmCancel">${cancelText}</button>
-                <button type="button" class="btn-action btn-warning" id="confirmOk">${confirmText}</button>
+            <div class="modal-actions" style="display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" class="btn-action btn-secondary confirm-cancel-btn">${cancelText}</button>
+                <button type="button" class="btn-action btn-warning confirm-ok-btn">${confirmText}</button>
             </div>
         `;
-        
-        // Prevent modal content clicks from closing
-        confirmModal.addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
         
         overlay.appendChild(confirmModal);
         document.body.appendChild(overlay);
         
-        // Small delay to prevent immediate closing
-        setTimeout(() => {
-            // Handle button clicks
-            const cancelBtn = document.getElementById('confirmCancel');
-            const okBtn = document.getElementById('confirmOk');
-            
-            if (cancelBtn) {
-                cancelBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    overlay.remove();
-                    resolve(false);
-                };
+        // Prevent all clicks on modal from bubbling
+        confirmModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+        }, true);
+        
+        // Handle button clicks with event capture
+        const cancelBtn = confirmModal.querySelector('.confirm-cancel-btn');
+        const okBtn = confirmModal.querySelector('.confirm-ok-btn');
+        
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                overlay.remove();
+                resolve(false);
+            }, true);
+        }
+        
+        if (okBtn) {
+            okBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                overlay.remove();
+                resolve(true);
+            }, true);
+        }
+        
+        // Close on overlay click only
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                e.preventDefault();
+                e.stopPropagation();
+                overlay.remove();
+                resolve(false);
             }
-            
-            if (okBtn) {
-                okBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    overlay.remove();
-                    resolve(true);
-                };
-            }
-            
-            // Close on overlay click (but not modal content)
-            overlay.onclick = (e) => {
-                if (e.target === overlay) {
-                    overlay.remove();
-                    resolve(false);
-                }
-            };
-        }, 100);
+        });
     });
 }

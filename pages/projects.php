@@ -1280,7 +1280,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             
             <!-- Clear Sales Tracking Button -->
             <button type="button" class="btn-action btn-warning role-only--admin role-only--superadmin" 
-                    onclick="clearSalesTracking()" id="clearTrackingBtn">
+                    onclick="clearSalesTracking(event)" id="clearTrackingBtn">
                 🗑️ Clear Sales Tracking
             </button>
             
