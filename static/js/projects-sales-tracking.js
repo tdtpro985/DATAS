@@ -91,18 +91,25 @@ async function saveSalesTracking() {
             Toast.success('Sales tracking saved successfully');
         }
         
-        // Reload projects list
-        if (typeof ProjectsPage !== 'undefined' && ProjectsPage.loadProjects) {
-            await ProjectsPage.loadProjects();
-        }
-        
-        // Close and reopen modal to refresh
-        closeDetailsModal();
-        setTimeout(() => {
-            if (typeof ProjectsPage !== 'undefined' && ProjectsPage.viewProject) {
-                ProjectsPage.viewProject(parseInt(projectId));
+        // Show Actual Project modal before reloading
+        if (typeof ProjectsPage !== 'undefined' && ProjectsPage.showActualProjectModal) {
+            closeDetailsModal();
+            ProjectsPage.showActualProjectModal(parseInt(projectId));
+        } else {
+            // Fallback: just reload
+            // Reload projects list
+            if (typeof ProjectsPage !== 'undefined' && ProjectsPage.loadProjects) {
+                await ProjectsPage.loadProjects();
             }
-        }, 500);
+            
+            // Close and reopen modal to refresh
+            closeDetailsModal();
+            setTimeout(() => {
+                if (typeof ProjectsPage !== 'undefined' && ProjectsPage.viewProject) {
+                    ProjectsPage.viewProject(parseInt(projectId));
+                }
+            }, 500);
+        }
         
     } catch (error) {
         console.error('[SALES TRACKING] Save error:', error);
