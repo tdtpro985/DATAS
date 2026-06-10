@@ -356,7 +356,7 @@ html {
     display: none;
     position: fixed;
     top: 0;
-    left: 0;
+    left: var(--sidebar-w); /* Start after sidebar */
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0.7);
@@ -366,6 +366,13 @@ html {
     justify-content: center;
     padding: 1rem;
     animation: fadeIn 0.2s ease;
+}
+
+/* On mobile, cover full screen since sidebar is hidden */
+@media (max-width: 768px) {
+    .modal-overlay {
+        left: 0;
+    }
 }
 
 .modal-overlay.active {

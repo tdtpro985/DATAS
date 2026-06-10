@@ -1486,7 +1486,7 @@ const ProjectsPage = {
     showActualProjectModal(projectId) {
         const overlay = document.createElement('div');
         overlay.className = 'modal-overlay active';
-        overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.2s;';
+        // Use CSS class styling instead of inline styles to respect sidebar positioning
         
         const modalBox = document.createElement('div');
         modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); animation: slideUp 0.3s;';
