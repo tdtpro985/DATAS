@@ -15,27 +15,37 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
 }
 
-$db = getDB();
-$date = buildDateFilter('publication_date');
+try {
+    $db = getDB();
+    $date = buildDateFilter('publication_date');
 
-$params = $date['params'];
-$where = 'WHERE ' . $date['sql'];
+    $params = $date['params'];
+    $where = 'WHERE ' . $date['sql'];
 
-// Exclude archived and illegitimate projects  
-$where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
+    // Exclude archived and illegitimate projects  
+    $where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
 
-// Get regional statistics
-$stmt = $db->prepare("
-    SELECT
-        COALESCE(region, 'Unknown') AS region,
-        COUNT(*) AS project_count,
-        COALESCE(SUM(project_value), 0) AS total_value
-    FROM projects
-    $where
-    GROUP BY region
-    ORDER BY total_value DESC
-");
-$stmt->execute($params);
+    // Get regional statistics
+    $stmt = $db->prepare("
+        SELECT
+            COALESCE(region, 'Unknown') AS region,
+            COUNT(*) AS project_count,
+            COALESCE(SUM(project_value), 0) AS total_value
+        FROM projects
+        $where
+        GROUP BY region
+        ORDER BY total_value DESC
+    ");
+    $stmt->execute($params);
+} catch (Exception $e) {
+    error_log("Regional stats error: " . $e->getMessage());
+    jsonResponse([
+        'regions' => [],
+        'projectCounts' => [],
+        'values' => []
+    ]);
+    exit;
+}
 $rows = $stmt->fetchAll();
 
 $regions = [];
