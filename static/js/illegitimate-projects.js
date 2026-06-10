@@ -265,12 +265,42 @@ const IllegalitimateProjectsPage = {
                         <div class="detail-value">${this.escapeHtml(project.source || '—')}</div>
                     </div>
                     <div class="detail-item">
+                        <div class="detail-label">Contract ID</div>
+                        <div class="detail-value">${this.escapeHtml(project.contractor_id || project.contract_id || '—')}</div>
+                    </div>
+                    <div class="detail-item">
                         <div class="detail-label">Contractor Name</div>
                         <div class="detail-value">${this.escapeHtml(project.contractor_name || '—')}</div>
                     </div>
                     <div class="detail-item">
                         <div class="detail-label">Contact Person</div>
                         <div class="detail-value">${this.escapeHtml(project.contact_person || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contact Number</div>
+                        <div class="detail-value">${this.escapeHtml(project.contact_number || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">📍 Contractor Location</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_country || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Region</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_region || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Province</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_province || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">City</div>
+                        <div class="detail-value">${this.escapeHtml(project.contract_city || '—')}</div>
                     </div>
                 </div>
             </div>
@@ -279,19 +309,47 @@ const IllegalitimateProjectsPage = {
                 <div class="detail-section-title">🏗️ Project Details</div>
                 <div class="detail-grid">
                     <div class="detail-item">
+                        <div class="detail-label">Project ID</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_id || project.id || '—')}</div>
+                    </div>
+                    <div class="detail-item">
                         <div class="detail-label">Project Name</div>
                         <div class="detail-value">${this.escapeHtml(project.project_name || '—')}</div>
                     </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">📍 Project Location</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Country</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_country || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Region</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_region || project.region || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Province</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_province || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">City</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_city || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">💰 Project Information</div>
+                <div class="detail-grid">
                     <div class="detail-item">
                         <div class="detail-label">Project Value</div>
                         <div class="detail-value large">${value}</div>
                     </div>
                     <div class="detail-item">
-                        <div class="detail-label">Region</div>
-                        <div class="detail-value">${this.escapeHtml(project.region || '—')}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Status</div>
+                        <div class="detail-label">Project Status</div>
                         <div class="detail-value">${this.escapeHtml(project.status || '—')}</div>
                     </div>
                 </div>
