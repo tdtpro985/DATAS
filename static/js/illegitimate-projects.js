@@ -234,7 +234,99 @@ const IllegalitimateProjectsPage = {
     },
 
     viewProject(projectId) {
-        alert('Project details modal - Coming soon!');
+        const project = this.allProjects.find(p => p.id === projectId);
+        if (!project) return;
+
+        const modal = document.getElementById('detailsModal');
+        const modalBody = document.getElementById('detailsModalBody');
+        
+        const value = (project.project_value || 0).toLocaleString('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
+        
+        modalBody.innerHTML = `
+            <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span style="font-size: 1.5rem;">🚫</span>
+                    <div>
+                        <div style="font-weight: 700; color: #ef4444; margin-bottom: 0.25rem;">Illegitimate Project</div>
+                        <div style="font-size: 0.85rem; color: var(--text-secondary);">This project has been marked as not legitimate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">📋 Basic Information</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Published Date</div>
+                        <div class="detail-value">${project.publication_date || '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Source</div>
+                        <div class="detail-value">${this.escapeHtml(project.source || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contractor Name</div>
+                        <div class="detail-value">${this.escapeHtml(project.contractor_name || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Contact Person</div>
+                        <div class="detail-value">${this.escapeHtml(project.contact_person || '—')}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <div class="detail-section-title">🏗️ Project Details</div>
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Project Name</div>
+                        <div class="detail-value">${this.escapeHtml(project.project_name || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Project Value</div>
+                        <div class="detail-value large">${value}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Region</div>
+                        <div class="detail-value">${this.escapeHtml(project.region || '—')}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Status</div>
+                        <div class="detail-value">${this.escapeHtml(project.status || '—')}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const modalActions = modal.querySelector('.modal-actions');
+        modalActions.innerHTML = `
+            <button class="btn-secondary" onclick="closeDetailsModal()">Close</button>
+            <button class="btn-primary" onclick="IllegalitimateProjectsPage.restoreProject(${projectId})">✅ Mark as Legitimate</button>
+        `;
+
+        modal.classList.add('active');
+    },
+
+    async restoreProject(projectId) {
+        if (!confirm('Mark this project as legitimate? It will be restored to the normal project list.')) return;
+
+        try {
+            const response = await fetch(BASE + `/api/v1/projects/${projectId}/actual-project`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ is_actual_project: 'yes' })
+            });
+
+            if (!response.ok) throw new Error('Failed to restore project');
+
+            showToast('Project marked as legitimate', 'success');
+            closeDetailsModal();
+            this.loadProjects();
+        } catch (error) {
+            console.error('[RESTORE] Error:', error);
+            showToast('Failed to restore project', 'error');
+        }
     },
 
     showError(message) {

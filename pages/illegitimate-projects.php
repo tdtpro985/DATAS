@@ -146,11 +146,24 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <div class="modal-content modal-large">
         <div class="modal-header"><h2>Project Details</h2><button class="modal-close" onclick="closeDetailsModal()">&times;</button></div>
         <div class="modal-body" id="detailsModalBody"></div>
-        <div class="modal-actions"><button class="btn-secondary" onclick="closeDetailsModal()">Close</button><button class="btn-primary" onclick="saveSalesTracking()">💾 Save Sales Tracking</button></div>
+        <div class="modal-actions"></div>
     </div>
 </div>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/illegitimate-projects.js"></script>
+<script>
+function closeDetailsModal() {
+    document.getElementById('detailsModal').classList.remove('active');
+}
+function showToast(message, type = 'info') {
+    console.log('[TOAST]', type, message);
+    if (window.Toast && Toast.show) {
+        Toast.show(message, type);
+    } else {
+        alert(message);
+    }
+}
+</script>
 </body>
 </html>
