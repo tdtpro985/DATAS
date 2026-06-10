@@ -56,7 +56,7 @@ if ($source && $source !== 'all') {
 }
 
 if ($search) {
-    $where[] = '(p.contractor_name LIKE :search OR p.project_name LIKE :search)';
+    $where[] = '(p.contractor_name LIKE :search OR p.project_name LIKE :search OR p.project_id LIKE :search OR p.contract_id LIKE :search)';
     $params[':search'] = '%' . $search . '%';
 }
 
