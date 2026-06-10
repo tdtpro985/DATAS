@@ -56,28 +56,17 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
         }
 
         html, body {
-            overflow: hidden;
-            height: 100vh;
             margin: 0;
             padding: 0;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* Hide sidebar for full screen experience */
-        .sidebar {
-            display: none !important;
-        }
-        
-        /* Hide any header if present */
-        .header {
-            display: none !important;
-        }
-
-        /* Full height layout - keep original width */
         .dashboard { 
             display: flex; 
             flex-direction: column; 
             height: 100vh; 
-            padding: 0.1rem; 
+            padding: 1rem; 
             overflow: hidden;
             margin-left: 0;
         }
@@ -86,21 +75,20 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             flex: 1; 
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 0.2rem);
+            height: calc(100vh - 2rem);
             overflow: hidden;
-            padding: 0.3rem;
+            padding: 1rem;
             margin: 0;
         }
 
-        /* Ultra-compact page header */
         .page-header {
-            margin-bottom: 0.3rem;
-            padding-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
             border-bottom: 1px solid rgba(248, 113, 113, 0.15);
             flex-shrink: 0;
         }
         .page-header h1 {
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             font-weight: 800;
             margin: 0;
             color: var(--text-primary);
@@ -108,71 +96,29 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            line-height: 1.2;
         }
         .page-header p {
-            margin: 0.2rem 0 0;
+            margin: 0.25rem 0 0;
             color: var(--text-secondary);
-            font-size: 0.7rem;
-            line-height: 1.2;
+            font-size: 0.85rem;
         }
 
-        /* Ultra-compact step indicator */
         .step-indicator {
             display: flex;
-            gap: 0.3rem;
+            gap: 0.5rem;
             justify-content: center;
-            margin-bottom: 0.3rem;
-            padding: 0.3rem 0;
+            margin-bottom: 0.75rem;
+            padding: 0.5rem 0;
             border-bottom: 1px solid rgba(248, 113, 113, 0.18);
             flex-shrink: 0;
         }
-        .step-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: rgba(30, 36, 48, 0.9);
-            border: 2px solid rgba(248, 113, 113, 0.2);
-            font-weight: 700;
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            position: relative;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-        }
-        .step-badge.active {
-            background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-            border-color: #f87171;
-            color: white;
-            box-shadow: 0 2px 12px rgba(248, 113, 113, 0.35);
-            transform: scale(1.04);
-        }
-        .step-badge.completed {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-color: #10b981;
-            color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-        }
-        .step-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(248, 113, 113, 0.22) 0%, rgba(248, 113, 113, 0.08) 100%);
-            top: 14px;
-            left: 50%;
-            z-index: -1;
-        }
-
-        /* Form container with minimal scroll */
+        
         form {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            height: calc(100% - 4rem); /* Account for header and step indicator */
+            min-height: 0;
         }
 
         .form-step { 
@@ -180,124 +126,49 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             opacity: 0; 
             flex: 1;
             overflow-y: auto;
-            padding-right: 0.3rem;
-            height: 100%;
+            overflow-x: hidden;
+            padding-right: 0.5rem;
+            min-height: 0;
         }
+        
+        .form-step::-webkit-scrollbar { width: 8px; }
+        .form-step::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 4px; }
+        .form-step::-webkit-scrollbar-thumb { background: rgba(248, 113, 113, 0.3); border-radius: 4px; }
+        .form-step::-webkit-scrollbar-thumb:hover { background: rgba(248, 113, 113, 0.5); }
+        
         .form-step.active { 
             display: flex;
             flex-direction: column;
             animation: slideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             opacity: 1;
         }
-        @keyframes slideIn { 
-            from { opacity: 0; transform: translateY(10px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
 
-        /* Ultra-compact form sections */
-        .form-section {
-            background: var(--form-bg);
-            border: 1px solid var(--form-border);
-            border-radius: 6px;
-            padding: 0.5rem;
-            margin-bottom: 0.3rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-            transition: all 0.3s ease;
-        }
-        .form-section:hover {
-            border-color: rgba(248, 113, 113, 0.4);
-            box-shadow: 0 8px 24px rgba(248, 113, 113, 0.1);
-        }
-
-        .form-section h2 {
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            line-height: 1.2;
-        }
-        .form-section h2::before {
-            content: '';
-            width: 2px;
-            height: 14px;
-            background: linear-gradient(180deg, #f87171 0%, #ef4444 100%);
-            border-radius: 1px;
-        }
-
-        /* Ultra-compact grid system */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 0.4rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             align-items: start;
         }
         
-        /* Fixed 3-column layout override */
-        .form-grid[style*="grid-template-columns: 1fr 1fr 1fr"] {
-            grid-template-columns: 1fr 1fr 1fr !important;
-            gap: 1rem;
-        }
-        
-        /* Responsive breakpoints for fixed 3-column layout */
-        @media (max-width: 1024px) {
-            .form-grid[style*="grid-template-columns: 1fr 1fr 1fr"] {
-                grid-template-columns: 1fr 1fr !important;
-                gap: 0.8rem;
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
         
         @media (max-width: 768px) {
-            .form-grid[style*="grid-template-columns: 1fr 1fr 1fr"] {
-                grid-template-columns: 1fr !important;
-                gap: 0.6rem;
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard {
+                padding: 0.5rem;
+            }
+            
+            .card {
+                padding: 0.5rem;
             }
         }
-        
-        /* Ultra-compact form groups */
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.15rem;
-            min-height: 42px;
-        }
-        
-        .form-group label {
-            font-weight: 600;
-            color: var(--text-primary);
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            opacity: 0.9;
-            margin-bottom: 0.25rem;
-            line-height: 1.1;
-        }
-        .form-group label::after {
-            content: attr(data-required);
-            color: #ef4444;
-        }
-
-        .form-group input,
-        .form-group select {
-            background: var(--input-bg);
-            border: 1.5px solid var(--input-border);
-            border-radius: 6px;
-            padding: 0.4rem 0.6rem;
-            color: var(--text-primary);
-            font-size: 0.8rem;
-            font-family: 'Inter', sans-serif;
-            transition: all 0.2s ease;
-            outline: none;
-            min-height: 32px;
-            line-height: 1.2;
-            font-weight: 500;
-        }
-        .form-group input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-            font-size: 0.75rem;
             font-weight: 400;
         }
         .form-group input:hover,
