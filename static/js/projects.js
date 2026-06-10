@@ -2007,29 +2007,43 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
             </div>
         `;
         
+        // Prevent modal content clicks from closing
+        confirmModal.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        
         overlay.appendChild(confirmModal);
         document.body.appendChild(overlay);
         
-        // Handle button clicks
-        const cancelBtn = document.getElementById('confirmCancel');
-        const okBtn = document.getElementById('confirmOk');
-        
-        cancelBtn.onclick = () => {
-            overlay.remove();
-            resolve(false);
-        };
-        
-        okBtn.onclick = () => {
-            overlay.remove();
-            resolve(true);
-        };
-        
-        // Close on overlay click
-        overlay.onclick = (e) => {
-            if (e.target === overlay) {
-                overlay.remove();
-                resolve(false);
+        // Small delay to prevent immediate closing
+        setTimeout(() => {
+            // Handle button clicks
+            const cancelBtn = document.getElementById('confirmCancel');
+            const okBtn = document.getElementById('confirmOk');
+            
+            if (cancelBtn) {
+                cancelBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    overlay.remove();
+                    resolve(false);
+                };
             }
-        };
+            
+            if (okBtn) {
+                okBtn.onclick = (e) => {
+                    e.stopPropagation();
+                    overlay.remove();
+                    resolve(true);
+                };
+            }
+            
+            // Close on overlay click (but not modal content)
+            overlay.onclick = (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                    resolve(false);
+                }
+            };
+        }, 100);
     });
 }
