@@ -1122,11 +1122,14 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
                 <span>Bulk Unassign Projects</span>
             </button>
         </div>
-
         <!-- Content Area -->
         <div id="pm-content">
             <!-- Status Legend -->
             <div class="status-legend">
+                <div class="status-legend-item">
+                    <span class="status-circle priority"></span>
+                    <span>Priority</span>
+                </div>
                 <div class="status-legend-item">
                     <span class="status-circle awarded"></span>
                     <span>Awarded</span>
