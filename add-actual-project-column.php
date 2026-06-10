@@ -22,7 +22,7 @@ try {
         // Add the column
         $pdo->exec("
             ALTER TABLE projects 
-            ADD COLUMN is_actual_project ENUM('yes', 'no', 'pending') DEFAULT 'pending' AFTER tracking_status
+            ADD COLUMN is_actual_project ENUM('yes', 'no', 'pending') DEFAULT 'pending'
         ");
         echo "✓ Column 'is_actual_project' added successfully.\n";
         
