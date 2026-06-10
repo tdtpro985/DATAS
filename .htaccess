@@ -52,6 +52,9 @@ RewriteRule ^projects-by-form/?$ pages/projects-by-form.php [QSA,L]
 # /my-projects → pages/my-projects.php (sales rep only)
 RewriteRule ^my-projects/?$ pages/my-projects.php [QSA,L]
 
+# /illegitimate-projects → pages/illegitimate-projects.php (admin/superadmin/sales_rep only)
+RewriteRule ^illegitimate-projects/?$ pages/illegitimate-projects.php [QSA,L]
+
 RewriteRule ^reports/?$ pages/reports.php [QSA,L]
 
 # / (root) → pages/projects.php (redirect to projects instead of reports)
