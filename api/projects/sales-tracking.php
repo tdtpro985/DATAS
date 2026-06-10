@@ -237,6 +237,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 // Handle DELETE request - clear sales tracking data
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+    // Clean output buffer again before sending response
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    
     try {
         $db = getDB();
         
@@ -251,14 +256,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         $deleteStmt = $db->prepare('DELETE FROM sales_tracking WHERE project_id = :project_id');
         $deleteStmt->execute([':project_id' => $projectId]);
         
-        jsonResponse([
+        // Send clean JSON response
+        header('Content-Type: application/json');
+        echo json_encode([
+            'success' => true,
             'message' => 'Sales tracking cleared successfully'
         ]);
+        exit;
         
     } catch (Exception $e) {
         jsonError('Database error: ' . $e->getMessage(), 500);
     }
-    return;
 }
 
 jsonError('Method not allowed', 405);

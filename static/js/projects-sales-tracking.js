@@ -127,12 +127,26 @@ async function clearSalesTracking(event) {
     try {
         const response = await fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`, {
             method: 'DELETE',
-            credentials: 'include'
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json'
+            }
         });
         
+        // Get response text first to debug
+        const responseText = await response.text();
+        console.log('[SALES TRACKING] DELETE response:', responseText);
+        
+        let result;
+        try {
+            result = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('[SALES TRACKING] JSON parse error:', parseError);
+            throw new Error('Invalid response from server');
+        }
+        
         if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || error.message || 'Failed to clear');
+            throw new Error(result.detail || result.message || 'Failed to clear');
         }
         
         console.log('[SALES TRACKING] Cleared successfully');
