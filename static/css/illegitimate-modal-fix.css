@@ -1,0 +1,155 @@
+/* ══════════════════════════════════════════════════════════
+   ILLEGITIMATE PROJECTS - MODAL FIX
+   Perfectly centered in main content area (excluding sidebar)
+══════════════════════════════════════════════════════════ */
+
+/* Override any existing modal styles */
+body[data-page="illegitimate-projects"] .modal-overlay,
+.illegitimate-page .modal-overlay {
+    /* Reset everything first */
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: transparent;
+    z-index: 99999;
+    padding: 0;
+    margin: 0;
+    animation: fadeIn 0.2s ease;
+}
+
+/* Dark overlay with blur - ONLY covers main content area */
+body[data-page="illegitimate-projects"] .modal-overlay::before,
+.illegitimate-page .modal-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 250px; /* Sidebar width - exact pixels */
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1;
+}
+
+/* Show modal */
+body[data-page="illegitimate-projects"] .modal-overlay.active,
+.illegitimate-page .modal-overlay.active {
+    display: block !important;
+}
+
+/* Modal content - centered in main content area */
+body[data-page="illegitimate-projects"] .modal-overlay .modal-content,
+.illegitimate-page .modal-overlay .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+    /* Adjust for sidebar offset */
+    margin-left: 125px; /* Half of sidebar width to center in remaining space */
+    
+    max-width: 900px;
+    width: calc(100vw - 250px - 4rem); /* Viewport minus sidebar minus padding */
+    max-height: 90vh;
+    
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.25rem;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+    
+    overflow-y: auto;
+    animation: modalSlideUp 0.3s ease-out;
+    z-index: 2;
+}
+
+/* Slide up animation */
+@keyframes modalSlideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Fade in animation for overlay */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Mobile responsive - full screen */
+@media (max-width: 768px) {
+    body[data-page="illegitimate-projects"] .modal-overlay::before,
+    .illegitimate-page .modal-overlay::before {
+        left: 0; /* Cover full screen on mobile */
+    }
+    
+    body[data-page="illegitimate-projects"] .modal-overlay .modal-content,
+    .illegitimate-page .modal-overlay .modal-content {
+        margin-left: 0;
+        left: 1rem;
+        right: 1rem;
+        width: calc(100vw - 2rem);
+        transform: translate(0, -50%);
+    }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    body[data-page="illegitimate-projects"] .modal-overlay .modal-content,
+    .illegitimate-page .modal-overlay .modal-content {
+        width: calc(100vw - 250px - 2rem);
+        margin-left: 100px;
+    }
+}
+
+/* Large screen optimization */
+@media (min-width: 1920px) {
+    body[data-page="illegitimate-projects"] .modal-overlay .modal-content,
+    .illegitimate-page .modal-overlay .modal-content {
+        max-width: 1100px;
+    }
+}
+
+/* Fix for scrollable modal content */
+body[data-page="illegitimate-projects"] .modal-overlay .modal-content::-webkit-scrollbar,
+.illegitimate-page .modal-overlay .modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+body[data-page="illegitimate-projects"] .modal-overlay .modal-content::-webkit-scrollbar-track,
+.illegitimate-page .modal-overlay .modal-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+body[data-page="illegitimate-projects"] .modal-overlay .modal-content::-webkit-scrollbar-thumb,
+.illegitimate-page .modal-overlay .modal-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 128, 0, 0.4);
+    border-radius: 4px;
+}
+
+body[data-page="illegitimate-projects"] .modal-overlay .modal-content::-webkit-scrollbar-thumb:hover,
+.illegitimate-page .modal-overlay .modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 128, 0, 0.6);
+}
+
+/* Ensure modal header, body, footer don't break layout */
+body[data-page="illegitimate-projects"] .modal-header,
+body[data-page="illegitimate-projects"] .modal-body,
+body[data-page="illegitimate-projects"] .modal-footer,
+body[data-page="illegitimate-projects"] .modal-actions,
+.illegitimate-page .modal-header,
+.illegitimate-page .modal-body,
+.illegitimate-page .modal-footer,
+.illegitimate-page .modal-actions {
+    position: relative;
+    z-index: 3;
+}

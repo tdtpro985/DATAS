@@ -43,6 +43,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-modal-fix.css?v=1">
     <style>
         .pm-stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.75rem; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; }
         .pm-stat-icon { font-size: 2rem; opacity: 0.8; }
@@ -81,7 +82,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     </style>
     <script>const BASE = '<?= $base ?>';</script>
 </head>
-<body data-role="<?= htmlspecialchars($role) ?>">
+<body data-role="<?= htmlspecialchars($role) ?>" data-page="illegitimate-projects">
 <?php require __DIR__ . '/sidebar.php'; ?>
 <div class="dashboard">
     <div id="admin-content-wrapper" style="grid-column: 1 / -1;">
