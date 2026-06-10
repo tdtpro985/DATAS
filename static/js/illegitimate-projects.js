@@ -149,15 +149,15 @@ const IllegalitimateProjectsPage = {
             const trackingStatusClass = trackingStatus.toLowerCase().replace(/\s+/g, '-');
 
             return `
-                <tr data-project-id="${project.id}" onclick="IllegalitimateProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
+                <tr onclick="IllegalitimateProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
                     <td title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
                     <td title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
                     <td>${this.escapeHtml(project.region || '—')}</td>
                     <td>${this.escapeHtml(project.source || '—')}</td>
                     <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
-                    <td class="col-value">${value}</td>
-                    <td class="col-tracking"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
-                    <td class="col-date">${dateStr}</td>
+                    <td style="text-align: right; font-weight: 600; color: #34d399;">${value}</td>
+                    <td style="text-align: center;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
+                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem;">${dateStr}</td>
                 </tr>
             `;
         }).join('');
