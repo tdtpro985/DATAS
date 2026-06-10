@@ -330,7 +330,7 @@ const ProjectsPage = {
             const statusClass = this.getStatusClass(status);
             
             // Get sales tracking status
-            const trackingStatus = this.getSalesTrackingStatus(project);
+            const trackingStatus = project.sales_tracking_status || project.tracking_status || 'Not Started';
             const trackingBadge = this.getTrackingBadge(trackingStatus);
 
             return `
@@ -412,6 +412,17 @@ const ProjectsPage = {
         if (lower === 'for execution') return 'for-execution';
         if (lower === 'for bidding') return 'for-bidding';
         return '';
+    },
+
+    getTrackingBadge(status) {
+        const lower = String(status).trim().toLowerCase();
+        if (lower === 'complete') {
+            return '<span class="tracking-badge complete">Complete</span>';
+        } else if (lower === 'in progress') {
+            return '<span class="tracking-badge in-progress">In Progress</span>';
+        } else {
+            return '<span class="tracking-badge not-started">Not Started</span>';
+        }
     },
 
     escapeHtml(str) {
@@ -2094,3 +2105,26 @@ function showCustomConfirm(title, message, confirmText = 'Confirm', cancelText =
         });
     });
 }
+
+
+// Initialize event listeners
+document.addEventListener('DOMContentLoaded', () => {
+    ProjectsPage.init();
+    
+    // Set up event listeners for modal buttons using event delegation
+    document.addEventListener('click', (e) => {
+        const target = e.target;
+        
+        if (target.id === 'closeModalBtn' || target.closest('#closeModalBtn')) {
+            closeDetailsModal();
+        } else if (target.id === 'editProjectBtn' || target.closest('#editProjectBtn')) {
+            editProject();
+        } else if (target.id === 'clearTrackingBtn' || target.closest('#clearTrackingBtn')) {
+            clearSalesTracking(e);
+        } else if (target.id === 'archiveBtn' || target.closest('#archiveBtn')) {
+            toggleProjectArchive();
+        } else if (target.id === 'saveTrackingBtn' || target.closest('#saveTrackingBtn')) {
+            saveSalesTracking();
+        }
+    });
+});

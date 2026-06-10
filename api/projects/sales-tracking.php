@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-    $db = getDB();
+        $db = getDB();
     
     // Verify project exists
     $projectStmt = $db->prepare('SELECT id FROM projects WHERE id = :id LIMIT 1');
