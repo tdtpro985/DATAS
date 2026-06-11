@@ -1296,6 +1296,122 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     </div>
 </div>
 
+<!-- Edit Options Modal -->
+<div class="modal-overlay" id="editOptionsModal">
+    <div class="modal-content" style="max-width: 600px;">
+        <div class="modal-header">
+            <h2>✏️ Edit Project</h2>
+            <button class="modal-close" onclick="closeEditOptionsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin: 0 0 1.5rem; color: var(--text-secondary); text-align: center;">
+                Select which section you want to edit:
+            </p>
+            
+            <div style="display: grid; gap: 1rem;">
+                <!-- Contract Details -->
+                <button class="edit-option-card" onclick="editSection('contract')">
+                    <div class="edit-option-icon">📋</div>
+                    <div class="edit-option-content">
+                        <div class="edit-option-title">Contract Details</div>
+                        <div class="edit-option-desc">Contract ID, Name, Person, Number, Published Date</div>
+                    </div>
+                    <div class="edit-option-arrow">→</div>
+                </button>
+                
+                <!-- Project Details -->
+                <button class="edit-option-card" onclick="editSection('project')">
+                    <div class="edit-option-icon">🏗️</div>
+                    <div class="edit-option-content">
+                        <div class="edit-option-title">Project Details</div>
+                        <div class="edit-option-desc">Project ID, Name, Location, Address, Coordinates</div>
+                    </div>
+                    <div class="edit-option-arrow">→</div>
+                </button>
+                
+                <!-- Materials -->
+                <button class="edit-option-card" onclick="editSection('materials')">
+                    <div class="edit-option-icon">🔩</div>
+                    <div class="edit-option-content">
+                        <div class="edit-option-title">Materials</div>
+                        <div class="edit-option-desc">Steel Bars, Beams, Tubes, GI Sheets, etc.</div>
+                    </div>
+                    <div class="edit-option-arrow">→</div>
+                </button>
+                
+                <!-- Pictures (Priority only) -->
+                <button class="edit-option-card" id="editPicturesOption" onclick="editSection('pictures')" style="display: none;">
+                    <div class="edit-option-icon">📸</div>
+                    <div class="edit-option-content">
+                        <div class="edit-option-title">Pictures</div>
+                        <div class="edit-option-desc">Upload or manage project images</div>
+                    </div>
+                    <div class="edit-option-arrow">→</div>
+                </button>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn-action btn-secondary" onclick="closeEditOptionsModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<style>
+    .edit-option-card {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.03);
+        border: 2px solid rgba(255, 255, 255, 0.08);
+        border-radius: 0.75rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        width: 100%;
+        text-align: left;
+    }
+    
+    .edit-option-card:hover {
+        background: rgba(255, 152, 0, 0.1);
+        border-color: rgba(255, 152, 0, 0.3);
+        transform: translateX(4px);
+    }
+    
+    .edit-option-icon {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+    
+    .edit-option-content {
+        flex: 1;
+    }
+    
+    .edit-option-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+    
+    .edit-option-desc {
+        font-size: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.3;
+    }
+    
+    .edit-option-arrow {
+        font-size: 1.5rem;
+        color: var(--text-muted);
+        flex-shrink: 0;
+        transition: transform 0.2s ease;
+    }
+    
+    .edit-option-card:hover .edit-option-arrow {
+        transform: translateX(4px);
+        color: var(--orange-500);
+    }
+</style>
+
 <!-- Assignment Modal -->
 <div class="modal-overlay" id="assignModal">
     <div class="modal-content">
@@ -1424,7 +1540,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=10"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=2"></script>
+<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=3"></script>
 
 </body>
 </html>

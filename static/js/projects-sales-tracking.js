@@ -313,12 +313,55 @@ function editProject() {
         return;
     }
     
-    // Determine the correct encode page based on priority status
-    const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
+    // Store project info in edit modal
+    const editModal = document.getElementById('editOptionsModal');
+    if (editModal) {
+        editModal.dataset.projectId = projectId;
+        const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
+        editModal.dataset.isPriority = isPriority;
+        
+        // Show/hide Pictures option based on priority
+        const picturesOption = document.getElementById('editPicturesOption');
+        if (picturesOption) {
+            picturesOption.style.display = isPriority ? 'flex' : 'none';
+        }
+    }
+    
+    // Close details modal and open edit options modal
+    closeDetailsModal();
+    setTimeout(() => {
+        if (editModal) {
+            editModal.classList.add('active');
+        }
+    }, 200);
+}
+
+// Edit specific section
+function editSection(section) {
+    const editModal = document.getElementById('editOptionsModal');
+    const projectId = editModal?.dataset?.projectId;
+    const isPriority = editModal?.dataset?.isPriority === 'true';
+    
+    if (!projectId) {
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Project ID not found');
+        }
+        return;
+    }
+    
+    // Determine encode page
     const encodePage = isPriority ? '/encode/priority' : '/encode/non-priority';
     
-    // Redirect to encode page with project ID
-    window.location.href = `${BASE}${encodePage}?edit=${projectId}`;
+    // Redirect with section and project ID
+    window.location.href = `${BASE}${encodePage}?edit=${projectId}&section=${section}`;
+}
+
+// Close edit options modal
+function closeEditOptionsModal() {
+    const modal = document.getElementById('editOptionsModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
 
 // Close Details Modal
