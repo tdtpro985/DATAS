@@ -1700,6 +1700,16 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleProjectArchive();
         });
     }
+    
+    // Edit Project button click handler
+    const editProjectBtn = document.getElementById('editProjectBtn');
+    if (editProjectBtn) {
+        editProjectBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            editProject();
+        });
+    }
 });
 
 // Global functions for modal controls
@@ -1718,6 +1728,47 @@ function openAssignModal() {
 function openTrackingModal() {
     // TODO: Implement tracking modal functionality  
     alert('Sales tracking functionality will be implemented soon.');
+}
+
+/**
+ * Edit project - redirects to encode page
+ */
+function editProject() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = modal?.dataset?.projectId;
+    
+    if (!projectId) {
+        console.error('[PROJECTS] No project ID found');
+        showNotificationToast('Unable to edit project: No project ID found', 'error');
+        return;
+    }
+    
+    // Find the project
+    let project = null;
+    if (ProjectsPage && ProjectsPage.allProjects) {
+        project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    } else if (window.currentProjectsData && window.currentProjectsData.projects) {
+        project = window.currentProjectsData.projects.find(p => p.id == projectId);
+    }
+    
+    if (!project) {
+        console.error('[PROJECTS] Project not found');
+        showNotificationToast('Project not found', 'error');
+        return;
+    }
+    
+    // Check if project is archived
+    if (project.archived_at) {
+        showNotificationToast('Cannot edit archived projects. Please restore first.', 'warning');
+        return;
+    }
+    
+    // Determine the correct encode page based on priority status
+    const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
+    const encodePage = isPriority ? 'encode/priority' : 'encode/non-priority';
+    
+    // Redirect to encode page with project ID
+    window.location.href = `${BASE}/${encodePage}?edit=${projectId}`;
 }
 
 function saveSalesTracking() {
