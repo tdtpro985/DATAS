@@ -121,6 +121,9 @@ try {
             <a href="<?= $base ?>/sales-reps" class="ap-nav-item">
                 <span class="ap-nav-label">Sales Representatives</span>
             </a>
+            <a href="<?= $base ?>/sr-performance" class="ap-nav-item">
+                <span class="ap-nav-label">SR Performance Report</span>
+            </a>
             <a href="<?= $base ?>/users" class="ap-nav-item">
                 <span class="ap-nav-label">User Management</span>
             </a>
@@ -438,6 +441,7 @@ function updatePageTitle() {
         '/encode/non-priority': { title: 'Encode Non-Priority Project' },
         '/encode/priority': { title: 'Encode Priority Project' },
         '/sales-reps': { title: 'Sales Representatives' },
+        '/sr-performance': { title: 'SR Performance Report' },
         '/projects-management': { title: 'Project Management' },
         '/my-projects': { title: 'My Projects' }
     };

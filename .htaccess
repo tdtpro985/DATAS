@@ -22,6 +22,9 @@ RewriteRule ^admin/?$ pages/admin.php [QSA,L]
 # /sales-reps → pages/sales-reps.php (admin/superadmin only)
 RewriteRule ^sales-reps/?$ pages/sales-reps.php [QSA,L]
 
+# /sr-performance → pages/sr-performance.php (admin/superadmin only)
+RewriteRule ^sr-performance/?$ pages/sr-performance.php [QSA,L]
+
 # /users → pages/users.php (admin/superadmin only)
 RewriteRule ^users/?$ pages/users.php [QSA,L]
 
