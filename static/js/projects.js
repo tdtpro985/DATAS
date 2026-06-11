@@ -844,6 +844,7 @@ const ProjectsPage = {
                 <div class="detail-section-title">🔧 Materials</div>
                 <div class="detail-grid">
                     ${project.status && project.status.toLowerCase() === 'priority' ? `
+                    <!-- Priority Project Materials -->
                     <div class="detail-item" style="grid-column: 1 / -1;">
                         <div class="detail-label">Sheet Pile Type</div>
                         <div class="detail-value">${this.escapeHtml(project.sheet_pile_type || '—')}</div>
@@ -852,7 +853,16 @@ const ProjectsPage = {
                         <div class="detail-label">DRBs Type</div>
                         <div class="detail-value">${this.escapeHtml(project.drbs || '—')}</div>
                     </div>
-                    ` : ''}
+                    <div class="detail-item">
+                        <div class="detail-label">DRBS (Amount)</div>
+                        <div class="detail-value">${project.drbs_value ? formatCurrency(project.drbs_value) : '—'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Sheet Pile (Amount)</div>
+                        <div class="detail-value">${project.sheet_pile_amount ? formatCurrency(project.sheet_pile_amount) : '—'}</div>
+                    </div>
+                    ` : `
+                    <!-- Non-Priority Project Materials -->
                     <div class="detail-item">
                         <div class="detail-label">DRBS (Amount)</div>
                         <div class="detail-value">${project.drbs_value ? formatCurrency(project.drbs_value) : '—'}</div>
@@ -881,6 +891,7 @@ const ProjectsPage = {
                         <div class="detail-label">GI/BI (Amount)</div>
                         <div class="detail-value">${project.gi_bi ? formatCurrency(project.gi_bi) : '—'}</div>
                     </div>
+                    `}
                 </div>
             </div>
 
