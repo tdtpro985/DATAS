@@ -27,29 +27,33 @@ try {
     
     // Get project ID from path
     $path = $_GET['path'] ?? '';
-    $pathParts = explode('/', $path);
-    $projectId = null;
     
     // Extract ID from path like "projects/123"
-    if (count($pathParts) >= 2 && $pathParts[0] === 'projects' && is_numeric($pathParts[1])) {
-        $projectId = (int)$pathParts[1];
-    }
-    
-    if (!$projectId) {
+    if (preg_match('#^projects/(\d+)$#', $path, $matches)) {
+        $projectId = (int)$matches[1];
+    } else {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Invalid project ID']);
+        echo json_encode(['success' => false, 'message' => 'Invalid project ID in path: ' . $path]);
         exit;
     }
     
     // Parse JSON body
-    $input = json_decode(file_get_contents('php://input'), true);
-    if (!$input) {
+    $rawInput = file_get_contents('php://input');
+    $input = json_decode($rawInput, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
         http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Invalid JSON data']);
+        echo json_encode(['success' => false, 'message' => 'Invalid JSON data: ' . json_last_error_msg()]);
         exit;
     }
     
-    // Verify project exists and is not archived
+    if (!$input) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'message' => 'No data provided']);
+        exit;
+    }
+    
+    // Verify project exists
     $stmt = $pdo->prepare('SELECT id, archived_at FROM projects WHERE id = ?');
     $stmt->execute([$projectId]);
     $project = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -88,7 +92,7 @@ try {
         if ($key === 'id') continue; // Skip ID
         
         if (in_array($key, $allowedFields)) {
-            $updates[] = "$key = ?";
+            $updates[] = "`$key` = ?";
             $params[] = $value;
         }
     }
@@ -100,7 +104,7 @@ try {
     }
     
     // Add updated_at timestamp
-    $updates[] = "updated_at = NOW()";
+    $updates[] = "`updated_at` = NOW()";
     
     // Add project ID to params
     $params[] = $projectId;
@@ -108,12 +112,17 @@ try {
     // Execute update
     $sql = "UPDATE projects SET " . implode(', ', $updates) . " WHERE id = ?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+    $success = $stmt->execute($params);
+    
+    if (!$success) {
+        throw new Exception('Failed to execute update query');
+    }
     
     echo json_encode([
         'success' => true,
         'message' => 'Project updated successfully',
-        'updated_fields' => count($updates) - 1 // Exclude updated_at
+        'updated_fields' => count($updates) - 1, // Exclude updated_at
+        'project_id' => $projectId
     ]);
     
 } catch (PDOException $e) {
@@ -122,5 +131,12 @@ try {
     echo json_encode([
         'success' => false,
         'message' => 'Database error: ' . $e->getMessage()
+    ]);
+} catch (Exception $e) {
+    error_log("Project Update Error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'Error: ' . $e->getMessage()
     ]);
 }
