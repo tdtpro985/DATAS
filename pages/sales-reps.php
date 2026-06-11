@@ -73,9 +73,11 @@ if ($role !== 'superadmin' && $role !== 'admin') {
                     Manage sales representative accounts by branch
                 </p>
             </div>
+            <?php if ($role === 'superadmin'): ?>
             <button class="btn-primary" id="addSalesRepBtn" style="display: flex; align-items: center; gap: 0.5rem;">
                 <span>+</span> Add Sales Representative
             </button>
+            <?php endif; ?>
         </div>
 
         <div style="margin-bottom: var(--sp-4);">
@@ -179,37 +181,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
                     </div>
                 </div>
                 
-                <!-- Pending Projects Section -->
-                <div id="pendingProjectsSection" style="display: none; background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 8px;">
-                    <h3 style="margin: 0 0 0.5rem; color: var(--orange-500); font-size: 1rem; font-weight: 700;">
-                        Pending Projects
-                    </h3>
-                    <p style="color: #94a3b8; font-size: 0.875rem; margin-bottom: 1rem;">
-                        Projects that haven't been updated with sales tracking information
-                    </p>
-                    
-                    <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden;">
-                        <div style="max-height: 180px; overflow-y: auto; overflow-x: auto;">
-                            <table class="data-table" id="pendingProjectsTable" style="margin: 0; min-width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Project Name</th>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Contractor</th>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Region</th>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Value</th>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Status</th>
-                                        <th style="position: sticky; top: 0; background: #1a1a1a; z-index: 1; white-space: nowrap;">Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="pendingProjectsBody">
-                                    <tr>
-                                        <td colspan="6" class="loading-text">Loading...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+                <!-- Pending Projects section removed -->
                 
                 <div class="error-message" id="formError" style="display: none; margin-top: 1rem;"></div>
             </form>
@@ -217,6 +189,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
         
         <!-- Footer - Fixed -->
         <div style="flex-shrink: 0; padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
+            <?php if ($role === 'superadmin'): ?>
             <!-- Create Mode Buttons -->
             <div id="createButtons" style="display: flex; gap: 0.75rem; justify-content: flex-end;">
                 <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
@@ -248,6 +221,12 @@ if ($role !== 'superadmin' && $role !== 'admin') {
                     </button>
                 </div>
             </div>
+            <?php else: ?>
+            <!-- Admin: Read-only, Close only -->
+            <div style="display: flex; justify-content: flex-end;">
+                <button type="button" class="btn-secondary" onclick="closeModalHandler()">Close</button>
+            </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
@@ -280,7 +259,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 </div> <!-- .ap-main -->
 </div> <!-- .ap-shell -->
 
-<script>const BASE = '<?= $base ?>';</script>
+<script>const BASE = '<?= $base ?>'; const USER_ROLE = '<?= $role ?>';</script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/sales-reps.js?v=13"></script>
 

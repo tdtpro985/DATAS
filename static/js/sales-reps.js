@@ -38,21 +38,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup Event Listeners
 function setupEventListeners() {
-    addSalesRepBtn.addEventListener('click', () => openModal());
-    closeModal.addEventListener('click', () => closeModalHandler());
-    cancelBtn.addEventListener('click', () => closeModalHandler());
-    salesRepForm.addEventListener('submit', handleSubmit);
-    searchInput.addEventListener('input', handleSearch);
+    if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'superadmin') {
+        const addBtn = document.getElementById('addSalesRepBtn');
+        if (addBtn) addBtn.addEventListener('click', () => openModal());
+        if (cancelBtn) cancelBtn.addEventListener('click', () => closeModalHandler());
+        if (salesRepForm) salesRepForm.addEventListener('submit', handleSubmit);
+    }
+    if (closeModal) closeModal.addEventListener('click', () => closeModalHandler());
+    if (searchInput) searchInput.addEventListener('input', handleSearch);
     
     // Delete modal
-    closeDeleteModal.addEventListener('click', () => closeDeleteModalHandler());
-    cancelDeleteBtn.addEventListener('click', () => closeDeleteModalHandler());
+    if (closeDeleteModal) closeDeleteModal.addEventListener('click', () => closeDeleteModalHandler());
+    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => closeDeleteModalHandler());
     
     // Close modals on overlay click
-    salesRepModal.addEventListener('click', (e) => {
+    if (salesRepModal) salesRepModal.addEventListener('click', (e) => {
         if (e.target === salesRepModal) closeModalHandler();
     });
-    deleteModal.addEventListener('click', (e) => {
+    if (deleteModal) deleteModal.addEventListener('click', (e) => {
         if (e.target === deleteModal) closeDeleteModalHandler();
     });
 }
@@ -284,13 +287,20 @@ function openModal(rep = null) {
         // Show total projects (will be updated by API)
         document.getElementById('totalProjectsBadge').textContent = '0 projects';
         
-        // Show pending projects section
-        document.getElementById('pendingProjectsSection').style.display = 'block';
-        loadPendingProjects(rep.id);
+        // Show pending projects section — superadmin only
+        if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'superadmin') {
+            const pendingSection = document.getElementById('pendingProjectsSection');
+            if (pendingSection) {
+                pendingSection.style.display = 'block';
+                loadPendingProjects(rep.id);
+            }
+        }
         
-        // Show edit/delete buttons
-        document.getElementById('editButtons').style.display = 'flex';
-        document.getElementById('createButtons').style.display = 'none';
+        // Show edit/delete buttons (superadmin only — admin sees close-only rendered server-side)
+        const editBtns = document.getElementById('editButtons');
+        const createBtns = document.getElementById('createButtons');
+        if (editBtns)  editBtns.style.display = 'flex';
+        if (createBtns) createBtns.style.display = 'none';
         
         // Make fields readonly initially
         document.getElementById('email').setAttribute('readonly', 'readonly');
@@ -386,6 +396,7 @@ window.cancelEdit = function() {
 
 // Confirm delete
 window.confirmDelete = function() {
+    if (typeof USER_ROLE !== 'undefined' && USER_ROLE !== 'superadmin') return;
     const rep = salesReps.find(r => r.id === currentEditId);
     if (rep) {
         closeModalHandler();
