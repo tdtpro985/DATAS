@@ -452,13 +452,22 @@ const ProjectsPage = {
         return components.length > 0 ? components.join(', ') : null;
     },
 
-    getFullLocationName(code, type) {
-        if (!code) return null;
+    getFullLocationName(codeOrName, type) {
+        if (!codeOrName) return null;
         
+        // If it's already a full name (longer than 10 chars or contains spaces after first word), return as-is
+        const trimmed = String(codeOrName).trim();
+        const words = trimmed.split(' ');
+        if (trimmed.length > 10 || words.length > 1) {
+            return trimmed;
+        }
+        
+        // Otherwise, try to map the code to full name
         // Location code mappings - convert acronyms to full names
         const locationMappings = {
             // Countries
             'PH': 'Philippines',
+            'Philippines': 'Philippines',
             
             // Regions
             'NCR': 'National Capital Region (NCR)',
@@ -624,7 +633,9 @@ const ProjectsPage = {
             'SMA': 'San Mateo'
         };
         
-        return locationMappings[code] || code;
+        // Try to find mapping for the code
+        const mapped = locationMappings[trimmed];
+        return mapped || trimmed; // Return mapped value or original if not found
     },
 
     showError(message) {
@@ -652,6 +663,9 @@ const ProjectsPage = {
             angle_bars: project.angle_bars
         });
         console.log('[DEBUG] Contract country:', project.contract_country);
+        console.log('[DEBUG] Contract region:', project.contract_region);
+        console.log('[DEBUG] Contract province:', project.contract_province);
+        console.log('[DEBUG] Contract city:', project.contract_city);
         console.log('[DEBUG] Project region:', project.project_region);
         console.log('[DEBUG] Address field:', project.address);
         console.log('[DEBUG] City Province field:', project.city_province);

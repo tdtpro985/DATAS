@@ -620,7 +620,7 @@ const PriorityForm = {
         const finalSource = sourceValue === 'Other' ? getFieldValue('sourceOther') : sourceValue;
         const noticeReferenceNumber = sourceValue === 'PHILGEPS' ? getFieldValue('philgepsNotice') : null;
 
-        return {
+        const payload = {
             contractor_name: getFieldValue('contractorName'),
             contact_person: getFieldValue('contactPerson'),
             contact_number: getFieldValue('contactNumber'),
@@ -659,6 +659,16 @@ const PriorityForm = {
             status: 'Priority',
             form_type: 'priority'
         };
+        
+        // Debug: Log contractor location fields
+        console.log('[PRIORITY ENCODE] Contractor Location:', {
+            contract_country: payload.contract_country,
+            contract_region: payload.contract_region,
+            contract_province: payload.contract_province,
+            contract_city: payload.contract_city
+        });
+        
+        return payload;
     }
 };
 
