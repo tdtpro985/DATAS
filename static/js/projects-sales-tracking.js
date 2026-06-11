@@ -443,8 +443,8 @@ function generateContractForm(project) {
 
 // Generate Project Details form
 function generateProjectForm(project) {
-    const statuses = ['Prospect', 'For Bidding', 'For Execution', 'Priority'];
-    const currentStatus = (project.status || 'Prospect').trim();
+    const statuses = ['Awarded', 'For Bidding', 'For Execution'];
+    const currentStatus = (project.status || 'For Bidding').trim();
 
     const radioButtons = statuses.map(s => `
         <label style="
