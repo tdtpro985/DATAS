@@ -4084,6 +4084,13 @@ if ($role === 'encoder') {
                     }
                 });
 
+                console.log('[KPI] Result:', result);
+                console.log('[KPI] Has data.data?', !!result.data?.data);
+                if (result.data?.data) {
+                    console.log('[KPI] Projects:', result.data.data.projects_encoded);
+                    console.log('[KPI] Contractors:', result.data.data.contractors_identified);
+                }
+
                 if (result.success && result.data?.data) {
                     const data = result.data.data;
                     this.render({
@@ -4092,6 +4099,7 @@ if ($role === 'encoder') {
                         value: data.total_pipeline_value || 0
                     });
                 } else {
+                    console.warn('[KPI] Rendering fallback');
                     this.renderFallback();
                 }
             },
@@ -4121,9 +4129,14 @@ if ($role === 'encoder') {
                 
                 const result = await Utils.fetchWithFallback(url, { contractors: [] });
 
-                if (result.success && result.data?.contractors) {
+                console.log('[CONTRACTORS] Result:', result);
+                console.log('[CONTRACTORS] Has data.contractors?', !!result.data?.contractors);
+                console.log('[CONTRACTORS] Contractors count:', result.data?.contractors?.length || 0);
+
+                if (result.success && result.data?.contractors && result.data.contractors.length > 0) {
                     this.render(result.data.contractors);
                 } else {
+                    console.warn('[CONTRACTORS] Rendering empty state');
                     this.renderEmpty();
                 }
             },
