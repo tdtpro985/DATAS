@@ -1356,6 +1356,23 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     </div>
 </div>
 
+<!-- Edit Section Modal -->
+<div class="modal-overlay" id="editSectionModal">
+    <div class="modal-content modal-large" style="max-width: 900px;">
+        <div class="modal-header">
+            <h2 id="editSectionTitle">✏️ Edit</h2>
+            <button class="modal-close" onclick="closeEditSectionModal()">&times;</button>
+        </div>
+        <div class="modal-body" id="editSectionBody">
+            <!-- Dynamic form content will be loaded here -->
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn-action btn-secondary" onclick="closeEditSectionModal()">Cancel</button>
+            <button type="button" class="btn-action btn-primary" onclick="saveEditSection()">💾 Save Changes</button>
+        </div>
+    </div>
+</div>
+
 <style>
     .edit-option-card {
         display: flex;
@@ -1540,7 +1557,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=10"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=3"></script>
+<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=4"></script>
 
 </body>
 </html>

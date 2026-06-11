@@ -349,11 +349,311 @@ function editSection(section) {
         return;
     }
     
-    // Determine encode page
-    const encodePage = isPriority ? '/encode/priority' : '/encode/non-priority';
+    // Get project data
+    let project = null;
+    if (typeof ProjectsPage !== 'undefined' && ProjectsPage.allProjects) {
+        project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    } else if (window.currentProjectsData && window.currentProjectsData.projects) {
+        project = window.currentProjectsData.projects.find(p => p.id == projectId);
+    }
     
-    // Redirect with section and project ID
-    window.location.href = `${BASE}${encodePage}?edit=${projectId}&section=${section}`;
+    if (!project) {
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Project not found');
+        }
+        return;
+    }
+    
+    // Close edit options modal
+    closeEditOptionsModal();
+    
+    // Open edit section modal with appropriate form
+    setTimeout(() => {
+        openEditSectionModal(section, project);
+    }, 200);
+}
+
+// Open edit section modal with form
+function openEditSectionModal(section, project) {
+    const modal = document.getElementById('editSectionModal');
+    const title = document.getElementById('editSectionTitle');
+    const body = document.getElementById('editSectionBody');
+    
+    if (!modal || !title || !body) return;
+    
+    // Store section and project ID
+    modal.dataset.section = section;
+    modal.dataset.projectId = project.id;
+    
+    // Set title and generate form based on section
+    switch(section) {
+        case 'contract':
+            title.innerHTML = '📋 Edit Contract Details';
+            body.innerHTML = generateContractForm(project);
+            break;
+        case 'project':
+            title.innerHTML = '🏗️ Edit Project Details';
+            body.innerHTML = generateProjectForm(project);
+            break;
+        case 'materials':
+            title.innerHTML = '🔩 Edit Materials';
+            body.innerHTML = generateMaterialsForm(project);
+            break;
+        case 'pictures':
+            title.innerHTML = '📸 Edit Pictures';
+            body.innerHTML = generatePicturesForm(project);
+            break;
+    }
+    
+    // Show modal
+    modal.classList.add('active');
+}
+
+// Generate Contract Details form
+function generateContractForm(project) {
+    return `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Published Date</label>
+                <input type="date" class="form-control" id="edit_published_date" value="${project.published_date || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Source</label>
+                <input type="text" class="form-control" id="edit_source" value="${project.source || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Contract ID</label>
+                <input type="text" class="form-control" id="edit_contract_id" value="${project.contract_id || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Contractor Name</label>
+                <input type="text" class="form-control" id="edit_contractor_name" value="${project.contractor_name || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Contact Person</label>
+                <input type="text" class="form-control" id="edit_contact_person" value="${project.contact_person || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Contact Number</label>
+                <input type="text" class="form-control" id="edit_contact_number" value="${project.contact_number || ''}" placeholder="0919 123-4567" />
+            </div>
+        </div>
+    `;
+}
+
+// Generate Project Details form
+function generateProjectForm(project) {
+    return `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Project ID</label>
+                <input type="text" class="form-control" id="edit_project_id" value="${project.project_id || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Project Name</label>
+                <input type="text" class="form-control" id="edit_project_name" value="${project.project_name || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Country</label>
+                <input type="text" class="form-control" id="edit_country" value="${project.country || 'Philippines'}" />
+            </div>
+            <div class="form-group">
+                <label>Region</label>
+                <input type="text" class="form-control" id="edit_region" value="${project.region || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Province</label>
+                <input type="text" class="form-control" id="edit_province" value="${project.province || ''}" />
+            </div>
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-control" id="edit_city" value="${project.city || ''}" />
+            </div>
+            <div class="form-group">
+                <label>Barangay</label>
+                <input type="text" class="form-control" id="edit_barangay" value="${project.barangay || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Street</label>
+                <input type="text" class="form-control" id="edit_street" value="${project.street || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Bulk/Lot#</label>
+                <input type="text" class="form-control" id="edit_bulk_lot" value="${project.bulk_lot || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Coordinates</label>
+                <input type="text" class="form-control" id="edit_coordinates" value="${project.coordinates || ''}" placeholder="e.g. 14.5995,120.9842" />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Complete Address</label>
+                <textarea class="form-control" id="edit_complete_address" rows="2">${project.complete_address || ''}</textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Generate Materials form
+function generateMaterialsForm(project) {
+    return `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+                <label>Steel Bars (Rebars)</label>
+                <input type="text" class="form-control" id="edit_steel_bars" value="${project.steel_bars || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>H-Beams</label>
+                <input type="text" class="form-control" id="edit_h_beams" value="${project.h_beams || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>I-Beams</label>
+                <input type="text" class="form-control" id="edit_i_beams" value="${project.i_beams || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>C-Purlins</label>
+                <input type="text" class="form-control" id="edit_c_purlins" value="${project.c_purlins || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Square/Rectangular Tubes</label>
+                <input type="text" class="form-control" id="edit_square_tubes" value="${project.square_tubes || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Round Pipes</label>
+                <input type="text" class="form-control" id="edit_round_pipes" value="${project.round_pipes || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>GI Sheets (Corrugated)</label>
+                <input type="text" class="form-control" id="edit_gi_sheets" value="${project.gi_sheets || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Metal Deck/Flooring</label>
+                <input type="text" class="form-control" id="edit_metal_deck" value="${project.metal_deck || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Other Materials</label>
+                <textarea class="form-control" id="edit_other_materials" rows="2" placeholder="Optional">${project.other_materials || ''}</textarea>
+            </div>
+        </div>
+    `;
+}
+
+// Generate Pictures form
+function generatePicturesForm(project) {
+    return `
+        <div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                Pictures functionality will be implemented here.
+            </p>
+            <div style="text-align: center; padding: 3rem; background: rgba(255,255,255,0.03); border-radius: 0.5rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📸</div>
+                <p style="color: var(--text-muted);">Picture upload feature coming soon</p>
+            </div>
+        </div>
+    `;
+}
+
+// Save edit section
+async function saveEditSection() {
+    const modal = document.getElementById('editSectionModal');
+    const section = modal?.dataset?.section;
+    const projectId = modal?.dataset?.projectId;
+    
+    if (!section || !projectId) {
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Invalid data');
+        }
+        return;
+    }
+    
+    // Collect form data based on section
+    const updateData = { id: parseInt(projectId) };
+    
+    switch(section) {
+        case 'contract':
+            updateData.published_date = document.getElementById('edit_published_date')?.value || null;
+            updateData.source = document.getElementById('edit_source')?.value || null;
+            updateData.contract_id = document.getElementById('edit_contract_id')?.value || null;
+            updateData.contractor_name = document.getElementById('edit_contractor_name')?.value || null;
+            updateData.contact_person = document.getElementById('edit_contact_person')?.value || null;
+            updateData.contact_number = document.getElementById('edit_contact_number')?.value || null;
+            break;
+        case 'project':
+            updateData.project_id = document.getElementById('edit_project_id')?.value || null;
+            updateData.project_name = document.getElementById('edit_project_name')?.value || null;
+            updateData.country = document.getElementById('edit_country')?.value || null;
+            updateData.region = document.getElementById('edit_region')?.value || null;
+            updateData.province = document.getElementById('edit_province')?.value || null;
+            updateData.city = document.getElementById('edit_city')?.value || null;
+            updateData.barangay = document.getElementById('edit_barangay')?.value || null;
+            updateData.street = document.getElementById('edit_street')?.value || null;
+            updateData.bulk_lot = document.getElementById('edit_bulk_lot')?.value || null;
+            updateData.coordinates = document.getElementById('edit_coordinates')?.value || null;
+            updateData.complete_address = document.getElementById('edit_complete_address')?.value || null;
+            break;
+        case 'materials':
+            updateData.steel_bars = document.getElementById('edit_steel_bars')?.value || null;
+            updateData.h_beams = document.getElementById('edit_h_beams')?.value || null;
+            updateData.i_beams = document.getElementById('edit_i_beams')?.value || null;
+            updateData.c_purlins = document.getElementById('edit_c_purlins')?.value || null;
+            updateData.square_tubes = document.getElementById('edit_square_tubes')?.value || null;
+            updateData.round_pipes = document.getElementById('edit_round_pipes')?.value || null;
+            updateData.gi_sheets = document.getElementById('edit_gi_sheets')?.value || null;
+            updateData.metal_deck = document.getElementById('edit_metal_deck')?.value || null;
+            updateData.other_materials = document.getElementById('edit_other_materials')?.value || null;
+            break;
+        case 'pictures':
+            // Pictures functionality to be implemented
+            if (typeof Toast !== 'undefined') {
+                Toast.info('Pictures feature coming soon');
+            }
+            return;
+    }
+    
+    try {
+        // Call update API
+        const response = await fetch(`${BASE}/api/v1/projects/${projectId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify(updateData)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            if (typeof Toast !== 'undefined') {
+                Toast.success('Project updated successfully');
+            }
+            
+            // Close modal and reload
+            closeEditSectionModal();
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(result.message || 'Failed to update project');
+        }
+        
+    } catch (error) {
+        console.error('Update error:', error);
+        if (typeof Toast !== 'undefined') {
+            Toast.error(`Failed to update: ${error.message}`);
+        }
+    }
+}
+
+// Close edit section modal
+function closeEditSectionModal() {
+    const modal = document.getElementById('editSectionModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
 }
 
 // Close edit options modal
