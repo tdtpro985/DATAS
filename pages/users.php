@@ -17,7 +17,7 @@ if (empty($_SESSION['user'])) {
 $role = $_SESSION['user']['role'] ?? '';
 $fullName = $_SESSION['user']['full_name'] ?? ($_SESSION['user']['email'] ?? '');
 
-if ($role !== 'superadmin' && $role !== 'admin') {
+if ($role !== 'superadmin') {
     header('Location: ' . $base . '/');
     exit;
 }

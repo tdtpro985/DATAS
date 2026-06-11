@@ -124,9 +124,11 @@ try {
             <a href="<?= $base ?>/sr-performance" class="ap-nav-item">
                 <span class="ap-nav-label">SR Performance Report</span>
             </a>
+            <?php if ($role === 'superadmin'): ?>
             <a href="<?= $base ?>/users" class="ap-nav-item">
                 <span class="ap-nav-label">User Management</span>
             </a>
+            <?php endif; ?>
             <?php endif; ?>
             
             <?php if ($role === 'sales_rep'): ?>
