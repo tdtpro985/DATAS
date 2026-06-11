@@ -1765,10 +1765,10 @@ function editProject() {
     
     // Determine the correct encode page based on priority status
     const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
-    const encodePage = isPriority ? 'encode/priority' : 'encode/non-priority';
+    const encodePage = isPriority ? '/encode/priority' : '/encode/non-priority';
     
     // Redirect to encode page with project ID
-    window.location.href = `${BASE}/${encodePage}?edit=${projectId}`;
+    window.location.href = `${BASE}${encodePage}?edit=${projectId}`;
 }
 
 function saveSalesTracking() {
