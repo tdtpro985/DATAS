@@ -3819,6 +3819,20 @@ if ($role === 'encoder') {
         </div>
     </div>
 
+    <!-- Audio unlock banner -->
+    <div id="audio-unlock-banner" style="
+        position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+        background: linear-gradient(135deg, #ff8000, #ffa500);
+        color: #000; font-weight: 700; font-size: 0.85rem;
+        padding: 0.65rem 1.5rem; border-radius: 999px;
+        box-shadow: 0 4px 20px rgba(255,128,0,0.5);
+        z-index: 99998; cursor: pointer;
+        display: flex; align-items: center; gap: 0.5rem;
+        transition: opacity 0.3s;
+    " onclick="PriorityAlert.unlockAudio()">
+        🔊 Click to enable priority alert sound
+    </div>
+
     <!-- Priority Alert Modals -->
     <!-- First Modal: Pictures Only -->
     <div class="priority-alert-overlay" id="priorityPicturesOverlay">
@@ -5140,8 +5154,13 @@ if ($role === 'encoder') {
                 countdownTimer: null,
                 timeRemaining: 5
             },
-            audio: null,
+            // Web Audio API
+            audioCtx: null,
+            audioBuffer: null,
+            audioSource: null,
+            isAudioUnlocked: false,
             isAudioPlaying: false,
+            beepInterval: null,
 
             init() {
                 this.picturesOverlay = document.getElementById('priorityPicturesOverlay');
@@ -5158,19 +5177,97 @@ if ($role === 'encoder') {
                 this.checkForAlerts();
             },
 
+            /* ── Audio ─────────────────────────────────── */
             setupAudio() {
                 try {
-                    this.audio = new Audio(`${BASE}/static/sounds/priority-alert.mp3`);
-                    this.audio.preload = 'auto';
-                    this.audio.loop = true; // Loop until stopped
-                    
-                    this.audio.addEventListener('error', () => {
-                        console.warn('Priority alert sound file not found, using fallback');
-                        this.audio = null;
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new AudioCtx();
+
+                    // Load the MP3 into a buffer via fetch
+                    fetch(`${BASE}/static/sounds/priority-alert.mp3`)
+                        .then(r => r.arrayBuffer())
+                        .then(ab => this.audioCtx.decodeAudioData(ab))
+                        .then(buf => {
+                            this.audioBuffer = buf;
+                            console.log('[PriorityAlert] Audio buffer loaded.');
+                        })
+                        .catch(e => console.warn('[PriorityAlert] Audio load failed:', e));
+
+                    // Try to resume context on any user gesture
+                    const unlock = () => {
+                        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+                            this.audioCtx.resume().then(() => {
+                                this.isAudioUnlocked = true;
+                                this.hideBanner();
+                                console.log('[PriorityAlert] AudioContext unlocked via gesture.');
+                            });
+                        } else if (this.audioCtx && this.audioCtx.state === 'running') {
+                            this.isAudioUnlocked = true;
+                            this.hideBanner();
+                        }
+                    };
+                    ['click', 'keydown', 'touchstart'].forEach(evt =>
+                        document.addEventListener(evt, unlock, { once: true })
+                    );
+
+                    // If context is already running (e.g. in some browsers), mark unlocked
+                    if (this.audioCtx.state === 'running') {
+                        this.isAudioUnlocked = true;
+                        this.hideBanner();
+                    }
+                } catch (e) {
+                    console.warn('[PriorityAlert] Could not setup audio:', e);
+                }
+            },
+
+            unlockAudio() {
+                if (this.audioCtx && this.audioCtx.state === 'suspended') {
+                    this.audioCtx.resume().then(() => {
+                        this.isAudioUnlocked = true;
+                        this.hideBanner();
+                        console.log('[PriorityAlert] Audio unlocked by banner click.');
                     });
-                } catch (error) {
-                    console.warn('Could not setup audio:', error);
-                    this.audio = null;
+                } else {
+                    this.isAudioUnlocked = true;
+                    this.hideBanner();
+                }
+            },
+
+            hideBanner() {
+                const b = document.getElementById('audio-unlock-banner');
+                if (b) { b.style.opacity = '0'; setTimeout(() => b.style.display = 'none', 300); }
+            },
+
+            playAlert() {
+                this.isAudioPlaying = true;
+                if (this.isAudioUnlocked && this.audioCtx && this.audioBuffer) {
+                    this._startWebAudioLoop();
+                } else {
+                    // Fallback HTML5 Audio
+                    try {
+                        this._htmlAudio = new Audio(`${BASE}/static/sounds/priority-alert.mp3`);
+                        this._htmlAudio.loop = false;
+                        this._htmlAudio.volume = 1.0;
+                        this._htmlAudio.play().catch(() => this.playBeepFallback());
+                    } catch(e) {
+                        this.playBeepFallback();
+                    }
+                }
+            },
+
+            _startWebAudioLoop() {
+                if (!this.isAudioPlaying || !this.audioBuffer) return;
+                try {
+                    const source = this.audioCtx.createBufferSource();
+                    source.buffer = this.audioBuffer;
+                    source.loop = false;
+                    source.connect(this.audioCtx.destination);
+                    source.start(0);
+                    this.audioSource = source;
+                    console.log('[PriorityAlert] Web Audio loop started.');
+                } catch(e) {
+                    console.warn('[PriorityAlert] Web Audio play failed:', e);
+                    this.playBeepFallback();
                 }
             },
 
@@ -5416,25 +5513,6 @@ if ($role === 'encoder') {
                 }
             },
 
-            playAlert() {
-                try {
-                    if (this.audio) {
-                        this.audio.currentTime = 0;
-                        this.isAudioPlaying = true;
-                        this.audio.play().catch(error => {
-                            console.warn('Could not play alert sound:', error);
-                            this.playBeepFallback();
-                        });
-                    } else {
-                        // Fallback: Create a beep sound
-                        this.playBeepFallback();
-                    }
-                } catch (error) {
-                    console.warn('Audio playback failed:', error);
-                    this.playBeepFallback();
-                }
-            },
-
             playBeepFallback() {
                 try {
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -5469,9 +5547,17 @@ if ($role === 'encoder') {
             stopSound() {
                 this.isAudioPlaying = false;
                 
-                if (this.audio) {
-                    this.audio.pause();
-                    this.audio.currentTime = 0;
+                // Stop Web Audio source
+                if (this.audioSource) {
+                    try { this.audioSource.stop(); } catch(e) {}
+                    this.audioSource = null;
+                }
+
+                // Stop HTML5 Audio fallback
+                if (this._htmlAudio) {
+                    this._htmlAudio.pause();
+                    this._htmlAudio.currentTime = 0;
+                    this._htmlAudio = null;
                 }
                 
                 if (this.beepInterval) {
