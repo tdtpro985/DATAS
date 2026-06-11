@@ -201,9 +201,9 @@ if ($contractorId === null && $projectId === null) {
 
 $db = getDB();
 
-// Enforce uniqueness for each ID when provided
+// Enforce uniqueness for each ID when provided (excluding archived projects)
 if ($projectId !== null) {
-    $pStmt = $db->prepare('SELECT id FROM projects WHERE project_id = :project_id LIMIT 1');
+    $pStmt = $db->prepare('SELECT id FROM projects WHERE project_id = :project_id AND archived_at IS NULL LIMIT 1');
     $pStmt->execute([':project_id' => $projectId]);
     if ($pStmt->fetch()) {
         jsonError('Project ID already exists for another project', 422);
@@ -211,7 +211,7 @@ if ($projectId !== null) {
 }
 
 if ($contractorId !== null) {
-    $cStmt = $db->prepare('SELECT id FROM projects WHERE contractor_id = :contractor_id LIMIT 1');
+    $cStmt = $db->prepare('SELECT id FROM projects WHERE contractor_id = :contractor_id AND archived_at IS NULL LIMIT 1');
     $cStmt->execute([':contractor_id' => $contractorId]);
     if ($cStmt->fetch()) {
         jsonError('Contractor ID already exists for another project', 422);

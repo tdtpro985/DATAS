@@ -63,12 +63,15 @@ try {
     }
     
     $allowedFields = [
-        'published_date', 'source', 'contract_id', 'contractor_name', 
+        'publication_date', 'source', 'contractor_id', 'contractor_name', 
         'contact_person', 'contact_number', 'project_id', 'project_name', 
-        'country', 'region', 'province', 'city', 'barangay', 'street', 
-        'bulk_lot', 'coordinates', 'complete_address', 'steel_bars', 
-        'h_beams', 'i_beams', 'c_purlins', 'square_tubes', 'round_pipes', 
-        'gi_sheets', 'metal_deck', 'other_materials'
+        'project_country', 'project_region', 'project_province', 'project_city', 
+        'project_barangay', 'project_street', 'project_blk_lot', 
+        'project_coordinates', 'address', 'contract_country', 'contract_region', 
+        'contract_province', 'contract_city', 'contract_barangay', 
+        'contract_street', 'contract_blk_lot', 'contract_coordinates',
+        'sheet_pile_type', 'sheet_pile_amount', 'drbs', 'drbs_value',
+        'ms_plate', 'angle_bars', 'channel_bars', 'wide_flange', 'gi_bi'
     ];
     
     $updates = [];

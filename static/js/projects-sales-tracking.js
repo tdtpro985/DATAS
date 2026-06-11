@@ -415,15 +415,15 @@ function generateContractForm(project) {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
                 <label>Published Date</label>
-                <input type="date" class="form-control" id="edit_published_date" value="${project.published_date || ''}" />
+                <input type="date" class="form-control" id="edit_publication_date" value="${project.publication_date || ''}" />
             </div>
             <div class="form-group">
                 <label>Source</label>
                 <input type="text" class="form-control" id="edit_source" value="${project.source || ''}" />
             </div>
             <div class="form-group">
-                <label>Contract ID</label>
-                <input type="text" class="form-control" id="edit_contract_id" value="${project.contract_id || ''}" placeholder="Optional" />
+                <label>Contractor ID</label>
+                <input type="text" class="form-control" id="edit_contractor_id" value="${project.contractor_id || ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>Contractor Name</label>
@@ -570,9 +570,9 @@ async function saveEditSection() {
     
     switch(section) {
         case 'contract':
-            updateData.published_date = document.getElementById('edit_published_date')?.value || null;
+            updateData.publication_date = document.getElementById('edit_publication_date')?.value || null;
             updateData.source = document.getElementById('edit_source')?.value || null;
-            updateData.contract_id = document.getElementById('edit_contract_id')?.value || null;
+            updateData.contractor_id = document.getElementById('edit_contractor_id')?.value || null;
             updateData.contractor_name = document.getElementById('edit_contractor_name')?.value || null;
             updateData.contact_person = document.getElementById('edit_contact_person')?.value || null;
             updateData.contact_number = document.getElementById('edit_contact_number')?.value || null;
@@ -580,27 +580,24 @@ async function saveEditSection() {
         case 'project':
             updateData.project_id = document.getElementById('edit_project_id')?.value || null;
             updateData.project_name = document.getElementById('edit_project_name')?.value || null;
-            updateData.country = document.getElementById('edit_country')?.value || null;
-            updateData.region = document.getElementById('edit_region')?.value || null;
-            updateData.province = document.getElementById('edit_province')?.value || null;
-            updateData.city = document.getElementById('edit_city')?.value || null;
-            updateData.barangay = document.getElementById('edit_barangay')?.value || null;
-            updateData.street = document.getElementById('edit_street')?.value || null;
-            updateData.bulk_lot = document.getElementById('edit_bulk_lot')?.value || null;
-            updateData.coordinates = document.getElementById('edit_coordinates')?.value || null;
-            updateData.complete_address = document.getElementById('edit_complete_address')?.value || null;
+            updateData.project_country = document.getElementById('edit_country')?.value || null;
+            updateData.project_region = document.getElementById('edit_region')?.value || null;
+            updateData.project_province = document.getElementById('edit_province')?.value || null;
+            updateData.project_city = document.getElementById('edit_city')?.value || null;
+            updateData.project_barangay = document.getElementById('edit_barangay')?.value || null;
+            updateData.project_street = document.getElementById('edit_street')?.value || null;
+            updateData.project_blk_lot = document.getElementById('edit_bulk_lot')?.value || null;
+            updateData.project_coordinates = document.getElementById('edit_coordinates')?.value || null;
+            updateData.address = document.getElementById('edit_complete_address')?.value || null;
             break;
         case 'materials':
-            updateData.steel_bars = document.getElementById('edit_steel_bars')?.value || null;
-            updateData.h_beams = document.getElementById('edit_h_beams')?.value || null;
-            updateData.i_beams = document.getElementById('edit_i_beams')?.value || null;
-            updateData.c_purlins = document.getElementById('edit_c_purlins')?.value || null;
-            updateData.square_tubes = document.getElementById('edit_square_tubes')?.value || null;
-            updateData.round_pipes = document.getElementById('edit_round_pipes')?.value || null;
-            updateData.gi_sheets = document.getElementById('edit_gi_sheets')?.value || null;
-            updateData.metal_deck = document.getElementById('edit_metal_deck')?.value || null;
-            updateData.other_materials = document.getElementById('edit_other_materials')?.value || null;
-            break;
+            // Note: The database doesn't have these individual material columns
+            // This section needs to be redesigned or use existing columns like:
+            // sheet_pile_type, sheet_pile_amount, drbs, drbs_value, etc.
+            if (typeof Toast !== 'undefined') {
+                Toast.warning('Materials editing coming soon - database schema needs update');
+            }
+            return;
         case 'pictures':
             // Pictures functionality to be implemented
             if (typeof Toast !== 'undefined') {

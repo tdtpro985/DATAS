@@ -1584,7 +1584,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=10"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=4"></script>
+<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
 
 </body>
 </html>
