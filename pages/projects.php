@@ -1428,12 +1428,12 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         color: var(--orange-500);
     }
     
-    /* Fix modal positioning and z-index to appear above sidebar */
+    /* Fix modal positioning - center in main content area (excluding sidebar) */
     #editOptionsModal,
     #editSectionModal {
         position: fixed !important;
         top: 0 !important;
-        left: 0 !important;
+        left: 240px !important; /* Sidebar width */
         right: 0 !important;
         bottom: 0 !important;
         z-index: 10000 !important;
@@ -1445,6 +1445,14 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         position: relative;
         z-index: 10001 !important;
         margin: auto;
+    }
+    
+    /* Mobile: full screen */
+    @media (max-width: 768px) {
+        #editOptionsModal,
+        #editSectionModal {
+            left: 0 !important;
+        }
     }
 </style>
 
