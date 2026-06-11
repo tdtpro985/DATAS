@@ -34,6 +34,10 @@ try {
     // Exclude archived projects only
     $where .= " AND (archived_at IS NULL OR archived_at = '')";
 
+    // DEBUG: Log the actual query
+    error_log("KPI Query WHERE clause: " . $where);
+    error_log("KPI Query params: " . json_encode($params));
+
     // ── Total projects, contractors, pipeline value ────────────
     $stmt = $db->prepare("
         SELECT

@@ -17,7 +17,7 @@ define('DB_CHARSET', 'utf8mb4');
 define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
 define('SESSION_IDLE_TIMEOUT', 1800); // 30 minutes
 define('CSRF_TOKEN_LIFETIME', 3600); // 1 hour
-define('DEBUG_MODE', false);  // Set to true only in development
+define('DEBUG_MODE', true);  // Temporarily enabled for debugging
 define('APP_ENV', 'production');
 define('APP_VERSION', '20260611110426'); // Update this on every deploy to bust server cache
 
