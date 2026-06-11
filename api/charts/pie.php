@@ -1,9 +1,7 @@
 <?php
 /* ============================================================
    GET /api/v1/charts/pie
-   ============================================================
    Returns material breakdown slices for the pie chart.
-   Query params: period, month, region, group_by (ignored — always material)
    ============================================================ */
 
 require_once __DIR__ . '/../db.php';
@@ -15,46 +13,52 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
 }
 
-$db     = getDB();
-$date   = buildDateFilter('publication_date');
-$region = getRegion();
+try {
+    $db = getDB();
 
-$regionSql    = '';
-$regionParams = [];
-if ($region !== null) {
-    $regionSql    = ' AND region = :region';
-    $regionParams = [':region' => $region];
+    $conditions = ['archived_at IS NULL'];
+    $params     = [];
+
+    $month  = getMonth();
+    $year   = getYear();
+    if ($month !== null && $year !== null) {
+        $conditions[] = 'MONTH(publication_date) = :month AND YEAR(publication_date) = :year';
+        $params[':month'] = $month;
+        $params[':year']  = $year;
+    } elseif ($year !== null) {
+        $conditions[] = 'YEAR(publication_date) = :year';
+        $params[':year'] = $year;
+    }
+
+    $region = getRegion();
+    if ($region !== null) {
+        $conditions[] = 'region = :region';
+        $params[':region'] = $region;
+    }
+
+    $where = 'WHERE ' . implode(' AND ', $conditions);
+
+    $stmt = $db->prepare("
+        SELECT
+            COALESCE(SUM(sheet_pile_amount), 0) AS sheet_pile_total,
+            COALESCE(SUM(drbs_value), 0)        AS drbs_total
+        FROM projects
+        $where
+    ");
+    $stmt->execute($params);
+    $row = $stmt->fetch();
+
+    $slices = [];
+    if ($row['sheet_pile_total'] > 0) {
+        $slices[] = ['label' => 'Sheet Pile', 'value' => (float) $row['sheet_pile_total']];
+    }
+    if ($row['drbs_total'] > 0) {
+        $slices[] = ['label' => 'DRBs', 'value' => (float) $row['drbs_total']];
+    }
+
+    jsonResponse(['slices' => $slices]);
+
+} catch (Exception $e) {
+    error_log('Pie chart error: ' . $e->getMessage());
+    jsonResponse(['slices' => []]);
 }
-
-$params = array_merge($date['params'], $regionParams);
-$where  = 'WHERE ' . $date['sql'] . $regionSql;
-
-// Exclude archived projects only
-$where .= " AND (archived_at IS NULL OR archived_at = '')";
-
-// Build slices from sheet_pile and drbs values
-// Each project contributes up to 2 material slices
-$stmt = $db->prepare("
-    SELECT
-        'Sheet Pile'                        AS label,
-        COALESCE(SUM(sheet_pile_amount), 0) AS value
-    FROM projects
-    $where AND sheet_pile_amount > 0
-    UNION ALL
-    SELECT
-        'DRBs'                              AS label,
-        COALESCE(SUM(drbs_value), 0)        AS value
-    FROM projects
-    $where AND drbs_value > 0
-");
-// params used twice (once per UNION part)
-$stmt->execute(array_merge($params, $params));
-$rows = $stmt->fetchAll();
-
-// Filter out zero-value slices
-$slices = array_values(array_filter(
-    array_map(fn($r) => ['label' => $r['label'], 'value' => (float) $r['value']], $rows),
-    fn($s) => $s['value'] > 0
-));
-
-jsonResponse(['slices' => $slices]);

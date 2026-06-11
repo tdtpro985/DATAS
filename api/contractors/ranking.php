@@ -1,9 +1,7 @@
 <?php
 /* ============================================================
    GET /api/v1/contractors/ranking
-   ============================================================
    Returns contractors sorted by total project value DESC.
-   Query params: period, month, region, page, size
    ============================================================ */
 
 require_once __DIR__ . '/../db.php';
@@ -16,22 +14,29 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    $db     = getDB();
-    $date   = buildDateFilter('publication_date');
-    $region = getRegion();
+    $db = getDB();
 
-    $regionSql    = '';
-    $regionParams = [];
-    if ($region !== null) {
-        $regionSql    = ' AND region = :region';
-        $regionParams = [':region' => $region];
+    $conditions = ['archived_at IS NULL'];
+    $params     = [];
+
+    $month  = getMonth();
+    $year   = getYear();
+    if ($month !== null && $year !== null) {
+        $conditions[] = 'MONTH(publication_date) = :month AND YEAR(publication_date) = :year';
+        $params[':month'] = $month;
+        $params[':year']  = $year;
+    } elseif ($year !== null) {
+        $conditions[] = 'YEAR(publication_date) = :year';
+        $params[':year'] = $year;
     }
 
-    $params = array_merge($date['params'], $regionParams);
-    $where  = 'WHERE ' . $date['sql'] . $regionSql;
+    $region = getRegion();
+    if ($region !== null) {
+        $conditions[] = 'region = :region';
+        $params[':region'] = $region;
+    }
 
-    // Exclude archived projects only
-    $where .= " AND (archived_at IS NULL OR archived_at = '')";
+    $where = 'WHERE ' . implode(' AND ', $conditions);
 
     $stmt = $db->prepare("
         SELECT
@@ -48,21 +53,18 @@ try {
     ");
     $stmt->execute($params);
     $rows = $stmt->fetchAll();
-} catch (Exception $e) {
-    error_log("Contractors ranking error: " . $e->getMessage());
-    jsonResponse(['contractors' => []]);
-    exit;
-}
 
-// Cast types
-$contractors = array_map(function ($r) {
-    return [
+    $contractors = array_map(fn($r) => [
         'project_id'      => (int)   $r['project_id'],
         'contractor_name' => $r['contractor_name'],
         'project_name'    => $r['project_name'],
         'status'          => $r['status'],
         'total_value'     => (float) $r['total_value'],
-    ];
-}, $rows);
+    ], $rows);
 
-jsonResponse(['contractors' => $contractors]);
+    jsonResponse(['contractors' => $contractors]);
+
+} catch (Exception $e) {
+    error_log('Contractors ranking error: ' . $e->getMessage());
+    jsonResponse(['contractors' => []]);
+}

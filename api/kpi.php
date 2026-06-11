@@ -1,9 +1,8 @@
 <?php
 /* ============================================================
    GET /api/v1/kpi
-   ============================================================
-   Returns KPI summary + category breakdown for the dashboard.
-   Query params: period, month, region
+   Returns KPI summary + status category breakdown.
+   Query params: period, month, year, region
    ============================================================ */
 
 require_once __DIR__ . '/db.php';
@@ -16,29 +15,34 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 }
 
 try {
-    $db     = getDB();
-    $date   = buildDateFilter('publication_date');
-    $region = getRegion();
+    $db = getDB();
 
-    // Build region clause
-    $regionSql    = '';
-    $regionParams = [];
-    if ($region !== null) {
-        $regionSql    = ' AND region = :region';
-        $regionParams = [':region' => $region];
+    // Build filters
+    $conditions = ['archived_at IS NULL'];
+    $params     = [];
+
+    // Date filter
+    $month  = getMonth();
+    $year   = getYear();
+    if ($month !== null && $year !== null) {
+        $conditions[] = 'MONTH(publication_date) = :month AND YEAR(publication_date) = :year';
+        $params[':month'] = $month;
+        $params[':year']  = $year;
+    } elseif ($year !== null) {
+        $conditions[] = 'YEAR(publication_date) = :year';
+        $params[':year'] = $year;
     }
 
-    $params = array_merge($date['params'], $regionParams);
-    $where  = 'WHERE ' . $date['sql'] . $regionSql;
+    // Region filter
+    $region = getRegion();
+    if ($region !== null) {
+        $conditions[] = 'region = :region';
+        $params[':region'] = $region;
+    }
 
-    // Exclude archived projects only
-    $where .= " AND (archived_at IS NULL OR archived_at = '')";
+    $where = 'WHERE ' . implode(' AND ', $conditions);
 
-    // DEBUG: Log the actual query
-    error_log("KPI Query WHERE clause: " . $where);
-    error_log("KPI Query params: " . json_encode($params));
-
-    // ── Total projects, contractors, pipeline value ────────────
+    // Totals
     $stmt = $db->prepare("
         SELECT
             COUNT(*)                        AS projects_encoded,
@@ -50,12 +54,9 @@ try {
     $stmt->execute($params);
     $totals = $stmt->fetch();
 
-    // ── Category breakdown by status ──────────────────────────
+    // Status breakdown
     $stmt2 = $db->prepare("
-        SELECT
-            status,
-            COUNT(*)                        AS cnt,
-            COALESCE(SUM(project_value), 0) AS val
+        SELECT status, COUNT(*) AS cnt, COALESCE(SUM(project_value), 0) AS val
         FROM projects
         $where
         GROUP BY status
@@ -63,37 +64,33 @@ try {
     ");
     $stmt2->execute($params);
     $categories = $stmt2->fetchAll();
+
+    $categoryMap = [];
+    foreach ($categories as $cat) {
+        $key = strtolower(str_replace([' ', '-', '/'], '_', $cat['status']));
+        $categoryMap[$key] = [
+            'count' => (int)   $cat['cnt'],
+            'value' => (float) $cat['val'],
+        ];
+    }
+
+    jsonResponse([
+        'data' => array_merge([
+            'projects_encoded'       => (int)   $totals['projects_encoded'],
+            'contractors_identified' => (int)   $totals['contractors_identified'],
+            'total_pipeline_value'   => (float) $totals['total_pipeline_value'],
+            'pipeline_value'         => (float) $totals['total_pipeline_value'],
+        ], $categoryMap),
+    ]);
+
 } catch (Exception $e) {
-    error_log("KPI API error: " . $e->getMessage());
+    error_log('KPI API error: ' . $e->getMessage());
     jsonResponse([
         'data' => [
-            'projects_encoded' => 0,
+            'projects_encoded'       => 0,
             'contractors_identified' => 0,
-            'total_pipeline_value' => 0,
-            'pipeline_value' => 0
-        ]
-    ]);
-    exit;
-}
-
-// Build category map keyed by snake_case status name
-$categoryMap = [];
-foreach ($categories as $cat) {
-    $key = strtolower(str_replace([' ', '-', '/'], '_', $cat['status']));
-    $categoryMap[$key] = [
-        'count' => (int) $cat['cnt'],
-        'value' => (float) $cat['val'],
-    ];
-}
-
-jsonResponse([
-    'data' => array_merge(
-        [
-            'projects_encoded'      => (int)   $totals['projects_encoded'],
-            'contractors_identified'=> (int)   $totals['contractors_identified'],
-            'total_pipeline_value'  => (float) $totals['total_pipeline_value'],
-            'pipeline_value'        => (float) $totals['total_pipeline_value'],
+            'total_pipeline_value'   => 0,
+            'pipeline_value'         => 0,
         ],
-        $categoryMap
-    ),
-]);
+    ]);
+}

@@ -1,15 +1,7 @@
 <?php
 /* ============================================================
    GET /api/v1/charts/funnel
-   ============================================================
-   Returns sales funnel stages based on sales tracking data.
-   Stages:
-   1. Prospects - Raw projects (not yet tracked)
-   2. Contacted - Projects with contacted = 'Yes'
-   3. Sales Qualified Leads - Projects with sql = 'Yes'
-   4. Not Sales Qualified Leads - Projects with sql = 'No'
-   5. Quoted - Projects with quoted = 'Yes'
-   6. Win - Projects with to_win = 'Yes' and wa_amount > 0
+   Returns sales funnel stages.
    ============================================================ */
 
 require_once __DIR__ . '/../db.php';
@@ -21,118 +13,85 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
 }
 
-try {
-    $db     = getDB();
-    $date   = buildDateFilter('p.publication_date');
-    $region = getRegion();
-
-    $regionSql    = '';
-    $regionParams = [];
-    if ($region !== null) {
-        $regionSql    = ' AND p.region = :region';
-        $regionParams = [':region' => $region];
-    }
-
-    $params = array_merge($date['params'], $regionParams);
-    $where  = 'WHERE ' . $date['sql'] . $regionSql;
-
-    // Exclude archived projects only
-    $where .= " AND (p.archived_at IS NULL OR p.archived_at = '')";
-
-    // Get total projects (Prospects - raw projects, di pa nagagalaw)
-    $stmt = $db->prepare("
-        SELECT COUNT(*) as count
-        FROM projects p
-        $where
-    ");
-    $stmt->execute($params);
-    $totalProjects = $stmt->fetch()['count'];
-
-    // Get projects with sales tracking data
-    $stmt = $db->prepare("
-        SELECT 
-            COUNT(*) as total_tracked,
-            SUM(CASE WHEN st.contacted = 'Yes' THEN 1 ELSE 0 END) as contacted,
-            SUM(CASE WHEN st.sales_qualified = 'Yes' THEN 1 ELSE 0 END) as sql_yes,
-            SUM(CASE WHEN st.sales_qualified = 'No' THEN 1 ELSE 0 END) as sql_no,
-            SUM(CASE WHEN st.quoted = 'Yes' THEN 1 ELSE 0 END) as quoted,
-            SUM(CASE WHEN st.to_win = 'Yes' AND st.wa_amount > 0 THEN 1 ELSE 0 END) as win
-        FROM projects p
-        LEFT JOIN sales_tracking st ON p.id = st.project_id
-        $where
-        AND st.id IS NOT NULL
-    ");
-    $stmt->execute($params);
-    $trackingData = $stmt->fetch();
-} catch (Exception $e) {
-    error_log("Funnel API error: " . $e->getMessage());
-    jsonResponse([
-        'stages' => [
-            ['name' => 'Prospects', 'color' => '#64748B', 'count' => 0, 'description' => 'Raw projects', 'conversion' => null],
-            ['name' => 'Contacted', 'color' => '#3B82F6', 'count' => 0, 'description' => 'Contacted', 'conversion' => null],
-            ['name' => 'Sales Qualified Leads', 'color' => '#10B981', 'count' => 0, 'description' => 'SQL Yes', 'conversion' => null],
-            ['name' => 'Not Sales Qualified Leads', 'color' => '#EF4444', 'count' => 0, 'description' => 'SQL No', 'conversion' => null],
-            ['name' => 'Quoted', 'color' => '#F59E0B', 'count' => 0, 'description' => 'Quoted Yes', 'conversion' => null],
-            ['name' => 'Win', 'color' => '#8B5CF6', 'count' => 0, 'description' => 'Win', 'conversion' => null]
-        ]
-    ]);
-    exit;
-}
-
-// Build funnel stages based on your requirements
-$stages = [
-    [
-        'name' => 'Prospects',
-        'color' => '#64748B',
-        'count' => (int) $totalProjects,
-        'description' => 'Raw projects (di pa nagagalaw)'
+$fallback = [
+    'stages' => [
+        ['name' => 'Prospects',                  'color' => '#64748B', 'count' => 0, 'description' => 'Raw projects',             'conversion' => null],
+        ['name' => 'Contacted',                  'color' => '#3B82F6', 'count' => 0, 'description' => 'Contacted',                'conversion' => null],
+        ['name' => 'Sales Qualified Leads',      'color' => '#10B981', 'count' => 0, 'description' => 'SQL Yes',                  'conversion' => null],
+        ['name' => 'Not Sales Qualified Leads',  'color' => '#EF4444', 'count' => 0, 'description' => 'SQL No',                   'conversion' => null],
+        ['name' => 'Quoted',                     'color' => '#F59E0B', 'count' => 0, 'description' => 'Quoted Yes',               'conversion' => null],
+        ['name' => 'Win',                        'color' => '#8B5CF6', 'count' => 0, 'description' => 'Win',                      'conversion' => null],
     ],
-    [
-        'name' => 'Contacted',
-        'color' => '#3B82F6',
-        'count' => (int) $trackingData['contacted'],
-        'description' => 'Projects na naka Yes ung contacted'
-    ],
-    [
-        'name' => 'Sales Qualified Leads',
-        'color' => '#10B981',
-        'count' => (int) $trackingData['sql_yes'],
-        'description' => 'Naka yes na ung Sales Qualified Leads'
-    ],
-    [
-        'name' => 'Not Sales Qualified Leads',
-        'color' => '#EF4444',
-        'count' => (int) $trackingData['sql_no'],
-        'description' => 'Naka No sa Sales Qualified Leads'
-    ],
-    [
-        'name' => 'Quoted',
-        'color' => '#F59E0B',
-        'count' => (int) $trackingData['quoted'],
-        'description' => 'Mga naka Yes na Quoted'
-    ],
-    [
-        'name' => 'Win',
-        'color' => '#8B5CF6',
-        'count' => (int) $trackingData['win'],
-        'description' => 'Naka yes na yung Win at may W/L Amount na'
-    ]
 ];
 
-// Calculate conversion rates (skip "Not Sales Qualified Leads" for main funnel flow)
-$prevCount = null;
-foreach ($stages as &$stage) {
-    $conversion = null;
-    if ($prevCount !== null && $prevCount > 0) {
-        $conversion = round(($stage['count'] / $prevCount) * 100, 1);
-    }
-    $stage['conversion'] = $conversion;
-    
-    // Set previous count for next iteration
-    // Skip "Not Sales Qualified Leads" as it's a branch, not part of main flow
-    if ($stage['name'] !== 'Not Sales Qualified Leads' && $stage['count'] > 0) {
-        $prevCount = $stage['count'];
-    }
-}
+try {
+    $db = getDB();
 
-jsonResponse(['stages' => $stages]);
+    $conditions = ['p.archived_at IS NULL'];
+    $params     = [];
+
+    $month  = getMonth();
+    $year   = getYear();
+    if ($month !== null && $year !== null) {
+        $conditions[] = 'MONTH(p.publication_date) = :month AND YEAR(p.publication_date) = :year';
+        $params[':month'] = $month;
+        $params[':year']  = $year;
+    } elseif ($year !== null) {
+        $conditions[] = 'YEAR(p.publication_date) = :year';
+        $params[':year'] = $year;
+    }
+
+    $region = getRegion();
+    if ($region !== null) {
+        $conditions[] = 'p.region = :region';
+        $params[':region'] = $region;
+    }
+
+    $where = 'WHERE ' . implode(' AND ', $conditions);
+
+    // Total prospects
+    $stmt = $db->prepare("SELECT COUNT(*) AS cnt FROM projects p $where");
+    $stmt->execute($params);
+    $totalProjects = (int) $stmt->fetch()['cnt'];
+
+    // Sales tracking breakdown
+    $stmt = $db->prepare("
+        SELECT
+            COUNT(*)                                                       AS total_tracked,
+            SUM(CASE WHEN LOWER(st.contacted)       = 'yes' THEN 1 ELSE 0 END) AS contacted,
+            SUM(CASE WHEN LOWER(st.sales_qualified) = 'yes' THEN 1 ELSE 0 END) AS sql_yes,
+            SUM(CASE WHEN LOWER(st.sales_qualified) = 'no'  THEN 1 ELSE 0 END) AS sql_no,
+            SUM(CASE WHEN LOWER(st.quoted)          = 'yes' THEN 1 ELSE 0 END) AS quoted,
+            SUM(CASE WHEN LOWER(st.to_win)          = 'yes' AND COALESCE(st.wa_amount, 0) > 0 THEN 1 ELSE 0 END) AS win
+        FROM projects p
+        INNER JOIN sales_tracking st ON p.id = st.project_id
+        $where
+    ");
+    $stmt->execute($params);
+    $td = $stmt->fetch();
+
+    $stages = [
+        ['name' => 'Prospects',                 'color' => '#64748B', 'count' => $totalProjects,          'description' => 'Raw projects (di pa nagagalaw)'],
+        ['name' => 'Contacted',                 'color' => '#3B82F6', 'count' => (int) $td['contacted'],  'description' => 'Projects na naka Yes ung contacted'],
+        ['name' => 'Sales Qualified Leads',     'color' => '#10B981', 'count' => (int) $td['sql_yes'],    'description' => 'Naka yes na ung Sales Qualified Leads'],
+        ['name' => 'Not Sales Qualified Leads', 'color' => '#EF4444', 'count' => (int) $td['sql_no'],     'description' => 'Naka No sa Sales Qualified Leads'],
+        ['name' => 'Quoted',                    'color' => '#F59E0B', 'count' => (int) $td['quoted'],     'description' => 'Mga naka Yes na Quoted'],
+        ['name' => 'Win',                       'color' => '#8B5CF6', 'count' => (int) $td['win'],        'description' => 'Naka yes na yung Win at may W/L Amount na'],
+    ];
+
+    $prevCount = null;
+    foreach ($stages as &$stage) {
+        $stage['conversion'] = ($prevCount !== null && $prevCount > 0)
+            ? round(($stage['count'] / $prevCount) * 100, 1)
+            : null;
+        if ($stage['name'] !== 'Not Sales Qualified Leads' && $stage['count'] > 0) {
+            $prevCount = $stage['count'];
+        }
+    }
+
+    jsonResponse(['stages' => $stages]);
+
+} catch (Exception $e) {
+    error_log('Funnel API error: ' . $e->getMessage());
+    jsonResponse($fallback);
+}

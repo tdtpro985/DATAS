@@ -222,51 +222,22 @@ function getRegion(): ?string {
  * Returns an array: ['sql' => '...', 'params' => [...]]
  */
 function buildDateFilter(string $dateColumn = 'publication_date'): array {
-    $period = getPeriod();
     $month  = getMonth();
     $year   = getYear();
 
-    // If no month/year specified, return a condition that matches all records
-    // INCLUDING those with NULL publication_date
-    if ($month === null && $year === null) {
+    if ($month !== null && $year !== null) {
         return [
-            'sql'    => "1=1",
-            'params' => [],
+            'sql'    => "MONTH($dateColumn) = :month AND YEAR($dateColumn) = :year",
+            'params' => [':month' => $month, ':year' => $year],
         ];
     }
-
-    // If only year is specified (no month)
-    if ($month === null && $year !== null) {
+    if ($year !== null) {
         return [
-            'sql'    => "($dateColumn IS NOT NULL AND YEAR($dateColumn) = :year)",
+            'sql'    => "YEAR($dateColumn) = :year",
             'params' => [':year' => $year],
         ];
     }
-
-    // If only month is specified (unlikely, but handle it)
-    if ($month !== null && $year === null) {
-        // Use current year as default
-        $year = (int) date('Y');
-    }
-
-    switch ($period) {
-        case 'daily':
-            return [
-                'sql'    => "($dateColumn IS NOT NULL AND DATE($dateColumn) = CURDATE())",
-                'params' => [],
-            ];
-        case 'weekly':
-            return [
-                'sql'    => "($dateColumn IS NOT NULL AND YEARWEEK($dateColumn, 1) = YEARWEEK(CURDATE(), 1))",
-                'params' => [],
-            ];
-        case 'monthly':
-        default:
-            return [
-                'sql'    => "($dateColumn IS NOT NULL AND MONTH($dateColumn) = :month AND YEAR($dateColumn) = :year)",
-                'params' => [':month' => $month, ':year' => $year],
-            ];
-    }
+    return ['sql' => '1=1', 'params' => []];
 }
 
 /**
