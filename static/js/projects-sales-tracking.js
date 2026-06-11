@@ -455,39 +455,39 @@ function generateProjectForm(project) {
             </div>
             <div class="form-group">
                 <label>Country</label>
-                <input type="text" class="form-control" id="edit_country" value="${project.country || 'Philippines'}" />
+                <input type="text" class="form-control" id="edit_country" value="${project.project_country || 'Philippines'}" />
             </div>
             <div class="form-group">
                 <label>Region</label>
-                <input type="text" class="form-control" id="edit_region" value="${project.region || ''}" />
+                <input type="text" class="form-control" id="edit_region" value="${project.project_region || ''}" />
             </div>
             <div class="form-group">
                 <label>Province</label>
-                <input type="text" class="form-control" id="edit_province" value="${project.province || ''}" />
+                <input type="text" class="form-control" id="edit_province" value="${project.project_province || ''}" />
             </div>
             <div class="form-group">
                 <label>City</label>
-                <input type="text" class="form-control" id="edit_city" value="${project.city || ''}" />
+                <input type="text" class="form-control" id="edit_city" value="${project.project_city || ''}" />
             </div>
             <div class="form-group">
                 <label>Barangay</label>
-                <input type="text" class="form-control" id="edit_barangay" value="${project.barangay || ''}" placeholder="Optional" />
+                <input type="text" class="form-control" id="edit_barangay" value="${project.project_barangay || ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>Street</label>
-                <input type="text" class="form-control" id="edit_street" value="${project.street || ''}" placeholder="Optional" />
+                <input type="text" class="form-control" id="edit_street" value="${project.project_street || ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>Bulk/Lot#</label>
-                <input type="text" class="form-control" id="edit_bulk_lot" value="${project.bulk_lot || ''}" placeholder="Optional" />
+                <input type="text" class="form-control" id="edit_bulk_lot" value="${project.project_blk_lot || ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>Coordinates</label>
-                <input type="text" class="form-control" id="edit_coordinates" value="${project.coordinates || ''}" placeholder="e.g. 14.5995,120.9842" />
+                <input type="text" class="form-control" id="edit_coordinates" value="${project.project_coordinates || ''}" placeholder="e.g. 14.5995,120.9842" />
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
                 <label>Complete Address</label>
-                <textarea class="form-control" id="edit_complete_address" rows="2">${project.complete_address || ''}</textarea>
+                <textarea class="form-control" id="edit_complete_address" rows="2">${project.address || ''}</textarea>
             </div>
         </div>
     `;
