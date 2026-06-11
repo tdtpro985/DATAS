@@ -19,6 +19,7 @@ define('SESSION_IDLE_TIMEOUT', 1800); // 30 minutes
 define('CSRF_TOKEN_LIFETIME', 3600); // 1 hour
 define('DEBUG_MODE', false);  // Set to true only in development
 define('APP_ENV', 'production');
+define('APP_VERSION', '20260611110426'); // Update this on every deploy to bust server cache
 
 // Password Requirements
 define('MIN_PASSWORD_LENGTH', 12);

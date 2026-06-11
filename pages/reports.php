@@ -3954,13 +3954,17 @@ if ($role === 'encoder') {
             },
 
             async fetchWithFallback(url, fallbackData) {
+                console.log(`[API] Fetching: ${url}`);
                 try {
                     const response = await fetch(url);
+                    console.log(`[API] Response status for ${url}: ${response.status}`);
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const data = await response.json();
+                    console.log(`[API] Data received from ${url}:`, data);
                     return { success: true, data };
                 } catch (error) {
-                    console.warn(`API error for ${url}:`, error);
+                    console.error(`[API] Error for ${url}:`, error);
+                    console.log(`[API] Using fallback data:`, fallbackData);
                     return { success: false, data: fallbackData, error };
                 }
             },
