@@ -627,6 +627,7 @@ const PriorityForm = {
             contract_id: getFieldValue('contractId'),
             source: finalSource,
             notice_reference_number: noticeReferenceNumber,
+            publication_date: getFieldValue('publishedDate'),
             address: getFieldValue('contractStreet'),
             region: getFieldValue('contractCity'),
             city_province: getFieldValue('contractBarangay'),
