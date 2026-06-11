@@ -22,8 +22,8 @@ try {
     $params = $date['params'];
     $where = 'WHERE ' . $date['sql'];
 
-    // Exclude archived and illegitimate projects  
-    $where .= " AND (archived_at IS NULL OR archived_at = '') AND (is_actual_project IS NULL OR is_actual_project != 'no')";
+    // Exclude archived projects only  
+    $where .= " AND (archived_at IS NULL OR archived_at = '')";
 
     // Get regional statistics
     $stmt = $db->prepare("

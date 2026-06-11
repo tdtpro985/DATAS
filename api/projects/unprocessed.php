@@ -36,7 +36,6 @@ $params = [];
 
 // Core logic: Show all projects where tracking_status is 'Not Started' or doesn't exist
 $where[] = 'p.archived_at IS NULL';      // Not archived
-$where[] = "(p.is_actual_project IS NULL OR p.is_actual_project != 'no')";  // Not illegitimate
 $where[] = '(st.tracking_status IS NULL OR st.tracking_status = "Not Started")';  // Not Started or no tracking
 
 // Additional filters

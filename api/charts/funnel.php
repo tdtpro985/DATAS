@@ -36,8 +36,8 @@ try {
     $params = array_merge($date['params'], $regionParams);
     $where  = 'WHERE ' . $date['sql'] . $regionSql;
 
-    // Exclude archived and illegitimate projects
-    $where .= " AND (p.archived_at IS NULL OR p.archived_at = '') AND (p.is_actual_project IS NULL OR p.is_actual_project != 'no')";
+    // Exclude archived projects only
+    $where .= " AND (p.archived_at IS NULL OR p.archived_at = '')";
 
     // Get total projects (Prospects - raw projects, di pa nagagalaw)
     $stmt = $db->prepare("
