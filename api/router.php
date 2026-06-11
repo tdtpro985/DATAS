@@ -80,6 +80,7 @@ elseif ($path === 'projects/upload' && $method === 'POST')               { requi
 elseif ($path === 'projects' && $method === 'POST')                      { require __DIR__ . '/projects/index.php'; }
 elseif ($path === 'projects' && $method === 'GET')                       { require __DIR__ . '/projects/index.php'; }
 elseif ($path === 'projects/my-recent')                                  { require __DIR__ . '/projects/my-recent.php'; }
+elseif (preg_match('#^projects/(\d+)$#', $path, $m) && $method === 'PUT') { $_GET['path'] = $path; require __DIR__ . '/projects/update.php'; }
 elseif (preg_match('#^projects/(\d+)/status$#', $path, $m))             { $_GET['id'] = $m[1]; require __DIR__ . '/projects/status.php'; }
 elseif (preg_match('#^projects/(\d+)/assign$#', $path, $m))             { $_GET['id'] = $m[1]; require __DIR__ . '/projects/assign.php'; }
 elseif (preg_match('#^projects/(\d+)/unassign$#', $path, $m))           { $_GET['id'] = $m[1]; require __DIR__ . '/projects/unassign.php'; }
