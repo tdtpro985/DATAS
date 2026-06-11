@@ -64,7 +64,8 @@ try {
     
     $allowedFields = [
         'publication_date', 'source', 'contractor_id', 'contractor_name', 
-        'contact_person', 'contact_number', 'project_id', 'project_name', 
+        'contact_person', 'contact_number', 'project_id', 'project_name',
+        'status',
         'project_country', 'project_region', 'project_province', 'project_city', 
         'project_barangay', 'project_street', 'project_blk_lot', 
         'project_coordinates', 'address', 'contract_country', 'contract_region', 
@@ -79,6 +80,10 @@ try {
     
     foreach ($input as $key => $value) {
         if ($key === 'id') continue;
+        if ($key === 'status') {
+            $allowed = ['Prospect', 'For Bidding', 'For Execution', 'Priority'];
+            if (!in_array($value, $allowed, true)) continue;
+        }
         if (in_array($key, $allowedFields, true)) {
             $updates[] = "`$key` = ?";
             $params[] = $value;

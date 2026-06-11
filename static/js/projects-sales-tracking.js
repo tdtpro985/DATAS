@@ -443,6 +443,43 @@ function generateContractForm(project) {
 
 // Generate Project Details form
 function generateProjectForm(project) {
+    const statuses = ['Prospect', 'For Bidding', 'For Execution', 'Priority'];
+    const currentStatus = (project.status || 'Prospect').trim();
+
+    const radioButtons = statuses.map(s => `
+        <label style="
+            display: flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 1rem;
+            border: 1px solid ${currentStatus.toLowerCase() === s.toLowerCase()
+                ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(255,255,255,0.25)')
+                : 'rgba(255,255,255,0.08)'};
+            border-radius: 8px;
+            background: ${currentStatus.toLowerCase() === s.toLowerCase()
+                ? (s.toLowerCase() === 'priority' ? 'rgba(255,128,0,0.12)' : 'rgba(255,255,255,0.07)')
+                : 'transparent'};
+            cursor: pointer; font-size: 0.85rem; font-weight: 600;
+            color: ${s.toLowerCase() === 'priority' ? '#ff8000' : 'var(--text-primary)'};
+            transition: border-color 0.15s, background 0.15s;
+            user-select: none;
+        " onclick="selectStatusRadio(this, '${s}')">
+            <input type="radio" name="edit_status_radio" value="${s}"
+                ${currentStatus.toLowerCase() === s.toLowerCase() ? 'checked' : ''}
+                style="display:none;">
+            <span style="
+                width:14px; height:14px; border-radius:50%;
+                border: 2px solid ${currentStatus.toLowerCase() === s.toLowerCase()
+                    ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(255,255,255,0.6)')
+                    : 'rgba(255,255,255,0.3)'};
+                display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
+            ">
+                ${currentStatus.toLowerCase() === s.toLowerCase()
+                    ? `<span style="width:6px;height:6px;border-radius:50%;background:${s.toLowerCase() === 'priority' ? '#ff8000' : '#fff'};display:block;"></span>`
+                    : ''}
+            </span>
+            ${s}
+        </label>
+    `).join('');
+
     return `
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
@@ -453,6 +490,16 @@ function generateProjectForm(project) {
                 <label>Project Name</label>
                 <input type="text" class="form-control" id="edit_project_name" value="${project.project_name || ''}" />
             </div>
+
+            <!-- Status -->
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Status</label>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
+                    ${radioButtons}
+                </div>
+                <input type="hidden" id="edit_status" value="${currentStatus}" />
+            </div>
+
             <div class="form-group">
                 <label>Country</label>
                 <input type="text" class="form-control" id="edit_country" value="${project.project_country || 'Philippines'}" />
@@ -491,6 +538,37 @@ function generateProjectForm(project) {
             </div>
         </div>
     `;
+}
+
+// Handle status radio visual selection
+function selectStatusRadio(label, value) {
+    // Update hidden input
+    const hidden = document.getElementById('edit_status');
+    if (hidden) hidden.value = value;
+
+    // Reset all labels
+    document.querySelectorAll('[name="edit_status_radio"]').forEach(radio => {
+        const lbl = radio.closest('label');
+        if (!lbl) return;
+        const isPriority = radio.value.toLowerCase() === 'priority';
+        lbl.style.border = '1px solid rgba(255,255,255,0.08)';
+        lbl.style.background = 'transparent';
+        // Reset dot
+        const dot = lbl.querySelector('span > span');
+        if (dot) dot.remove();
+    });
+
+    // Activate selected label
+    const isPriority = value.toLowerCase() === 'priority';
+    label.style.border = `1px solid ${isPriority ? '#ff8000' : 'rgba(255,255,255,0.25)'}`;
+    label.style.background = isPriority ? 'rgba(255,128,0,0.12)' : 'rgba(255,255,255,0.07)';
+    label.querySelector('input').checked = true;
+    const ring = label.querySelector('span');
+    ring.style.borderColor = isPriority ? '#ff8000' : 'rgba(255,255,255,0.6)';
+    // Add inner dot
+    const innerDot = document.createElement('span');
+    innerDot.style.cssText = `width:6px;height:6px;border-radius:50%;background:${isPriority ? '#ff8000' : '#fff'};display:block;`;
+    ring.appendChild(innerDot);
 }
 
 // Generate Materials form
@@ -580,6 +658,7 @@ async function saveEditSection() {
         case 'project':
             updateData.project_id = document.getElementById('edit_project_id')?.value || null;
             updateData.project_name = document.getElementById('edit_project_name')?.value || null;
+            updateData.status = document.getElementById('edit_status')?.value || null;
             updateData.project_country = document.getElementById('edit_country')?.value || null;
             updateData.project_region = document.getElementById('edit_region')?.value || null;
             updateData.project_province = document.getElementById('edit_province')?.value || null;
