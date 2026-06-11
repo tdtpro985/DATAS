@@ -133,9 +133,10 @@ function handleGet($pdo) {
                 WHERE assigned_to = u.id
             ) as assigned_count,
             (
-                SELECT COUNT(DISTINCT st.project_id)
-                FROM sales_tracking st
-                WHERE st.sales_rep_id = u.id
+                SELECT COUNT(DISTINCT p.id)
+                FROM projects p
+                WHERE p.assigned_to = u.id
+                   OR p.id IN (SELECT st.project_id FROM sales_tracking st WHERE st.sales_rep_id = u.id)
             ) as total_projects_count
         FROM users u
         WHERE u.role = 'sales_rep'
