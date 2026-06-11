@@ -88,6 +88,17 @@ try {
           $regionSql
           $srSql
         GROUP BY u.id, u.full_name, u.email, u.branch
+        HAVING
+            -- Only include reps that have at least one tracking record
+            -- with actual activity (not just an empty "Not Started" shell)
+            COUNT(DISTINCT st.project_id) > 0
+            AND (
+                SUM(CASE WHEN LOWER(st.contacted)       = 'yes' THEN 1 ELSE 0 END) > 0
+             OR SUM(CASE WHEN LOWER(st.sales_qualified) IN ('yes','no') THEN 1 ELSE 0 END) > 0
+             OR SUM(CASE WHEN LOWER(st.quoted)          = 'yes' THEN 1 ELSE 0 END) > 0
+             OR SUM(CASE WHEN LOWER(st.to_win)          = 'yes' THEN 1 ELSE 0 END) > 0
+             OR SUM(CASE WHEN st.tracking_status IN ('In Progress','Complete') THEN 1 ELSE 0 END) > 0
+            )
         ORDER BY win_count DESC, total_win_amount DESC, contacted_count DESC
     ");
 
