@@ -636,6 +636,16 @@ const PriorityForm = {
             project_value: getFieldNumber('projectValue'),
             accomplishment_rate: getFieldNumber('completionRate'),
             
+            // Project Location
+            project_country: getFieldValue('projectCountry'),
+            project_region: getFieldValue('projectRegion'),
+            project_province: getFieldValue('projectProvince'),
+            project_city: getFieldValue('projectCity'),
+            project_barangay: getFieldValue('projectBarangay'),
+            project_street: getFieldValue('projectStreet'),
+            project_blk_lot: getFieldValue('projectBlkLot'),
+            project_coordinates: getFieldValue('projectCoords'),
+            
             // Materials
             sheet_pile_type: getFieldValue('sheetPileMaterial'),
             sheet_pile_amount: getFieldNumber('sheetPileValue'),
