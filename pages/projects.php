@@ -1427,6 +1427,25 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         transform: translateX(4px);
         color: var(--orange-500);
     }
+    
+    /* Fix modal positioning and z-index to appear above sidebar */
+    #editOptionsModal,
+    #editSectionModal {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        z-index: 10000 !important;
+        margin: 0 !important;
+    }
+    
+    #editOptionsModal .modal-content,
+    #editSectionModal .modal-content {
+        position: relative;
+        z-index: 10001 !important;
+        margin: auto;
+    }
 </style>
 
 <!-- Assignment Modal -->
