@@ -284,15 +284,15 @@ function openModal(rep = null) {
         }
         document.getElementById('loginStatusDisplay').innerHTML = statusHtml;
         
-        // Show total projects (will be updated by API)
-        document.getElementById('totalProjectsBadge').textContent = '0 projects';
+        // Show total projects from sales_tracking (all time)
+        const totalCount = rep.total_projects_count || 0;
+        document.getElementById('totalProjectsBadge').textContent = totalCount + (totalCount === 1 ? ' project' : ' projects');
         
         // Show pending projects section — superadmin only
         if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'superadmin') {
             const pendingSection = document.getElementById('pendingProjectsSection');
             if (pendingSection) {
                 pendingSection.style.display = 'block';
-                loadPendingProjects(rep.id);
             }
         }
         
