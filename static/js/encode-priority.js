@@ -76,7 +76,7 @@ const PriorityForm = {
             this.loadCities('contractCountry', 'contractRegion', 'contractProvince', 'contractCity');
         });
         document.getElementById('contractCity').addEventListener('change', () => {
-            this.loadBarangays('contractCountry', 'contractRegion', 'contractProvince', 'contractCity', 'contractBarangay');
+            // Barangay is now a free text field, no need to load options
         });
 
         // Set up location cascades for project
@@ -94,7 +94,7 @@ const PriorityForm = {
             this.loadCities('projectCountry', 'projectRegion', 'projectProvince', 'projectCity');
         });
         document.getElementById('projectCity').addEventListener('change', () => {
-            this.loadBarangays('projectCountry', 'projectRegion', 'projectProvince', 'projectCity', 'projectBarangay');
+            // Barangay is now a free text field, no need to load options
         });
     },
 
@@ -480,34 +480,20 @@ const PriorityForm = {
     },
 
     async loadBarangays(countryId, regionId, provinceId, cityId, barangayId) {
+        // Note: Barangay fields are now text inputs (not dropdowns), so this function is not used
+        // Keeping it here for backward compatibility but it won't affect the form
         const country = document.getElementById(countryId).value;
         const region = document.getElementById(regionId).value;
         const city = document.getElementById(cityId).value;
-        const barangaySelect = document.getElementById(barangayId);
+        const barangayInput = document.getElementById(barangayId);
 
-        if (!country || !region || !city) {
+        // Don't hide or manipulate the barangay input field since it's a free text field
+        if (!country || !region || !city || !barangayInput) {
             return;
         }
 
-        try {
-            const response = await fetch(`${BASE}/api/locations.php?action=barangays&country=${country}&region=${region}&city=${city}`);
-            const data = await response.json();
-
-            if (data.barangays && data.barangays.length > 0) {
-                barangaySelect.innerHTML = '<option value="">Select barangay</option>';
-                data.barangays.forEach(barangay => {
-                    const option = document.createElement('option');
-                    option.value = barangay.code;
-                    option.textContent = barangay.name;
-                    barangaySelect.appendChild(option);
-                });
-                barangaySelect.style.display = 'block';
-            } else {
-                barangaySelect.style.display = 'none';
-            }
-        } catch (error) {
-            console.error('Error loading barangays:', error);
-        }
+        // You can optionally load barangay suggestions here if needed in the future
+        // For now, users can manually type the barangay name
     },
 
     async handleSubmit(event) {
