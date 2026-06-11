@@ -4649,10 +4649,11 @@ if ($role === 'encoder') {
 
                 monthSelect.innerHTML = '';
                 
-                // Add "All Months" option
+                // Add "All Months" option - SELECTED BY DEFAULT
                 const allOption = document.createElement('option');
                 allOption.value = 'all';
                 allOption.textContent = 'All Months';
+                allOption.selected = true; // Default to "All Months"
                 monthSelect.appendChild(allOption);
                 
                 // Add available months
@@ -4660,12 +4661,7 @@ if ($role === 'encoder') {
                     const option = document.createElement('option');
                     option.value = month.value;
                     option.textContent = `${month.label} (${month.project_count} projects)`;
-                    
-                    // Select the most recent month by default
-                    if (index === 0) {
-                        option.selected = true;
-                    }
-                    
+                    // Don't auto-select any specific month
                     monthSelect.appendChild(option);
                 });
             },

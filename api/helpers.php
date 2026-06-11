@@ -227,6 +227,7 @@ function buildDateFilter(string $dateColumn = 'publication_date'): array {
     $year   = getYear();
 
     // If no month/year specified, return a condition that matches all records
+    // INCLUDING those with NULL publication_date
     if ($month === null && $year === null) {
         return [
             'sql'    => "1=1",
@@ -237,7 +238,7 @@ function buildDateFilter(string $dateColumn = 'publication_date'): array {
     // If only year is specified (no month)
     if ($month === null && $year !== null) {
         return [
-            'sql'    => "YEAR($dateColumn) = :year",
+            'sql'    => "($dateColumn IS NOT NULL AND YEAR($dateColumn) = :year)",
             'params' => [':year' => $year],
         ];
     }
@@ -251,18 +252,18 @@ function buildDateFilter(string $dateColumn = 'publication_date'): array {
     switch ($period) {
         case 'daily':
             return [
-                'sql'    => "DATE($dateColumn) = CURDATE()",
+                'sql'    => "($dateColumn IS NOT NULL AND DATE($dateColumn) = CURDATE())",
                 'params' => [],
             ];
         case 'weekly':
             return [
-                'sql'    => "YEARWEEK($dateColumn, 1) = YEARWEEK(CURDATE(), 1)",
+                'sql'    => "($dateColumn IS NOT NULL AND YEARWEEK($dateColumn, 1) = YEARWEEK(CURDATE(), 1))",
                 'params' => [],
             ];
         case 'monthly':
         default:
             return [
-                'sql'    => "MONTH($dateColumn) = :month AND YEAR($dateColumn) = :year",
+                'sql'    => "($dateColumn IS NOT NULL AND MONTH($dateColumn) = :month AND YEAR($dateColumn) = :year)",
                 'params' => [':month' => $month, ':year' => $year],
             ];
     }
