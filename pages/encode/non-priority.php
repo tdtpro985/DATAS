@@ -866,6 +866,6 @@ const BASE = '<?= $base ?>';
 </script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/encode-non-priority.js?v=1"></script>
+<script src="<?= $base ?>/static/js/encode-non-priority.js?v=2"></script>
 </body>
 </html>

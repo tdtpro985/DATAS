@@ -165,7 +165,7 @@ const NonPriorityForm = {
 
     validateStep(stepNum) {
         const requiredFields = {
-            1: ['source', 'contractorName', 'contactPerson', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
+            1: ['source', 'contractorName', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
             2: ['projectName', 'projectCountry', 'projectRegion', 'projectProvince', 'projectCity', 'projectValue', 'projectStatus'],
             3: [] // Step 3 is all optional
         };
