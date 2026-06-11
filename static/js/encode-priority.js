@@ -628,17 +628,34 @@ const PriorityForm = {
             source: finalSource,
             notice_reference_number: noticeReferenceNumber,
             publication_date: getFieldValue('publishedDate'),
+            
+            // Contractor Location
+            contract_country: getFieldValue('contractCountry'),
+            contract_region: getFieldValue('contractRegion'),
+            contract_province: getFieldValue('contractProvince'),
+            contract_city: getFieldValue('contractCity'),
+            contract_barangay: getFieldValue('contractBarangay'),
+            contract_street: getFieldValue('contractStreet'),
+            contract_blk_lot: getFieldValue('contractBlkLot'),
+            contract_coordinates: getFieldValue('contractCoords'),
+            
+            // Legacy fields (kept for compatibility)
             address: getFieldValue('contractStreet'),
             region: getFieldValue('contractCity'),
             city_province: getFieldValue('contractBarangay'),
+            
+            // Project Details
             project_name: getFieldValue('projectName'),
             project_id: getFieldValue('projectId'),
             project_value: getFieldNumber('projectValue'),
             accomplishment_rate: getFieldNumber('completionRate'),
+            
+            // Materials
             sheet_pile_type: getFieldValue('sheetPileMaterial'),
             sheet_pile_amount: getFieldNumber('sheetPileValue'),
             drbs: getFieldValue('drbsMaterial'),
             drbs_value: getFieldNumber('drbsValue'),
+            
             status: 'Priority',
             form_type: 'priority'
         };
