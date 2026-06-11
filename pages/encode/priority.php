@@ -1006,7 +1006,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         <!-- Row 1: Project ID, Country, Barangay -->
                         <div class="form-group">
                             <label for="projectId">Project ID</label>
-                            <input type="text" id="projectId" name="project_id" maxlength="15" placeholder="Up to 15 chars">
+                            <input type="text" id="projectId" name="project_id" maxlength="100" placeholder="Optional">
                         </div>
                         <div class="form-group">
                             <label for="projectCountry" data-required=" *">Country</label>
@@ -1168,6 +1168,6 @@ const BASE = '<?= $base ?>';
 </script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/encode-priority.js?v=6"></script>
+<script src="<?= $base ?>/static/js/encode-priority.js?v=7"></script>
 </body>
 </html>

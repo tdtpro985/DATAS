@@ -62,18 +62,8 @@ const NonPriorityForm = {
             }
         });
 
-        // Project ID - numbers only validation
-        const projectIdInput = document.getElementById('projectId');
-        projectIdInput.addEventListener('input', function(e) {
-            // Remove any non-numeric characters
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-        projectIdInput.addEventListener('keypress', function(e) {
-            // Prevent non-numeric key presses
-            if (e.key && !/[0-9]/.test(e.key) && e.key !== 'Backspace' && e.key !== 'Delete' && e.key !== 'Tab' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') {
-                e.preventDefault();
-            }
-        });
+        // Project ID - allow any characters (letters, numbers, spaces, special chars)
+        // No restriction needed - treat as a normal text field
 
         // Load initial regions for Philippines
         setTimeout(() => {
@@ -165,7 +155,7 @@ const NonPriorityForm = {
 
     validateStep(stepNum) {
         const requiredFields = {
-            1: ['source', 'contractorName', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
+            1: ['publicationDate', 'source', 'contractorName', 'contactNumber', 'contractCountry', 'contractRegion', 'contractProvince', 'contractCity'],
             2: ['projectName', 'projectCountry', 'projectRegion', 'projectProvince', 'projectCity', 'projectValue', 'projectStatus'],
             3: [] // Step 3 is all optional
         };
