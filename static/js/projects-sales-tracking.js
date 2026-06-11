@@ -289,8 +289,36 @@ function editProject() {
         return;
     }
     
-    // Redirect to edit page
-    window.location.href = `${BASE}/projects/edit/${projectId}`;
+    // Find the project to determine priority status
+    let project = null;
+    if (typeof ProjectsPage !== 'undefined' && ProjectsPage.allProjects) {
+        project = ProjectsPage.allProjects.find(p => p.id == projectId);
+    } else if (window.currentProjectsData && window.currentProjectsData.projects) {
+        project = window.currentProjectsData.projects.find(p => p.id == projectId);
+    }
+    
+    if (!project) {
+        console.error('[PROJECTS] Project not found');
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Project not found');
+        }
+        return;
+    }
+    
+    // Check if project is archived
+    if (project.archived_at) {
+        if (typeof Toast !== 'undefined') {
+            Toast.warning('Cannot edit archived projects. Please restore first.');
+        }
+        return;
+    }
+    
+    // Determine the correct encode page based on priority status
+    const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
+    const encodePage = isPriority ? '/encode/priority' : '/encode/non-priority';
+    
+    // Redirect to encode page with project ID
+    window.location.href = `${BASE}${encodePage}?edit=${projectId}`;
 }
 
 // Close Details Modal
