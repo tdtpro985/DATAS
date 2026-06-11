@@ -11,9 +11,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
     $db = getDB();
 
-    $dateFilter = buildDateFilter('p.publication_date');
-    $dateWhere  = $dateFilter['sql'];
-    $params     = $dateFilter['params'];
+    $params    = [];
+    $dateSql   = '1=1';
+
+    $dateFrom = isset($_GET['date_from']) ? trim($_GET['date_from']) : '';
+    $dateTo   = isset($_GET['date_to'])   ? trim($_GET['date_to'])   : '';
+
+    if ($dateFrom && $dateTo) {
+        $dateSql = 'p.publication_date BETWEEN :date_from AND :date_to';
+        $params[':date_from'] = $dateFrom;
+        $params[':date_to']   = $dateTo;
+    } elseif ($dateFrom) {
+        $dateSql = 'p.publication_date >= :date_from';
+        $params[':date_from'] = $dateFrom;
+    } elseif ($dateTo) {
+        $dateSql = 'p.publication_date <= :date_to';
+        $params[':date_to'] = $dateTo;
+    }
 
     $region    = getRegion();
     $regionSql = '';
@@ -27,6 +41,14 @@ try {
     if ($srId) {
         $srSql = ' AND u.id = :sr_id';
         $params[':sr_id'] = $srId;
+    }
+
+    // Branch filter
+    $branch    = isset($_GET['branch']) ? trim($_GET['branch']) : '';
+    $branchSql = '';
+    if ($branch !== '') {
+        $branchSql = ' AND u.branch = :branch';
+        $params[':branch'] = $branch;
     }
 
     $sql = "
@@ -52,9 +74,10 @@ try {
         INNER JOIN projects p        ON st.project_id = p.id
         WHERE u.role = 'sales_rep'
           AND p.archived_at IS NULL
-          AND $dateWhere
+          AND $dateSql
           $regionSql
           $srSql
+          $branchSql
         GROUP BY u.id, u.full_name, u.email, u.branch
         ORDER BY win_count DESC, total_win_amount DESC, contacted_count DESC
     ";
@@ -66,7 +89,6 @@ try {
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Filter out reps with zero activity in PHP (avoids HAVING clause SQL issues)
     $rows = array_filter($rows, function ($r) {
         return (int)$r['contacted_count']   > 0
             || (int)$r['sql_yes_count']     > 0
@@ -108,6 +130,10 @@ try {
         ];
     }, $rows));
 
+    // Unique branches for filter dropdown
+    $branchesStmt = $db->query("SELECT DISTINCT branch FROM users WHERE role = 'sales_rep' AND branch IS NOT NULL ORDER BY branch");
+    $branches = $branchesStmt->fetchAll(PDO::FETCH_COLUMN);
+
     $summary = [
         'total_reps'           => count($reps),
         'total_assigned'       => array_sum(array_column($reps, 'total_assigned')),
@@ -120,16 +146,12 @@ try {
     ];
 
     jsonResponse([
-        'reps'    => $reps,
-        'summary' => $summary,
-        'filters' => [
-            'month'  => qp('month'),
-            'year'   => qp('year'),
-            'region' => $region ?? 'All Regions',
-        ],
+        'reps'     => $reps,
+        'summary'  => $summary,
+        'branches' => $branches,
     ]);
 
 } catch (Exception $e) {
     error_log('SR Performance API error: ' . $e->getMessage());
-    jsonResponse(['reps' => [], 'summary' => [], 'filters' => []], 500);
+    jsonResponse(['reps' => [], 'summary' => [], 'branches' => []], 500);
 }
