@@ -36,7 +36,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $db = getDB();
 
         // Build WHERE clause based on type parameter
+        // Exclude: archived projects AND illegitimate projects
         $whereConditions = ['p.archived_at IS NULL'];
+
+        // Check if is_actual_project column exists (might not be migrated yet)
+        static $hasIllegitimateCol = null;
+        if ($hasIllegitimateCol === null) {
+            try {
+                $colChk = $db->query("SHOW COLUMNS FROM projects LIKE 'is_actual_project'");
+                $hasIllegitimateCol = $colChk->rowCount() > 0;
+            } catch (Exception $e) {
+                $hasIllegitimateCol = false;
+            }
+        }
+        if ($hasIllegitimateCol) {
+            $whereConditions[] = "(p.is_actual_project IS NULL OR p.is_actual_project != 'no')";
+        }
+
         $params = [];
         
         if ($type === 'priority') {

@@ -43,8 +43,8 @@ async function loadDashboardStats() {
         const users = await parseJson(usersRes);
         safeText('dash-total-users', Array.isArray(users) ? users.length : 0);
 
-        // Load projects count
-        const projectsRes = await fetch(_B + '/api/v1/projects?page=1&size=1', { credentials: 'include' });
+        // Load non-priority projects count
+        const projectsRes = await fetch(_B + '/api/v1/projects?type=non-priority&page=1&size=1', { credentials: 'include' });
         const projectsData = await parseJson(projectsRes);
         safeText('dash-total-projects', (projectsData && typeof projectsData.total === 'number') ? projectsData.total : 0);
 
