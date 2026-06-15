@@ -573,46 +573,61 @@ function selectStatusRadio(label, value) {
 
 // Generate Materials form
 function generateMaterialsForm(project) {
+    const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
+
+    if (isPriority) {
+        return `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group" style="grid-column:1/-1;">
+                <label>Sheet Pile Type</label>
+                <input type="text" class="form-control" id="edit_sheet_pile_type" value="${project.sheet_pile_type || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>Sheet Pile Amount (₱)</label>
+                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount || ''}" placeholder="0.00" step="0.01" min="0" />
+            </div>
+            <div class="form-group" style="grid-column:1/-1;">
+                <label>DRBs Type</label>
+                <input type="text" class="form-control" id="edit_drbs" value="${project.drbs || ''}" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+                <label>DRBs Value (₱)</label>
+                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value || ''}" placeholder="0.00" step="0.01" min="0" />
+            </div>
+        </div>`;
+    }
+
     return `
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
-                <label>Steel Bars (Rebars)</label>
-                <input type="text" class="form-control" id="edit_steel_bars" value="${project.steel_bars || ''}" placeholder="Optional" />
+                <label>DRBs Value (₱)</label>
+                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>H-Beams</label>
-                <input type="text" class="form-control" id="edit_h_beams" value="${project.h_beams || ''}" placeholder="Optional" />
+                <label>Sheet Pile Amount (₱)</label>
+                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>I-Beams</label>
-                <input type="text" class="form-control" id="edit_i_beams" value="${project.i_beams || ''}" placeholder="Optional" />
+                <label>MS Plate (₱)</label>
+                <input type="number" class="form-control" id="edit_ms_plate" value="${project.ms_plate || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>C-Purlins</label>
-                <input type="text" class="form-control" id="edit_c_purlins" value="${project.c_purlins || ''}" placeholder="Optional" />
+                <label>Angle Bars (₱)</label>
+                <input type="number" class="form-control" id="edit_angle_bars" value="${project.angle_bars || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>Square/Rectangular Tubes</label>
-                <input type="text" class="form-control" id="edit_square_tubes" value="${project.square_tubes || ''}" placeholder="Optional" />
+                <label>Channel Bars (₱)</label>
+                <input type="number" class="form-control" id="edit_channel_bars" value="${project.channel_bars || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>Round Pipes</label>
-                <input type="text" class="form-control" id="edit_round_pipes" value="${project.round_pipes || ''}" placeholder="Optional" />
+                <label>Wide Flange (₱)</label>
+                <input type="number" class="form-control" id="edit_wide_flange" value="${project.wide_flange || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
-                <label>GI Sheets (Corrugated)</label>
-                <input type="text" class="form-control" id="edit_gi_sheets" value="${project.gi_sheets || ''}" placeholder="Optional" />
+                <label>GI/BI (₱)</label>
+                <input type="number" class="form-control" id="edit_gi_bi" value="${project.gi_bi || ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
-            <div class="form-group">
-                <label>Metal Deck/Flooring</label>
-                <input type="text" class="form-control" id="edit_metal_deck" value="${project.metal_deck || ''}" placeholder="Optional" />
-            </div>
-            <div class="form-group" style="grid-column: 1 / -1;">
-                <label>Other Materials</label>
-                <textarea class="form-control" id="edit_other_materials" rows="2" placeholder="Optional">${project.other_materials || ''}</textarea>
-            </div>
-        </div>
-    `;
+        </div>`;
 }
 
 // Generate Pictures form
@@ -670,13 +685,16 @@ async function saveEditSection() {
             updateData.address = document.getElementById('edit_complete_address')?.value || null;
             break;
         case 'materials':
-            // Note: The database doesn't have these individual material columns
-            // This section needs to be redesigned or use existing columns like:
-            // sheet_pile_type, sheet_pile_amount, drbs, drbs_value, etc.
-            if (typeof Toast !== 'undefined') {
-                Toast.warning('Materials editing coming soon - database schema needs update');
-            }
-            return;
+            updateData.drbs_value         = document.getElementById('edit_drbs_value')?.value        || null;
+            updateData.sheet_pile_amount  = document.getElementById('edit_sheet_pile_amount')?.value  || null;
+            updateData.sheet_pile_type    = document.getElementById('edit_sheet_pile_type')?.value    || null;
+            updateData.drbs               = document.getElementById('edit_drbs')?.value               || null;
+            updateData.ms_plate           = document.getElementById('edit_ms_plate')?.value           || null;
+            updateData.angle_bars         = document.getElementById('edit_angle_bars')?.value         || null;
+            updateData.channel_bars       = document.getElementById('edit_channel_bars')?.value       || null;
+            updateData.wide_flange        = document.getElementById('edit_wide_flange')?.value        || null;
+            updateData.gi_bi              = document.getElementById('edit_gi_bi')?.value              || null;
+            break;
         case 'pictures':
             // Pictures functionality to be implemented
             if (typeof Toast !== 'undefined') {

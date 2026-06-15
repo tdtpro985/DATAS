@@ -72,7 +72,8 @@ try {
         'contract_province', 'contract_city', 'contract_barangay', 
         'contract_street', 'contract_blk_lot', 'contract_coordinates',
         'sheet_pile_type', 'sheet_pile_amount', 'drbs', 'drbs_value',
-        'ms_plate', 'angle_bars', 'channel_bars', 'wide_flange', 'gi_bi'
+        'ms_plate', 'angle_bars', 'channel_bars', 'wide_flange', 'gi_bi',
+        'accomplishment_rate'
     ];
     
     $updates = [];

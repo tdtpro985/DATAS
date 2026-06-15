@@ -1748,44 +1748,34 @@ function openTrackingModal() {
 }
 
 /**
- * Edit project - redirects to encode page
+ * Edit project — opens section picker modal
  */
 function editProject() {
     const modal = document.getElementById('detailsModal');
     const projectId = modal?.dataset?.projectId;
-    
-    if (!projectId) {
-        console.error('[PROJECTS] No project ID found');
-        showNotificationToast('Unable to edit project: No project ID found', 'error');
-        return;
-    }
-    
-    // Find the project
+    if (!projectId) return;
+
     let project = null;
     if (ProjectsPage && ProjectsPage.allProjects) {
         project = ProjectsPage.allProjects.find(p => p.id == projectId);
     } else if (window.currentProjectsData && window.currentProjectsData.projects) {
         project = window.currentProjectsData.projects.find(p => p.id == projectId);
     }
-    
-    if (!project) {
-        console.error('[PROJECTS] Project not found');
-        showNotificationToast('Project not found', 'error');
-        return;
-    }
-    
-    // Check if project is archived
-    if (project.archived_at) {
-        showNotificationToast('Cannot edit archived projects. Please restore first.', 'warning');
-        return;
-    }
-    
-    // Determine the correct encode page based on priority status
+    if (!project) { if (typeof Toast !== 'undefined') Toast.error('Project not found'); return; }
+    if (project.archived_at) { if (typeof Toast !== 'undefined') Toast.warning('Cannot edit archived projects.'); return; }
+
     const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
-    const encodePage = isPriority ? '/encode/priority' : '/encode/non-priority';
-    
-    // Redirect to encode page with project ID
-    window.location.href = `${BASE}${encodePage}?edit=${projectId}`;
+
+    const editModal = document.getElementById('editOptionsModal');
+    if (editModal) {
+        editModal.dataset.projectId = projectId;
+        editModal.dataset.isPriority = isPriority;
+        const picturesOption = document.getElementById('editPicturesOption');
+        if (picturesOption) picturesOption.style.display = isPriority ? 'flex' : 'none';
+    }
+
+    closeDetailsModal();
+    setTimeout(() => { if (editModal) editModal.classList.add('active'); }, 150);
 }
 
 function saveSalesTracking() {
