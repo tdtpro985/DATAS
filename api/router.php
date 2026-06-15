@@ -90,6 +90,7 @@ elseif ($path === 'projects/archive' && in_array($method, ['POST', 'PUT']))  { r
 elseif ($path === 'projects/archived' && $method === 'GET')                  { require __DIR__ . '/projects/archived.php'; }
 elseif ($path === 'projects/illegitimate' && $method === 'GET')              { require __DIR__ . '/projects/illegitimate.php'; }
 elseif (preg_match('#^projects/(\d+)/sales-tracking$#', $path, $m))     { $_GET['id'] = $m[1]; require __DIR__ . '/projects/sales-tracking.php'; }
+elseif (preg_match('#^projects/(\d+)/images$#', $path, $m))             { $_GET['id'] = $m[1]; require __DIR__ . '/projects/images.php'; }
 elseif (preg_match('#^projects/(\d+)/actual-project$#', $path, $m))     { $_GET['id'] = $m[1]; require __DIR__ . '/projects/actual-project.php'; }
 elseif ($path === 'users' && in_array($method, ['GET','POST'], true))    { require __DIR__ . '/users/index.php'; }
 elseif (preg_match('#^users/(\d+)$#', $path, $m))                       { $_GET['id'] = $m[1]; require __DIR__ . '/users/user.php'; }

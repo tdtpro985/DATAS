@@ -253,7 +253,7 @@ Issues: None
 
 1. ❌ Forgot to clear OPcache → Old code runs
 2. ❌ Forgot to hard refresh browser → Sees old JavaScript
-3. ❌ Wrong file permissions → Server can't read files
+3. ❌ Wrong file permissions → Server can't read files          
 4. ❌ Database password wrong in config.production.php
 5. ❌ SELinux blocking file access
 

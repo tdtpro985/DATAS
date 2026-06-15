@@ -690,6 +690,16 @@ const ProjectsPage = {
             : '—';
 
         modalBody.innerHTML = `
+            <!-- Project Images (priority only) -->
+            <div id="projectImagesSection" style="display:none; margin-bottom: 1.25rem;">
+                <div class="detail-section-title" style="margin-bottom:0.75rem;">📷 Project Images</div>
+                <div id="projectImagesGrid" style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                    gap: 0.6rem;
+                "></div>
+            </div>
+
             <!-- First Group -->
             <div class="detail-section">
                 <div class="detail-section-title">📋 Basic Information</div>
@@ -1013,6 +1023,42 @@ const ProjectsPage = {
         modal.dataset.projectId = projectId;
         
         modal.classList.add('active');
+
+        // Fetch and render project images at the top
+        this.loadProjectImages(projectId);
+    },
+
+    async loadProjectImages(projectId) {
+        try {
+            const res = await fetch(`${BASE}/api/v1/projects/${projectId}/images`, {
+                credentials: 'include'
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            const images = data.images || [];
+            if (images.length === 0) return;
+
+            const section = document.getElementById('projectImagesSection');
+            const grid    = document.getElementById('projectImagesGrid');
+            if (!section || !grid) return;
+
+            grid.innerHTML = images.map(img => `
+                <a href="${BASE}/${img.file_path}" target="_blank" style="
+                    display: block; border-radius: 8px; overflow: hidden;
+                    border: 1px solid rgba(255,255,255,0.1);
+                    aspect-ratio: 1 / 1;
+                    background: #111;
+                ">
+                    <img src="${BASE}/${img.file_path}" alt="Project image"
+                        style="width:100%; height:100%; object-fit:cover; display:block;"
+                        loading="lazy"
+                        onerror="this.parentElement.style.display='none'">
+                </a>
+            `).join('');
+            section.style.display = 'block';
+        } catch (e) {
+            // silently fail — images are optional
+        }
     },
     
     async loadSalesReps() {
