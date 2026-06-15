@@ -1099,21 +1099,21 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <div class="summary-card">
                 <div class="summary-card-icon">📋</div>
                 <div class="summary-card-content">
-                    <div class="summary-card-label">Assigned to Me</div>
+                    <div class="summary-card-label">Total Projects</div>
                     <div class="summary-card-value" id="myTotalProjects">—</div>
                 </div>
             </div>
             <div class="summary-card">
                 <div class="summary-card-icon">🏗️</div>
                 <div class="summary-card-content">
-                    <div class="summary-card-label">My Contractors</div>
+                    <div class="summary-card-label">Contractors</div>
                     <div class="summary-card-value" id="myTotalContractors">—</div>
                 </div>
             </div>
             <div class="summary-card">
                 <div class="summary-card-icon">💵</div>
                 <div class="summary-card-content">
-                    <div class="summary-card-label">My Pipeline Value</div>
+                    <div class="summary-card-label">Pipeline Value</div>
                     <div class="summary-card-value" id="myPipelineValue">—</div>
                 </div>
             </div>
@@ -1483,7 +1483,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
-<script src="<?= $base ?>/static/js/projects.js?v=15"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=16"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
 
 </body>

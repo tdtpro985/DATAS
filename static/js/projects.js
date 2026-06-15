@@ -102,36 +102,29 @@ const ProjectsPage = {
         const isSalesRep = userRole === 'sales_rep';
         
         if (isSalesRep) {
-            // Summary cards show the SR's own assigned projects stats
-            const userId = parseInt(document.body.dataset.userId || '0');
-            const myProjects = this.allProjects.filter(p => 
-                !p.archived_at && parseInt(p.assigned_to) === userId
-            );
-            
-            // My stats (projects assigned to me, excluding archived)
-            const myUniqueContractors = new Set(
-                myProjects
+            // Cards show stats for all visible (non-archived) projects
+            const activeProjects = this.allProjects.filter(p => !p.archived_at);
+
+            const uniqueContractors = new Set(
+                activeProjects
                     .map(p => (p.contractor_name || '').trim())
                     .filter(name => name.length > 0)
             );
-            const myPipelineValue = myProjects.reduce((sum, p) => {
+            const pipelineValue = activeProjects.reduce((sum, p) => {
                 return sum + (parseFloat(p.project_value) || 0);
             }, 0);
-            
-            // Count by priority status
-            const myNonPriority = myProjects.filter(p => 
+            const nonPriorityCount = activeProjects.filter(p =>
                 String(p.status || '').trim().toLowerCase() !== 'priority'
             ).length;
-            const myPriority = myProjects.filter(p => 
+            const priorityCount = activeProjects.filter(p =>
                 String(p.status || '').trim().toLowerCase() === 'priority'
             ).length;
-            
-            // Update my cards
-            document.getElementById('myTotalProjects').textContent = myProjects.length.toLocaleString();
-            document.getElementById('myTotalContractors').textContent = myUniqueContractors.size.toLocaleString();
-            document.getElementById('myPipelineValue').textContent = this.formatShortCurrency(myPipelineValue);
-            document.getElementById('myNonPriorityProjects').textContent = myNonPriority.toLocaleString();
-            document.getElementById('myPriorityProjects').textContent = myPriority.toLocaleString();
+
+            document.getElementById('myTotalProjects').textContent = activeProjects.length.toLocaleString();
+            document.getElementById('myTotalContractors').textContent = uniqueContractors.size.toLocaleString();
+            document.getElementById('myPipelineValue').textContent = this.formatShortCurrency(pipelineValue);
+            document.getElementById('myNonPriorityProjects').textContent = nonPriorityCount.toLocaleString();
+            document.getElementById('myPriorityProjects').textContent = priorityCount.toLocaleString();
         } else {
             // Admin/Other roles - show all non-archived projects
             const activeProjects = this.allProjects.filter(p => !p.archived_at);
