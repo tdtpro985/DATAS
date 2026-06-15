@@ -1960,58 +1960,7 @@ function showNotificationModal(title, message, type = 'info') {
     // Focus OK button
     setTimeout(() => modal.querySelector('#notifOkBtn')?.focus(), 50);
 }
-                </div>
-                <div style="flex: 1;">
-                    <h2 style="
-                        margin: 0 0 0.5rem 0;
-                        color: ${color.text};
-                        font-size: 1.25rem;
-                        font-weight: 700;
-                    ">
-                        ${title}
-                    </h2>
-                    <p style="
-                        margin: 0;
-                        color: var(--text-primary, white);
-                        font-size: 1rem;
-                        line-height: 1.5;
-                    ">
-                        ${message}
-                    </p>
-                </div>
-            </div>
-            <div style="
-                display: flex;
-                justify-content: flex-end;
-                padding: 1.5rem;
-                gap: 1rem;
-            ">
-                <button onclick="closeNotificationModal()" style="
-    document.body.appendChild(modal);
-    
-    // Auto-focus the OK button
-    setTimeout(() => {
-        const okButton = modal.querySelector('button');
-        if (okButton) okButton.focus();
-    }, 100);
-}
 
-// Show confirmation modal (replaces confirm)
-function showConfirmationModal(title, message, onConfirm, onCancel = null) {
-    // Remove existing confirmation modal
-    const existing = document.getElementById('confirmationModal');
-    if (existing) {
-        existing.remove();
-    }
-    
-    // Create modal overlay
-    const modal = document.createElement('div');
-    modal.id = 'confirmationModal';
-    modal.className = 'modal-overlay';
-    modal.style.cssText = `
-        display: flex;
-        position: fixed;
-        top: 0;
 // Show confirmation modal (replaces confirm)
 function showConfirmationModal(title, message, onConfirm, onCancel = null) {
     const existing = document.getElementById('confirmationModal');
