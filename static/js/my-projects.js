@@ -3,7 +3,7 @@
    Modal is identical to Admin/Superadmin projects-management modal.
    ============================================================ */
 
-let currentView = 'assigned';
+let currentView = 'non-priority';
 let currentPage = 1;
 let currentFilters = { search: '', region: '', status: '' };
 let selectedProjectId = null;
@@ -17,10 +17,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     await RoleManager.init();
 
     const urlParams = new URLSearchParams(window.location.search);
-    currentView = urlParams.get('view') || 'assigned';
+    currentView = urlParams.get('view') || 'non-priority';
 
     loadProjects();
-    loadCounts();
 
     document.getElementById('searchInput').addEventListener('input', debounce(() => {
         currentFilters.search = document.getElementById('searchInput').value;
@@ -47,18 +46,17 @@ async function loadProjects() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-dim);">Loading…</td></tr>';
 
     try {
-        const endpoint = currentView === 'assigned'
-            ? `${_B}/api/v1/projects/assigned`
-            : `${_B}/api/v1/projects/processed`;
-
         const params = new URLSearchParams({
             page: currentPage,
-            size: 20,
-            sales_rep_id: userId,
-            ...currentFilters
+            size: 50,
+            type: currentView,  // 'priority' or 'non-priority'
         });
 
-        const res = await fetch(`${endpoint}?${params}`, { credentials: 'include' });
+        if (currentFilters.search)  params.set('search', currentFilters.search);
+        if (currentFilters.region)  params.set('region', currentFilters.region);
+        if (currentFilters.status)  params.set('status', currentFilters.status);
+
+        const res = await fetch(`${_B}/api/v1/projects?${params}`, { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to load projects');
 
         const data = await res.json();
@@ -76,7 +74,7 @@ async function loadProjects() {
             }, 0);
         }
 
-        renderPagination(data.total, data.size);
+        renderPagination(data.total, data.size || 50);
 
     } catch (err) {
         console.error('Error loading projects:', err);
@@ -91,9 +89,14 @@ function getTableRow(p) {
         : new Date(p.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
     const value = (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
-    const lastContact = p.last_contact_date
-        ? new Date(p.last_contact_date).toLocaleDateString('en-PH', { month: 'short', day: 'numeric' })
-        : '—';
+
+    // Sales tracking status badge
+    const trackingStatus = p.sales_tracking_status || (p.sales_tracking?.tracking_status) || 'Not Started';
+    const trackingClass = {
+        'Complete':    'tracking-complete',
+        'In Progress': 'tracking-in-progress',
+        'Not Started': 'tracking-not-started',
+    }[trackingStatus] || 'tracking-not-started';
 
     return `<tr data-project="${encodeURIComponent(JSON.stringify(p))}" style="cursor:pointer">
         <td>${date}</td>
@@ -102,7 +105,7 @@ function getTableRow(p) {
         <td>${escapeHtml(p.region || '—')}</td>
         <td style="text-align:right;">₱${value}</td>
         <td><span class="status-badge status-${statusClass}">${escapeHtml(p.status || '—')}</span></td>
-        <td>${lastContact}</td>
+        <td><span class="tracking-badge ${trackingClass}">${escapeHtml(trackingStatus)}</span></td>
     </tr>`;
 }
 
@@ -539,31 +542,9 @@ async function saveSalesTrackingSR() {
     }
 }
 
-// ── Load Counts ───────────────────────────────────────────────────────────────
+// ── Load Counts — kept for backward compat but no longer used on this page ───
 async function loadCounts() {
-    try {
-        const assignedRes = await fetch(
-            `${_B}/api/v1/projects/assigned?page=1&size=1&sales_rep_id=${userId}`,
-            { credentials: 'include' }
-        );
-        if (assignedRes.ok) {
-            const data = await assignedRes.json();
-            const el = document.getElementById('assigned-count');
-            if (el) el.textContent = data.total || 0;
-        }
-
-        const processedRes = await fetch(
-            `${_B}/api/v1/projects/processed?page=1&size=1&sales_rep_id=${userId}`,
-            { credentials: 'include' }
-        );
-        if (processedRes.ok) {
-            const data = await processedRes.json();
-            const el = document.getElementById('processed-count');
-            if (el) el.textContent = data.total || 0;
-        }
-    } catch (err) {
-        console.error('Error loading counts:', err);
-    }
+    // Stats cards removed; this is a no-op
 }
 
 // ── Pagination ────────────────────────────────────────────────────────────────

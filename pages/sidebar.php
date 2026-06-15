@@ -141,11 +141,11 @@ try {
                     <span class="ap-nav-arrow">▼</span>
                 </button>
                 <div class="ap-nav-dropdown-menu">
-                    <a href="<?= $base ?>/my-projects?view=assigned" class="ap-nav-dropdown-item">
-                        <span class="ap-nav-label">Assigned to Me</span>
+                    <a href="<?= $base ?>/my-projects?view=non-priority" class="ap-nav-dropdown-item">
+                        <span class="ap-nav-label">Non-Priority Projects</span>
                     </a>
-                    <a href="<?= $base ?>/my-projects?view=processed" class="ap-nav-dropdown-item">
-                        <span class="ap-nav-label">My Processed</span>
+                    <a href="<?= $base ?>/my-projects?view=priority" class="ap-nav-dropdown-item">
+                        <span class="ap-nav-label">Priority Projects</span>
                     </a>
                 </div>
             </div>
@@ -508,12 +508,10 @@ function updatePageTitle() {
             pageTitle.textContent = 'Project Management';
         }
     } else if (path.includes('/my-projects')) {
-        if (search.includes('view=assigned')) {
-            pageTitle.textContent = 'My Assigned Projects';
-        } else if (search.includes('view=processed')) {
-            pageTitle.textContent = 'My Processed Projects';
+        if (search.includes('view=priority')) {
+            pageTitle.textContent = 'Priority Projects';
         } else {
-            pageTitle.textContent = 'My Projects';
+            pageTitle.textContent = 'Non-Priority Projects';
         }
     } else if (path.includes('/encode/non-priority')) {
         pageTitle.textContent = 'Encode Non-Priority Project';

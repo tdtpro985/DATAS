@@ -28,14 +28,16 @@ if ($role !== 'sales_rep') {
     exit;
 }
 
-$currentView = $_GET['view'] ?? 'assigned';
+$currentView = $_GET['view'] ?? 'non-priority';
+$pageTitle = $currentView === 'priority' ? 'Priority Projects' : 'Non-Priority Projects';
+$pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Projects | TDT Powersteel SILEP</title>
+    <title><?= $pageTitle ?> | TDT Powersteel SILEP</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
     
     <!-- Google Fonts -->
@@ -485,10 +487,56 @@ $currentView = $_GET['view'] ?? 'assigned';
             resize: vertical;
             min-height: 80px;
         }
+
+        /* ── Tracking Status Badges ── */
+        .tracking-badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .tracking-not-started {
+            background: rgba(156,163,175,0.12);
+            color: #9ca3af;
+            border: 1px solid rgba(156,163,175,0.2);
+        }
+        .tracking-in-progress {
+            background: rgba(245,158,11,0.12);
+            color: #f59e0b;
+            border: 1px solid rgba(245,158,11,0.25);
+        }
+        .tracking-complete {
+            background: rgba(34,197,94,0.12);
+            color: #22c55e;
+            border: 1px solid rgba(34,197,94,0.25);
+        }
+
+        /* ── Yes/No active green/red ── */
+        .yes-no-btn.active.yes {
+            background: rgba(16,185,129,0.9) !important;
+            border-color: rgba(16,185,129,1) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(16,185,129,0.4);
+        }
+        .yes-no-btn.active.no {
+            background: rgba(239,68,68,0.9) !important;
+            border-color: rgba(239,68,68,1) !important;
+            color: #fff !important;
+            box-shadow: 0 2px 8px rgba(239,68,68,0.4);
+        }
+        .yes-no-btn.disabled {
+            opacity: 0.4;
+            cursor: not-allowed !important;
+            pointer-events: none;
+        }
     </style>
 </head>
 
-<body data-role="<?= $role ?>">
+<body data-role="<?= $role ?>" data-user-id="<?= (int)$userId ?>">
 
 <?php include __DIR__ . '/sidebar.php'; ?>
 
@@ -496,35 +544,25 @@ $currentView = $_GET['view'] ?? 'assigned';
     <div class="card animate-fadeInUp" style="max-width: 100%; margin: 0 auto;">
         <div style="margin-bottom: var(--sp-5);">
             <h2 style="font-size: var(--text-2xl); font-weight: 800; margin: 0; color: var(--text-primary);">
-                <span style="margin-right: 0.5rem;">💼</span>My Projects
+                <span style="margin-right: 0.5rem;"><?= $pageIcon ?></span><?= $pageTitle ?>
             </h2>
             <p style="margin: 0.5rem 0 0; color: var(--text-secondary); font-size: var(--text-sm);">
-                <?php
-                $viewTitles = [
-                    'assigned' => 'Projects assigned to you',
-                    'processed' => 'Projects with your sales tracking'
-                ];
-                echo $viewTitles[$currentView] ?? 'Projects assigned to you and your sales tracking';
-                ?>
+                <?= $currentView === 'priority' ? 'Priority projects for your sales tracking' : 'Non-priority projects for your sales tracking' ?>
             </p>
         </div>
 
-        <!-- Stats Summary -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-            <div class="pm-stat-card">
-                <div class="pm-stat-icon">📋</div>
-                <div class="pm-stat-content">
-                    <div class="pm-stat-label">Assigned to Me</div>
-                    <div class="pm-stat-value" id="assigned-count">—</div>
-                </div>
-            </div>
-            <div class="pm-stat-card">
-                <div class="pm-stat-icon">✅</div>
-                <div class="pm-stat-content">
-                    <div class="pm-stat-label">My Processed</div>
-                    <div class="pm-stat-value" id="processed-count">—</div>
-                </div>
-            </div>
+        <!-- View Tabs -->
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0;">
+            <a href="?view=non-priority"
+               style="padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: 0.5rem 0.5rem 0 0; transition: all 0.2s;
+                      <?= $currentView !== 'priority' ? 'color: var(--orange-500); border-bottom: 2px solid var(--orange-500); background: rgba(255,128,0,0.08);' : 'color: var(--text-secondary); border-bottom: 2px solid transparent;' ?>">
+                📋 Non-Priority
+            </a>
+            <a href="?view=priority"
+               style="padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: 0.5rem 0.5rem 0 0; transition: all 0.2s;
+                      <?= $currentView === 'priority' ? 'color: var(--orange-500); border-bottom: 2px solid var(--orange-500); background: rgba(255,128,0,0.08);' : 'color: var(--text-secondary); border-bottom: 2px solid transparent;' ?>">
+                ⭐ Priority
+            </a>
         </div>
 
         <!-- Filters -->
@@ -568,7 +606,7 @@ $currentView = $_GET['view'] ?? 'assigned';
                             <th>Region</th>
                             <th>Value (₱)</th>
                             <th>Status</th>
-                            <th>Last Contact</th>
+                            <th>Sales Tracking</th>
                         </tr>
                     </thead>
                     <tbody id="pm-table-body">
@@ -605,7 +643,7 @@ const CURRENT_USER_ID = <?= $userId ?>;
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script src="<?= $base ?>/static/js/my-projects.js?v=6"></script>
+<script src="<?= $base ?>/static/js/my-projects.js?v=7"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
