@@ -2519,6 +2519,20 @@ async function loadSalesRepsPM() {
                 branchInput.value = selectedOption.dataset.branch || '';
             }
         });
+
+        // Auto-select current logged-in user if they are in the list (default for admin role)
+        // Prefer body data-user-id (set server-side) over localStorage for reliability
+        const bodyUserId = parseInt(document.body.dataset.userId || '0');
+        const cachedUser = typeof Auth !== 'undefined' ? Auth.getUser() : null;
+        const currentUserId = bodyUserId || (cachedUser ? parseInt(cachedUser.id) : 0);
+        if (currentUserId) {
+            const matchingOption = Array.from(select.options).find(o => parseInt(o.value) === currentUserId);
+            if (matchingOption) {
+                select.value = matchingOption.value;
+                // Dispatch change to trigger branch auto-fill
+                select.dispatchEvent(new Event('change'));
+            }
+        }
     } catch (error) {
         console.error('Load sales reps error:', error);
     }
