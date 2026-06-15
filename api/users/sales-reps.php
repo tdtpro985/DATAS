@@ -140,7 +140,7 @@ function handleGet($pdo) {
             ) as total_projects_count
         FROM users u
         WHERE u.role IN ('sales_rep', 'admin')
-        ORDER BY u.created_at DESC
+        ORDER BY u.full_name ASC
     ");
     
     $stmt->execute();
