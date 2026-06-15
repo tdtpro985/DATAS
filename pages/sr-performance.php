@@ -300,8 +300,8 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
             background: var(--bg-card);
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: var(--radius-lg);
-            width: 92%;
-            max-width: 680px;
+            width: 95%;
+            max-width: 1100px;
             max-height: 88vh;
             overflow-y: auto;
             padding: 2rem;
@@ -628,7 +628,7 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                 <span>📋 Per-Project Timestamps</span>
                 <span id="mProjectsLoading" style="font-size:0.72rem;color:var(--text-muted);">Loading…</span>
             </div>
-            <div id="mProjectsTable" style="overflow-x:auto; margin-top:0.5rem;"></div>
+            <div id="mProjectsTable" style="overflow-x:auto; overflow-y:auto; max-height:300px; margin-top:0.5rem; border-radius:6px;"></div>
         </div>
     </div>
 </div>

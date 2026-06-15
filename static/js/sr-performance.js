@@ -27,7 +27,7 @@ function fmtDays(n) {
 }
 function speedBadge(days) {
     if (days === null || days === undefined) return '<span style="color:var(--text-muted);font-size:0.75rem;">No data</span>';
-    const cls = days <= 7 ? 'badge-success' : days <= 30 ? 'badge-warning' : 'badge-danger';
+    const cls = days <= 1 ? 'badge-success' : days <= 7 ? 'badge-warning' : 'badge-danger';
     return `<span class="badge ${cls}">${fmtDays(days)}</span>`;
 }
 function rankBadge(r) {
@@ -134,7 +134,7 @@ function renderTable() {
         const wW = Math.round((rep.win_count       / base) * 100);
 
         const timingCells = State.hasTimingData ? `
-            <td class="num-cell col-timing">${speedBadge(rep.avg_days_full_cycle)}</td>
+            <td class="num-cell col-timing">${speedBadge(rep.avg_days_full_cycle ?? rep.avg_days_processing)}</td>
         ` : '';
 
         const tr = document.createElement('tr');

@@ -104,6 +104,9 @@ try {
             COALESCE(SUM(p.project_value), 0) AS total_pipeline_value,
             COALESCE(SUM(CASE WHEN LOWER(st.to_win) = 'yes' AND COALESCE(st.wa_amount,0) > 0 THEN st.wa_amount END), 0) AS total_win_amount,
             MAX(st.updated_at) AS last_activity,
+            AVG(CASE WHEN st.assigned_at IS NOT NULL
+                     THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.updated_at) / 24.0
+                END) AS avg_days_processing,
             $timingSelect
         FROM users u
         INNER JOIN sales_tracking st ON u.id = st.sales_rep_id
@@ -168,6 +171,7 @@ try {
             'avg_days_sql_to_quote'  => $r['avg_days_sql_to_quote']   !== null ? round((float)$r['avg_days_sql_to_quote'],  1) : null,
             'avg_days_quote_to_win'  => $r['avg_days_quote_to_win']   !== null ? round((float)$r['avg_days_quote_to_win'],  1) : null,
             'avg_days_full_cycle'    => $avgFull,
+            'avg_days_processing'    => $r['avg_days_processing'] !== null ? round((float)$r['avg_days_processing'], 1) : null,
             'completed_cycles'       => (int) $r['completed_cycles'],
 
             // Conversion rates
@@ -184,12 +188,12 @@ try {
 
     // ── Sort: fastest full cycle first (nulls last), then most wins ──
     usort($reps, function ($a, $b) {
-        if ($a['avg_days_full_cycle'] === null && $b['avg_days_full_cycle'] === null) {
-            return $b['win_count'] - $a['win_count'];
-        }
-        if ($a['avg_days_full_cycle'] === null) return 1;
-        if ($b['avg_days_full_cycle'] === null) return -1;
-        $diff = $a['avg_days_full_cycle'] - $b['avg_days_full_cycle'];
+        $aVal = $a['avg_days_full_cycle'] ?? $a['avg_days_processing'];
+        $bVal = $b['avg_days_full_cycle'] ?? $b['avg_days_processing'];
+        if ($aVal === null && $bVal === null) return $b['win_count'] - $a['win_count'];
+        if ($aVal === null) return 1;
+        if ($bVal === null) return -1;
+        $diff = $aVal - $bVal;
         if (abs($diff) < 0.01) return $b['win_count'] - $a['win_count'];
         return $diff < 0 ? -1 : 1;
     });
