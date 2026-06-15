@@ -21,6 +21,7 @@ function fmtMoney(n) {
 function fmtPct(n) { return (n || 0).toFixed(1) + '%'; }
 function fmtDays(n) {
     if (n === null || n === undefined) return '—';
+    if (n === 0) return '< 1h';
     if (n < 1) return Math.round(n * 24) + 'h';
     return n.toFixed(1) + 'd';
 }
