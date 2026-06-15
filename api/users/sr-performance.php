@@ -11,12 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 try {
     $db = getDB();
 
+    // ── Check if timestamp columns exist ──────────────────
+    $hasTs = (bool)$db->query("SHOW COLUMNS FROM sales_tracking LIKE 'contacted_at'")->fetch();
+
+    // ── Filters ───────────────────────────────────────────
     $params    = [];
     $dateSql   = '1=1';
-
-    $dateFrom = isset($_GET['date_from']) ? trim($_GET['date_from']) : '';
-    $dateTo   = isset($_GET['date_to'])   ? trim($_GET['date_to'])   : '';
-
+    $dateFrom  = trim($_GET['date_from'] ?? '');
+    $dateTo    = trim($_GET['date_to']   ?? '');
     if ($dateFrom && $dateTo) {
         $dateSql = 'p.publication_date BETWEEN :date_from AND :date_to';
         $params[':date_from'] = $dateFrom;
@@ -43,13 +45,46 @@ try {
         $params[':sr_id'] = $srId;
     }
 
-    // Branch filter
-    $branch    = isset($_GET['branch']) ? trim($_GET['branch']) : '';
+    $branch    = trim($_GET['branch'] ?? '');
     $branchSql = '';
     if ($branch !== '') {
         $branchSql = ' AND u.branch = :branch';
         $params[':branch'] = $branch;
     }
+
+    // ── Timing columns (only when migration has been run) ─
+    $timingSelect = $hasTs ? "
+        /* Average days per stage (only completed transitions) */
+        AVG(CASE WHEN st.contacted_at IS NOT NULL AND st.assigned_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.contacted_at) / 24.0
+            END) AS avg_days_to_contact,
+
+        AVG(CASE WHEN st.sales_qualified_at IS NOT NULL AND st.contacted_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.contacted_at, st.sales_qualified_at) / 24.0
+            END) AS avg_days_contact_to_sql,
+
+        AVG(CASE WHEN st.quoted_at IS NOT NULL AND st.sales_qualified_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.sales_qualified_at, st.quoted_at) / 24.0
+            END) AS avg_days_sql_to_quote,
+
+        AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.quoted_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.to_win_at) / 24.0
+            END) AS avg_days_quote_to_win,
+
+        /* Full cycle: assigned → win */
+        AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.to_win_at) / 24.0
+            END) AS avg_days_full_cycle,
+
+        COUNT(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL THEN 1 END) AS completed_cycles
+    " : "
+        NULL AS avg_days_to_contact,
+        NULL AS avg_days_contact_to_sql,
+        NULL AS avg_days_sql_to_quote,
+        NULL AS avg_days_quote_to_win,
+        NULL AS avg_days_full_cycle,
+        0    AS completed_cycles
+    ";
 
     $sql = "
         SELECT
@@ -68,7 +103,8 @@ try {
             SUM(CASE WHEN st.tracking_status = 'Complete'     THEN 1 ELSE 0 END) AS complete_count,
             COALESCE(SUM(p.project_value), 0) AS total_pipeline_value,
             COALESCE(SUM(CASE WHEN LOWER(st.to_win) = 'yes' AND COALESCE(st.wa_amount,0) > 0 THEN st.wa_amount END), 0) AS total_win_amount,
-            MAX(st.updated_at) AS last_activity
+            MAX(st.updated_at) AS last_activity,
+            $timingSelect
         FROM users u
         INNER JOIN sales_tracking st ON u.id = st.sales_rep_id
         INNER JOIN projects p        ON st.project_id = p.id
@@ -79,7 +115,6 @@ try {
           $srSql
           $branchSql
         GROUP BY u.id, u.full_name, u.email, u.branch
-        ORDER BY win_count DESC, total_win_amount DESC, contacted_count DESC
     ";
 
     $stmt = $db->prepare($sql);
@@ -89,6 +124,7 @@ try {
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // Filter out reps with zero activity
     $rows = array_filter($rows, function ($r) {
         return (int)$r['contacted_count']   > 0
             || (int)$r['sql_yes_count']     > 0
@@ -105,6 +141,8 @@ try {
         $sqlYes    = (int) $r['sql_yes_count'];
         $quoted    = (int) $r['quoted_count'];
         $win       = (int) $r['win_count'];
+
+        $avgFull = $r['avg_days_full_cycle'] !== null ? round((float)$r['avg_days_full_cycle'], 1) : null;
 
         return [
             'id'                   => (int)   $r['id'],
@@ -123,16 +161,46 @@ try {
             'total_pipeline_value' => (float) $r['total_pipeline_value'],
             'total_win_amount'     => (float) $r['total_win_amount'],
             'last_activity'        => $r['last_activity'],
+
+            // Timing (null if migration not yet run)
+            'avg_days_to_contact'    => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
+            'avg_days_contact_to_sql'=> $r['avg_days_contact_to_sql'] !== null ? round((float)$r['avg_days_contact_to_sql'],1) : null,
+            'avg_days_sql_to_quote'  => $r['avg_days_sql_to_quote']   !== null ? round((float)$r['avg_days_sql_to_quote'],  1) : null,
+            'avg_days_quote_to_win'  => $r['avg_days_quote_to_win']   !== null ? round((float)$r['avg_days_quote_to_win'],  1) : null,
+            'avg_days_full_cycle'    => $avgFull,
+            'completed_cycles'       => (int) $r['completed_cycles'],
+
+            // Conversion rates
             'contact_rate'  => $assigned  > 0 ? round($contacted / $assigned  * 100, 1) : 0,
             'sql_rate'      => $contacted > 0 ? round($sqlYes    / $contacted * 100, 1) : 0,
             'quote_rate'    => $sqlYes    > 0 ? round($quoted    / $sqlYes    * 100, 1) : 0,
             'win_rate'      => $quoted    > 0 ? round($win       / $quoted    * 100, 1) : 0,
+
+            // Speed score: lower avg_days_full_cycle = faster = better
+            // Null (no completed cycles) ranks last
+            'speed_score'   => $avgFull !== null ? $avgFull : PHP_FLOAT_MAX,
         ];
     }, $rows));
 
+    // ── Sort: fastest full cycle first (nulls last), then most wins ──
+    usort($reps, function ($a, $b) {
+        if ($a['avg_days_full_cycle'] === null && $b['avg_days_full_cycle'] === null) {
+            return $b['win_count'] - $a['win_count'];
+        }
+        if ($a['avg_days_full_cycle'] === null) return 1;
+        if ($b['avg_days_full_cycle'] === null) return -1;
+        $diff = $a['avg_days_full_cycle'] - $b['avg_days_full_cycle'];
+        if (abs($diff) < 0.01) return $b['win_count'] - $a['win_count'];
+        return $diff < 0 ? -1 : 1;
+    });
+
+    // Remove internal speed_score before sending
+    foreach ($reps as &$rep) { unset($rep['speed_score']); }
+
     // Unique branches for filter dropdown
-    $branchesStmt = $db->query("SELECT DISTINCT branch FROM users WHERE role = 'sales_rep' AND branch IS NOT NULL ORDER BY branch");
-    $branches = $branchesStmt->fetchAll(PDO::FETCH_COLUMN);
+    $branches = $db->query(
+        "SELECT DISTINCT branch FROM users WHERE role = 'sales_rep' AND branch IS NOT NULL ORDER BY branch"
+    )->fetchAll(PDO::FETCH_COLUMN);
 
     $summary = [
         'total_reps'           => count($reps),
@@ -143,6 +211,7 @@ try {
         'total_wins'           => array_sum(array_column($reps, 'win_count')),
         'total_pipeline_value' => array_sum(array_column($reps, 'total_pipeline_value')),
         'total_win_amount'     => array_sum(array_column($reps, 'total_win_amount')),
+        'has_timing_data'      => $hasTs,
     ];
 
     jsonResponse([

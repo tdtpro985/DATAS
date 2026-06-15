@@ -474,6 +474,17 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
         <span style="margin-left:auto; font-size:0.7rem; color:var(--text-muted);">Click a row to view full details</span>
     </div>
 
+    <!-- Migration notice -->
+    <div id="timingNotice" style="
+        display:none; align-items:center; gap:0.75rem;
+        background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25);
+        border-radius:var(--radius-md); padding:0.75rem 1rem; margin-bottom:var(--sp-4);
+        font-size:0.8rem; color:#fcd34d;
+    ">
+        <span>⏱</span>
+        <span>Speed ranking requires the timing migration. Run <strong>migrate-tracking-timestamps.php</strong> on the server once to enable it. Until then, ranking is by wins.</span>
+    </div>
+
     <!-- Table -->
     <div class="sr-table-wrap">
         <table class="sr-table">
@@ -483,15 +494,22 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                     <th data-sort="full_name">Sales Rep</th>
                     <th data-sort="total_assigned" class="num-cell">Assigned</th>
                     <th>Funnel Breakdown</th>
-                    <th data-sort="win_rate" class="num-cell">Win Rate</th>
-                    <th data-sort="total_win_amount" class="num-cell">Win Amount</th>
+                    <!-- Timing columns (hidden until migration runs) -->
+                    <th data-sort="avg_days_to_contact"     class="num-cell col-timing" title="Avg days from assignment to first contact">Assign→Contact</th>
+                    <th data-sort="avg_days_contact_to_sql" class="num-cell col-timing" title="Avg days from contact to SQL">Contact→SQL</th>
+                    <th data-sort="avg_days_sql_to_quote"   class="num-cell col-timing" title="Avg days from SQL to quote">SQL→Quote</th>
+                    <th data-sort="avg_days_quote_to_win"   class="num-cell col-timing" title="Avg days from quote to win">Quote→Win</th>
+                    <th data-sort="avg_days_full_cycle"     class="num-cell col-timing sort-asc" title="Avg full cycle (lower = faster = better rank)">⚡ Full Cycle</th>
+                    <!-- Standard columns -->
+                    <th data-sort="win_rate"             class="num-cell">Win Rate</th>
+                    <th data-sort="total_win_amount"     class="num-cell">Win Amount</th>
                     <th data-sort="total_pipeline_value" class="num-cell">Pipeline</th>
                     <th>Tracking Status</th>
                 </tr>
             </thead>
             <tbody id="srTableBody">
                 <tr id="loadingRow">
-                    <td colspan="8"><span class="spinner"></span> Loading performance data…</td>
+                    <td colspan="13"><span class="spinner"></span> Loading performance data…</td>
                 </tr>
             </tbody>
         </table>
@@ -571,6 +589,34 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                 </div>
             </div>
         </div>
+
+        <!-- Speed / Timing -->
+        <div class="modal-section" id="mTimingSection" style="display:none;">
+            <div class="modal-section-title">⚡ Speed Metrics (avg days per stage)</div>
+            <div class="modal-stat-grid" style="grid-template-columns: repeat(2,1fr);">
+                <div class="modal-stat" style="grid-column:1/-1; background:rgba(255,128,0,0.07); border-color:rgba(255,128,0,0.2);">
+                    <div class="modal-stat-label">Full Cycle (Assign → Win)</div>
+                    <div class="modal-stat-val c-orange" id="mFullCycle">—</div>
+                    <div style="font-size:0.7rem;color:var(--text-muted);margin-top:0.2rem;">based on <span id="mCycles">0</span> completed cycles</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Assign → Contact</div>
+                    <div class="modal-stat-val c-blue" id="mToContact">—</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Contact → SQL</div>
+                    <div class="modal-stat-val c-green" id="mToSql">—</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">SQL → Quote</div>
+                    <div class="modal-stat-val c-yellow" id="mToQuote">—</div>
+                </div>
+                <div class="modal-stat">
+                    <div class="modal-stat-label">Quote → Win</div>
+                    <div class="modal-stat-val c-purple" id="mToWin">—</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -580,6 +626,6 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=3"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sr-performance.js?v=2"></script>
+<script src="<?= $base ?>/static/js/sr-performance.js?v=3"></script>
 </body>
 </html>

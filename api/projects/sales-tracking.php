@@ -175,14 +175,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $existingStmt = $db->prepare('SELECT * FROM sales_tracking WHERE project_id = :project_id LIMIT 1');
     $existingStmt->execute([':project_id' => $projectId]);
     $existing = $existingStmt->fetch(PDO::FETCH_ASSOC);
-    
+
+    // ── Compute which stage timestamps to set (only stamp the FIRST time) ──
+    // Check if the new columns exist (graceful degradation)
+    $hasTimestampCols = false;
+    try {
+        $colCheck = $db->query("SHOW COLUMNS FROM sales_tracking LIKE 'contacted_at'")->fetch();
+        $hasTimestampCols = (bool)$colCheck;
+    } catch (Exception $e) {}
+
+    $now = date('Y-m-d H:i:s');
+    $contactedAt       = null;
+    $salesQualifiedAt  = null;
+    $quotedAt          = null;
+    $toWinAt           = null;
+    $assignedAt        = null;
+
+    if ($hasTimestampCols && $existing) {
+        // Stamp only when transitioning from null/No → Yes for the first time
+        $contactedAt      = ($contacted === 'Yes'    && empty($existing['contacted_at']))      ? $now : ($existing['contacted_at']      ?? null);
+        $salesQualifiedAt = ($salesQualified !== null && empty($existing['sales_qualified_at'])) ? $now : ($existing['sales_qualified_at'] ?? null);
+        $quotedAt         = ($quoted === 'Yes'        && empty($existing['quoted_at']))          ? $now : ($existing['quoted_at']          ?? null);
+        $toWinAt          = ($toWin === 'Yes' && $waAmount > 0 && empty($existing['to_win_at'])) ? $now : ($existing['to_win_at']          ?? null);
+        $assignedAt       = $existing['assigned_at'] ?? $existing['created_at'] ?? $now;
+    } elseif ($hasTimestampCols && !$existing) {
+        $assignedAt       = $now;
+        $contactedAt      = ($contacted === 'Yes')    ? $now : null;
+        $salesQualifiedAt = ($salesQualified !== null) ? $now : null;
+        $quotedAt         = ($quoted === 'Yes')        ? $now : null;
+        $toWinAt          = ($toWin === 'Yes' && $waAmount > 0) ? $now : null;
+    }
+
     if ($existing) {
         // Update existing record
         // For updates, if no sales_rep_id is provided, keep the existing one or use current user
         if (!$salesRepId) {
             $salesRepId = $existing['sales_rep_id'] ?? $user['id'];
         }
-        
+
+        $timestampSql = $hasTimestampCols ? "
+                assigned_at        = :assigned_at,
+                contacted_at       = :contacted_at,
+                sales_qualified_at = :sales_qualified_at,
+                quoted_at          = :quoted_at,
+                to_win_at          = :to_win_at," : '';
+
         $updateStmt = $db->prepare("
             UPDATE sales_tracking SET
                 contacted = :contacted,
@@ -194,6 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 branch = :branch,
                 notes = :remarks,
                 tracking_status = :tracking_status,
+                $timestampSql
                 updated_by = :updated_by,
                 updated_at = NOW()
             WHERE project_id = :project_id
@@ -211,38 +249,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':tracking_status' => $trackingStatus,
             ':updated_by' => $user['id'],
             ':project_id' => $projectId
-        ]);
+        ] + ($hasTimestampCols ? [
+            ':assigned_at'        => $assignedAt,
+            ':contacted_at'       => $contactedAt,
+            ':sales_qualified_at' => $salesQualifiedAt,
+            ':quoted_at'          => $quotedAt,
+            ':to_win_at'          => $toWinAt,
+        ] : []));
         
     } else {
         // Create new record
-        // For new records, we need a sales_rep_id (required field)
         if (!$salesRepId) {
-            $salesRepId = $user['id']; // Use current user as default
+            $salesRepId = $user['id'];
         }
-        
+
+        $tsColumns = $hasTimestampCols ? ", assigned_at, contacted_at, sales_qualified_at, quoted_at, to_win_at" : '';
+        $tsValues  = $hasTimestampCols ? ", :assigned_at, :contacted_at, :sales_qualified_at, :quoted_at, :to_win_at" : '';
+
         $insertStmt = $db->prepare("
             INSERT INTO sales_tracking (
-                project_id, sales_rep_id, contacted, quoted, sales_qualified, 
+                project_id, sales_rep_id, contacted, quoted, sales_qualified,
                 to_win, wa_amount, branch, notes, tracking_status, updated_by
+                $tsColumns
             ) VALUES (
                 :project_id, :sales_rep_id, :contacted, :quoted, :sales_qualified,
                 :to_win, :wa_amount, :branch, :remarks, :tracking_status, :updated_by
+                $tsValues
             )
         ");
-        
+
         $insertStmt->execute([
-            ':project_id' => $projectId,
-            ':sales_rep_id' => $salesRepId,
-            ':contacted' => $contacted,
-            ':quoted' => $quoted,
+            ':project_id'      => $projectId,
+            ':sales_rep_id'    => $salesRepId,
+            ':contacted'       => $contacted,
+            ':quoted'          => $quoted,
             ':sales_qualified' => $salesQualified,
-            ':to_win' => $toWin,
-            ':wa_amount' => $waAmount,
-            ':branch' => $branch,
-            ':remarks' => $remarks,
+            ':to_win'          => $toWin,
+            ':wa_amount'       => $waAmount,
+            ':branch'          => $branch,
+            ':remarks'         => $remarks,
             ':tracking_status' => $trackingStatus,
-            ':updated_by' => $user['id']
-        ]);
+            ':updated_by'      => $user['id'],
+        ] + ($hasTimestampCols ? [
+            ':assigned_at'        => $assignedAt,
+            ':contacted_at'       => $contactedAt,
+            ':sales_qualified_at' => $salesQualifiedAt,
+            ':quoted_at'          => $quotedAt,
+            ':to_win_at'          => $toWinAt,
+        ] : []));
     }
     
     // AUTO-ASSIGNMENT LOGIC: If project was unassigned and SR saves tracking, auto-assign to that SR
