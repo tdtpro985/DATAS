@@ -610,6 +610,7 @@ function viewProject(projectId) {
     }
 
     modal.dataset.projectId = projectId;
+    modal.dataset.assignedTo = project.assigned_to || '';
     modal.classList.add('active');
     
     // Setup sales tracking functionality (matching projects.js)
@@ -2515,9 +2516,35 @@ async function setupProjectModalSalesTracking(projectId) {
     if (userRole === 'admin' || userRole === 'superadmin') {
         await loadSalesRepsPM();
     }
+
+    // Apply role-based visibility
+    applyRoleVisibilityPM(userRole);
+
+    // Admin: hide tracking section if project is assigned
+    if (userRole === 'admin') {
+        const modal = document.getElementById('detailsModal');
+        const assignedTo = modal?.dataset?.assignedTo || '';
+        const isAssigned = assignedTo !== '' && assignedTo !== '0' && assignedTo !== 'null';
+        const trackingSection = document.querySelector('.sales-tracking-section');
+        const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
+        if (isAssigned) {
+            if (trackingSection) trackingSection.style.display = 'none';
+            if (saveBtn)        saveBtn.style.display = 'none';
+        } else {
+            if (trackingSection) trackingSection.style.display = '';
+            if (saveBtn)        saveBtn.style.display = '';
+        }
+    }
     
     // Load existing sales tracking data
     await loadSalesTrackingDataPM(projectId);
+}
+
+function applyRoleVisibilityPM(userRole) {
+    document.querySelectorAll('[data-role-access]').forEach(el => {
+        const allowed = el.dataset.roleAccess.split(',').map(r => r.trim());
+        el.style.display = allowed.includes(userRole) ? '' : 'none';
+    });
 }
 
 function setupProgressiveFieldsPM() {
@@ -2616,7 +2643,9 @@ async function loadSalesRepsPM() {
         
         select.innerHTML = '<option value="">Select SR...</option>';
         
-        const salesReps = result.data || result.users || [];
+        const salesReps = (result.data || result.users || []).slice().sort((a, b) =>
+            (a.full_name || '').localeCompare(b.full_name || '')
+        );
         
         salesReps.forEach(sr => {
             const option = document.createElement('option');

@@ -1293,15 +1293,17 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
             
             <!-- Archive/Restore Button for Admins and Superadmins -->
-            <button type="button" class="btn-delete role-only--admin role-only--superadmin" 
+            <button type="button" class="btn-delete" 
                     id="archiveBtn" 
+                    data-role-access="admin,superadmin"
                     style="display: none;">
                 🗄️ Archive Project
             </button>
             
-            <button type="button" class="btn-primary role-only--superadmin role-only--admin role-only--sales_rep" onclick="saveSalesTracking()">💾 Save Sales Tracking</button>
-            <button type="button" class="btn-primary" onclick="openAssignModal()" id="assignBtn" style="display: none;">Assign to Sales Rep</button>
-            <button type="button" class="btn-primary role-only--superadmin role-only--admin role-only--sales_rep" onclick="openTrackingModal()" id="trackingBtn" style="display: none;">Sales Tracking</button>
+            <button type="button" class="btn-primary" 
+                    onclick="saveSalesTracking()" 
+                    id="saveTrackingBtn"
+                    data-role-access="superadmin,admin,sales_rep">💾 Save Sales Tracking</button>
         </div>
     </div>
 </div>
