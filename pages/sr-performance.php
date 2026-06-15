@@ -639,6 +639,6 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=3"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sr-performance.js?v=4"></script>
+<script src="<?= $base ?>/static/js/sr-performance.js?v=5"></script>
 </body>
 </html>

@@ -29,15 +29,15 @@ try {
         st.quoted_at,
         st.to_win_at,
         CASE WHEN st.assigned_at IS NOT NULL AND st.to_win_at IS NOT NULL
-             THEN ROUND(TIMESTAMPDIFF(MINUTE, st.assigned_at, st.to_win_at) / 60.0, 2)
-        END AS full_cycle_hours
+             THEN TIMESTAMPDIFF(SECOND, st.assigned_at, st.to_win_at)
+        END AS full_cycle_seconds
     " : "
         NULL AS assigned_at,
         NULL AS contacted_at,
         NULL AS sales_qualified_at,
         NULL AS quoted_at,
         NULL AS to_win_at,
-        NULL AS full_cycle_hours
+        NULL AS full_cycle_seconds
     ";
 
     $stmt = $db->prepare("
@@ -66,42 +66,45 @@ try {
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Compute avg full cycle from completed rows (assigned → win)
-    $cycles = array_filter($rows, fn($r) => $r['full_cycle_hours'] !== null);
-    $avgFullCycleHours = count($cycles) > 0
-        ? round(array_sum(array_column($cycles, 'full_cycle_hours')) / count($cycles), 2)
+    $cycles = array_filter($rows, fn($r) => $r['full_cycle_seconds'] !== null);
+    $avgFullCycleSec = count($cycles) > 0
+        ? round(array_sum(array_column($cycles, 'full_cycle_seconds')) / count($cycles))
         : null;
 
-    // Compute per-stage averages from all rows that have both endpoints
-    function avgHoursCol(array $rows, string $fromCol, string $toCol): ?float {
+    // Compute per-stage averages in seconds
+    function avgSecondsCol(array $rows, string $fromCol, string $toCol): ?int {
         $vals = [];
         foreach ($rows as $r) {
-            if ($r[$fromCol] && $r[$toCol]) {
-                $diff = (strtotime($r[$toCol]) - strtotime($r[$fromCol])) / 3600;
+            if (!empty($r[$fromCol]) && !empty($r[$toCol])) {
+                $diff = strtotime($r[$toCol]) - strtotime($r[$fromCol]);
                 if ($diff >= 0) $vals[] = $diff;
             }
         }
-        return count($vals) > 0 ? round(array_sum($vals) / count($vals), 2) : null;
+        return count($vals) > 0 ? (int)round(array_sum($vals) / count($vals)) : null;
     }
 
-    $avgAssignToContact   = avgHoursCol($rows, 'assigned_at', 'contacted_at');
-    $avgContactToSql      = avgHoursCol($rows, 'contacted_at', 'sales_qualified_at');
-    $avgSqlToQuote        = avgHoursCol($rows, 'sales_qualified_at', 'quoted_at');
-    $avgQuoteToWin        = avgHoursCol($rows, 'quoted_at', 'to_win_at');
+    $avgAssignToContact   = avgSecondsCol($rows, 'assigned_at', 'contacted_at');
+    $avgContactToSql      = avgSecondsCol($rows, 'contacted_at', 'sales_qualified_at');
+    $avgSqlToQuote        = avgSecondsCol($rows, 'sales_qualified_at', 'quoted_at');
+    $avgQuoteToWin        = avgSecondsCol($rows, 'quoted_at', 'to_win_at');
 
-    // Fallback: avg assigned → last updated (overall processing time)
-    $avgProcessingHours = null;
+    // Fallback: avg assigned → last updated
+    $avgProcessingSec = null;
     if ($hasTs) {
         $procVals = [];
         foreach ($rows as $r) {
-            if ($r['assigned_at'] && $r['tracking_updated']) {
-                $diff = (strtotime($r['tracking_updated']) - strtotime($r['assigned_at'])) / 3600;
+            if (!empty($r['assigned_at']) && !empty($r['tracking_updated'])) {
+                $diff = strtotime($r['tracking_updated']) - strtotime($r['assigned_at']);
                 if ($diff >= 0) $procVals[] = $diff;
             }
         }
         if (count($procVals) > 0) {
-            $avgProcessingHours = round(array_sum($procVals) / count($procVals), 2);
+            $avgProcessingSec = (int)round(array_sum($procVals) / count($procVals));
         }
     }
+
+    // Total for percentage calculation (use processing as fallback for full cycle)
+    $totalSec = $avgFullCycleSec ?? $avgProcessingSec;
 
     $projects = array_map(function ($r) {
         return [
@@ -120,19 +123,20 @@ try {
             'sales_qualified_at' => $r['sales_qualified_at'],
             'quoted_at'        => $r['quoted_at'],
             'to_win_at'        => $r['to_win_at'],
-            'full_cycle_hours' => $r['full_cycle_hours'] !== null ? (float) $r['full_cycle_hours'] : null,
+            'full_cycle_seconds' => $r['full_cycle_seconds'] !== null ? (int)$r['full_cycle_seconds'] : null,
             'tracking_updated' => $r['tracking_updated'],
         ];
     }, $rows);
 
     jsonResponse([
         'projects'               => $projects,
-        'avg_full_cycle_hours'   => $avgFullCycleHours,
+        'avg_full_cycle_sec'     => $avgFullCycleSec,
         'avg_assign_to_contact'  => $avgAssignToContact,
         'avg_contact_to_sql'     => $avgContactToSql,
         'avg_sql_to_quote'       => $avgSqlToQuote,
         'avg_quote_to_win'       => $avgQuoteToWin,
-        'avg_processing_hours'   => $avgProcessingHours,
+        'avg_processing_sec'     => $avgProcessingSec,
+        'total_sec'              => $totalSec,
         'has_timing_data'        => $hasTs,
     ]);
 

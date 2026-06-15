@@ -27,8 +27,9 @@ function fmtDays(n) {
 }
 function speedBadge(days) {
     if (days === null || days === undefined) return '<span style="color:var(--text-muted);font-size:0.75rem;">No data</span>';
+    const sec = Math.round(days * 86400);
     const cls = days <= 1 ? 'badge-success' : days <= 7 ? 'badge-warning' : 'badge-danger';
-    return `<span class="badge ${cls}">${fmtDays(days)}</span>`;
+    return `<span class="badge ${cls}">${fmtSec(sec)}</span>`;
 }
 function rankBadge(r) {
     if (r === 1) return '<span class="rank-badge rank-1">🥇 1st</span>';
@@ -305,14 +306,27 @@ async function loadProjectTimestamps(srId) {
 
         // Update Speed Metrics averages with real per-project data
         if (hasTs) {
-            setText('mFullCycle',  data.avg_full_cycle_hours  !== null ? fmtHours(data.avg_full_cycle_hours)  : (data.avg_processing_hours !== null ? fmtHours(data.avg_processing_hours) + ' (est)' : '—'));
-            setText('mToContact',  data.avg_assign_to_contact !== null ? fmtHours(data.avg_assign_to_contact) : '—');
-            setText('mToSql',      data.avg_contact_to_sql    !== null ? fmtHours(data.avg_contact_to_sql)    : '—');
-            setText('mToQuote',    data.avg_sql_to_quote      !== null ? fmtHours(data.avg_sql_to_quote)      : '—');
-            setText('mToWin',      data.avg_quote_to_win      !== null ? fmtHours(data.avg_quote_to_win)      : '—');
-            const cycleCount = projects.filter(p => p.full_cycle_hours !== null).length;
+            const totalSec = data.total_sec;
+            const pct = (sec) => totalSec && sec !== null ? ' <span style="color:var(--text-muted);font-size:0.75rem;">(' + ((sec/totalSec)*100).toFixed(1) + '%)</span>' : '';
+
+            const fullCycleDisplay = data.avg_full_cycle_sec !== null
+                ? fmtSec(data.avg_full_cycle_sec)
+                : (data.avg_processing_sec !== null ? fmtSec(data.avg_processing_sec) + ' (est)' : '—');
+
+            const fcEl = document.getElementById('mFullCycle');
+            if (fcEl) fcEl.innerHTML = fullCycleDisplay;
+
+            const setWithPct = (id, sec) => {
+                const el = document.getElementById(id);
+                if (el) el.innerHTML = sec !== null ? fmtSec(sec) + pct(sec) : '—';
+            };
+            setWithPct('mToContact', data.avg_assign_to_contact);
+            setWithPct('mToSql',     data.avg_contact_to_sql);
+            setWithPct('mToQuote',   data.avg_sql_to_quote);
+            setWithPct('mToWin',     data.avg_quote_to_win);
+
+            const cycleCount = projects.filter(p => p.full_cycle_seconds !== null).length;
             setText('mCycles', cycleCount.toString());
-            // Show timing section
             const timingSection = document.getElementById('mTimingSection');
             if (timingSection) timingSection.style.display = 'block';
         }
@@ -324,7 +338,7 @@ async function loadProjectTimestamps(srId) {
 
         const yesNo = (v) => v === 'Yes' ? '<span class="ts-yes">Yes</span>' : v === 'No' ? '<span class="ts-no">No</span>' : '<span class="ts-null">—</span>';
         const ts    = (v) => v ? `<span style="font-size:0.68rem;color:var(--text-secondary);">${fmtTs(v)}</span>` : '<span class="ts-null">—</span>';
-        const dur   = (v) => v !== null && v !== undefined ? `<span class="ts-dur">${fmtHours(v)}</span>` : '<span class="ts-null">—</span>';
+        const dur = (v) => v !== null && v !== undefined ? `<span class="ts-dur">${fmtSec(v)}</span>` : '<span class="ts-null">—</span>';
         const statusBadge = (s) => {
             if (!s) return '—';
             const lower = s.toLowerCase().replace(/\s+/g, '');
@@ -379,7 +393,7 @@ async function loadProjectTimestamps(srId) {
                 <td>${ts(p.sales_qualified_at)}</td>
                 <td>${ts(p.quoted_at)}</td>
                 <td>${ts(p.to_win_at)}</td>
-                <td style="text-align:center">${dur(p.full_cycle_hours)}</td>`;
+                <td style="text-align:center">${dur(p.full_cycle_seconds)}</td>`;
             html += `</tr>`;
         });
         html += '</tbody></table>';
@@ -395,16 +409,27 @@ function fmtTs(dateStr) {
     if (!dateStr) return '—';
     const d = new Date(dateStr);
     return d.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' })
-        + ' ' + d.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', hour12:true });
+        + ' ' + d.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+}
+
+function fmtSec(sec) {
+    if (sec === null || sec === undefined) return '—';
+    if (sec === 0) return '< 1s';
+    const d = Math.floor(sec / 86400);
+    const h = Math.floor((sec % 86400) / 3600);
+    const m = Math.floor((sec % 3600) / 60);
+    const s = sec % 60;
+    const parts = [];
+    if (d > 0) parts.push(d + 'd');
+    if (h > 0) parts.push(h + 'h');
+    if (m > 0) parts.push(m + 'm');
+    if (s > 0 && d === 0) parts.push(s + 's'); // show seconds only if < 1 day
+    return parts.length ? parts.join(' ') : '< 1s';
 }
 
 function fmtHours(hours) {
     if (hours === null || hours === undefined) return '—';
-    if (hours === 0) return '< 1h';
-    if (hours < 24) return hours.toFixed(1) + 'h';
-    const days = hours / 24;
-    if (days < 1) return hours.toFixed(1) + 'h';
-    return days.toFixed(1) + 'd';
+    return fmtSec(Math.round(hours * 3600));
 }
 
 /* ── Loading / Error ── */
