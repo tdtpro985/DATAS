@@ -356,9 +356,7 @@ function setupProgressiveFieldsSR() {
             const value = e.target.dataset.value;
 
             if (!isFieldEnabledSR(field)) {
-                if (typeof showNotificationModal === 'function') {
-                    showNotificationModal('Warning', 'Please complete the previous fields first', 'warning');
-                }
+                ModalSystem.warning('Please complete the previous fields first');
                 return;
             }
 
@@ -499,9 +497,7 @@ async function saveSalesTrackingSR() {
     }
 
     if (errors.length > 0) {
-        if (typeof showNotificationModal === 'function') {
-            showNotificationModal('Validation Error', errors[0], 'warning');
-        } else { alert(errors[0]); }
+        ModalSystem.warning(errors[0]);
         return;
     }
 
@@ -530,24 +526,16 @@ async function saveSalesTrackingSR() {
         if (saveBtn) { saveBtn.innerHTML = '💾 Save Sales Tracking'; saveBtn.disabled = false; }
 
         if (response.ok) {
-            if (typeof showNotificationModal === 'function') {
-                showNotificationModal('Success', 'Sales tracking saved successfully!', 'success');
-                setTimeout(() => { closeDetailsModal(); loadProjects(); loadCounts(); }, 1500);
-            } else {
-                closeDetailsModal(); loadProjects(); loadCounts();
-            }
+            ModalSystem.success('Sales tracking saved successfully!');
+            setTimeout(() => { closeDetailsModal(); loadProjects(); loadCounts(); }, 1500);
         } else {
             const err = await response.json();
-            if (typeof showNotificationModal === 'function') {
-                showNotificationModal('Error', err.detail || err.message || 'Failed to save', 'error');
-            } else { alert(err.detail || err.message || 'Failed to save'); }
+            ModalSystem.error(err.detail || err.message || 'Failed to save');
         }
     } catch (err) {
         console.error('Save sales tracking error:', err);
         if (saveBtn) { saveBtn.innerHTML = '💾 Save Sales Tracking'; saveBtn.disabled = false; }
-        if (typeof showNotificationModal === 'function') {
-            showNotificationModal('Error', 'Failed to save tracking', 'error');
-        }
+        ModalSystem.error('Failed to save tracking');
     }
 }
 

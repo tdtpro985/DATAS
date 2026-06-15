@@ -605,7 +605,7 @@ const CURRENT_USER_ID = <?= $userId ?>;
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script src="<?= $base ?>/static/js/my-projects.js?v=5"></script>
+<script src="<?= $base ?>/static/js/my-projects.js?v=6"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
