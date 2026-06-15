@@ -1882,72 +1882,84 @@ async function proceedWithBulkUnassignment() {
 function showNotificationModal(title, message, type = 'info') {
     // Remove existing notification modal
     const existing = document.getElementById('notificationModal');
-    if (existing) {
-        existing.remove();
-    }
+    if (existing) existing.remove();
     
-    // Create modal overlay
+    const colors = {
+        success: { bg: 'rgba(16,185,129,0.1)',  border: '#10b981', text: '#10b981', icon: '✓' },
+        error:   { bg: 'rgba(239,68,68,0.1)',   border: '#ef4444', text: '#ef4444', icon: '✕' },
+        warning: { bg: 'rgba(245,158,11,0.1)',  border: '#f59e0b', text: '#f59e0b', icon: '⚠' },
+        info:    { bg: 'rgba(59,130,246,0.1)',  border: '#3b82f6', text: '#3b82f6', icon: 'ℹ' }
+    };
+    const color = colors[type] || colors.info;
+
     const modal = document.createElement('div');
     modal.id = 'notificationModal';
-    modal.className = 'modal-overlay';
+    // Use a unique class — NOT modal-overlay — to avoid CSS display:none conflicts
+    modal.className = 'pm-notification-overlay';
     modal.style.cssText = `
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.7);
         backdrop-filter: blur(4px);
-        z-index: 10000;
+        z-index: 99999;
+        display: flex;
         align-items: center;
         justify-content: center;
         animation: fadeIn 0.2s ease;
     `;
-    
-    // Define colors based on type
-    const colors = {
-        success: { bg: 'rgba(16, 185, 129, 0.1)', border: '#10b981', text: '#10b981', icon: '✓' },
-        error: { bg: 'rgba(239, 68, 68, 0.1)', border: '#ef4444', text: '#ef4444', icon: '✕' },
-        warning: { bg: 'rgba(245, 158, 11, 0.1)', border: '#f59e0b', text: '#f59e0b', icon: '⚠' },
-        info: { bg: 'rgba(59, 130, 246, 0.1)', border: '#3b82f6', text: '#3b82f6', icon: 'ℹ' }
-    };
-    
-    const color = colors[type] || colors.info;
-    
-    // Create modal content
+
     modal.innerHTML = `
         <div style="
-            background: var(--bg-card, #1e293b);
+            background: #1e293b;
             border: 2px solid ${color.border};
             border-radius: 1rem;
-            max-width: 500px;
-            width: 90%;
+            max-width: 500px; width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             animation: slideInUp 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
         ">
             <div style="
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                padding: 2rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex; align-items: center; gap: 1rem;
+                padding: 1.75rem 2rem;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
                 background: ${color.bg};
             ">
                 <div style="
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
+                    width: 44px; height: 44px; border-radius: 50%;
                     background: ${color.border};
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    flex-shrink: 0;
-                ">
-                    ${color.icon}
+                    display: flex; align-items: center; justify-content: center;
+                    color: #fff; font-size: 1.4rem; font-weight: 700; flex-shrink: 0;
+                ">${color.icon}</div>
+                <div style="flex:1;">
+                    <h3 style="margin:0 0 0.35rem; color:${color.text}; font-size:1.1rem; font-weight:700;">${title}</h3>
+                    <p style="margin:0; color:#fff; font-size:0.95rem; line-height:1.5;">${message}</p>
+                </div>
+            </div>
+            <div style="display:flex; justify-content:flex-end; padding:1.25rem 2rem; gap:0.75rem;">
+                <button id="notifOkBtn" style="
+                    background:${color.border}; color:#fff; border:none;
+                    padding:0.65rem 2rem; border-radius:0.5rem;
+                    font-size:0.95rem; font-weight:600; cursor:pointer;
+                ">OK</button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Close on OK
+    modal.querySelector('#notifOkBtn').addEventListener('click', (e) => {
+        e.stopPropagation();
+        closeNotificationModal();
+    });
+
+    // Close on backdrop click (but NOT on content click)
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeNotificationModal();
+    });
+
+    // Focus OK button
+    setTimeout(() => modal.querySelector('#notifOkBtn')?.focus(), 50);
+}
                 </div>
                 <div style="flex: 1;">
                     <h2 style="
@@ -1975,22 +1987,6 @@ function showNotificationModal(title, message, type = 'info') {
                 gap: 1rem;
             ">
                 <button onclick="closeNotificationModal()" style="
-                    background: ${color.border};
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 2rem;
-                    border-radius: 0.5rem;
-                    font-size: 0.95rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                ">
-                    OK
-                </button>
-            </div>
-        </div>
-    `;
-    
     document.body.appendChild(modal);
     
     // Auto-focus the OK button
@@ -2016,161 +2012,74 @@ function showConfirmationModal(title, message, onConfirm, onCancel = null) {
         display: flex;
         position: fixed;
         top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.7);
+// Show confirmation modal (replaces confirm)
+function showConfirmationModal(title, message, onConfirm, onCancel = null) {
+    const existing = document.getElementById('confirmationModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'confirmationModal';
+    modal.className = 'pm-notification-overlay';
+    modal.style.cssText = `
+        position: fixed; inset: 0;
+        background: rgba(0,0,0,0.7);
         backdrop-filter: blur(4px);
-        z-index: 10000;
+        z-index: 99999;
+        display: flex;
         align-items: center;
         justify-content: center;
         animation: fadeIn 0.2s ease;
     `;
-    
-    // Create modal content
+
     modal.innerHTML = `
         <div style="
-            background: var(--bg-card, #1e293b);
+            background: #1e293b;
             border: 2px solid #3b82f6;
             border-radius: 1rem;
-            max-width: 500px;
-            width: 90%;
-            animation: slideInUp 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            max-width: 500px; width: 90%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
         ">
-            <div style="
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                padding: 2rem;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            ">
-                <div style="
-                    width: 48px;
-                    height: 48px;
-                    border-radius: 50%;
-                    background: #3b82f6;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    color: white;
-                    font-size: 1.5rem;
-                    font-weight: bold;
-                    flex-shrink: 0;
-                ">
-                    ?
-                </div>
-                <div style="flex: 1;">
-                    <h2 style="
-                        margin: 0 0 0.5rem 0;
-                        color: var(--text-primary, white);
-                        font-size: 1.25rem;
-                        font-weight: 700;
-                    ">
-                        ${title}
-                    </h2>
-                    <p style="
-                        margin: 0;
-                        color: var(--text-secondary, #9ca3af);
-                        font-size: 1rem;
-                        line-height: 1.5;
-                    ">
-                        ${message}
-                    </p>
+            <div style="display:flex; align-items:center; gap:1rem; padding:1.75rem 2rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+                <div style="width:44px; height:44px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; font-weight:700; flex-shrink:0;">?</div>
+                <div style="flex:1;">
+                    <h3 style="margin:0 0 0.35rem; color:#fff; font-size:1.1rem; font-weight:700;">${title}</h3>
+                    <p style="margin:0; color:#9ca3af; font-size:0.95rem; line-height:1.5;">${message}</p>
                 </div>
             </div>
-            <div style="
-                display: flex;
-                justify-content: flex-end;
-                padding: 1.5rem;
-                gap: 1rem;
-            ">
-                <button id="cancelConfirmBtn" style="
-                    background: rgba(107, 114, 128, 0.2);
-                    border: 1px solid rgba(107, 114, 128, 0.4);
-                    color: var(--text-primary, white);
-                    padding: 0.75rem 1.5rem;
-                    border-radius: 0.5rem;
-                    font-size: 0.95rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                ">
-                    Cancel
-                </button>
-                <button id="confirmBtn" style="
-                    background: #3b82f6;
-                    color: white;
-                    border: none;
-                    padding: 0.75rem 2rem;
-                    border-radius: 0.5rem;
-                    font-size: 0.95rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    transition: all 0.2s ease;
-                ">
-                    OK
-                </button>
+            <div style="display:flex; justify-content:flex-end; padding:1.25rem 2rem; gap:0.75rem;">
+                <button id="cancelConfirmBtn" style="background:rgba(107,114,128,0.2); border:1px solid rgba(107,114,128,0.4); color:#fff; padding:0.65rem 1.5rem; border-radius:0.5rem; font-size:0.95rem; font-weight:600; cursor:pointer;">Cancel</button>
+                <button id="confirmBtn" style="background:#3b82f6; color:#fff; border:none; padding:0.65rem 2rem; border-radius:0.5rem; font-size:0.95rem; font-weight:600; cursor:pointer;">OK</button>
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
-    // Add event listeners with proper event handling
-    const confirmBtn = modal.querySelector('#confirmBtn');
-    const cancelBtn = modal.querySelector('#cancelConfirmBtn');
-    
-    // Prevent the modal from closing immediately
-    modal.addEventListener('click', (e) => {
-        // Only close if clicking the overlay background, not the modal content
-        if (e.target === modal) {
-            console.log('[Modal] Clicked overlay - cancelling');
-            closeConfirmationModal();
-            if (onCancel) onCancel();
-        }
-    });
-    
-    confirmBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+
+    modal.querySelector('#confirmBtn').addEventListener('click', (e) => {
         e.stopPropagation();
-        console.log('[Modal] Confirm button clicked');
         closeConfirmationModal();
-        // Small delay to ensure modal closes before executing callback
-        setTimeout(() => {
-            if (onConfirm) onConfirm();
-        }, 100);
+        setTimeout(() => { if (onConfirm) onConfirm(); }, 100);
     });
-    
-    cancelBtn.addEventListener('click', (e) => {
-        e.preventDefault();
+    modal.querySelector('#cancelConfirmBtn').addEventListener('click', (e) => {
         e.stopPropagation();
-        console.log('[Modal] Cancel button clicked');
         closeConfirmationModal();
         if (onCancel) onCancel();
     });
-    
-    // Handle escape key
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) { closeConfirmationModal(); if (onCancel) onCancel(); }
+    });
+
     const handleEscape = (e) => {
         if (e.key === 'Escape') {
-            console.log('[Modal] Escape key pressed');
             closeConfirmationModal();
             if (onCancel) onCancel();
             document.removeEventListener('keydown', handleEscape);
         }
     };
-    
     document.addEventListener('keydown', handleEscape);
-    
-    // Auto-focus the confirm button after a delay
-    setTimeout(() => {
-        if (confirmBtn) {
-            confirmBtn.focus();
-            console.log('[Modal] Focused confirm button');
-        }
-    }, 300);
-    
-    console.log('[Modal] Confirmation modal created and displayed');
+
+    setTimeout(() => modal.querySelector('#confirmBtn')?.focus(), 100);
 }
 
 // Close notification modal
