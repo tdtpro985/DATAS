@@ -156,8 +156,9 @@ function viewProjectSR(projectId) {
         style: 'currency', currency: 'PHP', minimumFractionDigits: 2
     });
 
-    // Exact same HTML as Admin/Superadmin viewProject()
+    // Exact same HTML as Admin/Superadmin viewProject() — ALL encoder fields shown
     modalBody.innerHTML = `
+        <!-- ── Basic Information ── -->
         <div class="detail-section">
             <div class="detail-section-title">📋 Basic Information</div>
             <div class="detail-grid">
@@ -174,6 +175,27 @@ function viewProjectSR(projectId) {
                     <div class="detail-value">${escapeHtml(project.contractor_id || project.contract_id || '—')}</div>
                 </div>
                 <div class="detail-item">
+                    <div class="detail-label">Project ID</div>
+                    <div class="detail-value">${escapeHtml(String(project.project_id || '—'))}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="status-badge status-${(project.status || '').toLowerCase().replace(/\s+/g,'-')}">${escapeHtml(project.status || '—')}</span>
+                    </div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Project Value</div>
+                    <div class="detail-value large">${value}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Contractor Information ── -->
+        <div class="detail-section">
+            <div class="detail-section-title">🏢 Contractor Information</div>
+            <div class="detail-grid">
+                <div class="detail-item">
                     <div class="detail-label">Contractor Name</div>
                     <div class="detail-value">${escapeHtml(project.contractor_name || '—')}</div>
                 </div>
@@ -188,6 +210,7 @@ function viewProjectSR(projectId) {
             </div>
         </div>
 
+        <!-- ── Contractor Location ── -->
         <div class="detail-section">
             <div class="detail-section-title">📍 Contractor Location</div>
             <div class="detail-grid">
@@ -207,23 +230,37 @@ function viewProjectSR(projectId) {
                     <div class="detail-label">City</div>
                     <div class="detail-value">${escapeHtml(project.contract_city || '—')}</div>
                 </div>
+                <div class="detail-item">
+                    <div class="detail-label">Barangay</div>
+                    <div class="detail-value">${escapeHtml(project.contract_barangay || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Street</div>
+                    <div class="detail-value">${escapeHtml(project.contract_street || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Blk/Lot #</div>
+                    <div class="detail-value">${escapeHtml(project.contract_blk_lot || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Coordinates</div>
+                    <div class="detail-value">${escapeHtml(project.contract_coords || '—')}</div>
+                </div>
             </div>
         </div>
 
+        <!-- ── Project Details ── -->
         <div class="detail-section">
             <div class="detail-section-title">🏗️ Project Details</div>
             <div class="detail-grid">
-                <div class="detail-item">
-                    <div class="detail-label">Project ID</div>
-                    <div class="detail-value">${escapeHtml(String(project.project_id || project.id || '—'))}</div>
-                </div>
-                <div class="detail-item">
+                <div class="detail-item" style="grid-column: 1 / -1;">
                     <div class="detail-label">Project Name</div>
                     <div class="detail-value">${escapeHtml(project.project_name || '—')}</div>
                 </div>
             </div>
         </div>
 
+        <!-- ── Project Location ── -->
         <div class="detail-section">
             <div class="detail-section-title">📍 Project Location</div>
             <div class="detail-grid">
@@ -243,26 +280,100 @@ function viewProjectSR(projectId) {
                     <div class="detail-label">City</div>
                     <div class="detail-value">${escapeHtml(project.project_city || '—')}</div>
                 </div>
+                <div class="detail-item">
+                    <div class="detail-label">Barangay</div>
+                    <div class="detail-value">${escapeHtml(project.project_barangay || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Street</div>
+                    <div class="detail-value">${escapeHtml(project.project_street || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Blk/Lot #</div>
+                    <div class="detail-value">${escapeHtml(project.project_blk_lot || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Coordinates</div>
+                    <div class="detail-value">${escapeHtml(project.project_coords || '—')}</div>
+                </div>
             </div>
         </div>
 
+        <!-- ── Materials ── -->
         <div class="detail-section">
-            <div class="detail-section-title">💰 Project Information</div>
+            <div class="detail-section-title">🔩 Materials</div>
             <div class="detail-grid">
                 <div class="detail-item">
-                    <div class="detail-label">Project Value</div>
-                    <div class="detail-value large">${value}</div>
+                    <div class="detail-label">Sheet Pile Type</div>
+                    <div class="detail-value">${escapeHtml(project.sheet_pile_type || '—')}</div>
                 </div>
                 <div class="detail-item">
-                    <div class="detail-label">Project Status</div>
-                    <div class="detail-value">
-                        <span class="status-badge status-${(project.status || '').toLowerCase().replace(/\s+/g, '-')}">${escapeHtml(project.status || '—')}</span>
-                    </div>
+                    <div class="detail-label">Sheet Pile Amount</div>
+                    <div class="detail-value">${project.sheet_pile_amount ? '₱' + parseFloat(project.sheet_pile_amount).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">DRBs</div>
+                    <div class="detail-value">${escapeHtml(project.drbs || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">DRBs Value</div>
+                    <div class="detail-value">${project.drbs_value ? '₱' + parseFloat(project.drbs_value).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">MS Plate</div>
+                    <div class="detail-value">${project.ms_plate ? '₱' + parseFloat(project.ms_plate).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Angle Bars</div>
+                    <div class="detail-value">${project.angle_bars ? '₱' + parseFloat(project.angle_bars).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Channel Bars</div>
+                    <div class="detail-value">${project.channel_bars ? '₱' + parseFloat(project.channel_bars).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Wide Flange</div>
+                    <div class="detail-value">${project.wide_flange ? '₱' + parseFloat(project.wide_flange).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">GI/BI</div>
+                    <div class="detail-value">${project.gi_bi ? '₱' + parseFloat(project.gi_bi).toLocaleString('en-PH', {minimumFractionDigits:2}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Accomplishment Rate</div>
+                    <div class="detail-value">${project.accomplishment_rate ? project.accomplishment_rate + '%' : '—'}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Sales Tracking — exact copy of Admin modal -->
+        <!-- ── Assignment Info ── -->
+        <div class="detail-section">
+            <div class="detail-section-title">👤 Assignment</div>
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Assigned To</div>
+                    <div class="detail-value">${escapeHtml(project.assigned_to_name || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Branch</div>
+                    <div class="detail-value">${escapeHtml(project.assigned_to_branch || project.tracking_branch || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date Assigned</div>
+                    <div class="detail-value">${project.assigned_at ? new Date(project.assigned_at).toLocaleDateString('en-PH', {month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Encoded By</div>
+                    <div class="detail-value">${escapeHtml(project.encoded_by_name || '—')}</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date Encoded</div>
+                    <div class="detail-value">${project.created_at ? new Date(project.created_at).toLocaleDateString('en-PH', {month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── Sales Tracking — exact copy of Admin modal ── -->
         <div class="sales-tracking-section">
             <div class="sales-tracking-title">📊 Sales Tracking</div>
             <div class="sales-form-grid">
@@ -273,7 +384,6 @@ function viewProjectSR(projectId) {
                         <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
                     </div>
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">Quoted</label>
                     <div class="yes-no-buttons">
@@ -281,7 +391,6 @@ function viewProjectSR(projectId) {
                         <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
                     </div>
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">Sales Qualified Leads</label>
                     <div class="yes-no-buttons">
@@ -289,7 +398,6 @@ function viewProjectSR(projectId) {
                         <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
                     </div>
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">To Win</label>
                     <div class="yes-no-buttons">
@@ -297,27 +405,22 @@ function viewProjectSR(projectId) {
                         <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
                     </div>
                 </div>
-
-                <!-- SR/Branch: read-only display for sales_rep -->
                 <div class="sales-form-group">
                     <label class="sales-form-label">Sales Representative</label>
                     <input type="text" class="sales-form-input" id="sales-rep-display" readonly
                            value="${escapeHtml(project.assigned_to_name || project.sales_rep_name || '—')}"
                            style="background:rgba(255,255,255,0.05);cursor:not-allowed;">
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">Branch</label>
                     <input type="text" class="sales-form-input" id="branch-input" readonly
                            value="${escapeHtml(project.assigned_to_branch || project.tracking_branch || '—')}"
                            style="background:rgba(255,255,255,0.05);cursor:not-allowed;">
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color:#ff7070;display:none;">*</span></label>
                     <input type="number" class="sales-form-input" id="wl-amount-input" placeholder="0.00" step="0.01" min="0">
                 </div>
-
                 <div class="sales-form-group">
                     <label class="sales-form-label">Remarks <span style="color:#ff7070;">*</span></label>
                     <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..."></textarea>
