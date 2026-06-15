@@ -47,26 +47,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadProjects();
     });
 
-    // Yes/No button handlers for sales tracking
-    document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('yes-no-btn')) {
-            const field = e.target.dataset.field;
-            const value = e.target.dataset.value;
-            
-            // Remove active class from siblings
-            const siblings = e.target.parentElement.querySelectorAll('.yes-no-btn');
-            siblings.forEach(btn => btn.classList.remove('active'));
-            
-            // Add active class to clicked button
-            e.target.classList.add('active');
-            
-            // Update hidden input
-            const hiddenInput = document.getElementById(field);
-            if (hiddenInput) {
-                hiddenInput.value = value;
-            }
-        }
-    });
+    // Yes/No button state is handled by scoped listeners in openDetailsModal
 });
 
 // Load projects
@@ -308,62 +289,62 @@ function openDetailsModal(projectId, rowEl) {
                 </div>
             </div>
 
-            <!-- Sales Tracking Section (Hidden for Encoders) -->
+            <!-- Sales Tracking Section -->
             <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
-                <div class="sales-tracking-title">Sales Tracking</div>
+                <div class="sales-tracking-title">📊 Sales Tracking</div>
                 <div class="sales-form-grid">
                     <!-- Left Column -->
                     <div class="sales-form-group">
                         <label class="sales-form-label">Contacted <span style="color: #ff7070;">*</span></label>
                         <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn yes" data-field="contacted" data-value="yes" data-required="true">Yes</button>
-                            <button type="button" class="yes-no-btn no" data-field="contacted" data-value="no" data-required="true">No</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
                         </div>
                     </div>
                     
                     <div class="sales-form-group">
                         <label class="sales-form-label">Quoted <span style="color: #ff7070;">*</span></label>
                         <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn yes" data-field="quoted" data-value="yes" data-required="true">Yes</button>
-                            <button type="button" class="yes-no-btn no" data-field="quoted" data-value="no" data-required="true">No</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
                         </div>
                     </div>
                     
                     <div class="sales-form-group">
                         <label class="sales-form-label">Sales Qualified Leads <span style="color: #ff7070;">*</span></label>
                         <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn yes" data-field="sql" data-value="yes" data-required="true">Yes</button>
-                            <button type="button" class="yes-no-btn no" data-field="sql" data-value="no" data-required="true">No</button>
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
                         </div>
                     </div>
                     
                     <div class="sales-form-group">
                         <label class="sales-form-label">To Win <span style="color: #ff7070;">*</span></label>
                         <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn yes" data-field="to_win" data-value="yes" data-required="true">Yes</button>
-                            <button type="button" class="yes-no-btn no" data-field="to_win" data-value="no" data-required="true">No</button>
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
                         </div>
                     </div>
                     
                     <!-- Right Column -->
                     <div class="sales-form-group">
-                        <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
-                        <input type="text" class="sales-form-input" id="sales-rep-display" readonly value="${escapeHtml(_detailsProject.assigned_to_name || '—')}" style="background: rgba(255, 255, 255, 0.05); cursor: not-allowed;">
+                        <label class="sales-form-label">Sales Representative</label>
+                        <input type="text" class="sales-form-input" id="sales-rep-display" readonly value="${escapeHtml(_detailsProject.assigned_to_name || '—')}" style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
                     </div>
                     
                     <div class="sales-form-group">
-                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
-                        <input type="text" class="sales-form-input" id="branch-display" readonly value="${escapeHtml(_detailsProject.assigned_to_branch || '—')}" style="background: rgba(255, 255, 255, 0.05); cursor: not-allowed;">
+                        <label class="sales-form-label">Branch</label>
+                        <input type="text" class="sales-form-input" id="branch-display" readonly value="${escapeHtml(_detailsProject.assigned_to_branch || '—')}" style="background: rgba(255,255,255,0.05); cursor: not-allowed;">
                     </div>
                     
                     <div class="sales-form-group">
-                        <label class="sales-form-label">WA Amount (₱) <span style="color: #ff7070;">*</span></label>
-                        <input type="number" class="sales-form-input" id="wa-amount-input" placeholder="0.00" step="0.01" min="0" required>
+                        <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color:#ff7070;display:none;">*</span></label>
+                        <input type="number" class="sales-form-input" id="wa-amount-input" placeholder="0.00" step="0.01" min="0">
                     </div>
                     
                     <div class="sales-form-group">
-                        <label class="sales-form-label">Remarks <span style="color: #ff7070;">*</span></label>
-                        <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..." required></textarea>
+                        <label class="sales-form-label">Remarks</label>
+                        <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..."></textarea>
                     </div>
                 </div>
             </div>
@@ -372,33 +353,40 @@ function openDetailsModal(projectId, rowEl) {
         // Add action buttons to modal-actions div
         const modalActions = modal.querySelector('.modal-actions');
         if (modalActions) {
-            modalActions.innerHTML = `<button class="btn-action btn-primary" id="detailsSaveBtn"><span>Save Changes</span></button>`;
+            modalActions.innerHTML = `<button class="btn-action btn-secondary" onclick="closeDetailsModal()">Close</button><button class="btn-action btn-primary" id="detailsSaveBtn">💾 Save Sales Tracking</button>`;
         }
 
-        // Attach event listeners
+        // Attach scoped event listeners (no global delegated handler to avoid double-firing)
         setTimeout(() => {
-            // Yes/No button handlers
-            document.querySelectorAll('.yes-no-btn').forEach(btn => {
+            const modalBody = document.getElementById('detailsModalBody');
+
+            // Yes/No button handlers — scoped to this modal body
+            modalBody.querySelectorAll('.yes-no-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const field = this.dataset.field;
-                    const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
-                    buttons.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
+                    const value = this.dataset.value;
+                    // Clear siblings
+                    modalBody.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
+                        b.classList.remove('active', 'yes', 'no');
+                    });
+                    // Set active with color class
+                    this.classList.add('active', value);
+                    // Show/hide W/L Amount asterisk
+                    if (field === 'to_win') {
+                        const req = document.getElementById('wl-amount-required');
+                        if (req) req.style.display = value === 'yes' ? 'inline' : 'none';
+                    }
                 });
             });
 
             // Save button handler
             const saveBtn = document.getElementById('detailsSaveBtn');
             if (saveBtn) {
-                saveBtn.addEventListener('click', () => {
-                    saveTrackingFromModal();
-                });
+                saveBtn.addEventListener('click', () => saveTrackingFromModal());
             }
 
-            // Load existing tracking data if available
-            if (_detailsProject.is_processed == 1) {
-                loadTrackingData(_detailsProject.id);
-            }
+            // Always load existing tracking data (not just for is_processed)
+            loadTrackingData(_detailsProject.id);
         }, 0);
 
         modal.classList.add('active');
@@ -418,40 +406,44 @@ function closeDetailsModal() {
 async function loadTrackingData(projectId) {
     try {
         const res = await fetch(`${_B}/api/v1/projects/${projectId}/sales-tracking`, { credentials: 'include' });
-        if (res.ok) {
-            const data = await res.json();
-            if (data.exists && data.tracking) {
-                const t = data.tracking;
-                
-                // Set Yes/No buttons
-                if (t.contacted) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="contacted"][data-value="${t.contacted}"]`);
-                    if (btn) btn.classList.add('active');
-                }
-                
-                if (t.quoted) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="quoted"][data-value="${t.quoted}"]`);
-                    if (btn) btn.classList.add('active');
-                }
-                
-                if (t.sql) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="sql"][data-value="${t.sql}"]`);
-                    if (btn) btn.classList.add('active');
-                }
-                
-                if (t.to_win) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="to_win"][data-value="${t.to_win}"]`);
-                    if (btn) btn.classList.add('active');
-                }
-                
-                // Set other fields
-                const waAmountInput = document.getElementById('wa-amount-input');
-                const remarksTextarea = document.getElementById('remarks-textarea');
-                
-                if (waAmountInput) waAmountInput.value = t.wa_amount || '';
-                if (remarksTextarea) remarksTextarea.value = t.remarks || '';
-            }
-        }
+        if (!res.ok) return;
+        const data = await res.json();
+        // API returns { exists, data: {...} }
+        if (!data.exists || !data.data) return;
+
+        const t = data.data;
+        const modalBody = document.getElementById('detailsModalBody');
+        if (!modalBody) return;
+
+        // Restore Yes/No buttons — API returns booleans (true/false/null)
+        const fieldMap = {
+            contacted: t.contacted,
+            quoted: t.quoted,
+            sales_qualified: t.sales_qualified,
+            to_win: t.to_win
+        };
+
+        Object.entries(fieldMap).forEach(([field, val]) => {
+            if (val === null || val === undefined) return;
+            const value = val === true ? 'yes' : 'no';
+            // Clear siblings
+            modalBody.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
+                b.classList.remove('active', 'yes', 'no');
+            });
+            const btn = modalBody.querySelector(`.yes-no-btn[data-field="${field}"][data-value="${value}"]`);
+            if (btn) btn.classList.add('active', value);
+        });
+
+        // Show W/L asterisk if To Win = Yes
+        const req = document.getElementById('wl-amount-required');
+        if (req) req.style.display = (t.to_win === true) ? 'inline' : 'none';
+
+        // Restore amount and remarks
+        const waAmountInput = document.getElementById('wa-amount-input');
+        const remarksTextarea = document.getElementById('remarks-textarea');
+        if (waAmountInput && t.wa_amount) waAmountInput.value = t.wa_amount;
+        if (remarksTextarea && t.notes) remarksTextarea.value = t.notes;
+
     } catch (err) {
         console.error('Error loading tracking data:', err);
     }
@@ -459,71 +451,84 @@ async function loadTrackingData(projectId) {
 
 // Save tracking from modal
 async function saveTrackingFromModal() {
-    // Get values from Yes/No buttons
-    const contactedBtn = document.querySelector('.yes-no-btn[data-field="contacted"].active');
-    const quotedBtn = document.querySelector('.yes-no-btn[data-field="quoted"].active');
-    const sqlBtn = document.querySelector('.yes-no-btn[data-field="sql"].active');
-    const toWinBtn = document.querySelector('.yes-no-btn[data-field="to_win"].active');
-    
-    const contacted = contactedBtn ? contactedBtn.dataset.value : null;
-    const quoted = quotedBtn ? quotedBtn.dataset.value : null;
-    const sql = sqlBtn ? sqlBtn.dataset.value : null;
-    const toWin = toWinBtn ? toWinBtn.dataset.value : null;
-    
-    const waAmount = document.getElementById('wa-amount-input')?.value;
-    const remarks = document.getElementById('remarks-textarea')?.value;
-    
-    // Validate required fields
-    if (!contacted || !quoted || !sql || !toWin) {
-        ModalSystem.error('Please answer all Yes/No questions');
-        return;
-    }
-    
-    if (!waAmount || parseFloat(waAmount) <= 0) {
-        ModalSystem.error('Please enter a valid WA Amount');
-        return;
-    }
-    
-    if (!remarks || remarks.trim() === '') {
-        ModalSystem.error('Please enter remarks');
-        return;
-    }
-    
-    const trackingData = {
-        contacted: contacted,
-        quoted: quoted,
-        sql: sql,
-        to_win: toWin,
-        wa_amount: parseFloat(waAmount),
-        remarks: remarks.trim()
+    const modalBody = document.getElementById('detailsModalBody');
+
+    const getField = (field) => {
+        const btn = modalBody.querySelector(`.yes-no-btn[data-field="${field}"].active`);
+        return btn ? (btn.dataset.value === 'yes') : null;
     };
-    
+
+    const contacted      = getField('contacted');
+    const quoted         = getField('quoted');
+    const salesQualified = getField('sales_qualified');
+    const toWin          = getField('to_win');
+    const waAmount       = parseFloat(document.getElementById('wa-amount-input')?.value || '0');
+    const remarks        = document.getElementById('remarks-textarea')?.value?.trim() || '';
+
+    // Validate — require all 4 yes/no fields
+    if (contacted === null || quoted === null || salesQualified === null || toWin === null) {
+        if (typeof ModalSystem !== 'undefined') {
+            ModalSystem.error('Please answer all Yes/No questions');
+        } else {
+            alert('Please answer all Yes/No questions');
+        }
+        return;
+    }
+
+    // W/L Amount only required when To Win = Yes
+    if (toWin === true && (!waAmount || waAmount <= 0)) {
+        if (typeof ModalSystem !== 'undefined') {
+            ModalSystem.error('Please enter a valid W/L Amount when To Win is Yes');
+        } else {
+            alert('Please enter a valid W/L Amount when To Win is Yes');
+        }
+        return;
+    }
+
+    // Build payload — include SR identity from display fields
+    const salesRepDisplay = document.getElementById('sales-rep-display')?.value;
+    const branchDisplay   = document.getElementById('branch-display')?.value;
+
+    const trackingData = {
+        contacted,
+        quoted,
+        sales_qualified: salesQualified,
+        to_win: toWin,
+        wa_amount: waAmount || null,
+        remarks: remarks || null,
+        // Pass SR id from project data so the backend records it correctly
+        sales_rep_id: _detailsProject.assigned_to || _detailsProject.sales_rep_id || null,
+        branch: branchDisplay && branchDisplay !== '—' ? branchDisplay : null
+    };
+
     try {
-        // Check if tracking exists
-        const checkRes = await fetch(`${_B}/api/v1/projects/${_detailsProject.id}/sales-tracking`, { credentials: 'include' });
-        const checkData = await checkRes.json();
-        const exists = checkData.exists;
-        
-        const method = exists ? 'PUT' : 'POST';
         const res = await fetch(`${_B}/api/v1/projects/${_detailsProject.id}/sales-tracking`, {
-            method: method,
+            method: 'POST',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(trackingData)
         });
-        
+
         if (res.ok) {
-            ModalSystem.success('Sales tracking saved successfully');
+            if (typeof ModalSystem !== 'undefined') {
+                ModalSystem.success('Sales tracking saved successfully');
+            }
             closeDetailsModal();
             loadProjects();
             loadCounts();
         } else {
             const err = await res.json();
-            ModalSystem.error(err.detail || err.message || 'Failed to save tracking');
+            if (typeof ModalSystem !== 'undefined') {
+                ModalSystem.error(err.detail || err.message || 'Failed to save tracking');
+            } else {
+                alert(err.detail || err.message || 'Failed to save tracking');
+            }
         }
     } catch (err) {
         console.error('Error saving tracking:', err);
-        ModalSystem.error('Failed to save tracking');
+        if (typeof ModalSystem !== 'undefined') {
+            ModalSystem.error('Failed to save tracking');
+        }
     }
 }
 
