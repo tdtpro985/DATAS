@@ -2538,17 +2538,23 @@ async function loadSalesTrackingDataPM(projectId) {
         
         if (result.exists && result.data) {
             const data = result.data;
-            
-            // Restore button states
+
+            // Restore button states — set all at once, ignore progressive locking
             const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
             fields.forEach(field => {
                 const value = data[field];
+                // Clear first
+                document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
+                    b.classList.remove('active', 'yes', 'no');
+                    b.style.opacity = '1';
+                    b.style.cursor = 'pointer';
+                });
                 if (value === true) {
-                    const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
-                    if (button) button.classList.add('active', 'yes');
+                    const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
+                    if (btn) btn.classList.add('active', 'yes');
                 } else if (value === false) {
-                    const button = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
-                    if (button) button.classList.add('active', 'no');
+                    const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
+                    if (btn) btn.classList.add('active', 'no');
                 }
             });
             
