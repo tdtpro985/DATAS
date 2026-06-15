@@ -1262,7 +1262,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 
 </div> <!-- /.ap-main -->
 </div> <!-- /.ap-shell -->
-<div class="ap-sidebar-overlay" id="ap-sidebar-overlay"></div>
 
 <!-- ── Modals — outside ap-shell to avoid stacking context issues ── -->
 

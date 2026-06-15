@@ -296,10 +296,21 @@ try {
         </div>
     </div>
 
+    <!-- Mobile sidebar overlay -->
+    <div class="ap-sidebar-overlay" id="ap-sidebar-overlay"></div>
+
     <div class="ap-main">
         <!-- Top Bar -->
         <div class="ap-topbar">
             <div class="ap-topbar-title">
+                <!-- Hamburger button — visible on mobile only -->
+                <button type="button" class="ap-hamburger" id="ap-hamburger" aria-label="Toggle sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                        <line x1="3" y1="6"  x2="21" y2="6"/>
+                        <line x1="3" y1="12" x2="21" y2="12"/>
+                        <line x1="3" y1="18" x2="21" y2="18"/>
+                    </svg>
+                </button>
                 <span id="pageTitle">Dashboard</span>
             </div>
             <div class="ap-topbar-actions">
@@ -421,6 +432,34 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.key === 'Escape' && logoutModal.classList.contains('active')) {
             closeLogoutModalHandler();
         }
+    });
+
+    // ── Hamburger / Sidebar toggle (mobile) ──────────────
+    const hamburger = document.getElementById('ap-hamburger');
+    const sidebar   = document.getElementById('ap-sidebar');
+    const overlay   = document.getElementById('ap-sidebar-overlay');
+
+    function openSidebar() {
+        sidebar?.classList.add('open');
+        overlay?.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeSidebar() {
+        sidebar?.classList.remove('open');
+        overlay?.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    hamburger?.addEventListener('click', () => {
+        sidebar?.classList.contains('open') ? closeSidebar() : openSidebar();
+    });
+    overlay?.addEventListener('click', closeSidebar);
+
+    // Close sidebar when a nav link is clicked on mobile
+    document.querySelectorAll('.ap-nav-item, .ap-nav-dropdown-item').forEach(el => {
+        el.addEventListener('click', () => {
+            if (window.innerWidth <= 768) closeSidebar();
+        });
     });
 });
 
