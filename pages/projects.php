@@ -1260,8 +1260,14 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     </div>
 </main>
 
+</div> <!-- /.ap-main -->
+</div> <!-- /.ap-shell -->
+<div class="ap-sidebar-overlay" id="ap-sidebar-overlay"></div>
+
+<!-- ── Modals — outside ap-shell to avoid stacking context issues ── -->
+
 <!-- Project Details Modal -->
-<div class="modal-overlay" id="detailsModal">
+<div class="modal-overlay" id="detailsModal" style="z-index:100000;">
     <div class="modal-content">
         <div class="modal-header">
             <h2>📋 Project Details</h2>
@@ -1289,7 +1295,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 </div>
 
 <!-- Edit Options Modal -->
-<div class="modal-overlay" id="editOptionsModal">
+<div class="modal-overlay" id="editOptionsModal" style="z-index:100000;">
     <div class="modal-content" style="max-width: 600px;">
         <div class="modal-header">
             <h2>✏️ Edit Project</h2>
@@ -1301,7 +1307,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             </p>
             
             <div style="display: grid; gap: 1rem;">
-                <!-- Contract Details -->
                 <button class="edit-option-card" onclick="editSection('contract')">
                     <div class="edit-option-icon">📋</div>
                     <div class="edit-option-content">
@@ -1311,7 +1316,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                     <div class="edit-option-arrow">→</div>
                 </button>
                 
-                <!-- Project Details -->
                 <button class="edit-option-card" onclick="editSection('project')">
                     <div class="edit-option-icon">🏗️</div>
                     <div class="edit-option-content">
@@ -1321,7 +1325,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                     <div class="edit-option-arrow">→</div>
                 </button>
                 
-                <!-- Materials -->
                 <button class="edit-option-card" onclick="editSection('materials')">
                     <div class="edit-option-icon">🔩</div>
                     <div class="edit-option-content">
@@ -1331,7 +1334,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                     <div class="edit-option-arrow">→</div>
                 </button>
                 
-                <!-- Pictures (Priority only) -->
                 <button class="edit-option-card" id="editPicturesOption" onclick="editSection('pictures')" style="display: none;">
                     <div class="edit-option-icon">📸</div>
                     <div class="edit-option-content">
@@ -1349,7 +1351,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 </div>
 
 <!-- Edit Section Modal -->
-<div class="modal-overlay" id="editSectionModal">
+<div class="modal-overlay" id="editSectionModal" style="z-index:100000;">
     <div class="modal-content modal-large" style="max-width: 900px;">
         <div class="modal-header">
             <h2 id="editSectionTitle">✏️ Edit</h2>
@@ -1365,91 +1367,8 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     </div>
 </div>
 
-<style>
-    .edit-option-card {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.25rem;
-        background: rgba(255, 255, 255, 0.03);
-        border: 2px solid rgba(255, 255, 255, 0.08);
-        border-radius: 0.75rem;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        width: 100%;
-        text-align: left;
-    }
-    
-    .edit-option-card:hover {
-        background: rgba(255, 152, 0, 0.1);
-        border-color: rgba(255, 152, 0, 0.3);
-        transform: translateX(4px);
-    }
-    
-    .edit-option-icon {
-        font-size: 2rem;
-        flex-shrink: 0;
-    }
-    
-    .edit-option-content {
-        flex: 1;
-    }
-    
-    .edit-option-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin-bottom: 0.25rem;
-    }
-    
-    .edit-option-desc {
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        line-height: 1.3;
-    }
-    
-    .edit-option-arrow {
-        font-size: 1.5rem;
-        color: var(--text-muted);
-        flex-shrink: 0;
-        transition: transform 0.2s ease;
-    }
-    
-    .edit-option-card:hover .edit-option-arrow {
-        transform: translateX(4px);
-        color: var(--orange-500);
-    }
-    
-    /* Fix modal positioning - center in main content area (excluding sidebar) */
-    #editOptionsModal,
-    #editSectionModal {
-        position: fixed !important;
-        top: 0 !important;
-        left: 240px !important; /* Sidebar width */
-        right: 0 !important;
-        bottom: 0 !important;
-        z-index: 10000 !important;
-        margin: 0 !important;
-    }
-    
-    #editOptionsModal .modal-content,
-    #editSectionModal .modal-content {
-        position: relative;
-        z-index: 10001 !important;
-        margin: auto;
-    }
-    
-    /* Mobile: full screen */
-    @media (max-width: 768px) {
-        #editOptionsModal,
-        #editSectionModal {
-            left: 0 !important;
-        }
-    }
-</style>
-
 <!-- Assignment Modal -->
-<div class="modal-overlay" id="assignModal">
+<div class="modal-overlay" id="assignModal" style="z-index:100000;">
     <div class="modal-content">
         <div class="modal-header">
             <h2>Assign Project to Sales Rep</h2>
@@ -1474,7 +1393,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 </div>
 
 <!-- Sales Tracking Modal -->
-<div class="modal-overlay" id="trackingModal">
+<div class="modal-overlay" id="trackingModal" style="z-index:100000;">
     <div class="modal-content modal-large">
         <div class="modal-header">
             <h2>📊 Sales Tracking</h2>
@@ -1484,8 +1403,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <p style="margin: 0 0 1.5rem; color: var(--text-secondary);">
                 Project: <strong id="tracking-project-name">—</strong>
             </p>
-            
-            <!-- Sales Representative Information Section -->
             <div class="detail-section">
                 <div class="detail-section-title">👤 Sales Representative Information</div>
                 <div class="detail-grid">
@@ -1499,12 +1416,9 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                     </div>
                 </div>
             </div>
-            
-            <!-- Sales Tracking Questions Section -->
             <div class="detail-section">
                 <div class="detail-section-title">📋 Sales Tracking Questions</div>
                 <div class="detail-grid">
-                    <!-- Contacted -->
                     <div class="detail-item">
                         <div class="detail-label">Contacted?</div>
                         <div class="yes-no-buttons">
@@ -1513,8 +1427,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         </div>
                         <input type="hidden" id="contacted" name="contacted">
                     </div>
-
-                    <!-- Quoted -->
                     <div class="detail-item">
                         <div class="detail-label">Quoted?</div>
                         <div class="yes-no-buttons">
@@ -1523,8 +1435,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         </div>
                         <input type="hidden" id="quoted" name="quoted">
                     </div>
-
-                    <!-- Sales Qualified Leads -->
                     <div class="detail-item">
                         <div class="detail-label">Sales Qualified Lead?</div>
                         <div class="yes-no-buttons">
@@ -1533,8 +1443,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         </div>
                         <input type="hidden" id="sales_qualified" name="sales_qualified">
                     </div>
-
-                    <!-- To Win -->
                     <div class="detail-item">
                         <div class="detail-label">To Win?</div>
                         <div class="yes-no-buttons">
@@ -1543,14 +1451,10 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         </div>
                         <input type="hidden" id="to_win" name="to_win">
                     </div>
-
-                    <!-- WA Amount -->
                     <div class="detail-item">
                         <div class="detail-label">WA Amount (₱)</div>
                         <input type="number" id="wa_amount" name="wa_amount" class="form-control" placeholder="0.00" step="0.01" min="0">
                     </div>
-
-                    <!-- Remarks -->
                     <div class="detail-item">
                         <div class="detail-label">Remarks</div>
                         <textarea id="remarks" name="remarks" class="form-control" placeholder="Enter remarks..." rows="3"></textarea>
@@ -1564,10 +1468,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         </div>
     </div>
 </div>
-
-</div> <!-- /.ap-main -->
-</div> <!-- /.ap-shell -->
-<div class="ap-sidebar-overlay" id="ap-sidebar-overlay"></div>
 
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
