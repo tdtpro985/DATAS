@@ -494,22 +494,13 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                     <th data-sort="full_name">Sales Rep</th>
                     <th data-sort="total_assigned" class="num-cell">Assigned</th>
                     <th>Funnel Breakdown</th>
-                    <!-- Timing columns (hidden until migration runs) -->
-                    <th data-sort="avg_days_to_contact"     class="num-cell col-timing" title="Avg days from assignment to first contact">Assign→Contact</th>
-                    <th data-sort="avg_days_contact_to_sql" class="num-cell col-timing" title="Avg days from contact to SQL">Contact→SQL</th>
-                    <th data-sort="avg_days_sql_to_quote"   class="num-cell col-timing" title="Avg days from SQL to quote">SQL→Quote</th>
-                    <th data-sort="avg_days_quote_to_win"   class="num-cell col-timing" title="Avg days from quote to win">Quote→Win</th>
-                    <th data-sort="avg_days_full_cycle"     class="num-cell col-timing sort-asc" title="Avg full cycle (lower = faster = better rank)">⚡ Full Cycle</th>
-                    <!-- Standard columns -->
-                    <th data-sort="win_rate"             class="num-cell">Win Rate</th>
-                    <th data-sort="total_win_amount"     class="num-cell">Win Amount</th>
-                    <th data-sort="total_pipeline_value" class="num-cell">Pipeline</th>
-                    <th>Tracking Status</th>
+                    <th data-sort="avg_days_full_cycle" class="num-cell col-timing sort-asc" title="Avg full cycle (lower = faster = better rank)">⚡ Full Cycle</th>
+                    <th data-sort="win_rate" class="num-cell">Win Rate</th>
                 </tr>
             </thead>
             <tbody id="srTableBody">
                 <tr id="loadingRow">
-                    <td colspan="13"><span class="spinner"></span> Loading performance data…</td>
+                    <td colspan="6"><span class="spinner"></span> Loading performance data…</td>
                 </tr>
             </tbody>
         </table>

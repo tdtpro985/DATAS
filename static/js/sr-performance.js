@@ -133,10 +133,6 @@ function renderTable() {
         const wW = Math.round((rep.win_count       / base) * 100);
 
         const timingCells = State.hasTimingData ? `
-            <td class="num-cell col-timing" title="Avg days: Assigned → Contacted">${fmtDays(rep.avg_days_to_contact)}</td>
-            <td class="num-cell col-timing" title="Avg days: Contacted → SQL">${fmtDays(rep.avg_days_contact_to_sql)}</td>
-            <td class="num-cell col-timing" title="Avg days: SQL → Quoted">${fmtDays(rep.avg_days_sql_to_quote)}</td>
-            <td class="num-cell col-timing" title="Avg days: Quoted → Win">${fmtDays(rep.avg_days_quote_to_win)}</td>
             <td class="num-cell col-timing">${speedBadge(rep.avg_days_full_cycle)}</td>
         ` : '';
 
@@ -180,15 +176,6 @@ function renderTable() {
             </td>
             ${timingCells}
             <td class="num-cell">${winBadge(rep.win_rate)}</td>
-            <td class="num-cell money-cell">${fmtMoney(rep.total_win_amount)}</td>
-            <td class="num-cell money-cell">${fmtMoney(rep.total_pipeline_value)}</td>
-            <td>
-                <div class="tracking-badges">
-                    <span class="track-badge track-ns" title="Not Started">${rep.not_started_count}</span>
-                    <span class="track-badge track-ip" title="In Progress">${rep.in_progress_count}</span>
-                    <span class="track-badge track-co" title="Complete">${rep.complete_count}</span>
-                </div>
-            </td>
         `;
         tr.addEventListener('click', () => openDetail(rep));
         tbody.appendChild(tr);
@@ -309,7 +296,7 @@ function showLoading(on) {
 }
 function showError(msg) {
     const tbody = document.getElementById('srTableBody');
-    if (tbody) tbody.innerHTML = `<tr><td colspan="13" style="text-align:center;padding:3rem;color:var(--danger);">⚠️ ${msg}</td></tr>`;
+    if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:3rem;color:var(--danger);">⚠️ ${msg}</td></tr>`;
 }
 
 /* ── Init ── */
