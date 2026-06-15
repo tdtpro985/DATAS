@@ -2406,10 +2406,11 @@ function applyRoleVisibilityPM(userRole) {
 }
 
 function setupProgressiveFieldsPM() {
-    const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
-    
+    const body = document.getElementById('detailsModalBody');
+    if (!body) return;
+
     // Clear all button states first
-    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+    body.querySelectorAll('.yes-no-btn').forEach(btn => {
         btn.classList.remove('active', 'yes', 'no');
     });
     
@@ -2417,7 +2418,7 @@ function setupProgressiveFieldsPM() {
     updateFieldStatesPM();
     
     // Setup button handlers
-    document.querySelectorAll('.yes-no-btn').forEach(btn => {
+    body.querySelectorAll('.yes-no-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
             const field = e.target.dataset.field;
             const value = e.target.dataset.value;
@@ -2429,7 +2430,7 @@ function setupProgressiveFieldsPM() {
             }
             
             // Update button states
-            const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+            const buttons = body.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
             buttons.forEach(b => {
                 b.classList.remove('active', 'yes', 'no');
             });
@@ -2450,27 +2451,25 @@ function setupProgressiveFieldsPM() {
 }
 
 function isFieldEnabledPM(field) {
+    const body = document.getElementById('detailsModalBody');
     const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
     const currentIndex = fieldOrder.indexOf(field);
-    
     if (currentIndex === 0) return true;
-    
     for (let i = 0; i < currentIndex; i++) {
         const prevField = fieldOrder[i];
-        const hasSelection = document.querySelector(`.yes-no-btn[data-field="${prevField}"].active`);
+        const hasSelection = body?.querySelector(`.yes-no-btn[data-field="${prevField}"].active`);
         if (!hasSelection) return false;
     }
-    
     return true;
 }
 
 function updateFieldStatesPM() {
+    const body = document.getElementById('detailsModalBody');
+    if (!body) return;
     const fieldOrder = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
-    
     fieldOrder.forEach(field => {
-        const buttons = document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
+        const buttons = body.querySelectorAll(`.yes-no-btn[data-field="${field}"]`);
         const isEnabled = isFieldEnabledPM(field);
-        
         buttons.forEach(btn => {
             if (isEnabled) {
                 btn.classList.remove('disabled');
@@ -2538,28 +2537,29 @@ async function loadSalesTrackingDataPM(projectId) {
         
         if (result.exists && result.data) {
             const data = result.data;
+            const body = document.getElementById('detailsModalBody');
 
-            // Restore button states — set all at once, ignore progressive locking
+            // Restore button states scoped to detailsModalBody only
             const fields = ['contacted', 'quoted', 'sales_qualified', 'to_win'];
             fields.forEach(field => {
                 const value = data[field];
-                // Clear first
-                document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
+                // Clear & enable all buttons for this field
+                body.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
                     b.classList.remove('active', 'yes', 'no', 'disabled');
                     b.style.opacity = '1';
                     b.style.cursor = 'pointer';
                 });
                 if (value === true) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
-                    if (btn) { btn.classList.add('active', 'yes'); }
+                    const btn = body.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
+                    if (btn) btn.classList.add('active', 'yes');
                 } else if (value === false) {
-                    const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
-                    if (btn) { btn.classList.add('active', 'no'); }
+                    const btn = body.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
+                    if (btn) btn.classList.add('active', 'no');
                 }
             });
 
-            // Enable ALL buttons (existing data — no progressive locking)
-            document.querySelectorAll('.yes-no-btn').forEach(b => {
+            // Enable ALL buttons in modal (no progressive locking when loading existing data)
+            body.querySelectorAll('.yes-no-btn').forEach(b => {
                 b.classList.remove('disabled');
                 b.style.opacity = '1';
                 b.style.cursor = 'pointer';
@@ -2744,10 +2744,11 @@ async function saveSalesTracking() {
     if (!projectId) return;
     
     // Collect data
-    const toWin = document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
-    const sql = document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
-    const contacted = document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
-    const quoted = document.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value;
+    const body = document.getElementById('detailsModalBody');
+    const toWin = body.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value;
+    const sql = body.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value;
+    const contacted = body.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value;
+    const quoted = body.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value;
     const salesRepId = document.getElementById('sales-rep-select')?.value;
     const branch = document.getElementById('branch-input')?.value;
     const wlAmount = document.getElementById('wl-amount-input')?.value;
