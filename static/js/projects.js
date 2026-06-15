@@ -57,7 +57,18 @@ const ProjectsPage = {
 
     async loadProjects() {
         try {
-            const response = await fetch(BASE + '/api/v1/projects?size=1000', {
+            // For sales_rep, use the assigned endpoint with their user ID (server-side filtering)
+            const userRole = document.body.dataset.role;
+            const userId = parseInt(document.body.dataset.userId || '0');
+            
+            let apiUrl;
+            if (userRole === 'sales_rep' && userId) {
+                apiUrl = `${BASE}/api/v1/projects/assigned?sales_rep_id=${userId}&size=1000`;
+            } else {
+                apiUrl = `${BASE}/api/v1/projects?size=1000`;
+            }
+
+            const response = await fetch(apiUrl, {
                 credentials: 'include'
             });
 
@@ -67,7 +78,7 @@ const ProjectsPage = {
             this.allProjects = data.projects || [];
             this.totalProjects = this.allProjects.length;
 
-            // Filter by type
+            // Filter by type (priority / non-priority)
             if (this.type === 'priority') {
                 this.allProjects = this.allProjects.filter(p => 
                     String(p.status || '').trim().toLowerCase() === 'priority'
@@ -75,16 +86,6 @@ const ProjectsPage = {
             } else if (this.type === 'non-priority') {
                 this.allProjects = this.allProjects.filter(p => 
                     String(p.status || '').trim().toLowerCase() !== 'priority'
-                );
-            }
-
-            // Filter for sales rep - show only assigned projects
-            const userRole = document.body.dataset.role;
-            if (userRole === 'sales_rep') {
-                const userId = parseInt(document.body.dataset.userId || '0') ||
-                               (Auth.getUser() ? parseInt(Auth.getUser().id) : 0);
-                this.allProjects = this.allProjects.filter(p => 
-                    parseInt(p.assigned_to) === userId && !p.archived_at
                 );
             }
 
@@ -109,14 +110,8 @@ const ProjectsPage = {
         const isSalesRep = userRole === 'sales_rep';
         
         if (isSalesRep) {
-            // Get current user ID - prefer server-rendered data-user-id over localStorage
-            const userId = parseInt(document.body.dataset.userId || '0') ||
-                           (Auth.getUser() ? parseInt(Auth.getUser().id) : 0);
-            
-            // Filter projects assigned to current user (excluding archived)
-            const myProjects = this.allProjects.filter(p => 
-                parseInt(p.assigned_to) === userId && !p.archived_at
-            );
+            // allProjects is already filtered to this sales rep's projects (from loadProjects)
+            const myProjects = this.allProjects.filter(p => !p.archived_at);
             
             // My stats (projects assigned to me, excluding archived)
             const myUniqueContractors = new Set(
