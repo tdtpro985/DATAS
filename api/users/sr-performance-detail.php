@@ -65,11 +65,43 @@ try {
     $stmt->execute([':sr_id' => $srId]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Compute avg full cycle from completed rows
+    // Compute avg full cycle from completed rows (assigned → win)
     $cycles = array_filter($rows, fn($r) => $r['full_cycle_hours'] !== null);
     $avgFullCycleHours = count($cycles) > 0
         ? round(array_sum(array_column($cycles, 'full_cycle_hours')) / count($cycles), 2)
         : null;
+
+    // Compute per-stage averages from all rows that have both endpoints
+    function avgHoursCol(array $rows, string $fromCol, string $toCol): ?float {
+        $vals = [];
+        foreach ($rows as $r) {
+            if ($r[$fromCol] && $r[$toCol]) {
+                $diff = (strtotime($r[$toCol]) - strtotime($r[$fromCol])) / 3600;
+                if ($diff >= 0) $vals[] = $diff;
+            }
+        }
+        return count($vals) > 0 ? round(array_sum($vals) / count($vals), 2) : null;
+    }
+
+    $avgAssignToContact   = avgHoursCol($rows, 'assigned_at', 'contacted_at');
+    $avgContactToSql      = avgHoursCol($rows, 'contacted_at', 'sales_qualified_at');
+    $avgSqlToQuote        = avgHoursCol($rows, 'sales_qualified_at', 'quoted_at');
+    $avgQuoteToWin        = avgHoursCol($rows, 'quoted_at', 'to_win_at');
+
+    // Fallback: avg assigned → last updated (overall processing time)
+    $avgProcessingHours = null;
+    if ($hasTs) {
+        $procVals = [];
+        foreach ($rows as $r) {
+            if ($r['assigned_at'] && $r['tracking_updated']) {
+                $diff = (strtotime($r['tracking_updated']) - strtotime($r['assigned_at'])) / 3600;
+                if ($diff >= 0) $procVals[] = $diff;
+            }
+        }
+        if (count($procVals) > 0) {
+            $avgProcessingHours = round(array_sum($procVals) / count($procVals), 2);
+        }
+    }
 
     $projects = array_map(function ($r) {
         return [
@@ -94,9 +126,14 @@ try {
     }, $rows);
 
     jsonResponse([
-        'projects'            => $projects,
-        'avg_full_cycle_hours'=> $avgFullCycleHours,
-        'has_timing_data'     => $hasTs,
+        'projects'               => $projects,
+        'avg_full_cycle_hours'   => $avgFullCycleHours,
+        'avg_assign_to_contact'  => $avgAssignToContact,
+        'avg_contact_to_sql'     => $avgContactToSql,
+        'avg_sql_to_quote'       => $avgSqlToQuote,
+        'avg_quote_to_win'       => $avgQuoteToWin,
+        'avg_processing_hours'   => $avgProcessingHours,
+        'has_timing_data'        => $hasTs,
     ]);
 
 } catch (Exception $e) {

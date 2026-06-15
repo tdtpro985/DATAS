@@ -305,13 +305,21 @@ async function loadProjectTimestamps(srId) {
         const data = await res.json();
         const projects = data.projects || [];
         const hasTs    = data.has_timing_data;
-        const avgHours = data.avg_full_cycle_hours;
 
         if (loading) loading.textContent = `${projects.length} project${projects.length !== 1 ? 's' : ''}`;
 
-        // Update full cycle average with hours-based value
-        if (hasTs && avgHours !== null) {
-            setText('mFullCycle', fmtHours(avgHours));
+        // Update Speed Metrics averages with real per-project data
+        if (hasTs) {
+            setText('mFullCycle',  data.avg_full_cycle_hours  !== null ? fmtHours(data.avg_full_cycle_hours)  : (data.avg_processing_hours !== null ? fmtHours(data.avg_processing_hours) + ' (est)' : '—'));
+            setText('mToContact',  data.avg_assign_to_contact !== null ? fmtHours(data.avg_assign_to_contact) : '—');
+            setText('mToSql',      data.avg_contact_to_sql    !== null ? fmtHours(data.avg_contact_to_sql)    : '—');
+            setText('mToQuote',    data.avg_sql_to_quote      !== null ? fmtHours(data.avg_sql_to_quote)      : '—');
+            setText('mToWin',      data.avg_quote_to_win      !== null ? fmtHours(data.avg_quote_to_win)      : '—');
+            const cycleCount = projects.filter(p => p.full_cycle_hours !== null).length;
+            setText('mCycles', cycleCount.toString());
+            // Show timing section
+            const timingSection = document.getElementById('mTimingSection');
+            if (timingSection) timingSection.style.display = 'block';
         }
 
         if (projects.length === 0) {

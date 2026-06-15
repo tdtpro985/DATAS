@@ -199,18 +199,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $assignedAt        = null;
 
     if ($hasTimestampCols && $existing) {
-        // Stamp only when transitioning from null/No → Yes for the first time
-        $contactedAt      = ($contacted === 'Yes'    && empty($existing['contacted_at']))      ? $now : ($existing['contacted_at']      ?? null);
+        // Stamp when a field transitions from null → any value (Yes or No)
+        $contactedAt      = ($contacted !== null    && empty($existing['contacted_at']))       ? $now : ($existing['contacted_at']      ?? null);
         $salesQualifiedAt = ($salesQualified !== null && empty($existing['sales_qualified_at'])) ? $now : ($existing['sales_qualified_at'] ?? null);
-        $quotedAt         = ($quoted === 'Yes'        && empty($existing['quoted_at']))          ? $now : ($existing['quoted_at']          ?? null);
-        $toWinAt          = ($toWin === 'Yes' && $waAmount > 0 && empty($existing['to_win_at'])) ? $now : ($existing['to_win_at']          ?? null);
+        $quotedAt         = ($quoted !== null        && empty($existing['quoted_at']))           ? $now : ($existing['quoted_at']          ?? null);
+        $toWinAt          = ($toWin !== null         && empty($existing['to_win_at']))           ? $now : ($existing['to_win_at']          ?? null);
         $assignedAt       = $existing['assigned_at'] ?? $existing['created_at'] ?? $now;
     } elseif ($hasTimestampCols && !$existing) {
         $assignedAt       = $now;
-        $contactedAt      = ($contacted === 'Yes')    ? $now : null;
+        $contactedAt      = ($contacted !== null)     ? $now : null;
         $salesQualifiedAt = ($salesQualified !== null) ? $now : null;
-        $quotedAt         = ($quoted === 'Yes')        ? $now : null;
-        $toWinAt          = ($toWin === 'Yes' && $waAmount > 0) ? $now : null;
+        $quotedAt         = ($quoted !== null)         ? $now : null;
+        $toWinAt          = ($toWin !== null)          ? $now : null;
     }
 
     if ($existing) {
