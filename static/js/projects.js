@@ -905,67 +905,30 @@ const ProjectsPage = {
                 </div>
             </div>
 
-            <!-- Sales Tracking Section (Hidden for Encoders) -->
-            <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
-                <div class="sales-tracking-title">📊 Sales Tracking</div>
-                <div class="sales-form-grid">
-                    <!-- Left Column -->
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Contacted</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
+            <!-- Sales tracking has moved to Project Management -->
+            ${(project.sales_tracking_status || project.tracking_status)
+                ? `<div class="detail-section">
+                    <div class="detail-section-title">📊 Sales Tracking</div>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Tracking Status</div>
+                            <div class="detail-value">
+                                <span class="tracking-badge ${(project.sales_tracking_status || project.tracking_status || '').toLowerCase().replace(/\s+/g,'-')}">
+                                    ${this.escapeHtml(project.sales_tracking_status || project.tracking_status || 'Not Started')}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Sales Rep</div>
+                            <div class="detail-value">${this.escapeHtml(project.sales_rep_name || '—')}</div>
                         </div>
                     </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Quoted</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
-                        </div>
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Sales Qualified Leads</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
-                        </div>
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">To Win</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
-                        </div>
-                    </div>
-                    
-                    <!-- Right Column - Only for Superadmin/Admin -->
-                    <div class="sales-form-group" data-role-access="superadmin,admin">
-                        <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
-                        <select class="sales-form-select" id="sales-rep-select">
-                            <option value="">Select SR...</option>
-                        </select>
-                    </div>
-                    
-                    <div class="sales-form-group" data-role-access="superadmin,admin">
-                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
-                        <input type="text" class="sales-form-input" id="branch-input" readonly placeholder="Auto-filled from SR">
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color: #ff7070; display: none;">*</span></label>
-                        <input type="number" class="sales-form-input" id="wl-amount-input" placeholder="0.00" step="0.01" min="0">
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Remarks <span style="color: #ff7070;">*</span></label>
-                        <textarea class="sales-form-textarea" id="remarks-textarea" placeholder="Enter remarks..."></textarea>
-                    </div>
-                </div>
-            </div>
+                    <p style="margin:0.75rem 0 0; font-size:0.78rem; color:var(--text-muted);">
+                        📌 To update sales tracking, go to <strong>Project Management</strong>.
+                    </p>
+                   </div>`
+                : ''
+            }
         `;
 
         // Store current project ID for future use
@@ -974,30 +937,10 @@ const ProjectsPage = {
         
         // Setup yes/no button handlers with progressive validation
         setTimeout(() => {
-            this.setupProgressiveFields();
-            
-            // Handle role-based visibility
+            // Handle role-based visibility (archive button, edit button, etc.)
             const userRole = document.body.dataset.role;
             this.setupRoleBasedVisibility(userRole);
-            
-            // Load sales reps only for superadmin and admin
-            if (userRole === 'superadmin' || userRole === 'admin') {
-                this.loadSalesReps().then(() => {
-                    // Load sales tracking data AFTER sales reps are loaded
-                    this.loadSalesTrackingData(projectId);
-                });
-            } else {
-                // For sales_rep role, load tracking data directly
-                this.loadSalesTrackingData(projectId);
-            }
-            
-            // Reset save button text (in case it was stuck on "Saving...")
-            const saveBtn = document.querySelector('button[onclick="saveSalesTracking()"]');
-            if (saveBtn) {
-                saveBtn.textContent = '💾 Save Sales Tracking';
-                saveBtn.disabled = false;
-            }
-        }, 100); // Increased delay to ensure DOM is ready
+        }, 100);
         
         // Show/Hide Archive Button based on user role and project archive status
         const archiveBtn = document.getElementById('archiveBtn');
@@ -1303,28 +1246,6 @@ const ProjectsPage = {
                 element.style.display = '';
             }
         });
-
-        // Admin: hide the entire Sales Tracking section if project is already assigned
-        if (userRole === 'admin') {
-            const modal = document.getElementById('detailsModal');
-            const assignedTo = modal?.dataset?.assignedTo || '';
-            const isAssigned = assignedTo !== '' && assignedTo !== '0' && assignedTo !== 'null';
-
-            const trackingSection = document.querySelector('.sales-tracking-section');
-            const saveBtn = document.getElementById('saveTrackingBtn');
-            const clearBtn = document.getElementById('clearTrackingBtn');
-
-            if (isAssigned) {
-                if (trackingSection) trackingSection.style.display = 'none';
-                if (saveBtn)        saveBtn.style.display = 'none';
-                if (clearBtn)       clearBtn.style.display = 'none';
-            } else {
-                if (trackingSection) trackingSection.style.display = '';
-                if (saveBtn)        saveBtn.style.display = '';
-                // clearBtn stays hidden for admin on unassigned (nothing to clear yet, superadmin only)
-                if (clearBtn)       clearBtn.style.display = 'none';
-            }
-        }
     },
 
     setupProgressiveFields() {

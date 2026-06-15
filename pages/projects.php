@@ -1277,20 +1277,11 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                 ✏️ Edit Project
             </button>
             
-            <!-- Clear Sales Tracking Button (Superadmin, Admin, Sales Rep only) -->
-            <button type="button" class="btn-action btn-warning role-only--admin role-only--superadmin role-only--sales_rep" 
-                    id="clearTrackingBtn">
-                🗑️ Clear Tracking
-            </button>
-            
             <!-- Archive/Restore Button -->
             <button type="button" class="btn-action btn-delete" 
                     id="archiveBtn">
                 🗄️ Archive Project
             </button>
-            
-            <button type="button" class="btn-action btn-primary btn-save" id="saveTrackingBtn"
-                    data-role-access="superadmin,admin,sales_rep">💾 Save Sales Tracking</button>
             
             <button type="button" class="btn-action btn-secondary" id="closeModalBtn">Close</button>
         </div>
@@ -1585,7 +1576,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=12"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
 
 </body>
 </html>
