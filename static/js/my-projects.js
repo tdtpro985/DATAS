@@ -46,21 +46,33 @@ async function loadProjects() {
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-dim);">Loading…</td></tr>';
 
     try {
+        // Fetch only projects assigned to this SR
         const params = new URLSearchParams({
             page: currentPage,
             size: 50,
-            type: currentView,  // 'priority' or 'non-priority'
+            sales_rep_id: userId,
         });
 
         if (currentFilters.search)  params.set('search', currentFilters.search);
         if (currentFilters.region)  params.set('region', currentFilters.region);
         if (currentFilters.status)  params.set('status', currentFilters.status);
 
-        const res = await fetch(`${_B}/api/v1/projects?${params}`, { credentials: 'include' });
+        const res = await fetch(`${_B}/api/v1/projects/assigned?${params}`, { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to load projects');
 
         const data = await res.json();
-        const projects = data.projects || [];
+        let projects = data.projects || [];
+
+        // Filter by priority type (Non-Priority / Priority tab)
+        if (currentView === 'priority') {
+            projects = projects.filter(p =>
+                String(p.status || '').trim().toLowerCase() === 'priority'
+            );
+        } else {
+            projects = projects.filter(p =>
+                String(p.status || '').trim().toLowerCase() !== 'priority'
+            );
+        }
 
         if (projects.length === 0) {
             tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;color:var(--text-dim);">No projects found</td></tr>';
