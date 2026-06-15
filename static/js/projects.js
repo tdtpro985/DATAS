@@ -81,8 +81,8 @@ const ProjectsPage = {
             // Filter for sales rep - show only assigned projects
             const userRole = document.body.dataset.role;
             if (userRole === 'sales_rep') {
-                const user = Auth.getUser();
-                const userId = user ? parseInt(user.id) : 0;
+                const userId = parseInt(document.body.dataset.userId || '0') ||
+                               (Auth.getUser() ? parseInt(Auth.getUser().id) : 0);
                 this.allProjects = this.allProjects.filter(p => 
                     parseInt(p.assigned_to) === userId && !p.archived_at
                 );
@@ -109,9 +109,9 @@ const ProjectsPage = {
         const isSalesRep = userRole === 'sales_rep';
         
         if (isSalesRep) {
-            // Get current user ID from cached user data
-            const user = Auth.getUser();
-            const userId = user ? parseInt(user.id) : 0;
+            // Get current user ID - prefer server-rendered data-user-id over localStorage
+            const userId = parseInt(document.body.dataset.userId || '0') ||
+                           (Auth.getUser() ? parseInt(Auth.getUser().id) : 0);
             
             // Filter projects assigned to current user (excluding archived)
             const myProjects = this.allProjects.filter(p => 

@@ -1083,7 +1083,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         }
     </style>
 </head>
-<body data-role="<?= htmlspecialchars($role) ?>">
+<body data-role="<?= htmlspecialchars($role) ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
 
 <?php include __DIR__ . '/sidebar.php'; ?>
 
@@ -1483,7 +1483,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
-<script src="<?= $base ?>/static/js/projects.js?v=12"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=13"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
 
 </body>
