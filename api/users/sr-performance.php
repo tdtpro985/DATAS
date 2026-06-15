@@ -108,7 +108,7 @@ try {
         FROM users u
         INNER JOIN sales_tracking st ON u.id = st.sales_rep_id
         INNER JOIN projects p        ON st.project_id = p.id
-        WHERE u.role = 'sales_rep'
+        WHERE u.role IN ('sales_rep', 'admin')
           AND p.archived_at IS NULL
           AND $dateSql
           $regionSql
@@ -199,7 +199,7 @@ try {
 
     // Unique branches for filter dropdown
     $branches = $db->query(
-        "SELECT DISTINCT branch FROM users WHERE role = 'sales_rep' AND branch IS NOT NULL ORDER BY branch"
+        "SELECT DISTINCT branch FROM users WHERE role IN ('sales_rep', 'admin') AND branch IS NOT NULL ORDER BY branch"
     )->fetchAll(PDO::FETCH_COLUMN);
 
     $summary = [

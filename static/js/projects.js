@@ -970,6 +970,7 @@ const ProjectsPage = {
 
         // Store current project ID for future use
         modal.dataset.projectId = projectId;
+        modal.dataset.assignedTo = project.assigned_to || '';
         
         // Setup yes/no button handlers with progressive validation
         setTimeout(() => {
@@ -1300,6 +1301,28 @@ const ProjectsPage = {
                 element.style.display = '';
             }
         });
+
+        // Admin: hide the entire Sales Tracking section if project is already assigned
+        if (userRole === 'admin') {
+            const modal = document.getElementById('detailsModal');
+            const assignedTo = modal?.dataset?.assignedTo || '';
+            const isAssigned = assignedTo !== '' && assignedTo !== '0' && assignedTo !== 'null';
+
+            const trackingSection = document.querySelector('.sales-tracking-section');
+            const saveBtn = document.getElementById('saveTrackingBtn');
+            const clearBtn = document.getElementById('clearTrackingBtn');
+
+            if (isAssigned) {
+                if (trackingSection) trackingSection.style.display = 'none';
+                if (saveBtn)        saveBtn.style.display = 'none';
+                if (clearBtn)       clearBtn.style.display = 'none';
+            } else {
+                if (trackingSection) trackingSection.style.display = '';
+                if (saveBtn)        saveBtn.style.display = '';
+                // clearBtn stays hidden for admin on unassigned (nothing to clear yet, superadmin only)
+                if (clearBtn)       clearBtn.style.display = 'none';
+            }
+        }
     },
 
     setupProgressiveFields() {

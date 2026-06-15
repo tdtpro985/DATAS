@@ -126,10 +126,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db = getDB();
     
     // Verify project exists
-    $projectStmt = $db->prepare('SELECT id FROM projects WHERE id = :id LIMIT 1');
+    $projectStmt = $db->prepare('SELECT id, assigned_to FROM projects WHERE id = :id LIMIT 1');
     $projectStmt->execute([':id' => $projectId]);
-    if (!$projectStmt->fetch()) {
+    $projectRow = $projectStmt->fetch(PDO::FETCH_ASSOC);
+    if (!$projectRow) {
         jsonError('Project not found', 404);
+    }
+
+    // Admin can only track unassigned projects
+    if ($user['role'] === 'admin' && !empty($projectRow['assigned_to'])) {
+        jsonError('Admin can only save sales tracking for unassigned projects.', 403);
     }
     
     // Prepare sales tracking data - properly handle null values

@@ -1289,7 +1289,8 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                 🗄️ Archive Project
             </button>
             
-            <button type="button" class="btn-action btn-primary btn-save" id="saveTrackingBtn">💾 Save Sales Tracking</button>
+            <button type="button" class="btn-action btn-primary btn-save" id="saveTrackingBtn"
+                    data-role-access="superadmin,admin,sales_rep">💾 Save Sales Tracking</button>
             
             <button type="button" class="btn-action btn-secondary" id="closeModalBtn">Close</button>
         </div>
