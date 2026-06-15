@@ -1276,17 +1276,19 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <!-- Content will be inserted here -->
         </div>
         <div class="modal-actions">
-            <!-- Edit Button -->
+            <!-- Edit Button — hidden for sales_rep -->
+            <?php if ($role !== 'sales_rep'): ?>
             <button type="button" class="btn-action btn-primary" 
                     id="editProjectBtn">
                 ✏️ Edit Project
             </button>
             
-            <!-- Archive/Restore Button -->
+            <!-- Archive/Restore Button — hidden for sales_rep -->
             <button type="button" class="btn-action btn-delete" 
                     id="archiveBtn">
                 🗄️ Archive Project
             </button>
+            <?php endif; ?>
             
             <button type="button" class="btn-action btn-secondary" id="closeModalBtn">Close</button>
         </div>
@@ -1483,7 +1485,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
-<script src="<?= $base ?>/static/js/projects.js?v=16"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=17"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
 
 </body>

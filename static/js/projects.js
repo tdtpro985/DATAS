@@ -920,9 +920,16 @@ const ProjectsPage = {
         
         // Setup yes/no button handlers with progressive validation
         setTimeout(() => {
-            // Handle role-based visibility (archive button, edit button, etc.)
-            const userRole = document.body.dataset.role;
-            this.setupRoleBasedVisibility(userRole);
+            // Role-based: closeModalBtn always needs a handler
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            if (closeModalBtn) {
+                // Remove any previous listener by cloning
+                const newClose = closeModalBtn.cloneNode(true);
+                closeModalBtn.parentNode.replaceChild(newClose, closeModalBtn);
+                newClose.addEventListener('click', () => {
+                    document.getElementById('detailsModal')?.classList.remove('active');
+                });
+            }
         }, 100);
         
         // Show/Hide Archive Button based on user role and project archive status
