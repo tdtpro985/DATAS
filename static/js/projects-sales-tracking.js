@@ -580,19 +580,19 @@ function generateMaterialsForm(project) {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group" style="grid-column:1/-1;">
                 <label>Sheet Pile Type</label>
-                <input type="text" class="form-control" id="edit_sheet_pile_type" value="${project.sheet_pile_type || ''}" placeholder="Optional" />
+                <input type="text" class="form-control" id="edit_sheet_pile_type" value="${project.sheet_pile_type ?? ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>Sheet Pile Amount (₱)</label>
-                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group" style="grid-column:1/-1;">
                 <label>DRBs Type</label>
-                <input type="text" class="form-control" id="edit_drbs" value="${project.drbs || ''}" placeholder="Optional" />
+                <input type="text" class="form-control" id="edit_drbs" value="${project.drbs ?? ''}" placeholder="Optional" />
             </div>
             <div class="form-group">
                 <label>DRBs Value (₱)</label>
-                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
         </div>`;
     }
@@ -601,31 +601,31 @@ function generateMaterialsForm(project) {
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div class="form-group">
                 <label>DRBs Value (₱)</label>
-                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_drbs_value" value="${project.drbs_value ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>Sheet Pile Amount (₱)</label>
-                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_sheet_pile_amount" value="${project.sheet_pile_amount ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>MS Plate (₱)</label>
-                <input type="number" class="form-control" id="edit_ms_plate" value="${project.ms_plate || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_ms_plate" value="${project.ms_plate ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>Angle Bars (₱)</label>
-                <input type="number" class="form-control" id="edit_angle_bars" value="${project.angle_bars || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_angle_bars" value="${project.angle_bars ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>Channel Bars (₱)</label>
-                <input type="number" class="form-control" id="edit_channel_bars" value="${project.channel_bars || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_channel_bars" value="${project.channel_bars ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>Wide Flange (₱)</label>
-                <input type="number" class="form-control" id="edit_wide_flange" value="${project.wide_flange || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_wide_flange" value="${project.wide_flange ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
             <div class="form-group">
                 <label>GI/BI (₱)</label>
-                <input type="number" class="form-control" id="edit_gi_bi" value="${project.gi_bi || ''}" placeholder="0.00" step="0.01" min="0" />
+                <input type="number" class="form-control" id="edit_gi_bi" value="${project.gi_bi ?? ''}" placeholder="0.00" step="0.01" min="0" />
             </div>
         </div>`;
 }
