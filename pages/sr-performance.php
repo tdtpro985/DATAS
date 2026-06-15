@@ -290,7 +290,7 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
             display: none;
             position: fixed; inset: 0;
             background: rgba(0,0,0,0.65);
-            z-index: 9999;
+            z-index: 100000;
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(3px);
@@ -527,7 +527,10 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
 </div>
 </div>
 
-<!-- Detail Modal -->
+</div><!-- .ap-main -->
+</div><!-- .ap-shell -->
+
+<!-- Detail Modal — outside ap-shell to avoid stacking context issues -->
 <div class="detail-modal-overlay" id="detailModal">
     <div class="detail-modal" id="detailModalInner">
         <button class="modal-close-btn" id="closeDetailModal" title="Close">✕</button>
@@ -632,9 +635,6 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
         </div>
     </div>
 </div>
-
-</div><!-- .ap-main -->
-</div><!-- .ap-shell -->
 
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=3"></script>
