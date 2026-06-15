@@ -777,7 +777,12 @@ CREATE TABLE `sales_tracking` (
   `sales_qualified` enum('Yes','No') DEFAULT NULL COMMENT 'Is this a Sales Qualified Lead?',
   `wa_amount` decimal(18,2) DEFAULT 0.00,
   `tracking_status` enum('Not Started','In Progress','Complete') NOT NULL DEFAULT 'Not Started',
-  `branch` varchar(100) DEFAULT NULL COMMENT 'Sales rep branch'
+  `branch` varchar(100) DEFAULT NULL COMMENT 'Sales rep branch',
+  `assigned_at` datetime DEFAULT NULL COMMENT 'When the project was assigned to this SR',
+  `contacted_at` datetime DEFAULT NULL COMMENT 'When contacted was first set to Yes',
+  `sales_qualified_at` datetime DEFAULT NULL COMMENT 'When sales_qualified was first set (Yes or No)',
+  `quoted_at` datetime DEFAULT NULL COMMENT 'When quoted was first set to Yes',
+  `to_win_at` datetime DEFAULT NULL COMMENT 'When to_win was first set to Yes with wa_amount'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
