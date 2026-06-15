@@ -214,6 +214,11 @@ function renderUserCard(u) {
                     <span style="font-size:0.8rem; color:var(--text-secondary);">Role</span>
                     <span class="badge badge-secondary" style="text-transform:none;">${escapeHtml(ROLE_LABELS[u.role] || ROLE_LABELS.unknown)}</span>
                 </div>
+                ${u.branch ? `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:0.8rem; color:var(--text-secondary);">Branch</span>
+                    <span style="font-size:0.8rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.1rem 0.5rem; border-radius:999px; font-weight:600;">${escapeHtml(u.branch)}</span>
+                </div>` : ''}
                 <div style="display:flex; justify-content:space-between; align-items:center;">
                     <span style="font-size:0.8rem; color:var(--text-secondary);">Created</span>
                     <span style="font-size:0.8rem; color:var(--text-muted);">${formatDate(u.created_at)}</span>
@@ -248,20 +253,19 @@ function openUserModal(user = null) {
     document.getElementById('userEmail').value = user ? user.email : '';
     document.getElementById('userFullName').value = user ? user.full_name : '';
     document.getElementById('userRole').value = user ? user.role : 'encoder';
+    document.getElementById('userBranch').value = user ? (user.branch || '') : '';
     document.getElementById('userPassword').value = '';
     document.getElementById('userPasswordConfirm').value = '';
+
+    toggleBranchField();
     
     // Show/hide password fields based on edit vs create
-    const passwordGroup = document.getElementById('passwordGroup');
-    const passwordGroupConfirm = document.getElementById('passwordGroupConfirm');
     const passwordHint = document.querySelector('#passwordGroup .form-hint');
     
     if (user) {
-        // Editing existing user - password is optional
         passwordHint.textContent = 'Leave blank to keep current password. Minimum 8 characters if changing.';
         document.getElementById('userPassword').required = false;
     } else {
-        // Creating new user - password is required
         passwordHint.textContent = 'Minimum 8 characters for new accounts';
         document.getElementById('userPassword').required = true;
     }
@@ -292,6 +296,7 @@ async function onSaveUser() {
         email: document.getElementById('userEmail').value.trim(),
         full_name: document.getElementById('userFullName').value.trim(),
         role: document.getElementById('userRole').value,
+        branch: document.getElementById('userBranch')?.value || null,
     };
     
     const pwd = document.getElementById('userPassword').value;
@@ -371,6 +376,12 @@ async function deleteUser(id) {
 
 function escapeHtml(text) { const d = document.createElement('div'); d.textContent = text || ''; return d.innerHTML; }
 function formatDate(s) { if (!s) return '—'; const d = new Date(s); return d.toLocaleDateString(); }
+
+window.toggleBranchField = function() {
+    const role = document.getElementById('userRole')?.value;
+    const group = document.getElementById('branchGroup');
+    if (group) group.style.display = role === 'admin' ? 'block' : 'none';
+};
 
 // Init on DOM ready
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initUsersPage); else initUsersPage();

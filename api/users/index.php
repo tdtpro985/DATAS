@@ -17,7 +17,7 @@ $db = getDB();
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
         $stmt = $db->query("
-            SELECT id, email, full_name, role, reset_requested, created_at
+            SELECT id, email, full_name, role, branch, reset_requested, created_at
             FROM users
             ORDER BY created_at DESC
         ");
@@ -28,6 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             'email'           => $u['email'],
             'full_name'       => $u['full_name'],
             'role'            => $u['role'],
+            'branch'          => $u['branch'],
             'reset_requested' => (bool) $u['reset_requested'],
             'created_at'      => $u['created_at'],
         ], $users);
@@ -54,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $fullName  = trim($body['full_name'] ?? '');
         $password  = $body['password']       ?? '';
         $role      = trim($body['role']      ?? 'encoder');
+        $branch    = isset($body['branch']) ? (trim($body['branch']) ?: null) : null;
 
         if (empty($email))  jsonError('Email is required', 422);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) jsonError('Invalid email format', 422);
@@ -88,6 +90,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $sets[] = 'role = :role';
                 $params[':role'] = $role;
             }
+            // Always update branch (allows clearing it too)
+            $sets[] = 'branch = :branch';
+            $params[':branch'] = $branch;
             if (!empty($password)) {
                 // SECURITY: Validate password strength
                 $passwordValidation = validatePassword($password);
@@ -117,14 +122,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $hash = hashPassword($password);
             $stmt = $db->prepare("
-                INSERT INTO users (email, full_name, password_hash, role)
-                VALUES (:email, :full_name, :hash, :role)
+                INSERT INTO users (email, full_name, password_hash, role, branch)
+                VALUES (:email, :full_name, :hash, :role, :branch)
             ");
             $stmt->execute([
                 ':email'      => $email,
                 ':full_name'  => $fullName,
                 ':hash'       => $hash,
                 ':role'       => $role,
+                ':branch'     => $branch,
             ]);
 
             jsonResponse(['id' => (int) $db->lastInsertId(), 'message' => 'User created successfully.'], 201);

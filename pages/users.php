@@ -118,10 +118,28 @@ if ($role !== 'superadmin') {
                 </div>
                 <div class="form-group">
                     <label for="userRole">Role *</label>
-                    <select id="userRole" name="role" required>
+                    <select id="userRole" name="role" required onchange="toggleBranchField()">
                         <option value="admin">Admin</option>
                         <option value="superadmin">Superadmin</option>
                         <option value="encoder">Encoder</option>
+                    </select>
+                </div>
+                <div class="form-group" id="branchGroup" style="display:none;">
+                    <label for="userBranch">Branch</label>
+                    <select id="userBranch" name="branch">
+                        <option value="">Select Branch</option>
+                        <option value="TDT Manila">TDT Manila</option>
+                        <option value="TDT Cagayan De Oro">TDT Cagayan De Oro</option>
+                        <option value="TDT Cebu">TDT Cebu</option>
+                        <option value="TDT Davao">TDT Davao</option>
+                        <option value="TDT General Santos">TDT General Santos</option>
+                        <option value="TDT Ilocos">TDT Ilocos</option>
+                        <option value="TDT Iloilo">TDT Iloilo</option>
+                        <option value="TDT Isabela">TDT Isabela</option>
+                        <option value="TDT Legazpi">TDT Legazpi</option>
+                        <option value="PS Manila">PS Manila</option>
+                        <option value="PS Laug">PS Laug</option>
+                        <option value="PS Batangas">PS Batangas</option>
                     </select>
                 </div>
                 <div class="form-group" id="passwordGroup">
