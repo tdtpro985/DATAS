@@ -259,17 +259,12 @@ function openDetail(rep) {
             </div>`;
     }).join('');
 
-    // Timing section
+    // Timing section — always show if timing data exists; values will be filled by loadProjectTimestamps
     const timingSection = document.getElementById('mTimingSection');
     if (timingSection) {
+        // Show immediately; loadProjectTimestamps will fill in real values
         if (State.hasTimingData) {
             timingSection.style.display = 'block';
-            setText('mFullCycle',   fmtDays(rep.avg_days_full_cycle));
-            setText('mCycles',      fmt(rep.completed_cycles));
-            setText('mToContact',   fmtDays(rep.avg_days_to_contact));
-            setText('mToSql',       fmtDays(rep.avg_days_contact_to_sql));
-            setText('mToQuote',     fmtDays(rep.avg_days_sql_to_quote));
-            setText('mToWin',       fmtDays(rep.avg_days_quote_to_win));
         } else {
             timingSection.style.display = 'none';
         }
@@ -338,38 +333,53 @@ async function loadProjectTimestamps(srId) {
             return `<span class="ts-notstarted">${s}</span>`;
         };
 
-        let html = `<table class="ts-table">
+        let html = `<table class="ts-table" style="table-layout:fixed; min-width:${hasTs ? '900px' : '400px'};">
+            <colgroup>
+                <col style="width:180px">
+                <col style="width:90px">
+                <col style="width:70px">
+                <col style="width:70px">
+                <col style="width:70px">
+                <col style="width:70px">`;
+        if (hasTs) html += `
+                <col style="width:130px">
+                <col style="width:130px">
+                <col style="width:130px">
+                <col style="width:130px">
+                <col style="width:130px">
+                <col style="width:90px">`;
+        html += `</colgroup>
             <thead><tr>
                 <th>Project</th>
                 <th>Status</th>
-                <th>Contacted</th>
-                <th>SQL</th>
-                <th>Quoted</th>
-                <th>Win</th>`;
+                <th style="text-align:center">Contacted</th>
+                <th style="text-align:center">SQL</th>
+                <th style="text-align:center">Quoted</th>
+                <th style="text-align:center">Win</th>`;
         if (hasTs) html += `
                 <th>Assigned At</th>
                 <th>Contacted At</th>
                 <th>SQL At</th>
                 <th>Quoted At</th>
                 <th>Win At</th>
-                <th>⚡ Full Cycle</th>`;
+                <th style="text-align:center">⚡ Full Cycle</th>`;
         html += `</tr></thead><tbody>`;
 
         projects.forEach(p => {
             html += `<tr>
-                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(p.project_name)}">${escHtml(p.project_name || '—')}</td>
+                <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(p.project_name)}">${escHtml(p.project_name || '—')}</td>
                 <td>${statusBadge(p.tracking_status)}</td>
-                <td>${yesNo(p.contacted)}</td>
-                <td>${yesNo(p.sales_qualified)}</td>
-                <td>${yesNo(p.quoted)}</td>
-                <td>${yesNo(p.to_win)}</td>`;
+                <td style="text-align:center">${yesNo(p.contacted)}</td>
+                <td style="text-align:center">${yesNo(p.sales_qualified)}</td>
+                <td style="text-align:center">${yesNo(p.quoted)}</td>
+                <td style="text-align:center">${yesNo(p.to_win)}</td>`;
             if (hasTs) html += `
                 <td>${ts(p.assigned_at)}</td>
                 <td>${ts(p.contacted_at)}</td>
                 <td>${ts(p.sales_qualified_at)}</td>
                 <td>${ts(p.quoted_at)}</td>
                 <td>${ts(p.to_win_at)}</td>
-                <td>${dur(p.full_cycle_hours)}</td>`;
+                <td style="text-align:center">${dur(p.full_cycle_hours)}</td>`;
             html += `</tr>`;
         });
         html += '</tbody></table>';
