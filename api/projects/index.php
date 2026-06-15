@@ -70,6 +70,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $params[':search'] = '%' . $search . '%';
         }
         
+        // Single project by database ID
+        $dbId = isset($_GET['db_id']) ? (int)$_GET['db_id'] : null;
+        if ($dbId) {
+            $whereConditions[] = 'p.id = :db_id';
+            $params[':db_id'] = $dbId;
+        }
+
         $whereClause = implode(' AND ', $whereConditions);
 
         // Get total count (exclude archived projects)

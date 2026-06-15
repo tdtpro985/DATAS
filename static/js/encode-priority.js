@@ -673,3 +673,97 @@ if (document.readyState === 'loading') {
 } else {
     PriorityForm.init();
 }
+
+/* ── Edit Mode ─────────────────────────────────────────── */
+(function initPriorityEditMode() {
+    const editId = new URLSearchParams(window.location.search).get('edit');
+    if (!editId) return;
+
+    async function loadAndFill() {
+        try {
+            document.querySelectorAll('h1').forEach(el => { if (el.textContent.includes('Encode')) el.textContent = 'Edit Priority Project'; });
+            document.querySelectorAll('p').forEach(el => { if (el.textContent.includes('Complete all')) el.textContent = 'Update the project details below.'; });
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) submitBtn.textContent = '✓ Save Changes';
+
+            const res = await fetch(`${BASE}/api/v1/projects?db_id=${editId}&size=1`, { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to load project');
+            const data = await res.json();
+            const p = data.projects?.[0];
+            if (!p || !p.id) throw new Error('Project not found');
+
+            const set = (id, val) => { const el = document.getElementById(id); if (el && val !== null && val !== undefined) el.value = val; };
+
+            // Step 1
+            set('publishedDate',    p.publication_date);
+            set('source',           p.source);
+            if (p.source === 'PHILGEPS') { set('philgepsNotice', p.notice_reference_number); const g = document.getElementById('philgepsNoticeGroup'); if (g) g.style.display = 'block'; }
+            set('contractId',       p.contractor_id);
+            set('contractCountry',  p.contract_country || 'Philippines');
+            set('contractRegion',   p.contract_region);
+            set('contractProvince', p.contract_province);
+            set('contractCity',     p.contract_city);
+            set('contractBarangay', p.contract_barangay);
+            set('contractStreet',   p.contract_street);
+            set('contractBlkLot',   p.contract_blk_lot);
+            set('contractCoords',   p.contract_coordinates);
+            set('contractorName',   p.contractor_name);
+            set('contactPerson',    p.contact_person);
+            set('contactNumber',    p.contact_number);
+
+            // Step 2
+            set('projectId',        p.project_id);
+            set('projectName',      p.project_name);
+            set('projectValue',     p.project_value);
+            set('completionRate',   p.accomplishment_rate);
+            set('projectCountry',   p.project_country || 'Philippines');
+            set('projectRegion',    p.project_region);
+            set('projectProvince',  p.project_province);
+            set('projectCity',      p.project_city);
+            set('projectBarangay',  p.project_barangay);
+            set('projectStreet',    p.project_street);
+            set('projectBlkLot',    p.project_blk_lot);
+            set('projectCoords',    p.project_coordinates);
+
+            // Step 3 — Materials
+            set('sheetPileMaterial', p.sheet_pile_type);
+            set('sheetPileValue',    p.sheet_pile_amount);
+            set('drbsMaterial',      p.drbs);
+            set('drbsValue',         p.drbs_value);
+
+            // Override submit to PUT
+            const form = document.getElementById('encodeForm');
+            if (form) {
+                form.addEventListener('submit', async function overrideSubmit(e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    const payload = PriorityForm.buildPayload();
+                    payload.id = parseInt(editId);
+                    try {
+                        const r = await fetch(`${BASE}/api/v1/projects/${editId}`, {
+                            method: 'PUT',
+                            credentials: 'include',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const d = await r.json();
+                        if (!r.ok) throw new Error(d.detail || d.message || 'Update failed');
+                        if (typeof Toast !== 'undefined') Toast.success('Project updated successfully!');
+                        setTimeout(() => { window.location.href = `${BASE}/projects?type=priority`; }, 1200);
+                    } catch (err) {
+                        if (typeof Toast !== 'undefined') Toast.error(err.message || 'Update failed');
+                    }
+                }, true);
+            }
+        } catch (err) {
+            console.error('[PRIORITY EDIT MODE]', err);
+            if (typeof Toast !== 'undefined') Toast.error('Failed to load project: ' + err.message);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadAndFill);
+    } else {
+        setTimeout(loadAndFill, 200);
+    }
+})();
