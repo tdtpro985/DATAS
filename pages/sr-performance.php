@@ -51,6 +51,19 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
         @media (max-width: 1100px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
         @media (max-width: 600px)  { .kpi-grid { grid-template-columns: 1fr 1fr; } }
 
+        /* Per-project timestamps table */
+        .ts-table { width:100%; border-collapse:collapse; font-size:0.72rem; }
+        .ts-table th { background:rgba(255,255,255,0.04); color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.5rem 0.6rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.07); white-space:nowrap; }
+        .ts-table td { padding:0.5rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:top; color:var(--text-primary); }
+        .ts-table tr:hover td { background:rgba(255,255,255,0.02); }
+        .ts-null { color:var(--text-muted); }
+        .ts-yes  { color:#34d399; font-weight:700; }
+        .ts-no   { color:#f87171; font-weight:700; }
+        .ts-dur  { color:var(--orange-400); font-weight:700; font-size:0.78rem; }
+        .ts-complete   { background:rgba(16,185,129,0.12); color:#34d399; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
+        .ts-inprogress { background:rgba(59,130,246,0.12);  color:#60a5fa; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
+        .ts-notstarted { background:rgba(108,117,125,0.15); color:#adb5bd; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
+
         .kpi-card {
             background: var(--bg-card);
             border: 1px solid rgba(255,255,255,0.07);
@@ -608,6 +621,15 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                 </div>
             </div>
         </div>
+
+        <!-- Per-project timestamps -->
+        <div class="modal-section" id="mProjectsSection">
+            <div class="modal-section-title" style="display:flex;align-items:center;justify-content:space-between;">
+                <span>📋 Per-Project Timestamps</span>
+                <span id="mProjectsLoading" style="font-size:0.72rem;color:var(--text-muted);">Loading…</span>
+            </div>
+            <div id="mProjectsTable" style="overflow-x:auto; margin-top:0.5rem;"></div>
+        </div>
     </div>
 </div>
 
@@ -617,6 +639,6 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=3"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sr-performance.js?v=3"></script>
+<script src="<?= $base ?>/static/js/sr-performance.js?v=4"></script>
 </body>
 </html>

@@ -96,6 +96,7 @@ elseif ($path === 'users' && in_array($method, ['GET','POST'], true))    { requi
 elseif (preg_match('#^users/(\d+)$#', $path, $m))                       { $_GET['id'] = $m[1]; require __DIR__ . '/users/user.php'; }
 elseif ($path === 'users/sales-reps-ranking')                            { require __DIR__ . '/users/sales-reps-ranking.php'; }
 elseif ($path === 'users/sr-performance')                               { require __DIR__ . '/users/sr-performance.php'; }
+elseif ($path === 'users/sr-performance-detail')                        { require __DIR__ . '/users/sr-performance-detail.php'; }
 elseif ($path === 'users/sales-reps' && in_array($method, ['GET', 'POST'], true)) { require __DIR__ . '/users/sales-reps.php'; }
 elseif (preg_match('#^users/sales-reps/(\d+)$#', $path, $m) && in_array($method, ['PUT', 'DELETE'], true)) { require __DIR__ . '/users/sales-reps.php'; }
 elseif ($path === 'platforms' && $method === 'GET')                      { require __DIR__ . '/platforms/index.php'; }

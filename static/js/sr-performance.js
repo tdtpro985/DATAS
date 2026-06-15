@@ -281,11 +281,112 @@ function openDetail(rep) {
 
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+
+    // Load per-project timestamps
+    loadProjectTimestamps(rep.id);
 }
 
 function closeDetail() {
     document.getElementById('detailModal')?.classList.remove('active');
     document.body.style.overflow = '';
+}
+
+/* ── Per-project timestamps ── */
+async function loadProjectTimestamps(srId) {
+    const container = document.getElementById('mProjectsTable');
+    const loading   = document.getElementById('mProjectsLoading');
+    if (!container) return;
+    container.innerHTML = '';
+    if (loading) loading.textContent = 'Loading…';
+
+    try {
+        const res = await fetch(`${BASE}/api/v1/users/sr-performance-detail?sr_id=${srId}`);
+        if (!res.ok) throw new Error('API error');
+        const data = await res.json();
+        const projects = data.projects || [];
+        const hasTs    = data.has_timing_data;
+        const avgHours = data.avg_full_cycle_hours;
+
+        if (loading) loading.textContent = `${projects.length} project${projects.length !== 1 ? 's' : ''}`;
+
+        // Update full cycle average with hours-based value
+        if (hasTs && avgHours !== null) {
+            setText('mFullCycle', fmtHours(avgHours));
+        }
+
+        if (projects.length === 0) {
+            container.innerHTML = '<p style="color:var(--text-muted);font-size:0.8rem;">No projects found.</p>';
+            return;
+        }
+
+        const yesNo = (v) => v === 'Yes' ? '<span class="ts-yes">Yes</span>' : v === 'No' ? '<span class="ts-no">No</span>' : '<span class="ts-null">—</span>';
+        const ts    = (v) => v ? `<span style="font-size:0.68rem;color:var(--text-secondary);">${fmtTs(v)}</span>` : '<span class="ts-null">—</span>';
+        const dur   = (v) => v !== null && v !== undefined ? `<span class="ts-dur">${fmtHours(v)}</span>` : '<span class="ts-null">—</span>';
+        const statusBadge = (s) => {
+            if (!s) return '—';
+            const lower = s.toLowerCase().replace(/\s+/g, '');
+            if (lower === 'complete')   return `<span class="ts-complete">${s}</span>`;
+            if (lower === 'inprogress') return `<span class="ts-inprogress">${s}</span>`;
+            return `<span class="ts-notstarted">${s}</span>`;
+        };
+
+        let html = `<table class="ts-table">
+            <thead><tr>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Contacted</th>
+                <th>SQL</th>
+                <th>Quoted</th>
+                <th>Win</th>`;
+        if (hasTs) html += `
+                <th>Assigned At</th>
+                <th>Contacted At</th>
+                <th>SQL At</th>
+                <th>Quoted At</th>
+                <th>Win At</th>
+                <th>⚡ Full Cycle</th>`;
+        html += `</tr></thead><tbody>`;
+
+        projects.forEach(p => {
+            html += `<tr>
+                <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${escHtml(p.project_name)}">${escHtml(p.project_name || '—')}</td>
+                <td>${statusBadge(p.tracking_status)}</td>
+                <td>${yesNo(p.contacted)}</td>
+                <td>${yesNo(p.sales_qualified)}</td>
+                <td>${yesNo(p.quoted)}</td>
+                <td>${yesNo(p.to_win)}</td>`;
+            if (hasTs) html += `
+                <td>${ts(p.assigned_at)}</td>
+                <td>${ts(p.contacted_at)}</td>
+                <td>${ts(p.sales_qualified_at)}</td>
+                <td>${ts(p.quoted_at)}</td>
+                <td>${ts(p.to_win_at)}</td>
+                <td>${dur(p.full_cycle_hours)}</td>`;
+            html += `</tr>`;
+        });
+        html += '</tbody></table>';
+        container.innerHTML = html;
+
+    } catch (e) {
+        if (loading) loading.textContent = 'Failed to load';
+        console.error('loadProjectTimestamps error:', e);
+    }
+}
+
+function fmtTs(dateStr) {
+    if (!dateStr) return '—';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' })
+        + ' ' + d.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', hour12:true });
+}
+
+function fmtHours(hours) {
+    if (hours === null || hours === undefined) return '—';
+    if (hours === 0) return '< 1h';
+    if (hours < 24) return hours.toFixed(1) + 'h';
+    const days = hours / 24;
+    if (days < 1) return hours.toFixed(1) + 'h';
+    return days.toFixed(1) + 'd';
 }
 
 /* ── Loading / Error ── */
