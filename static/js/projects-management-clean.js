@@ -2545,17 +2545,24 @@ async function loadSalesTrackingDataPM(projectId) {
                 const value = data[field];
                 // Clear first
                 document.querySelectorAll(`.yes-no-btn[data-field="${field}"]`).forEach(b => {
-                    b.classList.remove('active', 'yes', 'no');
+                    b.classList.remove('active', 'yes', 'no', 'disabled');
                     b.style.opacity = '1';
                     b.style.cursor = 'pointer';
                 });
                 if (value === true) {
                     const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="yes"]`);
-                    if (btn) btn.classList.add('active', 'yes');
+                    if (btn) { btn.classList.add('active', 'yes'); }
                 } else if (value === false) {
                     const btn = document.querySelector(`.yes-no-btn[data-field="${field}"][data-value="no"]`);
-                    if (btn) btn.classList.add('active', 'no');
+                    if (btn) { btn.classList.add('active', 'no'); }
                 }
+            });
+
+            // Enable ALL buttons (existing data — no progressive locking)
+            document.querySelectorAll('.yes-no-btn').forEach(b => {
+                b.classList.remove('disabled');
+                b.style.opacity = '1';
+                b.style.cursor = 'pointer';
             });
             
             // Restore form fields
@@ -2579,8 +2586,7 @@ async function loadSalesTrackingDataPM(projectId) {
             if (remarksTextarea && data.notes) {
                 remarksTextarea.value = data.notes;
             }
-            
-            updateFieldStatesPM();
+            // Do NOT call updateFieldStatesPM() here — it would re-dim the buttons
         }
     } catch (error) {
         console.error('Load sales tracking error:', error);
