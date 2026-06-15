@@ -1084,7 +1084,9 @@ const ProjectsPage = {
             select.innerHTML = '<option value="">Select SR...</option>';
             
             // The API returns data in result.data, not result.sales_reps
-            const salesReps = result.data || [];
+            const salesReps = (result.data || []).slice().sort((a, b) =>
+                (a.full_name || '').localeCompare(b.full_name || '')
+            );
             
             salesReps.forEach(sr => {
                 const option = document.createElement('option');
