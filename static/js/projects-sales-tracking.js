@@ -506,7 +506,7 @@ function generateProjectForm(project) {
             </div>
             <div class="form-group">
                 <label>Region</label>
-                <input type="text" class="form-control" id="edit_region" value="${project.project_region || ''}" />
+                <input type="text" class="form-control" id="edit_region" value="${project.project_region || project.region || ''}" />
             </div>
             <div class="form-group">
                 <label>Province</label>
@@ -514,7 +514,7 @@ function generateProjectForm(project) {
             </div>
             <div class="form-group">
                 <label>City</label>
-                <input type="text" class="form-control" id="edit_city" value="${project.project_city || ''}" />
+                <input type="text" class="form-control" id="edit_city" value="${project.project_city || project.city_province || ''}" />
             </div>
             <div class="form-group">
                 <label>Barangay</label>
