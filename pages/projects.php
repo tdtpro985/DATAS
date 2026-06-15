@@ -1469,6 +1469,15 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 </div>
 
 <script>const BASE = '<?= $base ?>';</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var modalIds = ['detailsModal','editOptionsModal','editSectionModal','assignModal','trackingModal'];
+    modalIds.forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el && el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>

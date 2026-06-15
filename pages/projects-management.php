@@ -78,6 +78,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             right: 0;
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
+            z-index: 100000 !important;
             backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
@@ -1338,6 +1339,18 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
 </div>
 
 <script>const BASE = '<?= $base ?>';</script>
+<script>
+// Move all modals to document.body to escape ap-shell stacking context
+document.addEventListener('DOMContentLoaded', function() {
+    const modalIds = ['assignModal','trackingModal','detailsModal','salesRepModal'];
+    modalIds.forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el && el.parentNode !== document.body) {
+            document.body.appendChild(el);
+        }
+    });
+});
+</script>
 <script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>

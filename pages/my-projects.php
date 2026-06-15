@@ -607,5 +607,11 @@ const CURRENT_USER_ID = <?= $userId ?>;
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script src="<?= $base ?>/static/js/my-projects.js?v=3"></script>
 
-</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script></body>
 </html>

@@ -391,5 +391,11 @@ if ($role !== 'admin' && $role !== 'superadmin') {
 loadDashboardStats();
 </script>
 
-</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script></body>
 </html>

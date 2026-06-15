@@ -263,5 +263,11 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/sales-reps.js?v=13"></script>
 
-</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script></body>
 </html>

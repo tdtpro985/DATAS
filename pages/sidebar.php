@@ -434,6 +434,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Move modals to document.body to escape ap-shell stacking context
+    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id], .credits-modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+
     // ── Hamburger / Sidebar toggle (mobile) ──────────────
     const hamburger = document.getElementById('ap-hamburger');
     const sidebar   = document.getElementById('ap-sidebar');

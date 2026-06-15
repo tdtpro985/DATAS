@@ -166,7 +166,13 @@ function showToast(message, type = 'info') {
     }
 }
 </script>
-</body>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script></body>
 </html>
     <style>
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 1rem; animation: fadeIn 0.2s ease; }
