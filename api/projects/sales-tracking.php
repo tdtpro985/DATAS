@@ -164,14 +164,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Determine tracking status based on filled fields
-    $trackingFields = [$contacted, $quoted, $salesQualified, $toWin, $waAmount];
-    $filledFields = count(array_filter($trackingFields, function($value) {
-        return $value !== null && $value !== '';
-    }));
-    
-    if ($filledFields === 0) {
+    // Complete = all 4 yes/no fields answered
+    // If to_win = Yes, wa_amount must also be > 0 for Complete
+    $yesNoFields = [$contacted, $quoted, $salesQualified, $toWin];
+    $allAnswered  = count(array_filter($yesNoFields, fn($v) => $v !== null)) === 4;
+    $winNeedsAmount = ($toWin === 'Yes' && (!$waAmount || $waAmount <= 0));
+
+    if (array_filter($yesNoFields, fn($v) => $v !== null) === []) {
         $trackingStatus = 'Not Started';
-    } elseif ($filledFields === count($trackingFields)) {
+    } elseif ($allAnswered && !$winNeedsAmount) {
         $trackingStatus = 'Complete';
     } else {
         $trackingStatus = 'In Progress';
