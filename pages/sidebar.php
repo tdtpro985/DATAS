@@ -141,6 +141,10 @@ try {
                 <span class="ap-nav-label">User Management</span>
             </a>
             <?php endif; ?>
+            <a href="<?= $base ?>/activity-logs" class="ap-nav-item">
+                <span class="ap-nav-label">Activity Logs</span>
+            </a>
+            <?php endif; ?>
             <?php endif; ?>
             
             <?php if ($role === 'sales_rep'): ?>

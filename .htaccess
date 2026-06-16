@@ -49,6 +49,12 @@ RewriteRule ^platforms/?$ pages/platforms.php [QSA,L]
 # /projects-management → pages/projects-management.php (admin/superadmin only)
 RewriteRule ^projects-management/?$ pages/projects-management.php [QSA,L]
 
+# /activity-logs → pages/activity-logs.php (admin/superadmin only)
+RewriteRule ^activity-logs/?$ pages/activity-logs.php [QSA,L]
+
+# /full-reports → pages/full-reports.php (admin/superadmin/sales_rep only)
+RewriteRule ^full-reports/?$ pages/full-reports.php [QSA,L]
+
 # /projects-by-form → pages/projects-by-form.php (dynamic custom form submissions view)
 RewriteRule ^projects-by-form/?$ pages/projects-by-form.php [QSA,L]
 
