@@ -1461,52 +1461,34 @@ function updateSelectedCount() {
         return;
     }
     
-    // Use a small delay to ensure DOM elements are ready
-    setTimeout(() => {
-        const countElement = document.getElementById('selectedCount');
-        const assignButtonCountElement = document.getElementById('assignButtonCount');
-        const inlineAssignButton = window.inlineAssignButton;
-        
-        const count = selectedProjects.size;
-        console.log('[PM] Current selectedProjects size:', count);
-        console.log('[PM] selectedCount element found:', !!countElement);
-        console.log('[PM] assignButtonCount element found:', !!assignButtonCountElement);
-        console.log('[PM] inlineAssignButton found:', !!inlineAssignButton);
-        
-        if (countElement) {
-            console.log('[PM] Updating selectedCount to:', count);
-            countElement.textContent = count;
-            countElement.style.color = count > 0 ? '#10b981' : 'white';
+    const count = selectedProjects.size;
+    console.log('[PM] Current selectedProjects size:', count);
+    
+    // Update all count elements
+    const countElements = document.querySelectorAll('#selectedCount');
+    countElements.forEach(el => {
+        el.textContent = count;
+        el.style.color = count > 0 ? '#10b981' : 'white';
+    });
+    
+    const assignButtonCountElement = document.getElementById('assignButtonCount');
+    if (assignButtonCountElement) {
+        assignButtonCountElement.textContent = count;
+    }
+    
+    // Update assign button state
+    const inlineAssignButton = window.inlineAssignButton || document.getElementById('inlineAssignButton');
+    if (inlineAssignButton) {
+        if (count > 0) {
+            inlineAssignButton.disabled = false;
+            inlineAssignButton.style.opacity = '1';
+            inlineAssignButton.style.cursor = 'pointer';
         } else {
-            console.error('[PM] selectedCount element not found!');
+            inlineAssignButton.disabled = true;
+            inlineAssignButton.style.opacity = '0.5';
+            inlineAssignButton.style.cursor = 'not-allowed';
         }
-        
-        if (assignButtonCountElement) {
-            console.log('[PM] Updating assignButtonCount to:', count);
-            assignButtonCountElement.textContent = count;
-        } else {
-            console.error('[PM] assignButtonCount element not found!');
-        }
-        
-        // Update assign button state
-        if (inlineAssignButton) {
-            console.log('[PM] Updating inline assign button state');
-            if (count > 0) {
-                inlineAssignButton.disabled = false;
-                inlineAssignButton.style.opacity = '1';
-                inlineAssignButton.style.cursor = 'pointer';
-                inlineAssignButton.style.transform = 'none';
-                console.log('[PM] Button enabled for', count, 'projects');
-            } else {
-                inlineAssignButton.disabled = true;
-                inlineAssignButton.style.opacity = '0.5';
-                inlineAssignButton.style.cursor = 'not-allowed';
-                console.log('[PM] Button disabled - no projects selected');
-            }
-        } else {
-            console.error('[PM] inlineAssignButton not found!');
-        }
-    }, 10); // Small delay to ensure DOM is ready
+    }
 }
 
 // Show bulk action buttons - Updated to not show floating buttons since we use inline
