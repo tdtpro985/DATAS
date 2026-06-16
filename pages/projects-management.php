@@ -1076,22 +1076,13 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             </select>
             <select id="statusFilter" class="pm-filter">
                 <option value="">All Status</option>
-                <option value="Prospect">Prospect</option>
-                <option value="Contacted">Contacted</option>
-                <option value="Sales Qualified">Sales Qualified</option>
-                <option value="Not Sales Qualified">Not Sales Qualified</option>
-                <option value="Quoted">Quoted</option>
-                <option value="Awarded">Awarded</option>
                 <option value="For Execution">For Execution</option>
+                <option value="For Bidding">For Bidding</option>
+                <option value="Awarded">Awarded</option>
                 <option value="Priority">Priority</option>
             </select>
             <select id="sourceFilter" class="pm-filter">
                 <option value="">All Sources</option>
-                <option value="DPWH">DPWH</option>
-                <option value="Private">Private</option>
-                <option value="BCI">BCI</option>
-                <option value="PHILGEPS">PHILGEPS</option>
-                <option value="Other">Other</option>
             </select>
             <select id="sortFilter" class="pm-filter">
                 <option value="desc">📅 Newest First</option>

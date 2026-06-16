@@ -140,6 +140,9 @@ async function loadProjects() {
         // Store projects data globally for viewProject function
         window.currentProjectsData = data;
         
+        // Populate source filter dynamically from project data
+        populateSourceFilter(projects);
+        
         // Render table headers based on view
         if (thead) thead.innerHTML = getTableHeaders();
         
@@ -165,6 +168,40 @@ async function loadProjects() {
     } catch (err) {
         console.error('Error loading projects:', err);
         tbody.innerHTML = `<tr><td colspan="${maxCols}" style="text-align:center;padding:2rem;color:var(--text-danger);">Error loading projects</td></tr>`;
+    }
+}
+
+// Populate source filter dynamically from project data
+function populateSourceFilter(projects) {
+    const sourceFilter = document.getElementById('sourceFilter');
+    if (!sourceFilter) return;
+    
+    // Preserve current selection
+    const currentValue = sourceFilter.value;
+    
+    // Collect unique sources from projects
+    const sources = new Set();
+    projects.forEach(p => {
+        if (p.source && p.source.trim()) {
+            sources.add(p.source.trim());
+        }
+    });
+    
+    // Sort sources alphabetically
+    const sortedSources = [...sources].sort();
+    
+    // Rebuild options
+    sourceFilter.innerHTML = '<option value="">All Sources</option>';
+    sortedSources.forEach(source => {
+        const option = document.createElement('option');
+        option.value = source;
+        option.textContent = source;
+        sourceFilter.appendChild(option);
+    });
+    
+    // Restore previous selection if it still exists
+    if (currentValue) {
+        sourceFilter.value = currentValue;
     }
 }
 
