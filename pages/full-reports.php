@@ -35,6 +35,9 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
     <style>
         :root {
             --primary: #f97316;

@@ -17,6 +17,16 @@ const FullReports = {
         users: []
     },
 
+    charts: {
+        projectsByRegion: null,
+        projectsByStatus: null,
+        projectsBySource: null,
+        salesFunnel: null,
+        materialBreakdown: null,
+        encodingPerformance: null,
+        monthlyTrends: null
+    },
+
     async init() {
         // Validate session
         const user = await Auth.checkAuth();
@@ -268,7 +278,27 @@ const FullReports = {
                 </tr>
             `).join('');
 
+        // Group by source
+        const bySource = {};
+        projects.forEach(p => {
+            const source = p.source || 'Unknown';
+            bySource[source] = (bySource[source] || 0) + 1;
+        });
+
+        // Group by month for trends
+        const byMonth = {};
+        projects.forEach(p => {
+            const date = new Date(p.created_at || p.publication_date);
+            const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            byMonth[monthKey] = (byMonth[monthKey] || 0) + 1;
+        });
+
         const html = `
+            <div class="chart-container">
+                <div class="chart-title">Projects by Region</div>
+                <canvas id="chartProjectsByRegion"></canvas>
+            </div>
+
             <div class="data-table-wrapper">
                 <table class="data-table">
                     <thead>
@@ -283,6 +313,17 @@ const FullReports = {
                 </table>
             </div>
 
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                <div class="chart-container">
+                    <div class="chart-title">Projects by Status</div>
+                    <canvas id="chartProjectsByStatus"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Projects by Source</div>
+                    <canvas id="chartProjectsBySource"></canvas>
+                </div>
+            </div>
+
             <div class="data-table-wrapper">
                 <table class="data-table">
                     <thead>
@@ -295,9 +336,22 @@ const FullReports = {
                     <tbody>${statusRows || '<tr><td colspan="3" style="text-align:center;color:var(--text-secondary);">No data available</td></tr>'}</tbody>
                 </table>
             </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Monthly Trends</div>
+                <canvas id="chartMonthlyTrends"></canvas>
+            </div>
         `;
 
         document.getElementById('projectAnalytics').innerHTML = html;
+
+        // Render charts after DOM update
+        setTimeout(() => {
+            this.renderProjectsByRegionChart(byRegion);
+            this.renderProjectsByStatusChart(byStatus);
+            this.renderProjectsBySourceChart(bySource);
+            this.renderMonthlyTrendsChart(byMonth);
+        }, 100);
     },
 
     renderContractorAnalytics() {
@@ -381,9 +435,19 @@ const FullReports = {
                     <div class="stat-sublabel">${(trackingCounts['Complete'] / total * 100).toFixed(1)}% of projects</div>
                 </div>
             </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Sales Tracking Funnel</div>
+                <canvas id="chartSalesFunnel"></canvas>
+            </div>
         `;
 
         document.getElementById('salesPerformance').innerHTML = html;
+
+        // Render chart after DOM update
+        setTimeout(() => {
+            this.renderSalesFunnelChart(trackingCounts);
+        }, 100);
     },
 
     renderGeographicAnalysis() {
@@ -450,6 +514,15 @@ const FullReports = {
             totalGIBI += parseFloat(p.gi_bi) || 0;
         });
 
+        const materialData = {
+            'Sheet Pile': totalSheetPile,
+            'MS Plate': totalMSPlate,
+            'Angle Bars': totalAngleBars,
+            'Channel Bars': totalChannelBars,
+            'Wide Flange': totalWideFlange,
+            'GI/BI': totalGIBI
+        };
+
         const html = `
             <div class="stats-grid">
                 <div class="stat-card">
@@ -488,9 +561,19 @@ const FullReports = {
                     <div class="stat-sublabel">Total sheets</div>
                 </div>
             </div>
+
+            <div class="chart-container">
+                <div class="chart-title">Material Requirements Breakdown</div>
+                <canvas id="chartMaterialBreakdown"></canvas>
+            </div>
         `;
 
         document.getElementById('materialRequirements').innerHTML = html;
+
+        // Render chart after DOM update
+        setTimeout(() => {
+            this.renderMaterialBreakdownChart(materialData);
+        }, 100);
     },
 
     renderEncodingPerformance() {
@@ -562,6 +645,342 @@ const FullReports = {
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+    },
+
+    // Chart Rendering Methods
+    renderProjectsByRegionChart(byRegion) {
+        const ctx = document.getElementById('chartProjectsByRegion');
+        if (!ctx) return;
+
+        // Destroy existing chart
+        if (this.charts.projectsByRegion) {
+            this.charts.projectsByRegion.destroy();
+        }
+
+        const sortedData = Object.entries(byRegion).sort((a, b) => b[1].count - a[1].count).slice(0, 10);
+        const labels = sortedData.map(([region]) => region);
+        const counts = sortedData.map(([, data]) => data.count);
+
+        this.charts.projectsByRegion = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Project Count',
+                    data: counts,
+                    backgroundColor: 'rgba(249, 115, 22, 0.7)',
+                    borderColor: 'rgba(249, 115, 22, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    },
+
+    renderProjectsByStatusChart(byStatus) {
+        const ctx = document.getElementById('chartProjectsByStatus');
+        if (!ctx) return;
+
+        if (this.charts.projectsByStatus) {
+            this.charts.projectsByStatus.destroy();
+        }
+
+        const labels = Object.keys(byStatus);
+        const counts = Object.values(byStatus);
+        const colors = [
+            'rgba(239, 68, 68, 0.8)',   // red
+            'rgba(249, 115, 22, 0.8)',  // orange
+            'rgba(34, 197, 94, 0.8)',   // green
+            'rgba(59, 130, 246, 0.8)',  // blue
+            'rgba(168, 85, 247, 0.8)',  // purple
+            'rgba(236, 72, 153, 0.8)'   // pink
+        ];
+
+        this.charts.projectsByStatus = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: counts,
+                    backgroundColor: colors,
+                    borderColor: '#1e293b',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: { color: '#94a3b8', font: { size: 11 } }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                }
+            }
+        });
+    },
+
+    renderProjectsBySourceChart(bySource) {
+        const ctx = document.getElementById('chartProjectsBySource');
+        if (!ctx) return;
+
+        if (this.charts.projectsBySource) {
+            this.charts.projectsBySource.destroy();
+        }
+
+        const sortedData = Object.entries(bySource).sort((a, b) => b[1] - a[1]).slice(0, 8);
+        const labels = sortedData.map(([source]) => source);
+        const counts = sortedData.map(([, count]) => count);
+
+        this.charts.projectsBySource = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Project Count',
+                    data: counts,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 1.5,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    y: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    },
+
+    renderSalesFunnelChart(trackingCounts) {
+        const ctx = document.getElementById('chartSalesFunnel');
+        if (!ctx) return;
+
+        if (this.charts.salesFunnel) {
+            this.charts.salesFunnel.destroy();
+        }
+
+        const labels = Object.keys(trackingCounts);
+        const counts = Object.values(trackingCounts);
+
+        this.charts.salesFunnel = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Project Count',
+                    data: counts,
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(249, 115, 22, 0.7)',
+                        'rgba(34, 197, 94, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(239, 68, 68, 1)',
+                        'rgba(249, 115, 22, 1)',
+                        'rgba(34, 197, 94, 1)'
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2.5,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    y: {
+                        ticks: { color: '#94a3b8', font: { size: 13 } },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    },
+
+    renderMaterialBreakdownChart(materialData) {
+        const ctx = document.getElementById('chartMaterialBreakdown');
+        if (!ctx) return;
+
+        if (this.charts.materialBreakdown) {
+            this.charts.materialBreakdown.destroy();
+        }
+
+        const labels = Object.keys(materialData);
+        const values = Object.values(materialData);
+
+        this.charts.materialBreakdown = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Total Amount',
+                    data: values,
+                    backgroundColor: 'rgba(168, 85, 247, 0.7)',
+                    borderColor: 'rgba(168, 85, 247, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    },
+
+    renderMonthlyTrendsChart(byMonth) {
+        const ctx = document.getElementById('chartMonthlyTrends');
+        if (!ctx) return;
+
+        if (this.charts.monthlyTrends) {
+            this.charts.monthlyTrends.destroy();
+        }
+
+        const sortedMonths = Object.keys(byMonth).sort();
+        const counts = sortedMonths.map(month => byMonth[month]);
+
+        this.charts.monthlyTrends = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: sortedMonths,
+                datasets: [{
+                    label: 'Projects Created',
+                    data: counts,
+                    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+                    borderColor: 'rgba(249, 115, 22, 1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 5,
+                    pointBackgroundColor: 'rgba(249, 115, 22, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                aspectRatio: 2.5,
+                plugins: {
+                    legend: {
+                        display: true,
+                        labels: { color: '#94a3b8' }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleColor: '#f97316',
+                        bodyColor: '#f1f5f9',
+                        borderColor: '#f97316',
+                        borderWidth: 1
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { color: '#94a3b8' },
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' }
+                    },
+                    x: {
+                        ticks: { color: '#94a3b8' },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
     }
 };
 
@@ -575,4 +994,3 @@ function exportReport() {
 document.addEventListener('DOMContentLoaded', () => {
     FullReports.init();
 });
-understood
