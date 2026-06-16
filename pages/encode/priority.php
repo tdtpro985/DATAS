@@ -46,6 +46,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=23">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <style>
         :root {
             --form-bg: rgba(20, 24, 32, 0.65);
@@ -399,10 +400,6 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             .btn-primary, .btn-secondary, .btn-success { padding: 0.3rem 0.8rem; font-size: 0.7rem; }
             .form-buttons { padding: 0.4rem; margin-top: 0.5rem; }
         }
-            margin: 0.25rem 0 0;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-        }
 
         .step-indicator {
             display: flex;
@@ -470,8 +467,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                 padding: 0.5rem;
             }
         }
-            font-weight: 400;
-        }
+
         .form-group input:hover,
         .form-group select:hover {
             border-color: rgba(248, 113, 113, 0.35);

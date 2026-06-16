@@ -42,6 +42,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=23">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <style>
         :root {
             --form-bg: rgba(20, 24, 32, 0.65);

@@ -1,0 +1,345 @@
+/* =============================================================
+   MODERN DROPDOWNS — TDT Powersteel Dashboard
+   Custom-styled select elements with dark theme
+   ============================================================= */
+
+/* ── Global Select Styling ── */
+select,
+.filter-select,
+.nav-select,
+.sales-form-select,
+.pm-filter-select,
+.form-group select,
+select.form-control {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background-color: #0f172a !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-repeat: no-repeat !important;
+    background-position: right 0.75rem center !important;
+    background-size: 14px 14px !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.625rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
+    cursor: pointer !important;
+    outline: none !important;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: none !important;
+    min-height: 40px !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0.01em !important;
+}
+
+/* ── Hover State ── */
+select:hover,
+.filter-select:hover,
+.nav-select:hover,
+.sales-form-select:hover,
+.form-group select:hover,
+select.form-control:hover {
+    border-color: rgba(255, 128, 0, 0.4) !important;
+    background-color: #131c31 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Focus State ── */
+select:focus,
+.filter-select:focus,
+.nav-select:focus,
+.sales-form-select:focus,
+.form-group select:focus,
+select.form-control:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    background-color: #131c31 !important;
+}
+
+/* ── Active / Open State ── */
+select:active,
+select:focus-visible {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.2) !important;
+}
+
+/* ── Option Styling (Dark Theme) ── */
+select option,
+.filter-select option,
+.nav-select option,
+.sales-form-select option,
+.form-group select option,
+select.form-control option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border: none !important;
+    cursor: pointer !important;
+    line-height: 1.5 !important;
+}
+
+/* ── Option Hover (limited browser support) ── */
+select option:hover,
+select option:focus,
+select option:active,
+select option:checked {
+    background-color: rgba(255, 128, 0, 0.15) !important;
+    color: #fff !important;
+}
+
+/* ── Disabled State ── */
+select:disabled,
+select[disabled] {
+    opacity: 0.4 !important;
+    cursor: not-allowed !important;
+    background-color: #0a0f1a !important;
+    border-color: rgba(255, 255, 255, 0.05) !important;
+    color: #475569 !important;
+}
+
+/* ── Placeholder / Empty Option ── */
+select option[value=""],
+select option:first-child {
+    color: #64748b !important;
+    font-style: italic !important;
+}
+
+/* =============================================================
+   SPECIFIC DROPDOWN VARIANTS
+   ============================================================= */
+
+/* ── Filter Bar Dropdowns (Projects page) ── */
+.projects-toolbar .filter-select,
+.pm-filters .filter-select {
+    padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
+    background-color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.625rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 600 !important;
+    min-height: 40px !important;
+}
+
+.projects-toolbar .filter-select:hover,
+.pm-filters .filter-select:hover {
+    border-color: rgba(255, 128, 0, 0.4) !important;
+    background-color: #131c31 !important;
+}
+
+.projects-toolbar .filter-select:focus,
+.pm-filters .filter-select:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15) !important;
+}
+
+/* ── Navigation Header Dropdowns ── */
+.nav-select {
+    padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+    background-color: rgba(15, 23, 42, 0.8) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 0.5rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.8rem !important;
+    font-weight: 500 !important;
+    min-height: 36px !important;
+    backdrop-filter: blur(8px) !important;
+}
+
+.nav-select:hover {
+    border-color: rgba(255, 128, 0, 0.3) !important;
+    background-color: rgba(15, 23, 42, 0.95) !important;
+}
+
+.nav-select:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.12) !important;
+}
+
+.nav-select option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* ── Sales Form Dropdowns ── */
+.sales-form-select {
+    padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
+    background-color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.625rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    min-height: 40px !important;
+}
+
+.sales-form-select:hover {
+    border-color: rgba(255, 128, 0, 0.4) !important;
+}
+
+.sales-form-select:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15) !important;
+}
+
+.sales-form-select option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* ── Form Group Dropdowns ── */
+.form-group select {
+    padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
+    background-color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.625rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    min-height: 40px !important;
+    width: 100% !important;
+}
+
+.form-group select:hover {
+    border-color: rgba(255, 128, 0, 0.4) !important;
+}
+
+.form-group select:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15) !important;
+}
+
+.form-group select option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* ── Admin Panel Dropdowns ── */
+select.form-control {
+    padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
+    background-color: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 0.625rem !important;
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    min-height: 40px !important;
+}
+
+select.form-control:hover {
+    border-color: rgba(255, 128, 0, 0.4) !important;
+}
+
+select.form-control:focus {
+    border-color: #ff8c00 !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15) !important;
+}
+
+select.form-control option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* =============================================================
+   ANIMATIONS & TRANSITIONS
+   ============================================================= */
+
+/* Smooth dropdown open animation */
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+select:focus {
+    animation: dropdownFadeIn 0.2s ease-out;
+}
+
+/* =============================================================
+   SCROLLBAR STYLING FOR DROPDOWNS
+   ============================================================= */
+
+select::-webkit-scrollbar {
+    width: 6px;
+}
+
+select::-webkit-scrollbar-track {
+    background: #0f172a;
+    border-radius: 3px;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: rgba(255, 128, 0, 0.3);
+    border-radius: 3px;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 128, 0, 0.5);
+}
+
+/* =============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================= */
+
+@media (max-width: 768px) {
+    select,
+    .filter-select,
+    .nav-select,
+    .sales-form-select,
+    .form-group select,
+    select.form-control {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+        min-height: 36px !important;
+    }
+}
+
+/* =============================================================
+   DARK THEME OVERRIDE FOR ALL SELECT ELEMENTS
+   ============================================================= */
+
+/* Ensure all selects in the app have consistent dark styling */
+body select {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body select option {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+/* Fix for Firefox select dropdown */
+@-moz-document url-prefix() {
+    select {
+        background-color: #0f172a !important;
+        color: #e2e8f0 !important;
+    }
+    
+    select option {
+        background-color: #0f172a !important;
+        color: #e2e8f0 !important;
+    }
+}
+
+/* Fix for Chrome/Edge select dropdown */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    select {
+        background-color: #0f172a !important;
+    }
+    
+    select option {
+        background-color: #0f172a !important;
+        color: #e2e8f0 !important;
+    }
+}

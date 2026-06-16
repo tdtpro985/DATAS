@@ -43,6 +43,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-modal-fix.css?v=1">
     <style>
         .pm-stat-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.75rem; padding: 1.5rem; display: flex; align-items: center; gap: 1rem; }

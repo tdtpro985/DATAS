@@ -37,6 +37,7 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
     <link rel="stylesheet" href="<?= $base ?>/static/css/roles.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
 
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
