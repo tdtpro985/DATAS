@@ -533,38 +533,38 @@ const FullReports = {
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">Sheet Pile</div>
-                    <div class="stat-value">${totalSheetPile.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total amount</div>
+                    <div class="stat-value">₱${totalSheetPile.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">DRBS Value</div>
-                    <div class="stat-value">₱${totalDRBS.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                    <div class="stat-value">₱${totalDRBS.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
                     <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">MS Plate</div>
-                    <div class="stat-value">${totalMSPlate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total tons</div>
+                    <div class="stat-value">₱${totalMSPlate.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Angle Bars</div>
-                    <div class="stat-value">${totalAngleBars.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total tons</div>
+                    <div class="stat-value">₱${totalAngleBars.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Channel Bars</div>
-                    <div class="stat-value">${totalChannelBars.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total tons</div>
+                    <div class="stat-value">₱${totalChannelBars.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Wide Flange</div>
-                    <div class="stat-value">${totalWideFlange.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total tons</div>
+                    <div class="stat-value">₱${totalWideFlange.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">GI/BI</div>
-                    <div class="stat-value">${totalGIBI.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-                    <div class="stat-sublabel">Total sheets</div>
+                    <div class="stat-value">₱${totalGIBI.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})}</div>
+                    <div class="stat-sublabel">Total value</div>
                 </div>
             </div>
 
