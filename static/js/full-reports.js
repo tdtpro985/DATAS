@@ -594,16 +594,26 @@ const FullReports = {
         console.log('[ENCODING PERF] User map:', userMap);
         console.log('[ENCODING PERF] Sample projects encoded_by:', projects.slice(0, 5).map(p => p.encoded_by));
 
-        // Group by encoder with full name
+        // Group by encoder with full name and track legitimate/illegitimate
         const byEncoder = {};
         projects.forEach(p => {
             const encoderId = p.encoded_by;
             if (!encoderId) {
                 // Track projects with no encoder
                 if (!byEncoder['No Encoder Assigned']) {
-                    byEncoder['No Encoder Assigned'] = 0;
+                    byEncoder['No Encoder Assigned'] = {
+                        total: 0,
+                        legitimate: 0,
+                        illegitimate: 0
+                    };
                 }
-                byEncoder['No Encoder Assigned']++;
+                byEncoder['No Encoder Assigned'].total++;
+                // Check if illegitimate
+                if (p.is_illegitimate || p.illegitimate) {
+                    byEncoder['No Encoder Assigned'].illegitimate++;
+                } else {
+                    byEncoder['No Encoder Assigned'].legitimate++;
+                }
                 return;
             }
             
@@ -617,21 +627,33 @@ const FullReports = {
             }
             
             if (!byEncoder[encoderName]) {
-                byEncoder[encoderName] = 0;
+                byEncoder[encoderName] = {
+                    total: 0,
+                    legitimate: 0,
+                    illegitimate: 0
+                };
             }
-            byEncoder[encoderName]++;
+            byEncoder[encoderName].total++;
+            
+            // Check if illegitimate
+            if (p.is_illegitimate || p.illegitimate) {
+                byEncoder[encoderName].illegitimate++;
+            } else {
+                byEncoder[encoderName].legitimate++;
+            }
         });
 
         console.log('[ENCODING PERF] Grouped by encoder:', byEncoder);
 
         const encoderRows = Object.entries(byEncoder)
-            .sort((a, b) => b[1] - a[1])
-            .map(([name, count], index) => `
+            .sort((a, b) => b[1].total - a[1].total)
+            .map(([name, stats]) => `
                 <tr>
-                    <td>${index + 1}</td>
                     <td>${this.escapeHtml(name)}</td>
-                    <td>${count.toLocaleString()}</td>
-                    <td>${(count / projects.length * 100).toFixed(2)}%</td>
+                    <td>${stats.total.toLocaleString()}</td>
+                    <td style="color: #10b981;">${stats.legitimate.toLocaleString()}</td>
+                    <td style="color: #ef4444;">${stats.illegitimate.toLocaleString()}</td>
+                    <td>${(stats.total / projects.length * 100).toFixed(2)}%</td>
                 </tr>
             `).join('');
 
@@ -640,13 +662,14 @@ const FullReports = {
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Encoder Name</th>
-                            <th>Projects Encoded</th>
+                            <th>Total Projects</th>
+                            <th>Legitimate</th>
+                            <th>Illegitimate</th>
                             <th>Percentage</th>
                         </tr>
                     </thead>
-                    <tbody>${encoderRows || '<tr><td colspan="4" style="text-align:center;color:var(--text-secondary);">No data available</td></tr>'}</tbody>
+                    <tbody>${encoderRows || '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);">No data available</td></tr>'}</tbody>
                 </table>
             </div>
         `;
