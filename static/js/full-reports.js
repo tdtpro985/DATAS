@@ -529,37 +529,37 @@ const FullReports = {
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-label">Sheet Pile</div>
-                    <div class="stat-value">${this.formatNumber(totalSheetPile)}</div>
+                    <div class="stat-value">${totalSheetPile.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total amount</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">DRBS Value</div>
-                    <div class="stat-value">₱${this.formatNumber(totalDRBS)}</div>
+                    <div class="stat-value">₱${totalDRBS.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">MS Plate</div>
-                    <div class="stat-value">${this.formatNumber(totalMSPlate)}</div>
+                    <div class="stat-value">${totalMSPlate.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total tons</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Angle Bars</div>
-                    <div class="stat-value">${this.formatNumber(totalAngleBars)}</div>
+                    <div class="stat-value">${totalAngleBars.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total tons</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Channel Bars</div>
-                    <div class="stat-value">${this.formatNumber(totalChannelBars)}</div>
+                    <div class="stat-value">${totalChannelBars.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total tons</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Wide Flange</div>
-                    <div class="stat-value">${this.formatNumber(totalWideFlange)}</div>
+                    <div class="stat-value">${totalWideFlange.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total tons</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">GI/BI</div>
-                    <div class="stat-value">${this.formatNumber(totalGIBI)}</div>
+                    <div class="stat-value">${totalGIBI.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
                     <div class="stat-sublabel">Total sheets</div>
                 </div>
             </div>
@@ -582,14 +582,14 @@ const FullReports = {
         const projects = this.getFilteredProjects();
         const encoders = this.data.users.filter(u => u.role === 'encoder' || u.role === 'admin' || u.role === 'superadmin');
 
-        // Group by encoder
+        // Group by encoder with full name
         const byEncoder = {};
         projects.forEach(p => {
             const encoderId = p.encoded_by;
             if (!encoderId) return;
             
             const encoder = encoders.find(e => e.id === encoderId);
-            const encoderName = encoder ? encoder.full_name : `User #${encoderId}`;
+            const encoderName = encoder ? (encoder.full_name || encoder.email || `User #${encoderId}`) : `Unknown User #${encoderId}`;
             
             if (!byEncoder[encoderName]) {
                 byEncoder[encoderName] = 0;
