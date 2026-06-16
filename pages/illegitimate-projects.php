@@ -150,9 +150,10 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
         <div class="modal-actions"></div>
     </div>
 </div>
+<script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/illegitimate-projects.js"></script>
+<script src="<?= $base ?>/static/js/illegitimate-projects.js?v=2"></script>
 <script>
 function closeDetailsModal() {
     document.getElementById('detailsModal').classList.remove('active');

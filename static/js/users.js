@@ -354,10 +354,17 @@ async function onSaveUser() {
     }
 }
 
-function deleteUserConfirm(id) {
+async function deleteUserConfirm(id) {
     const u = users.find(x => x.id === id);
     if (!u) return;
-    if (!confirm(`Delete user ${u.full_name}? This action cannot be undone.`)) return;
+    const confirmed = await ModalSystem.confirm({
+        title: 'Delete User',
+        message: `Delete user ${u.full_name}? This action cannot be undone.`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        type: 'danger'
+    });
+    if (!confirmed) return;
     deleteUser(id);
 }
 

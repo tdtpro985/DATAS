@@ -366,7 +366,14 @@ const IllegalitimateProjectsPage = {
     },
 
     async restoreProject(projectId) {
-        if (!confirm('Mark this project as legitimate? It will be restored to the normal project list.')) return;
+        const confirmed = await ModalSystem.confirm({
+            title: 'Mark as Legitimate',
+            message: 'Mark this project as legitimate? It will be restored to the normal project list.',
+            confirmText: 'Yes, Restore',
+            cancelText: 'Cancel',
+            type: 'success'
+        });
+        if (!confirmed) return;
 
         try {
             const response = await fetch(BASE + `/api/v1/projects/${projectId}/actual-project`, {
@@ -378,12 +385,12 @@ const IllegalitimateProjectsPage = {
 
             if (!response.ok) throw new Error('Failed to restore project');
 
-            showToast('Project marked as legitimate', 'success');
+            ModalSystem.success('Project marked as legitimate');
             closeDetailsModal();
             this.loadProjects();
         } catch (error) {
             console.error('[RESTORE] Error:', error);
-            showToast('Failed to restore project', 'error');
+            ModalSystem.error('Failed to restore project');
         }
     },
 
@@ -412,5 +419,5 @@ function closeDetailsModal() {
 }
 
 function saveSalesTracking() {
-    alert('Save sales tracking - Coming soon!');
+    ModalSystem.info('Save sales tracking - Coming soon!');
 }

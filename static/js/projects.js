@@ -1496,8 +1496,7 @@ const ProjectsPage = {
     },
 
     editProject(projectId) {
-        // TODO: Implement edit functionality
-        alert(`Edit project #${projectId}\n\nThis feature will be implemented soon.`);
+        ModalSystem.info('Edit functionality will be available soon.');
     },
     
     showActualProjectModal(projectId) {
@@ -1651,13 +1650,13 @@ const ProjectsPage = {
         const project = this.allProjects.find(p => p.id === projectId);
         if (!project) return;
 
-        const confirmed = confirm(
-            `Are you sure you want to delete this project?\n\n` +
-            `Contractor: ${project.contractor_name}\n` +
-            `Project: ${project.project_name}\n\n` +
-            `This action cannot be undone.`
-        );
-
+        const confirmed = await ModalSystem.confirm({
+            title: 'Delete Project',
+            message: `Are you sure you want to delete this project?\n\nContractor: ${project.contractor_name}\nProject: ${project.project_name}\n\nThis action cannot be undone.`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            type: 'danger'
+        });
         if (!confirmed) return;
 
         try {
@@ -1667,14 +1666,14 @@ const ProjectsPage = {
             });
 
             if (response.ok) {
-                alert('Project deleted successfully!');
-                this.loadProjects(); // Reload the list
+                ModalSystem.success('Project deleted successfully!');
+                this.loadProjects();
             } else {
                 throw new Error('Failed to delete project');
             }
         } catch (error) {
             console.error('[PROJECTS] Delete error:', error);
-            alert('Failed to delete project. Please try again.');
+            ModalSystem.error('Failed to delete project. Please try again.');
         }
     }
 };
@@ -1732,13 +1731,11 @@ function closeDetailsModal() {
 }
 
 function openAssignModal() {
-    // TODO: Implement assignment modal functionality
-    alert('Assignment functionality will be implemented soon.');
+    ModalSystem.info('Assignment functionality will be implemented soon.');
 }
 
 function openTrackingModal() {
-    // TODO: Implement tracking modal functionality  
-    alert('Sales tracking functionality will be implemented soon.');
+    ModalSystem.info('Sales tracking functionality will be implemented soon.');
 }
 
 /**

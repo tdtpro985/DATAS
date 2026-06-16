@@ -117,7 +117,7 @@ async function saveSalesTracking() {
         if (typeof Toast !== 'undefined') {
             Toast.error(error.message || 'Failed to save sales tracking');
         } else {
-            alert('Error: ' + (error.message || 'Failed to save sales tracking'));
+            ModalSystem.error(error.message || 'Failed to save sales tracking');
         }
     } finally {
         if (saveBtn) {
@@ -138,7 +138,7 @@ async function clearSalesTracking(event) {
     const projectId = modal?.dataset?.projectId;
     
     if (!projectId) {
-        alert('Project ID not found');
+        ModalSystem.error('Project ID not found');
         return;
     }
     
@@ -169,7 +169,7 @@ async function clearSalesTracking(event) {
         
     } catch (error) {
         console.error('[CLEAR] Error:', error);
-        alert('Failed to clear: ' + error.message);
+        ModalSystem.error('Failed to clear: ' + error.message);
     }
 }
 

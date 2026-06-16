@@ -1485,8 +1485,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script>window.PROJECT_TYPE = '<?= $type ?>';</script>
-<script src="<?= $base ?>/static/js/projects.js?v=17"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=5"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=18"></script>
+<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=6"></script>
 
 </body>
 </html>
