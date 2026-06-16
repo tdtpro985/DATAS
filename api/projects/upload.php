@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -117,6 +118,8 @@ try {
     
     $imageId = $db->lastInsertId();
     
+    logActivity($db, $_SESSION['user']['id'], ActivityType::PROJECT_UPDATE, EntityType::PROJECT, $projectId, "File uploaded for project #{$projectId}: {$file['name']}");
+
     // Return success response
     jsonResponse([
         'success' => true,

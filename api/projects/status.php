@@ -8,8 +8,9 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
-requireRole(['sales_rep', 'superadmin', 'admin']);
+$user = requireRole(['sales_rep', 'superadmin', 'admin']);
 
 if ($_SERVER['REQUEST_METHOD'] !== 'PATCH') {
     jsonError('Method not allowed', 405);
@@ -43,6 +44,8 @@ if (!$project) {
 // Update status
 $db->prepare('UPDATE projects SET status = :status WHERE id = :id')
    ->execute([':status' => $newStatus, ':id' => $projectId]);
+
+logActivity($db, $user['id'], ActivityType::PROJECT_UPDATE, EntityType::PROJECT, $projectId, "Project #{$projectId} status changed to '{$newStatus}'");
 
 jsonResponse([
     'id'      => $projectId,

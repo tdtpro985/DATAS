@@ -12,6 +12,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError('Method not allowed', 405);
@@ -69,6 +70,9 @@ $_SESSION['user'] = [
     'full_name' => $user['full_name'],
     'role'      => $user['role'],
 ];
+
+// Log login activity
+logActivity($db, $user['id'], ActivityType::USER_LOGIN, EntityType::USER, $user['id'], "User {$user['email']} logged in");
 
 // Track session activity
 trackSessionActivity($user['id']);

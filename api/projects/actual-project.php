@@ -10,6 +10,7 @@ while (ob_get_level() > 0) {
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 try {
     $user = requireRole(['superadmin', 'admin', 'sales_rep']);
@@ -63,6 +64,8 @@ try {
         ':project_id' => $projectId
     ]);
     
+    logActivity($db, $user['id'], ActivityType::PROJECT_MARK_ILLEGITIMATE, EntityType::PROJECT, $projectId, "Project #{$projectId} marked as '{$isActualProject}'", ['is_actual_project' => $isActualProject]);
+
     jsonResponse([
         'message' => 'Project status saved successfully',
         'is_actual_project' => $isActualProject

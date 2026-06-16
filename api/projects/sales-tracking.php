@@ -19,6 +19,7 @@ ob_start();
 try {
     require_once __DIR__ . '/../db.php';
     require_once __DIR__ . '/../helpers.php';
+    require_once __DIR__ . '/../activity-logger.php';
 } catch (Exception $e) {
     // Clean output buffer
     ob_end_clean();
@@ -328,6 +329,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         error_log("AUTO-ASSIGNED: Project $projectId auto-assigned to SR $salesRepId");
     }
     
+    logActivity($db, $user['id'], ActivityType::SALES_TRACKING_UPDATE, EntityType::SALES_TRACKING, $projectId, "Sales tracking updated for project #{$projectId}", ['tracking_status' => $trackingStatus]);
+
     jsonResponse([
         'message' => 'Sales tracking saved successfully',
         'tracking_status' => $trackingStatus,
@@ -364,6 +367,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         // Delete sales tracking record
         $deleteStmt = $db->prepare('DELETE FROM sales_tracking WHERE project_id = :project_id');
         $deleteStmt->execute([':project_id' => $projectId]);
+        
+        logActivity($db, $user['id'], ActivityType::SALES_TRACKING_UPDATE, EntityType::SALES_TRACKING, $projectId, "Sales tracking cleared for project #{$projectId}");
         
         jsonResponse(['success' => true, 'message' => 'Sales tracking cleared successfully']);
         

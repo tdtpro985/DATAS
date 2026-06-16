@@ -82,6 +82,9 @@ class ActivityType {
     // Data activities
     const EXPORT_DATA = 'EXPORT_DATA';
     const IMPORT_DATA = 'IMPORT_DATA';
+    
+    // System activities
+    const SYSTEM_MIGRATION = 'SYSTEM_MIGRATION';
 }
 
 /**

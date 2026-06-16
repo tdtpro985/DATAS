@@ -41,6 +41,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
 }
 
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 try {
     $pdo = getDB();
@@ -144,6 +145,9 @@ try {
     
     if ($result) {
         $platform_id = $pdo->lastInsertId();
+        
+        logActivity($pdo, $_SESSION['user']['id'], ActivityType::PLATFORM_CREATE, EntityType::PLATFORM, $platform_id, "Platform lead created: {$contact_person} ({$source})");
+
         ob_clean();
         echo json_encode([
             'success' => true,

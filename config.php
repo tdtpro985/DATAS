@@ -29,7 +29,7 @@ define('BCRYPT_COST', 12);
 define('MAX_LOGIN_ATTEMPTS', 5);
 define('LOGIN_ATTEMPT_WINDOW', 900); // 15 minutes
 define('MAX_2FA_ATTEMPTS', 3);
-define('2FA_ATTEMPT_WINDOW', 900); // 15 minutes
+define('TWO_FA_ATTEMPT_WINDOW', 900); // 15 minutes
 
 // File Upload
 define('MAX_FILE_SIZE', 5242880); // 5MB

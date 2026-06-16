@@ -12,6 +12,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     jsonError('Method not allowed', 405);
@@ -34,7 +35,7 @@ if (strlen($totpCode) !== 6 || !ctype_digit($totpCode)) {
 }
 
 // SECURITY: Check rate limiting for 2FA attempts
-if (!checkRateLimit('2fa_attempt', $userId, MAX_2FA_ATTEMPTS, 2FA_ATTEMPT_WINDOW)) {
+if (!checkRateLimit('2fa_attempt', $userId, MAX_2FA_ATTEMPTS, TWO_FA_ATTEMPT_WINDOW)) {
     jsonError('Too many failed authentication attempts. Please try again later.', 429);
 }
 
@@ -102,5 +103,7 @@ $_SESSION['user'] = [
     'full_name' => $user['full_name'],
     'role'      => $user['role'],
 ];
+
+logActivity($db, $user['id'], ActivityType::USER_LOGIN, EntityType::USER, $user['id'], "User {$user['email']} logged in via 2FA");
 
 jsonResponse(['user' => $_SESSION['user']]);

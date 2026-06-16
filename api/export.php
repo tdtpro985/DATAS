@@ -7,6 +7,7 @@
 
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
+require_once __DIR__ . '/activity-logger.php';
 
 // Allow CORS for export requests
 header('Access-Control-Allow-Origin: *');
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-requireAuth();
+$user = requireAuth();
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
     jsonError('Method not allowed', 405);
@@ -41,6 +42,9 @@ try {
     
     $exportData = [];
     
+    // Log export activity
+    logActivity($db, $user['id'], ActivityType::EXPORT_DATA, EntityType::EXPORT, null, "Data exported: " . implode(', ', $reports) . " (format: {$format})");
+
     // Generate data for each requested report
     foreach ($reports as $reportType) {
         switch ($reportType) {

@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 // Ensure clean output
 ob_start();
@@ -110,6 +111,8 @@ try {
         // Commit transaction
         $db->commit();
         
+        logActivity($db, $user['id'], ActivityType::PROJECT_BULK_ASSIGN, EntityType::PROJECT, null, "Bulk assigned {$successfulAssignments} project(s) to {$salesRep['full_name']}", ['project_ids' => $projectIds, 'sales_rep_id' => $salesRepId]);
+
         ob_clean();
         jsonResponse([
             'success' => true,

@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 requireRole(['admin', 'superadmin']);
 
@@ -78,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $sql = 'UPDATE users SET ' . implode(', ', $sets) . ' WHERE id = :id';
         $db->prepare($sql)->execute($params);
 
+        logActivity($db, $_SESSION['user']['id'], ActivityType::USER_UPDATE, EntityType::USER, $userId, "User #{$userId} updated");
         jsonResponse(['id' => $userId, 'message' => 'User updated.']);
     } catch (Exception $e) {
         error_log('PUT /api/v1/users/{id} error: ' . $e->getMessage());
@@ -92,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     if (!$check->fetch()) jsonError('User not found', 404);
 
     $db->prepare('DELETE FROM users WHERE id = :id')->execute([':id' => $userId]);
+    logActivity($db, $_SESSION['user']['id'], ActivityType::USER_DELETE, EntityType::USER, $userId, "User #{$userId} deleted");
     jsonResponse(['message' => 'User deleted.']);
 }
 

@@ -12,6 +12,7 @@ ob_start();
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 // Check authentication
 if (empty($_SESSION['user'])) {
@@ -100,6 +101,8 @@ try {
     // Commit transaction
     $pdo->commit();
     
+    logActivity($pdo, $_SESSION['user']['id'], ActivityType::PROJECT_BULK_UNASSIGN, EntityType::PROJECT, null, "Bulk unassigned {$successCount} project(s)", ['project_ids' => $projectIds, 'success_count' => $successCount, 'failed_count' => $failedCount]);
+
     $message = "Successfully unassigned $successCount project(s)";
     if ($failedCount > 0) {
         $message .= ", $failedCount failed";

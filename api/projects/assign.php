@@ -9,6 +9,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 $user = requireRole(['superadmin', 'admin']);
 
@@ -80,6 +81,8 @@ try {
     
     $db->commit();
     
+    logActivity($db, $user['id'], ActivityType::PROJECT_ASSIGN, EntityType::PROJECT, $projectId, "Project #{$projectId} {$action} to {$salesRep['full_name']}");
+
     jsonResponse([
         'success' => true,
         'message' => "Project {$action} to {$salesRep['full_name']}",

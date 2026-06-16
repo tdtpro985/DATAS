@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 $user = requireRole(['superadmin', 'admin']);
 
@@ -45,6 +46,8 @@ $stmt = $db->prepare('
     WHERE id = :project_id
 ');
 $stmt->execute([':project_id' => $projectId]);
+
+logActivity($db, $user['id'], ActivityType::PROJECT_UNASSIGN, EntityType::PROJECT, $projectId, "Project #{$projectId} unassigned");
 
 jsonResponse([
     'success' => true,

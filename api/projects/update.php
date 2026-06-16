@@ -8,6 +8,7 @@ header('Content-Type: application/json; charset=utf-8');
 try {
     require_once __DIR__ . '/../db.php';
     require_once __DIR__ . '/../helpers.php';
+    require_once __DIR__ . '/../activity-logger.php';
 
     session_start();
     if (empty($_SESSION['user'])) {
@@ -105,6 +106,8 @@ try {
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
+
+    logActivity($pdo, $_SESSION['user']['id'], ActivityType::PROJECT_UPDATE, EntityType::PROJECT, $projectId, "Project #{$projectId} updated", ['updated_fields' => array_keys($input)]);
     
     echo json_encode([
         'success' => true,

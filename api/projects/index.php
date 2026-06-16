@@ -13,6 +13,7 @@ while (ob_get_level() > 0) {
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 try {
     $user = requireRole(['encoder', 'superadmin', 'admin', 'sales_rep']);
@@ -104,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
         $stmt->bindValue(':size', $size, PDO::PARAM_INT);
         $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
+$stmt->execute();
         $projects = $stmt->fetchAll();
         
         // Convert numeric fields from string to proper numeric types
@@ -428,6 +429,9 @@ $stmt->execute([
 ]);
 
 $newId = (int) $db->lastInsertId();
+
+// Log project creation
+logActivity($db, $user['id'], ActivityType::PROJECT_CREATE, EntityType::PROJECT, $newId, "Created project '{$projectName}' for contractor '{$contractorName}'");
 
 if (!empty($uploadedPhotos)) {
     $imageStmt = $db->prepare("INSERT INTO project_images (project_id, file_path) VALUES (:project_id, :file_path)");

@@ -8,6 +8,7 @@
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 requireRole(['admin', 'superadmin']);
 
@@ -106,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $sql = 'UPDATE users SET ' . implode(', ', $sets) . ' WHERE id = :id';
             $db->prepare($sql)->execute($params);
 
+            logActivity($db, $_SESSION['user']['id'], ActivityType::USER_UPDATE, EntityType::USER, $userId, "User #{$userId} updated");
             jsonResponse(['id' => $userId, 'message' => 'User updated successfully.']);
         } else {
             // ── CREATE USER ──
@@ -133,7 +135,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':branch'     => $branch,
             ]);
 
-            jsonResponse(['id' => (int) $db->lastInsertId(), 'message' => 'User created successfully.'], 201);
+            $newUserId = (int) $db->lastInsertId();
+            logActivity($db, $_SESSION['user']['id'], ActivityType::USER_CREATE, EntityType::USER, $newUserId, "User created: {$email} (role: {$role})");
+            jsonResponse(['id' => $newUserId, 'message' => 'User created successfully.'], 201);
         }
     } catch (Exception $e) {
         error_log('POST /api/v1/users error: ' . $e->getMessage());
@@ -155,6 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
         if (!$check->fetch()) jsonError('User not found', 404);
 
         $db->prepare('DELETE FROM users WHERE id = :id')->execute([':id' => $userId]);
+        logActivity($db, $_SESSION['user']['id'], ActivityType::USER_DELETE, EntityType::USER, $userId, "User #{$userId} deleted");
         jsonResponse(['message' => 'User deleted successfully.']);
     } catch (Exception $e) {
         error_log('DELETE /api/v1/users error: ' . $e->getMessage());

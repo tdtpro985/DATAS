@@ -41,6 +41,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
 }
 
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 try {
     $pdo = getDB();
@@ -152,6 +153,8 @@ try {
     ]);
     
     if ($result) {
+        logActivity($pdo, $_SESSION['user']['id'], ActivityType::PLATFORM_UPDATE, EntityType::PLATFORM, $platform_id, "Platform lead #{$platform_id} updated");
+
         ob_clean();
         echo json_encode([
             'success' => true,

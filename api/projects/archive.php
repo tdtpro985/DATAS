@@ -45,6 +45,7 @@ if (!in_array($role, ['admin', 'superadmin'], true)) {
 }
 
 require_once __DIR__ . '/../db.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 try {
     $pdo = getDB();
@@ -94,6 +95,8 @@ try {
         ]);
         
         if ($result) {
+            logActivity($pdo, $_SESSION['user']['id'], ActivityType::PROJECT_ARCHIVE, EntityType::PROJECT, $project_id, "Project #{$project_id} archived");
+
             ob_clean();
             echo json_encode([
                 'success' => true,
@@ -122,6 +125,8 @@ try {
         $result = $stmt->execute([':id' => $project_id]);
         
         if ($result) {
+            logActivity($pdo, $_SESSION['user']['id'], ActivityType::PROJECT_UPDATE, EntityType::PROJECT, $project_id, "Project #{$project_id} restored from archive");
+
             ob_clean();
             echo json_encode([
                 'success' => true,

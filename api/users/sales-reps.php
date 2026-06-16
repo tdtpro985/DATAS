@@ -19,6 +19,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
+require_once __DIR__ . '/../activity-logger.php';
 
 // Check authentication using helper function
 try {
@@ -347,6 +348,8 @@ function handlePost($pdo) {
     $stmt->execute([$newId]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    logActivity($pdo, $_SESSION['user']['id'], ActivityType::USER_CREATE, EntityType::USER, $newId, "Sales rep created: {$fullName} ({$email})");
+
     echo json_encode([
         'success' => true,
         'message' => 'Sales representative created successfully',
@@ -431,6 +434,8 @@ function handlePut($pdo, $userId) {
     $stmt->execute([$userId]);
     $updatedUser = $stmt->fetch(PDO::FETCH_ASSOC);
     
+    logActivity($pdo, $_SESSION['user']['id'], ActivityType::USER_UPDATE, EntityType::USER, $userId, "Sales rep #{$userId} updated");
+
     echo json_encode([
         'success' => true,
         'message' => 'Sales representative updated successfully',
@@ -464,6 +469,8 @@ function handleDelete($pdo, $userId) {
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt->execute([$userId]);
     
+    logActivity($pdo, $_SESSION['user']['id'], ActivityType::USER_DELETE, EntityType::USER, $userId, "Sales rep #{$userId} deleted");
+
     echo json_encode([
         'success' => true,
         'message' => 'Sales representative deleted successfully'
