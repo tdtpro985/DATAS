@@ -175,7 +175,7 @@ function getTableHeaders() {
         <th>Contractor</th>
         <th>Project Name</th>
         <th>Region</th>
-        <th>Value (₱)</th>
+        <th>₱</th>
         <th>Status</th>
     `;
     
@@ -199,7 +199,7 @@ function getTableHeaders() {
 function getTableRow(p) {
     const published = p.publication_date || p.published_date || p.published_at || null;
     const publishedFormatted = published ? new Date(published).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-    const value = (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+    const value = formatCurrency(p.project_value);
     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
     
     // Get tracking status from API data
@@ -211,7 +211,7 @@ function getTableRow(p) {
         <td style="font-weight:500;">${p.contractor_name || '—'}</td>
         <td>${p.project_name || '—'}</td>
         <td>${p.region || '—'}</td>
-        <td style="text-align:right;">₱${value}</td>
+        <td style="text-align:right;">${value}</td>
         <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
     `;
     
@@ -410,7 +410,7 @@ function viewProject(projectId) {
         return;
     }
 
-    const value = (project.project_value || 0).toLocaleString('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
+    const value = formatCurrency(project.project_value);
     
     // Complete modal content matching projects.js
     modalBody.innerHTML = `

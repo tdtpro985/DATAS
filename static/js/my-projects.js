@@ -99,7 +99,7 @@ function getTableRow(p) {
     const date = p.assigned_at
         ? new Date(p.assigned_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })
         : new Date(p.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
-    const value = (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
+    const value = typeof formatCurrency === 'function' ? formatCurrency(p.project_value) : (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
 
     // Sales tracking status badge
@@ -115,7 +115,7 @@ function getTableRow(p) {
         <td style="font-weight:500;">${escapeHtml(p.contractor_name || '—')}</td>
         <td>${escapeHtml(p.project_name || '—')}</td>
         <td>${escapeHtml(p.region || '—')}</td>
-        <td style="text-align:right;">₱${value}</td>
+        <td style="text-align:right;">${value}</td>
         <td><span class="status-badge status-${statusClass}">${escapeHtml(p.status || '—')}</span></td>
         <td><span class="tracking-badge ${trackingClass}">${escapeHtml(trackingStatus)}</span></td>
     </tr>`;
@@ -152,9 +152,7 @@ function viewProjectSR(projectId) {
     const modalBody = document.getElementById('detailsModalBody');
     if (!modal || !modalBody) return;
 
-    const value = (project.project_value || 0).toLocaleString('en-PH', {
-        style: 'currency', currency: 'PHP', minimumFractionDigits: 2
-    });
+    const value = typeof formatCurrency === 'function' ? formatCurrency(project.project_value) : (project.project_value || 0).toLocaleString('en-PH', { style: 'currency', currency: 'PHP', minimumFractionDigits: 2 });
 
     // Exact same HTML as Admin/Superadmin viewProject() — ALL encoder fields shown
     modalBody.innerHTML = `

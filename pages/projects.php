@@ -1232,7 +1232,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
                         <th>Region</th>
                         <th>Source</th>
                         <th>Status</th>
-                        <th class="col-value">Value (₱)</th>
+                        <th class="col-value">₱</th>
                         <th>Sales Tracking</th>
                         <th class="col-date">Published Date</th>
                     </tr>
