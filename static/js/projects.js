@@ -83,6 +83,9 @@ const ProjectsPage = {
             // Populate region filter
             this.populateRegionFilter();
 
+            // Populate source filter
+            this.populateSourceFilter();
+
             // Initial filter
             this.filterProjects();
 
@@ -168,6 +171,24 @@ const ProjectsPage = {
             const option = document.createElement('option');
             option.value = region;
             option.textContent = region;
+            select.appendChild(option);
+        });
+
+        select.value = currentValue;
+    },
+
+    populateSourceFilter() {
+        const sources = [...new Set(this.allProjects.map(p => (p.source || '').trim()).filter(Boolean))];
+        sources.sort();
+
+        const select = document.getElementById('source-filter');
+        const currentValue = select.value;
+
+        select.innerHTML = '<option value="">All Sources</option>';
+        sources.forEach(source => {
+            const option = document.createElement('option');
+            option.value = source;
+            option.textContent = source;
             select.appendChild(option);
         });
 

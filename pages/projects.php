@@ -1150,11 +1150,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         </select>
         <select id="source-filter" class="filter-select">
             <option value="">All Sources</option>
-            <option value="DPWH">DPWH</option>
-            <option value="Private">Private</option>
-            <option value="BCI">BCI</option>
-            <option value="PHILGEPS">PHILGEPS</option>
-            <option value="Other">Other</option>
         </select>
         <select id="sort-filter" class="filter-select">
             <option value="publication_date_desc">📅 Newest First</option>
