@@ -835,6 +835,139 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
             }
         }
     </style>
+
+    <style>
+        /* ── Searchable Region Select ── */
+        .searchable-select-wrapper {
+            position: relative;
+        }
+
+        .searchable-select-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            border-radius: 4px;
+            padding: 0.3rem 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            min-height: 26px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .searchable-select-trigger:hover {
+            border-color: rgba(248, 113, 113, 0.35);
+        }
+
+        .searchable-select-trigger:focus,
+        .searchable-select-wrapper.open .searchable-select-trigger {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 2px rgba(248, 113, 113, 0.1);
+            outline: none;
+        }
+
+        .searchable-select-label {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: rgba(255,255,255,0.35);
+        }
+
+        .searchable-select-label.has-value {
+            color: var(--text-primary);
+        }
+
+        .searchable-select-arrow {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.5);
+            margin-left: 0.35rem;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+        .searchable-select-wrapper.open .searchable-select-arrow {
+            transform: rotate(180deg);
+        }
+
+        .searchable-select-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 3px);
+            left: 0;
+            right: 0;
+            background: #1e2430;
+            border: 1.5px solid rgba(248, 113, 113, 0.35);
+            border-radius: 6px;
+            z-index: 9999;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+
+        .searchable-select-wrapper.open .searchable-select-dropdown {
+            display: block;
+        }
+
+        .searchable-select-search {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.05);
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 0.4rem 0.6rem;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .searchable-select-search::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .searchable-select-options {
+            max-height: 180px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .searchable-select-options::-webkit-scrollbar { width: 4px; }
+        .searchable-select-options::-webkit-scrollbar-track { background: transparent; }
+        .searchable-select-options::-webkit-scrollbar-thumb { background: rgba(248,113,113,0.3); border-radius: 2px; }
+
+        .searchable-option {
+            padding: 0.4rem 0.6rem;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .searchable-option:hover,
+        .searchable-option.focused {
+            background: rgba(248, 113, 113, 0.15);
+            color: #f87171;
+        }
+
+        .searchable-option.selected {
+            background: rgba(248, 113, 113, 0.1);
+            font-weight: 600;
+        }
+
+        .searchable-option.hidden {
+            display: none;
+        }
+
+        .searchable-no-results {
+            padding: 0.5rem 0.6rem;
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.35);
+            text-align: center;
+        }
+    </style>
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>">
 
@@ -912,11 +1045,17 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         </div>
                         <div class="form-group">
                             <label for="contractRegion" data-required=" *">Region</label>
-                            <input type="text" id="contractRegion" name="contract_region" 
-                                   list="contractRegionList" placeholder="Type or select region" required>
-                            <datalist id="contractRegionList">
-                                <!-- Options will be populated dynamically -->
-                            </datalist>
+                            <div class="searchable-select-wrapper" id="contractRegionWrapper">
+                                <div class="searchable-select-trigger" id="contractRegionTrigger" tabindex="0">
+                                    <span class="searchable-select-label" id="contractRegionLabel">Select region</span>
+                                    <span class="searchable-select-arrow">▾</span>
+                                </div>
+                                <div class="searchable-select-dropdown" id="contractRegionDropdown">
+                                    <input type="text" class="searchable-select-search" placeholder="Search region..." autocomplete="off" id="contractRegionSearch">
+                                    <div class="searchable-select-options" id="contractRegionOptions"></div>
+                                </div>
+                                <select id="contractRegion" name="contract_region" required style="display:none;"></select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="contractStreet">Street</label>
@@ -1029,11 +1168,17 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
                         </div>
                         <div class="form-group">
                             <label for="projectRegion" data-required=" *">Region</label>
-                            <input type="text" id="projectRegion" name="project_region" 
-                                   list="projectRegionList" placeholder="Type or select region" required>
-                            <datalist id="projectRegionList">
-                                <!-- Options will be populated dynamically -->
-                            </datalist>
+                            <div class="searchable-select-wrapper" id="projectRegionWrapper">
+                                <div class="searchable-select-trigger" id="projectRegionTrigger" tabindex="0">
+                                    <span class="searchable-select-label" id="projectRegionLabel">Select region</span>
+                                    <span class="searchable-select-arrow">▾</span>
+                                </div>
+                                <div class="searchable-select-dropdown" id="projectRegionDropdown">
+                                    <input type="text" class="searchable-select-search" placeholder="Search region..." autocomplete="off" id="projectRegionSearch">
+                                    <div class="searchable-select-options" id="projectRegionOptions"></div>
+                                </div>
+                                <select id="projectRegion" name="project_region" required style="display:none;"></select>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="projectStreet">Street</label>

@@ -2,15 +2,173 @@
    encode-non-priority.js — Non-Priority Form (3 Steps)
    ============================================================ */
 
+// Searchable Select Widget
+class SearchableSelect {
+    constructor(wrapperId, selectId) {
+        this.wrapper = document.getElementById(wrapperId);
+        this.select = document.getElementById(selectId);
+        this.trigger = this.wrapper.querySelector('.searchable-select-trigger');
+        this.label = this.wrapper.querySelector('.searchable-select-label');
+        this.arrow = this.wrapper.querySelector('.searchable-select-arrow');
+        this.dropdown = this.wrapper.querySelector('.searchable-select-dropdown');
+        this.search = this.wrapper.querySelector('.searchable-select-search');
+        this.optionsContainer = this.wrapper.querySelector('.searchable-select-options');
+        
+        this.init();
+    }
+
+    init() {
+        // Toggle dropdown
+        this.trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggle();
+        });
+
+        // Search filter
+        this.search.addEventListener('input', () => this.filterOptions());
+
+        // Select option on click
+        this.optionsContainer.addEventListener('click', (e) => {
+            const option = e.target.closest('.searchable-option');
+            if (option && !option.classList.contains('hidden')) {
+                this.selectOption(option.dataset.value);
+            }
+        });
+
+        // Close on outside click
+        document.addEventListener('click', (e) => {
+            if (!this.wrapper.contains(e.target)) {
+                this.close();
+            }
+        });
+
+        // Keyboard support
+        this.trigger.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.toggle();
+            }
+        });
+    }
+
+    toggle() {
+        if (this.wrapper.classList.contains('open')) {
+            this.close();
+        } else {
+            this.open();
+        }
+    }
+
+    open() {
+        this.wrapper.classList.add('open');
+        this.search.value = '';
+        this.filterOptions();
+        setTimeout(() => this.search.focus(), 50);
+    }
+
+    close() {
+        this.wrapper.classList.remove('open');
+    }
+
+    filterOptions() {
+        const term = this.search.value.toLowerCase().trim();
+        const options = this.optionsContainer.querySelectorAll('.searchable-option');
+        let hasVisible = false;
+
+        options.forEach(opt => {
+            const text = opt.textContent.toLowerCase();
+            if (text.includes(term)) {
+                opt.classList.remove('hidden');
+                hasVisible = true;
+            } else {
+                opt.classList.add('hidden');
+            }
+        });
+
+        // Show/hide no results message
+        let noResults = this.optionsContainer.querySelector('.searchable-no-results');
+        if (!hasVisible && options.length > 0) {
+            if (!noResults) {
+                noResults = document.createElement('div');
+                noResults.className = 'searchable-no-results';
+                noResults.textContent = 'No regions found';
+                this.optionsContainer.appendChild(noResults);
+            }
+            noResults.style.display = 'block';
+        } else if (noResults) {
+            noResults.style.display = 'none';
+        }
+    }
+
+    selectOption(value) {
+        // Update hidden select
+        this.select.value = value;
+        
+        // Update label
+        const selectedOption = this.optionsContainer.querySelector(`[data-value="${value}"]`);
+        if (selectedOption) {
+            this.label.textContent = selectedOption.textContent;
+            this.label.classList.add('has-value');
+        }
+
+        // Update selected state
+        this.optionsContainer.querySelectorAll('.searchable-option').forEach(opt => {
+            opt.classList.toggle('selected', opt.dataset.value === value);
+        });
+
+        // Trigger change event
+        this.select.dispatchEvent(new Event('change', { bubbles: true }));
+
+        this.close();
+    }
+
+    populate(regions) {
+        // Clear existing options
+        this.optionsContainer.innerHTML = '';
+        this.select.innerHTML = '<option value="">Select region</option>';
+
+        // Add new options
+        regions.forEach(region => {
+            // Add to hidden select
+            const selectOption = document.createElement('option');
+            selectOption.value = region.name;
+            selectOption.textContent = region.name;
+            this.select.appendChild(selectOption);
+
+            // Add to visible dropdown
+            const divOption = document.createElement('div');
+            divOption.className = 'searchable-option';
+            divOption.dataset.value = region.name;
+            divOption.textContent = region.name;
+            this.optionsContainer.appendChild(divOption);
+        });
+    }
+
+    setValue(value) {
+        if (value) {
+            this.selectOption(value);
+        } else {
+            this.label.textContent = 'Select region';
+            this.label.classList.remove('has-value');
+            this.select.value = '';
+        }
+    }
+}
+
 const NonPriorityForm = {
     currentStep: 1,
     totalSteps: 3,
     form: null,
     locationCache: {},
+    searchableSelects: {},
 
     init() {
         this.form = document.getElementById('encodeForm');
         if (!this.form) return;
+
+        // Initialize searchable select widgets
+        this.searchableSelects.contractRegion = new SearchableSelect('contractRegionWrapper', 'contractRegion');
+        this.searchableSelects.projectRegion = new SearchableSelect('projectRegionWrapper', 'projectRegion');
 
         // Event listeners for step navigation - all steps
         document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
@@ -190,21 +348,6 @@ const NonPriorityForm = {
         const countryElement = document.getElementById(countrySelectId);
         const country = countryElement ? (countryElement.value === 'Philippines' ? 'PH' : countryElement.value || 'PH') : 'PH';
         
-        // Get the corresponding datalist for the region input
-        const regionInput = document.getElementById(regionSelectId);
-        let datalistId;
-        if (regionSelectId === 'contractRegion') {
-            datalistId = 'regionList';
-        } else if (regionSelectId === 'projectRegion') {
-            datalistId = 'projectRegionList';
-        }
-        
-        const regionDatalist = document.getElementById(datalistId);
-        if (!regionDatalist) {
-            console.error('Datalist not found for:', datalistId);
-            return;
-        }
-
         try {
             const response = await fetch(`${BASE}/api/locations.php?action=regions&country=${country}`);
             
@@ -218,15 +361,15 @@ const NonPriorityForm = {
             
             const data = await response.json();
 
-            // Clear existing options
-            regionDatalist.innerHTML = '';
-            
             if (data.regions && data.regions.length > 0) {
-                data.regions.forEach(region => {
-                    const option = document.createElement('option');
-                    option.value = region.name; // Use name for display
-                    regionDatalist.appendChild(option);
-                });
+                // Determine which searchable select to update
+                const selectWidget = regionSelectId === 'contractRegion' 
+                    ? this.searchableSelects.contractRegion 
+                    : this.searchableSelects.projectRegion;
+                
+                if (selectWidget) {
+                    selectWidget.populate(data.regions);
+                }
             } else {
                 console.warn('No regions found. Database may not be initialized.');
                 Toast.warning('No regions available. Please contact administrator.');
