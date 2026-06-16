@@ -60,10 +60,10 @@ try {
                     <span class="ap-nav-arrow">▼</span>
                 </button>
                 <div class="ap-nav-dropdown-menu">
-                    <a href="<?= $base ?>/admin" class="ap-nav-dropdown-item">
+                    <a href="<?= $base ?>/reports" class="ap-nav-dropdown-item">
                         <span class="ap-nav-label">Dashboard Report</span>
                     </a>
-                    <a href="<?= $base ?>/reports" class="ap-nav-dropdown-item">
+                    <a href="<?= $base ?>/full-reports" class="ap-nav-dropdown-item">
                         <span class="ap-nav-label">Full Reports</span>
                     </a>
                 </div>
