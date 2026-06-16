@@ -1062,6 +1062,70 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             }
         }
     </style>
+
+    <style>
+        /* ── Edit Options Modal ── */
+        .edit-options-grid {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .edit-option-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.875rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+        }
+
+        .edit-option-card:hover {
+            background: rgba(255, 140, 0, 0.1);
+            border-color: rgba(255, 140, 0, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .edit-option-icon {
+            font-size: 1.6rem;
+            width: 2.5rem;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .edit-option-content {
+            flex: 1;
+        }
+
+        .edit-option-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .edit-option-desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .edit-option-arrow {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+            transition: transform 0.2s, color 0.2s;
+        }
+
+        .edit-option-card:hover .edit-option-arrow {
+            transform: translateX(4px);
+            color: var(--orange-500, #f97316);
+        }
+    </style>
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
 
@@ -1268,17 +1332,17 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 
 <!-- Edit Options Modal -->
 <div class="modal-overlay" id="editOptionsModal" style="z-index:100000;">
-    <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-content" style="max-width: 480px;">
         <div class="modal-header">
             <h2>✏️ Edit Project</h2>
             <button class="modal-close" onclick="closeEditOptionsModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin: 0 0 1.5rem; color: var(--text-secondary); text-align: center;">
+            <p style="margin: 0 0 1.25rem; color: var(--text-secondary); text-align: center; font-size: 0.875rem;">
                 Select which section you want to edit:
             </p>
             
-            <div style="display: grid; gap: 1rem;">
+            <div class="edit-options-grid">
                 <button class="edit-option-card" onclick="editSection('contract')">
                     <div class="edit-option-icon">📋</div>
                     <div class="edit-option-content">
