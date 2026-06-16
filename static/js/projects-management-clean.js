@@ -1580,8 +1580,21 @@ function exitProjectSelectionMode() {
     checkboxes.forEach(checkbox => checkbox.remove());
     console.log('[PM] Removed', checkboxes.length, 'checkboxes');
     
+    // Remove match badges and clear row styling
+    const matchBadges = document.querySelectorAll('.match-badge');
+    matchBadges.forEach(badge => badge.remove());
+    
+    const rows = document.querySelectorAll('#pm-table-body tr[data-project]');
+    rows.forEach(row => {
+        row.style.background = '';
+        row.style.border = '';
+    });
+    
     // Clear button reference
     window.inlineAssignButton = null;
+    
+    // Reload projects to restore original table state
+    loadProjects();
     
     console.log('[PM] Successfully exited project selection mode');
 }
