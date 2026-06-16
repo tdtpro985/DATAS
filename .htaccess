@@ -60,6 +60,9 @@ RewriteRule ^illegitimate-projects/?$ pages/illegitimate-projects.php [QSA,L]
 
 RewriteRule ^reports/?$ pages/reports.php [QSA,L]
 
+# /full-reports → pages/full-reports.php (admin/superadmin/sales_rep only)
+RewriteRule ^full-reports/?$ pages/full-reports.php [QSA,L]
+
 # / (root) → pages/projects.php (redirect to projects instead of reports)
 RewriteRule ^$ pages/projects.php [QSA,L]
 RewriteRule ^index\.html?$ pages/projects.php [QSA,L]
