@@ -82,12 +82,13 @@ const FullReports = {
             const contractorsData = await contractorsRes.json();
             this.data.contractors = contractorsData.data?.contractors || [];
 
-            // Load ALL users (not just filter by role first)
+            // Load ALL users - API returns array directly, not wrapped
             const usersRes = await fetch(`${BASE}/api/v1/users`, {
                 credentials: 'include'
             });
             const usersData = await usersRes.json();
-            this.data.users = usersData.users || [];
+            // API returns array directly, not { users: [...] }
+            this.data.users = Array.isArray(usersData) ? usersData : (usersData.users || []);
 
             console.log('[FULL REPORTS] Loaded users:', this.data.users.length);
             console.log('[FULL REPORTS] Users data sample:', this.data.users.slice(0, 3));
