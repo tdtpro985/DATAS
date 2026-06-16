@@ -363,48 +363,132 @@ const FullReports = {
     renderContractorAnalytics() {
         const projects = this.getFilteredProjects();
 
-        // Group by contractor
+        // Group by contractor with additional info
         const byContractor = {};
         projects.forEach(p => {
             const name = p.contractor_name || 'Unknown';
             if (!byContractor[name]) {
-                byContractor[name] = { count: 0, value: 0 };
+                byContractor[name] = { 
+                    count: 0, 
+                    value: 0,
+                    sources: new Set(),
+                    regions: new Set()
+                };
             }
             byContractor[name].count++;
             byContractor[name].value += parseFloat(p.project_value) || 0;
+            
+            // Track sources and regions
+            if (p.source) byContractor[name].sources.add(p.source);
+            const region = p.project_region || p.region;
+            if (region) byContractor[name].regions.add(region);
         });
 
-        const contractorRows = Object.entries(byContractor)
+        // Sort and prepare data
+        const sortedContractors = Object.entries(byContractor)
             .sort((a, b) => b[1].value - a[1].value)
-            .slice(0, 50) // Top 50
-            .map(([name, data], index) => `
-                <tr>
-                    <td>${index + 1}</td>
-                    <td>${this.escapeHtml(name)}</td>
-                    <td>${data.count.toLocaleString()}</td>
-                    <td>₱${this.formatNumber(data.value)}</td>
-                    <td>₱${this.formatNumber(data.value / data.count)}</td>
-                </tr>
-            `).join('');
+            .map(([name, data]) => ({
+                name,
+                count: data.count,
+                value: data.value,
+                avgValue: data.value / data.count,
+                sources: Array.from(data.sources).join(', '),
+                regions: Array.from(data.regions).join(', ')
+            }));
+
+        // Pagination state
+        if (!this.contractorPagination) {
+            this.contractorPagination = { currentPage: 1, pageSize: 10 };
+        }
+
+        const totalPages = Math.ceil(sortedContractors.length / this.contractorPagination.pageSize);
+        const startIdx = (this.contractorPagination.currentPage - 1) * this.contractorPagination.pageSize;
+        const endIdx = startIdx + this.contractorPagination.pageSize;
+        const pageData = sortedContractors.slice(startIdx, endIdx);
+
+        const contractorRows = pageData.map((contractor) => `
+            <tr>
+                <td>${this.escapeHtml(contractor.name)}</td>
+                <td>${this.escapeHtml(contractor.sources || 'N/A')}</td>
+                <td>${this.escapeHtml(contractor.regions || 'N/A')}</td>
+                <td>${contractor.count.toLocaleString()}</td>
+                <td>₱${this.formatNumber(contractor.value)}</td>
+                <td>₱${this.formatNumber(contractor.avgValue)}</td>
+            </tr>
+        `).join('');
+
+        // Pagination controls
+        const paginationHTML = `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; background: var(--bg-card); border-top: 1px solid var(--border-color);">
+                <div style="color: var(--text-secondary); font-size: 0.85rem;">
+                    Showing ${startIdx + 1}-${Math.min(endIdx, sortedContractors.length)} of ${sortedContractors.length} contractors
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button 
+                        onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage - 1})"
+                        ${this.contractorPagination.currentPage === 1 ? 'disabled' : ''}
+                        style="padding: 0.4rem 0.8rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; ${this.contractorPagination.currentPage === 1 ? 'opacity: 0.5; cursor: not-allowed;' : ''}"
+                    >
+                        Previous
+                    </button>
+                    <span style="display: flex; align-items: center; padding: 0 1rem; color: var(--text-primary); font-weight: 600; font-size: 0.85rem;">
+                        Page ${this.contractorPagination.currentPage} of ${totalPages}
+                    </span>
+                    <button 
+                        onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage + 1})"
+                        ${this.contractorPagination.currentPage === totalPages ? 'disabled' : ''}
+                        style="padding: 0.4rem 0.8rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.85rem; ${this.contractorPagination.currentPage === totalPages ? 'opacity: 0.5; cursor: not-allowed;' : ''}"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        `;
 
         const html = `
             <div class="data-table-wrapper">
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>Contractor Name</th>
+                            <th>Source</th>
+                            <th>Region</th>
                             <th>Project Count</th>
                             <th>Total Value</th>
                             <th>Average Value</th>
                         </tr>
                     </thead>
-                    <tbody>${contractorRows || '<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);">No data available</td></tr>'}</tbody>
+                    <tbody>${contractorRows || '<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">No data available</td></tr>'}</tbody>
                 </table>
+                ${paginationHTML}
             </div>
         `;
 
         document.getElementById('contractorAnalytics').innerHTML = html;
+    },
+
+    changeContractorPage(newPage) {
+        const projects = this.getFilteredProjects();
+        const byContractor = {};
+        projects.forEach(p => {
+            const name = p.contractor_name || 'Unknown';
+            if (!byContractor[name]) {
+                byContractor[name] = { count: 0, value: 0, sources: new Set(), regions: new Set() };
+            }
+            byContractor[name].count++;
+            byContractor[name].value += parseFloat(p.project_value) || 0;
+            if (p.source) byContractor[name].sources.add(p.source);
+            const region = p.project_region || p.region;
+            if (region) byContractor[name].regions.add(region);
+        });
+
+        const totalContractors = Object.keys(byContractor).length;
+        const totalPages = Math.ceil(totalContractors / this.contractorPagination.pageSize);
+
+        if (newPage >= 1 && newPage <= totalPages) {
+            this.contractorPagination.currentPage = newPage;
+            this.renderContractorAnalytics();
+        }
     },
 
     renderSalesPerformance() {
