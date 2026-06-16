@@ -316,7 +316,8 @@ function openModal(rep = null) {
         document.getElementById('confirmPassword').setAttribute('required', 'required');
         
         // Hide account details
-        document.getElementById('pendingProjectsSection').style.display = 'none';
+        const pendingSection = document.getElementById('pendingProjectsSection');
+        if (pendingSection) pendingSection.style.display = 'none';
         
         // Show create buttons
         document.getElementById('editButtons').style.display = 'none';
