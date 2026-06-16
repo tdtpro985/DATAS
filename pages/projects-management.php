@@ -1352,6 +1352,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
+<script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/projects-management-clean.js?v=11"></script>
