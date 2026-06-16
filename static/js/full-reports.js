@@ -140,7 +140,7 @@ const FullReports = {
             filtered = filtered.filter(p => p.source === this.filters.source);
         }
 
-        // Apply date range filter
+        // Apply date range filter (based on publication_date)
         if (this.filters.dateRange !== 'all') {
             const now = new Date();
             const filterDate = new Date();
@@ -164,7 +164,8 @@ const FullReports = {
             }
 
             filtered = filtered.filter(p => {
-                const projectDate = new Date(p.created_at || p.publication_date);
+                if (!p.publication_date) return false;
+                const projectDate = new Date(p.publication_date);
                 return projectDate >= filterDate;
             });
         }
@@ -285,10 +286,11 @@ const FullReports = {
             bySource[source] = (bySource[source] || 0) + 1;
         });
 
-        // Group by month for trends
+        // Group by month for trends (based on publication_date)
         const byMonth = {};
         projects.forEach(p => {
-            const date = new Date(p.created_at || p.publication_date);
+            if (!p.publication_date) return;
+            const date = new Date(p.publication_date);
             const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
             byMonth[monthKey] = (byMonth[monthKey] || 0) + 1;
         });
@@ -938,7 +940,7 @@ const FullReports = {
             data: {
                 labels: sortedMonths,
                 datasets: [{
-                    label: 'Projects Created',
+                    label: 'Projects Published',
                     data: counts,
                     backgroundColor: 'rgba(249, 115, 22, 0.1)',
                     borderColor: 'rgba(249, 115, 22, 1)',
