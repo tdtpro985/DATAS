@@ -438,6 +438,46 @@ function generateContractForm(project) {
                 <input type="text" class="form-control" id="edit_contact_number" value="${project.contact_number || ''}" placeholder="0919 123-4567" />
             </div>
         </div>
+        
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+            <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--orange-500); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                📍 Contractor Location
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div class="form-group">
+                    <label>Country</label>
+                    <input type="text" class="form-control" id="edit_contract_country" value="${project.contract_country || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Region</label>
+                    <input type="text" class="form-control" id="edit_contract_region" value="${project.contract_region || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Province</label>
+                    <input type="text" class="form-control" id="edit_contract_province" value="${project.contract_province || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" class="form-control" id="edit_contract_city" value="${project.contract_city || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Barangay</label>
+                    <input type="text" class="form-control" id="edit_contract_barangay" value="${project.contract_barangay || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Street</label>
+                    <input type="text" class="form-control" id="edit_contract_street" value="${project.contract_street || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Blk/Lot #</label>
+                    <input type="text" class="form-control" id="edit_contract_blk_lot" value="${project.contract_blk_lot || ''}" placeholder="Optional" />
+                </div>
+                <div class="form-group">
+                    <label>Coordinates</label>
+                    <input type="text" class="form-control" id="edit_contract_coordinates" value="${project.contract_coordinates || ''}" placeholder="e.g. 14.5994,120.9842" />
+                </div>
+            </div>
+        </div>
     `;
 }
 
@@ -669,6 +709,15 @@ async function saveEditSection() {
             updateData.contractor_name = document.getElementById('edit_contractor_name')?.value || null;
             updateData.contact_person = document.getElementById('edit_contact_person')?.value || null;
             updateData.contact_number = document.getElementById('edit_contact_number')?.value || null;
+            // Contractor location fields
+            updateData.contract_country = document.getElementById('edit_contract_country')?.value || null;
+            updateData.contract_region = document.getElementById('edit_contract_region')?.value || null;
+            updateData.contract_province = document.getElementById('edit_contract_province')?.value || null;
+            updateData.contract_city = document.getElementById('edit_contract_city')?.value || null;
+            updateData.contract_barangay = document.getElementById('edit_contract_barangay')?.value || null;
+            updateData.contract_street = document.getElementById('edit_contract_street')?.value || null;
+            updateData.contract_blk_lot = document.getElementById('edit_contract_blk_lot')?.value || null;
+            updateData.contract_coordinates = document.getElementById('edit_contract_coordinates')?.value || null;
             break;
         case 'project':
             updateData.project_id = document.getElementById('edit_project_id')?.value || null;
