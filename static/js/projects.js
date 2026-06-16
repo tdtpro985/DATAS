@@ -221,6 +221,7 @@ const ProjectsPage = {
             let valueA, valueB;
 
             switch (field) {
+                case 'publication_date':
                 case 'publication':
                     valueA = new Date(a.publication_date || 0);
                     valueB = new Date(b.publication_date || 0);
@@ -229,10 +230,12 @@ const ProjectsPage = {
                     valueA = new Date(a.created_at || 0);
                     valueB = new Date(b.created_at || 0);
                     break;
+                case 'contractor_name':
                 case 'contractor':
                     valueA = (a.contractor_name || '').toLowerCase();
                     valueB = (b.contractor_name || '').toLowerCase();
                     break;
+                case 'project_name':
                 case 'project':
                     valueA = (a.project_name || '').toLowerCase();
                     valueB = (b.project_name || '').toLowerCase();
@@ -249,6 +252,7 @@ const ProjectsPage = {
                     valueA = (a.status || '').toLowerCase();
                     valueB = (b.status || '').toLowerCase();
                     break;
+                case 'tracking_status':
                 case 'tracking':
                     valueA = (a.sales_tracking_status || 'Not Started').toLowerCase();
                     valueB = (b.sales_tracking_status || 'Not Started').toLowerCase();
