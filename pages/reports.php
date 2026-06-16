@@ -1314,10 +1314,25 @@ if ($role === 'encoder') {
         
         .contractors-table {
             flex: 1;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
             min-height: 0;
-            max-height: 100%; /* Use available space within flex container */
+            position: relative;
+        }
+
+        .contractors-scroll-track {
+            display: flex;
+            flex-direction: column;
+            animation: contractorScroll linear infinite;
+            animation-play-state: running;
+        }
+
+        .contractors-table:hover .contractors-scroll-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes contractorScroll {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(-50%); }
         }
         
         .contractors-table::-webkit-scrollbar {
@@ -1505,9 +1520,8 @@ if ($role === 'encoder') {
         
         .contractors-table {
             flex: 1;
-            overflow-y: auto;
+            overflow: hidden;
             min-height: 0;
-            max-height: calc(100vh - 300px);
         }
         
         .contractors-table::-webkit-scrollbar {
@@ -1641,9 +1655,8 @@ if ($role === 'encoder') {
         
         .contractors-table {
             flex: 1;
-            overflow-y: auto;
+            overflow: hidden;
             min-height: 0;
-            max-height: calc(100vh - 300px);
         }
         
         .contractors-table::-webkit-scrollbar {
@@ -4164,13 +4177,22 @@ if ($role === 'encoder') {
                     return;
                 }
 
-                container.innerHTML = contractors.slice(0, 20).map((item, index) => `
+                const rowsHtml = contractors.slice(0, 20).map((item, index) => `
                     <div class="contractor-row">
                         <div class="contractor-rank">${index + 1}</div>
                         <div class="contractor-name">${item.contractor_name || 'Unknown'}</div>
                         <div class="contractor-value">₱${Utils.formatNumber(item.total_value || 0)}</div>
                     </div>
                 `).join('');
+
+                // Duplicate rows for seamless infinite loop
+                const duration = Math.max(10, contractors.slice(0, 20).length * 1.2);
+                container.innerHTML = `
+                    <div class="contractors-scroll-track" style="animation-duration: ${duration}s;">
+                        ${rowsHtml}
+                        ${rowsHtml}
+                    </div>
+                `;
             },
 
             renderEmpty() {
