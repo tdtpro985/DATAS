@@ -145,7 +145,6 @@ try {
                 <span class="ap-nav-label">Activity Logs</span>
             </a>
             <?php endif; ?>
-            <?php endif; ?>
             
             <?php if ($role === 'sales_rep'): ?>
             <div class="ap-nav-section-label" style="margin-top: 1.5rem;">My Work</div>
