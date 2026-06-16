@@ -1335,9 +1335,9 @@ function showProjectSelectionBanner(salesRepName) {
     `;
     
     statusContainer.innerHTML = `
-        <span>📋 Assignment Mode: Selected Sales Rep <strong>${salesRepName}</strong></span>
-        <span>| Selected Projects: <span id="selectedCount" style="font-weight: 700;">0</span></span>
-        <button onclick="exitProjectSelectionMode()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 500;">Cancel</button>
+        <span>📋 Assignment Mode: Selected Sales Rep <strong style="color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">${salesRepName}</strong></span>
+        <span style="color: rgba(255,255,255,0.95);">| Selected Projects: <span id="selectedCount" style="font-weight: 900; color: #fff; background: rgba(0,0,0,0.25); padding: 0.15rem 0.6rem; border-radius: 0.375rem; font-size: 1.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">0</span></span>
+        <button onclick="exitProjectSelectionMode()" style="background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;">Cancel</button>
     `;
     
     // Create assign projects button
@@ -1468,7 +1468,8 @@ function updateSelectedCount() {
     const countElements = document.querySelectorAll('#selectedCount');
     countElements.forEach(el => {
         el.textContent = count;
-        el.style.color = count > 0 ? '#10b981' : 'white';
+        el.style.color = '#fff';
+        el.style.background = count > 0 ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)';
     });
     
     const assignButtonCountElement = document.getElementById('assignButtonCount');
