@@ -49,10 +49,6 @@ const ProjectsPage = {
             this.filterProjects();
         });
 
-        // Refresh button
-        document.getElementById('refresh-btn').addEventListener('click', () => {
-            this.loadProjects();
-        });
     },
 
     async loadProjects() {

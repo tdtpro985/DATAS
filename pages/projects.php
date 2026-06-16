@@ -227,26 +227,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             border-color: var(--orange-500);
         }
 
-        .btn-refresh {
-            padding: 0.75rem 1.25rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-refresh:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
         /* ── Projects Table Card ── */
         .projects-card {
             background: var(--bg-card);
@@ -1190,10 +1170,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             <option value="status_asc">📊 Status A-Z</option>
             <option value="tracking_status_desc">📈 Tracking Status</option>
         </select>
-        <button class="btn-refresh" id="refresh-btn">
-            <span>🔄</span>
-            <span>Refresh</span>
-        </button>
     </div>
 
     <!-- Projects Table -->
