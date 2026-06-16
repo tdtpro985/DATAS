@@ -774,11 +774,20 @@ async function saveEditSection() {
                 Toast.success('Project updated successfully');
             }
             
-            // Close modal and reload
+            // Close modal
             closeEditSectionModal();
-            setTimeout(() => {
-                window.location.reload();
-            }, 1000);
+            
+            // Reload projects table without full page refresh
+            if (typeof ProjectsPage !== 'undefined' && typeof ProjectsPage.loadProjects === 'function') {
+                setTimeout(() => {
+                    ProjectsPage.loadProjects();
+                }, 500);
+            } else {
+                // Fallback to full page reload if ProjectsPage not available
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            }
         } else {
             throw new Error(result.message || 'Failed to update project');
         }
