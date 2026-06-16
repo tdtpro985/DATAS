@@ -160,7 +160,7 @@ const ProjectsPage = {
     },
 
     populateRegionFilter() {
-        const regions = [...new Set(this.allProjects.map(p => p.region).filter(Boolean))];
+        const regions = [...new Set(this.allProjects.map(p => p.project_region || p.region).filter(Boolean))];
         regions.sort();
 
         const select = document.getElementById('region-filter');
@@ -206,12 +206,12 @@ const ProjectsPage = {
             const matchesSearch = !searchTerm || 
                 (project.contractor_name || '').toLowerCase().includes(searchTerm) ||
                 (project.project_name || '').toLowerCase().includes(searchTerm) ||
-                (project.region || '').toLowerCase().includes(searchTerm) ||
+                (project.project_region || project.region || '').toLowerCase().includes(searchTerm) ||
                 (project.project_id || '').toLowerCase().includes(searchTerm) ||
                 (project.contractor_id || '').toLowerCase().includes(searchTerm);
 
             // Region filter
-            const matchesRegion = !regionFilter || project.region === regionFilter;
+            const matchesRegion = !regionFilter || (project.project_region || project.region) === regionFilter;
 
             // Source filter
             const matchesSource = !sourceFilter || project.source === sourceFilter;
@@ -262,8 +262,8 @@ const ProjectsPage = {
                     valueB = parseFloat(b.project_value || 0);
                     break;
                 case 'region':
-                    valueA = (a.region || '').toLowerCase();
-                    valueB = (b.region || '').toLowerCase();
+                    valueA = (a.project_region || a.region || '').toLowerCase();
+                    valueB = (b.project_region || b.region || '').toLowerCase();
                     break;
                 case 'status':
                     valueA = (a.status || '').toLowerCase();
@@ -341,7 +341,7 @@ const ProjectsPage = {
                 <tr data-project-id="${project.id}" onclick="ProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
                     <td title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
                     <td title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
-                    <td>${this.escapeHtml(project.region || '—')}</td>
+                    <td>${this.escapeHtml(project.project_region || project.region || '—')}</td>
                     <td>${this.escapeHtml(project.source || '—')}</td>
                     <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
                     <td class="col-value">${value}</td>
