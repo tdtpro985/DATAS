@@ -170,6 +170,14 @@ const NonPriorityForm = {
         this.searchableSelects.contractRegion = new SearchableSelect('contractRegionWrapper', 'contractRegion');
         this.searchableSelects.projectRegion = new SearchableSelect('projectRegionWrapper', 'projectRegion');
 
+        // Add input event listeners to clear error styling
+        this.form.addEventListener('input', (e) => {
+            if (e.target.matches('input, select')) {
+                e.target.style.borderColor = '';
+                e.target.style.boxShadow = '';
+            }
+        });
+
         // Event listeners for step navigation - all steps
         document.getElementById('nextBtn').addEventListener('click', () => this.nextStep());
         document.getElementById('prevBtn').addEventListener('click', () => this.prevStep());
@@ -319,10 +327,25 @@ const NonPriorityForm = {
         };
 
         const fields = requiredFields[stepNum] || [];
+        const missingFields = [];
+        
         for (const fieldId of fields) {
             const field = document.getElementById(fieldId);
-            if (!field || !field.value) {
-                return false;
+            if (!field || !field.value || field.value.trim() === '') {
+                // Add visual feedback for missing field
+                if (field) {
+                    field.style.borderColor = '#ef4444';
+                    field.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.2)';
+                }
+                
+                // Get field label for error message
+                const label = document.querySelector(`label[for="${fieldId}"]`);
+                const fieldName = label ? label.textContent.replace(' *', '').trim() : fieldId;
+                missingFields.push(fieldName);
+            } else {
+                // Remove error styling if field is filled
+                field.style.borderColor = '';
+                field.style.boxShadow = '';
             }
         }
         
@@ -332,13 +355,27 @@ const NonPriorityForm = {
             const sourceOther = document.getElementById('sourceOther');
             const philgepsNotice = document.getElementById('philgepsNotice');
             
-            if (sourceSelect.value === 'Other' && !sourceOther.value) {
-                return false;
+            if (sourceSelect.value === 'Other' && (!sourceOther.value || sourceOther.value.trim() === '')) {
+                if (sourceOther) {
+                    sourceOther.style.borderColor = '#ef4444';
+                    sourceOther.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.2)';
+                }
+                missingFields.push('Specify Source');
             }
             
             if (sourceSelect.value === 'PHILGEPS' && (!philgepsNotice.value || philgepsNotice.value.trim() === '')) {
-                return false;
+                if (philgepsNotice) {
+                    philgepsNotice.style.borderColor = '#ef4444';
+                    philgepsNotice.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.2)';
+                }
+                missingFields.push('Notice Reference Number');
             }
+        }
+        
+        if (missingFields.length > 0) {
+            console.log('Missing required fields:', missingFields);
+            Toast.error(`Please fill in: ${missingFields.join(', ')}`);
+            return false;
         }
         
         return true;

@@ -321,6 +321,39 @@ if (empty($source)) {
     jsonError('Source is required', 422);
 }
 
+// Validate Province and City fields (both Contract and Project locations)
+$contractProvince = trim($body['contract_province'] ?? '');
+$contractCity = trim($body['contract_city'] ?? '');
+$projectProvince = trim($body['project_province'] ?? '');
+$projectCity = trim($body['project_city'] ?? '');
+
+if (empty($contractProvince)) {
+    jsonError('Contract Province is required', 422);
+}
+if (empty($contractCity)) {
+    jsonError('Contract City is required', 422);
+}
+if (empty($projectProvince)) {
+    jsonError('Project Province is required', 422);
+}
+if (empty($projectCity)) {
+    jsonError('Project City is required', 422);
+}
+
+// SECURITY: Validate location field formats
+if (!preg_match('/^[a-zA-Z0-9\s\-,\.]+$/', $contractProvince)) {
+    jsonError('Invalid contract province format', 422);
+}
+if (!preg_match('/^[a-zA-Z0-9\s\-,\.]+$/', $contractCity)) {
+    jsonError('Invalid contract city format', 422);
+}
+if (!preg_match('/^[a-zA-Z0-9\s\-,\.]+$/', $projectProvince)) {
+    jsonError('Invalid project province format', 422);
+}
+if (!preg_match('/^[a-zA-Z0-9\s\-,\.]+$/', $projectCity)) {
+    jsonError('Invalid project city format', 422);
+}
+
 $db = getDB();
 $stmt = $db->prepare("
     INSERT INTO projects (
