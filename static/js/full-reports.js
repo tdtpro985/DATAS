@@ -82,12 +82,15 @@ const FullReports = {
             const contractorsData = await contractorsRes.json();
             this.data.contractors = contractorsData.data?.contractors || [];
 
-            // Load users
+            // Load ALL users (not just filter by role first)
             const usersRes = await fetch(`${BASE}/api/v1/users`, {
                 credentials: 'include'
             });
             const usersData = await usersRes.json();
             this.data.users = usersData.users || [];
+
+            console.log('[FULL REPORTS] Loaded users:', this.data.users.length);
+            console.log('[FULL REPORTS] Users data sample:', this.data.users.slice(0, 3));
 
             // Populate filter dropdowns
             this.populateFilters();
@@ -580,22 +583,45 @@ const FullReports = {
 
     renderEncodingPerformance() {
         const projects = this.getFilteredProjects();
-        const encoders = this.data.users.filter(u => u.role === 'encoder' || u.role === 'admin' || u.role === 'superadmin');
+        
+        // Create user lookup map for faster access
+        const userMap = {};
+        this.data.users.forEach(u => {
+            userMap[u.id] = u;
+        });
+
+        console.log('[ENCODING PERF] User map:', userMap);
+        console.log('[ENCODING PERF] Sample projects encoded_by:', projects.slice(0, 5).map(p => p.encoded_by));
 
         // Group by encoder with full name
         const byEncoder = {};
         projects.forEach(p => {
             const encoderId = p.encoded_by;
-            if (!encoderId) return;
+            if (!encoderId) {
+                // Track projects with no encoder
+                if (!byEncoder['No Encoder Assigned']) {
+                    byEncoder['No Encoder Assigned'] = 0;
+                }
+                byEncoder['No Encoder Assigned']++;
+                return;
+            }
             
-            const encoder = encoders.find(e => e.id === encoderId);
-            const encoderName = encoder ? (encoder.full_name || encoder.email || `User #${encoderId}`) : `Unknown User #${encoderId}`;
+            const encoder = userMap[encoderId];
+            let encoderName;
+            
+            if (encoder) {
+                encoderName = encoder.full_name || encoder.email || `User ID ${encoderId}`;
+            } else {
+                encoderName = `Unknown User #${encoderId}`;
+            }
             
             if (!byEncoder[encoderName]) {
                 byEncoder[encoderName] = 0;
             }
             byEncoder[encoderName]++;
         });
+
+        console.log('[ENCODING PERF] Grouped by encoder:', byEncoder);
 
         const encoderRows = Object.entries(byEncoder)
             .sort((a, b) => b[1] - a[1])
