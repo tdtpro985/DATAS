@@ -421,12 +421,15 @@ const FullReports = {
         // Geographic Distribution - Total Regions
         const uniqueRegions = Object.keys(byRegion).filter(r => r !== 'Unknown').length;
         
-        // Material Requirements - Total Tonnage
-        let totalTonnage = 0;
+        // Material Requirements - Total Value of all materials
+        let totalMaterialValue = 0;
         projects.forEach(p => {
-            ['straight', 'deformed', 'purlins', 'decking', 'others'].forEach(mat => {
-                totalTonnage += parseFloat(p[mat + '_tons']) || 0;
-            });
+            totalMaterialValue += parseFloat(p.sheet_pile_amount)||0;
+            totalMaterialValue += parseFloat(p.ms_plate)||0;
+            totalMaterialValue += parseFloat(p.angle_bars)||0;
+            totalMaterialValue += parseFloat(p.channel_bars)||0;
+            totalMaterialValue += parseFloat(p.wide_flange)||0;
+            totalMaterialValue += parseFloat(p.gi_bi)||0;
         });
         
         // Encoding Performance - Total encoders & avg projects per encoder
@@ -461,8 +464,8 @@ const FullReports = {
             </div>
             <div class="stat-card" onclick="FullReports.scrollToSection('materialRequirementsSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
                 <div class="stat-label">🔩 Material Requirements</div>
-                <div class="stat-value">${this.formatNumber(totalTonnage)} Tons</div>
-                <div class="stat-sublabel">Across ${projects.length.toLocaleString()} projects →</div>
+                <div class="stat-value">₱${this.formatNumber(totalMaterialValue)}</div>
+                <div class="stat-sublabel">Total material value across all projects →</div>
             </div>
             <div class="stat-card" onclick="FullReports.scrollToSection('encodingPerformanceSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
                 <div class="stat-label">⌨️ Encoding Performance</div>
