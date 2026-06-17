@@ -113,7 +113,7 @@ select option,
 .form-group select option,
 select.form-control option,
 .pm-filter-select option {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    background: #1e293b !important;
     color: #e2e8f0 !important;
     padding: 0.75rem 1rem !important;
     font-size: 0.875rem !important;
@@ -130,6 +130,7 @@ select option:active {
     background: linear-gradient(135deg, #ff8000 0%, #ffa500 100%) !important;
     color: #000 !important;
     font-weight: 600 !important;
+    box-shadow: inset 0 0 10px rgba(255, 128, 0, 0.3) !important;
 }
 
 /* ── Disabled State ── */
@@ -231,6 +232,17 @@ select:active::before {
         background-size: 16px !important;
         background-color: #0f172a !important;
     }
+    
+    /* Firefox dropdown menu styling */
+    select option {
+        background-color: #1e293b !important;
+        color: #e2e8f0 !important;
+    }
+    
+    select option:hover {
+        background-color: #ff8000 !important;
+        color: #000 !important;
+    }
 }
 
 /* ── Responsive Design ── */
@@ -247,6 +259,48 @@ select:active::before {
         padding: 0.6rem 2rem 0.6rem 0.85rem !important;
         border-radius: 8px !important;
     }
+}
+
+/* ── Chrome/Edge Dropdown Menu Background ── */
+@supports (-webkit-appearance: none) {
+    select {
+        color-scheme: dark !important;
+    }
+    
+    select option {
+        background: #1e293b !important;
+        color: #e2e8f0 !important;
+    }
+    
+    select option:checked {
+        background: linear-gradient(135deg, #ff8000, #ffa500) !important;
+        color: #000 !important;
+    }
+}
+
+/* ── Force Dark Mode on Select Dropdowns ── */
+select {
+    color-scheme: dark !important;
+}
+
+/* ── Additional Option Styling for Better Visibility ── */
+select option {
+    background-color: #1e293b !important;
+    color: #e2e8f0 !important;
+    padding: 10px !important;
+    line-height: 1.5 !important;
+}
+
+select option:hover {
+    background: #ff8000 !important;
+    color: #000 !important;
+}
+
+select option:checked,
+select option:focus {
+    background: linear-gradient(135deg, #ff8000, #ffa500) !important;
+    color: #000 !important;
+    font-weight: 600 !important;
 }
 
 /* ── Dark Mode Enhancements ── */

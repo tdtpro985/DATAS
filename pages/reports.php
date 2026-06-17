@@ -3404,6 +3404,7 @@ if ($role === 'encoder') {
     
     <!-- Modern Select Dropdowns Styling -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/custom-select-dropdown.css">
 </head>
 <body>
     <div class="dashboard-container">
@@ -3957,6 +3958,9 @@ if ($role === 'encoder') {
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom Select Dropdown -->
+    <script src="<?= $base ?>/static/js/custom-select-dropdown.js"></script>
 
     <script>
         const BASE = '<?= $base ?>';
@@ -5794,6 +5798,18 @@ if ($role === 'encoder') {
         // Cleanup on page unload
         window.addEventListener('beforeunload', () => {
             App.cleanup();
+        });
+        
+        // Initialize custom select dropdowns for all control-select elements
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize control dropdowns with custom select
+            const controlSelects = document.querySelectorAll('.control-select');
+            controlSelects.forEach(select => {
+                new CustomSelect(select, {
+                    searchable: false,
+                    placeholder: select.options[select.selectedIndex]?.text || 'Select...'
+                });
+            });
         });
     </script>
 </body>
