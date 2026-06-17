@@ -6,17 +6,8 @@
    URL: http://your-domain.com/setup-activity-logs.php
    ============================================================ */
 
-// Security check - allow from localhost OR with token
-$allowedIPs = ['127.0.0.1', '::1', 'localhost'];
-$clientIP = $_SERVER['REMOTE_ADDR'] ?? '';
-
-// Allow access with secret token for webmin/remote access
-$token = $_GET['token'] ?? '';
-$expectedToken = 'TDT2026SETUP'; // Change this to something secure
-
-if (!in_array($clientIP, $allowedIPs) && $token !== $expectedToken) {
-    die('Access denied. Run this script from localhost or provide the correct token parameter.');
-}
+// Allow direct access (internal system)
+// No authentication required for setup script
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
