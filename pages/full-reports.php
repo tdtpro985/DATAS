@@ -510,8 +510,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script src="<?= $base ?>/static/js/full-reports.js?v=1"></script>
 
 <!-- Export Modal -->
-<div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:999999;align-items:center;justify-content:center;transition:opacity 0.2s;">
-    <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;width:520px;max-width:95%;max-height:90vh;overflow-y:auto;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+<div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
+    <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;width:540px;max-width:90vw;max-height:85vh;overflow-y:auto;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
             <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text-primary);">📥 Export Report</h3>
             <button onclick="closeExportModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
@@ -536,27 +536,27 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         <div id="exportDateError" style="display:none;font-size:0.75rem;color:#f87171;margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:rgba(239,68,68,0.1);border-radius:6px;"></div>
         <div style="margin-bottom:1.5rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.6rem;">Sections to Export</label>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="executive" checked style="accent-color:var(--primary);"> 📈 Executive Summary
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="executive" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 📈 Executive Summary
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="projects" checked style="accent-color:var(--primary);"> 📊 Project Analytics
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="projects" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 📊 Project Analytics
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="contractors" checked style="accent-color:var(--primary);"> 🏢 Contractor Analytics
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="contractors" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🏢 Contractor Analytics
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="sales" checked style="accent-color:var(--primary);"> 💼 Sales Performance
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="sales" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 💼 Sales Performance
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="geographic" checked style="accent-color:var(--primary);"> 🗺️ Geographic
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="geographic" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🗺️ Geographic
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
-                    <input type="checkbox" class="export-section" value="material" checked style="accent-color:var(--primary);"> 🔩 Material Req.
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="material" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🔩 Material Req.
                 </label>
-                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);grid-column:1/-1;">
-                    <input type="checkbox" class="export-section" value="encoding" checked style="accent-color:var(--primary);"> ⌨️ Encoding Performance
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                    <input type="checkbox" class="export-section" value="encoding" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> ⌨️ Encoding Performance
                 </label>
             </div>
         </div>
