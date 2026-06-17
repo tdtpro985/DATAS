@@ -202,7 +202,7 @@ function sortReps(reps) {
 }
 function setSortColumn(col) {
     // For timing cols, default sort is asc (fastest first); others default desc
-    const timingCols = ['avg_days_to_contact','avg_days_contact_to_quote','avg_days_quote_to_sql','avg_days_quote_to_win','avg_days_full_cycle'];
+    const timingCols = ['avg_days_to_contact','avg_days_contact_to_quote','avg_days_quote_to_sql','avg_days_quote_to_win','avg_days_sql_to_win','avg_days_full_cycle'];
     if (State.sortBy === col) {
         State.sortDir = State.sortDir === 'desc' ? 'asc' : 'desc';
     } else {
@@ -235,14 +235,14 @@ function openDetail(rep) {
     setText('mSql',      fmt(rep.sql_yes_count));
     setText('mSqlNo',    fmt(rep.sql_no_count));
 
-    // Funnel
+    // Funnel: Contacted → SQL Yes → SQL No → Quoted → Win
     const base = rep.total_assigned || 1;
     const funnel = [
         { label: 'Contacted', count: rep.contacted_count, color: '#3B82F6', days: rep.avg_days_to_contact,        daysLabel: 'avg days to contact' },
-        { label: 'Quoted',    count: rep.quoted_count,    color: '#F59E0B', days: rep.avg_days_contact_to_quote,  daysLabel: 'avg days contacted → Quoted' },
-        { label: 'SQL Yes',   count: rep.sql_yes_count,   color: '#10B981', days: rep.avg_days_quote_to_sql,      daysLabel: 'avg days quoted → SQL' },
+        { label: 'SQL Yes',   count: rep.sql_yes_count,   color: '#10B981', days: rep.avg_days_quote_to_sql,      daysLabel: 'avg days → SQL' },
         { label: 'SQL No',    count: rep.sql_no_count,    color: '#EF4444', days: null,                           daysLabel: null },
-        { label: 'Win',       count: rep.win_count,       color: '#8B5CF6', days: rep.avg_days_quote_to_win,      daysLabel: 'avg days quoted → Win' },
+        { label: 'Quoted',    count: rep.quoted_count,    color: '#F59E0B', days: rep.avg_days_contact_to_quote,  daysLabel: 'avg days → Quoted' },
+        { label: 'Win',       count: rep.win_count,       color: '#8B5CF6', days: rep.avg_days_sql_to_win,        daysLabel: 'avg days SQL → Win' },
     ];
     document.getElementById('mFunnel').innerHTML = funnel.map(f => {
         const pct  = Math.round((f.count / base) * 100);
@@ -323,7 +323,7 @@ async function loadProjectTimestamps(srId) {
             setWithPct('mToContact', data.avg_assign_to_contact);
             setWithPct('mToQuote',   data.avg_contact_to_quote);
             setWithPct('mToSql',     data.avg_quote_to_sql);
-            setWithPct('mToWin',     data.avg_quote_to_win);
+            setWithPct('mToWin',     data.avg_sql_to_win);
 
             const cycleCount = projects.filter(p => p.full_cycle_seconds !== null).length;
             setText('mCycles', cycleCount.toString());

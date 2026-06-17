@@ -74,6 +74,11 @@ try {
                  THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.to_win_at) / 24.0
             END) AS avg_days_quote_to_win,
 
+        /* SQL → Win: time from sales qualified to win */
+        AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.sales_qualified_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.sales_qualified_at, st.to_win_at) / 24.0
+            END) AS avg_days_sql_to_win,
+
         /* Full cycle: assigned → win */
         AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL
                  THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.to_win_at) / 24.0
@@ -85,6 +90,7 @@ try {
         NULL AS avg_days_contact_to_quote,
         NULL AS avg_days_quote_to_sql,
         NULL AS avg_days_quote_to_win,
+        NULL AS avg_days_sql_to_win,
         NULL AS avg_days_full_cycle,
         0    AS completed_cycles
     ";
@@ -174,11 +180,12 @@ try {
             'last_activity'        => $phTs($r['last_activity']),
 
             // Timing (null if migration not yet run)
-            'avg_days_to_contact'     => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
-            'avg_days_contact_to_quote'=> $r['avg_days_contact_to_quote'] !== null ? round((float)$r['avg_days_contact_to_quote'],1) : null,
-            'avg_days_quote_to_sql'   => $r['avg_days_quote_to_sql']   !== null ? round((float)$r['avg_days_quote_to_sql'],  1) : null,
-            'avg_days_quote_to_win'  => $r['avg_days_quote_to_win']   !== null ? round((float)$r['avg_days_quote_to_win'],  1) : null,
-            'avg_days_full_cycle'    => $avgFull,
+            'avg_days_to_contact'      => $r['avg_days_to_contact']      !== null ? round((float)$r['avg_days_to_contact'],       1) : null,
+            'avg_days_contact_to_quote'=> $r['avg_days_contact_to_quote']!== null ? round((float)$r['avg_days_contact_to_quote'],  1) : null,
+            'avg_days_quote_to_sql'    => $r['avg_days_quote_to_sql']    !== null ? round((float)$r['avg_days_quote_to_sql'],     1) : null,
+            'avg_days_quote_to_win'    => $r['avg_days_quote_to_win']    !== null ? round((float)$r['avg_days_quote_to_win'],     1) : null,
+            'avg_days_sql_to_win'      => $r['avg_days_sql_to_win']      !== null ? round((float)$r['avg_days_sql_to_win'],       1) : null,
+            'avg_days_full_cycle'      => $avgFull,
             'avg_days_processing'    => $r['avg_days_processing'] !== null ? round((float)$r['avg_days_processing'], 1) : null,
             'completed_cycles'       => (int) $r['completed_cycles'],
 

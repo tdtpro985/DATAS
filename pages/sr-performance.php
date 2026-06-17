@@ -53,17 +53,20 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
         @media (max-width: 600px)  { .kpi-grid { grid-template-columns: 1fr 1fr; } }
 
         /* Per-project timestamps table */
-        .ts-table { width:100%; border-collapse:collapse; font-size:0.72rem; }
-        .ts-table th { background:rgba(255,255,255,0.04); color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.5rem 0.6rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.07); white-space:nowrap; }
-        .ts-table td { padding:0.5rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:top; color:var(--text-primary); }
-        .ts-table tr:hover td { background:rgba(255,255,255,0.02); }
-        .ts-null { color:var(--text-muted); }
+        .ts-table { width:100%; border-collapse:separate; border-spacing:0; font-size:0.72rem; border-radius:6px; overflow:hidden; }
+        .ts-table thead { position:sticky; top:0; z-index:2; }
+        .ts-table th { background:rgba(255,255,255,0.06); color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.55rem 0.7rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.08); white-space:nowrap; font-size:0.65rem; }
+        .ts-table td { padding:0.5rem 0.7rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; color:var(--text-primary); }
+        .ts-table tbody tr:nth-child(even) td { background:rgba(255,255,255,0.015); }
+        .ts-table tbody tr:hover td { background:rgba(255,128,0,0.04); }
+        .ts-table tbody tr:last-child td { border-bottom:none; }
+        .ts-null { color:var(--text-muted); font-style:italic; }
         .ts-yes  { color:#34d399; font-weight:700; }
         .ts-no   { color:#f87171; font-weight:700; }
-        .ts-dur  { color:var(--orange-400); font-weight:700; font-size:0.78rem; }
-        .ts-complete   { background:rgba(16,185,129,0.12); color:#34d399; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
-        .ts-inprogress { background:rgba(59,130,246,0.12);  color:#60a5fa; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
-        .ts-notstarted { background:rgba(108,117,125,0.15); color:#adb5bd; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; }
+        .ts-dur  { color:var(--orange-400); font-weight:700; font-size:0.78rem; white-space:nowrap; }
+        .ts-complete   { background:rgba(16,185,129,0.12); color:#34d399; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
+        .ts-inprogress { background:rgba(59,130,246,0.12);  color:#60a5fa; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
+        .ts-notstarted { background:rgba(108,117,125,0.15); color:#adb5bd; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
 
         .kpi-card {
             background: var(--bg-card);
@@ -620,7 +623,7 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                 <div class="modal-stat-val c-green" id="mToSql">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">Quote → Win</div>
+                    <div class="modal-stat-label">SQL → Win</div>
                     <div class="modal-stat-val c-purple" id="mToWin">—</div>
                 </div>
             </div>
