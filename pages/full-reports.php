@@ -186,37 +186,65 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         }
 
         .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
+            border: 1px solid rgba(255, 128, 0, 0.2);
             border-radius: 12px;
             padding: 1.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #ff8000, #ffa500, #ff8000);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
 
         .stat-card:hover {
             transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 32px rgba(255, 128, 0, 0.25);
+            border-color: rgba(255, 128, 0, 0.5);
         }
 
         .stat-label {
-            font-size: 0.8rem;
-            font-weight: 600;
+            font-size: 0.75rem;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
+            letter-spacing: 0.08em;
+            color: #888;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .stat-value {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: 900;
-            color: var(--text-primary);
-            margin-bottom: 0.25rem;
+            color: #fff;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(255, 128, 0, 0.2);
+            line-height: 1.2;
         }
 
         .stat-sublabel {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            font-size: 0.7rem;
+            color: #ff8000;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
         }
 
         .stat-change {
@@ -352,6 +380,47 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         #exportModal .modal-box {
             position: relative;
             z-index: 1;
+        }
+        
+        /* Scroll to Top Button */
+        #scrollToTopBtn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff8000, #ffa500);
+            border: 2px solid rgba(255, 128, 0, 0.3);
+            border-radius: 50%;
+            color: #000;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 16px rgba(255, 128, 0, 0.4);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        #scrollToTopBtn.show {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        #scrollToTopBtn:hover {
+            background: linear-gradient(135deg, #ffa500, #ffb300);
+            box-shadow: 0 6px 24px rgba(255, 128, 0, 0.6);
+            transform: translateY(-4px);
+        }
+        
+        #scrollToTopBtn:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(255, 128, 0, 0.4);
         }
     </style>
     
@@ -628,6 +697,27 @@ function closeExportModal() {
     modal.style.opacity = '0';
     document.body.style.overflow = ''; 
 }
+
+// Scroll to Top Button Functionality
+window.addEventListener('scroll', function() {
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    if (window.pageYOffset > 300) {
+        scrollToTopBtn.classList.add('show');
+    } else {
+        scrollToTopBtn.classList.remove('show');
+    }
+});
+
+function scrollToTop() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+}
 </script>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" onclick="scrollToTop()" title="Scroll to top">↑</button>
+
 </body>
 </html>
