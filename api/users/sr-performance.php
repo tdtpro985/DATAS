@@ -59,13 +59,13 @@ try {
                  THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.contacted_at) / 24.0
             END) AS avg_days_to_contact,
 
-        AVG(CASE WHEN st.sales_qualified_at IS NOT NULL AND st.contacted_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.contacted_at, st.sales_qualified_at) / 24.0
-            END) AS avg_days_contact_to_sql,
+        AVG(CASE WHEN st.quoted_at IS NOT NULL AND st.contacted_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.contacted_at, st.quoted_at) / 24.0
+            END) AS avg_days_contact_to_quote,
 
-        AVG(CASE WHEN st.quoted_at IS NOT NULL AND st.sales_qualified_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.sales_qualified_at, st.quoted_at) / 24.0
-            END) AS avg_days_sql_to_quote,
+        AVG(CASE WHEN st.sales_qualified_at IS NOT NULL AND st.quoted_at IS NOT NULL
+                 THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.sales_qualified_at) / 24.0
+            END) AS avg_days_quote_to_sql,
 
         AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.quoted_at IS NOT NULL
                  THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.to_win_at) / 24.0
@@ -79,8 +79,8 @@ try {
         COUNT(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL THEN 1 END) AS completed_cycles
     " : "
         NULL AS avg_days_to_contact,
-        NULL AS avg_days_contact_to_sql,
-        NULL AS avg_days_sql_to_quote,
+        NULL AS avg_days_contact_to_quote,
+        NULL AS avg_days_quote_to_sql,
         NULL AS avg_days_quote_to_win,
         NULL AS avg_days_full_cycle,
         0    AS completed_cycles
@@ -166,9 +166,9 @@ try {
             'last_activity'        => $r['last_activity'],
 
             // Timing (null if migration not yet run)
-            'avg_days_to_contact'    => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
-            'avg_days_contact_to_sql'=> $r['avg_days_contact_to_sql'] !== null ? round((float)$r['avg_days_contact_to_sql'],1) : null,
-            'avg_days_sql_to_quote'  => $r['avg_days_sql_to_quote']   !== null ? round((float)$r['avg_days_sql_to_quote'],  1) : null,
+            'avg_days_to_contact'     => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
+            'avg_days_contact_to_quote'=> $r['avg_days_contact_to_quote'] !== null ? round((float)$r['avg_days_contact_to_quote'],1) : null,
+            'avg_days_quote_to_sql'   => $r['avg_days_quote_to_sql']   !== null ? round((float)$r['avg_days_quote_to_sql'],  1) : null,
             'avg_days_quote_to_win'  => $r['avg_days_quote_to_win']   !== null ? round((float)$r['avg_days_quote_to_win'],  1) : null,
             'avg_days_full_cycle'    => $avgFull,
             'avg_days_processing'    => $r['avg_days_processing'] !== null ? round((float)$r['avg_days_processing'], 1) : null,

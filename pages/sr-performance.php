@@ -612,12 +612,12 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
                     <div class="modal-stat-val c-blue" id="mToContact">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">Contact → SQL</div>
-                    <div class="modal-stat-val c-green" id="mToSql">—</div>
+                <div class="modal-stat-label">Contact → Quote</div>
+                <div class="modal-stat-val c-yellow" id="mToQuote">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">SQL → Quote</div>
-                    <div class="modal-stat-val c-yellow" id="mToQuote">—</div>
+                <div class="modal-stat-label">Quote → SQL</div>
+                <div class="modal-stat-val c-green" id="mToSql">—</div>
                 </div>
                 <div class="modal-stat">
                     <div class="modal-stat-label">Quote → Win</div>

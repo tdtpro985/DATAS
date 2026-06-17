@@ -84,9 +84,9 @@ try {
     }
 
     $avgAssignToContact   = avgSecondsCol($rows, 'assigned_at', 'contacted_at');
-    $avgContactToSql      = avgSecondsCol($rows, 'contacted_at', 'sales_qualified_at');
-    $avgSqlToQuote        = avgSecondsCol($rows, 'sales_qualified_at', 'quoted_at');
-    $avgQuoteToWin        = avgSecondsCol($rows, 'quoted_at', 'to_win_at');
+    $avgContactToQuote    = avgSecondsCol($rows, 'contacted_at', 'quoted_at');
+    $avgQuoteToSql        = avgSecondsCol($rows, 'quoted_at', 'sales_qualified_at');
+    $avgSqlToWin          = avgSecondsCol($rows, 'sales_qualified_at', 'to_win_at');
 
     // Fallback: avg assigned → last updated
     $avgProcessingSec = null;
@@ -132,9 +132,9 @@ try {
         'projects'               => $projects,
         'avg_full_cycle_sec'     => $avgFullCycleSec,
         'avg_assign_to_contact'  => $avgAssignToContact,
-        'avg_contact_to_sql'     => $avgContactToSql,
-        'avg_sql_to_quote'       => $avgSqlToQuote,
-        'avg_quote_to_win'       => $avgQuoteToWin,
+        'avg_contact_to_quote'   => $avgContactToQuote,
+        'avg_quote_to_sql'       => $avgQuoteToSql,
+        'avg_sql_to_win'         => $avgSqlToWin,
         'avg_processing_sec'     => $avgProcessingSec,
         'total_sec'              => $totalSec,
         'has_timing_data'        => $hasTs,
