@@ -1,27 +1,17 @@
 ﻿/* =============================================================
-   admin.css — Admin Panel Styles v14 - ULTRA MODERN
-   Sidebar layout + content area + all components
+   admin.css — Admin Panel Styles v15
+   Sidebar layout + content area
+   =============================================================
+   Uses design tokens from base.css (--orange-*, --bg-*, --text-*)
    ============================================================= */
 
 :root {
-    --primary:       var(--orange-500);
-    --primary-hover: var(--orange-600);
-    --card-bg:       var(--bg-card);
-    --text-dim:      var(--text-secondary);
-    --sidebar-w:     260px;
-    --topbar-h:      60px;
+    --sidebar-w: 260px;
+    --topbar-h:  60px;
     
-    /* Modern gradients */
-    --gradient-primary: linear-gradient(135deg, #FF8000 0%, #FFA500 100%);
+    /* Admin-specific gradients (not in base.css) */
     --gradient-card: linear-gradient(135deg, rgba(26, 29, 35, 0.95) 0%, rgba(17, 20, 26, 0.98) 100%);
     --gradient-hover: linear-gradient(135deg, rgba(255, 128, 0, 0.1) 0%, rgba(255, 165, 0, 0.05) 100%);
-    
-    /* Shadows */
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
-    --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.3);
-    --shadow-glow: 0 0 20px rgba(255, 128, 0, 0.3);
 }
 
 /* ── Reset ─────────────────────────────────────────────── */

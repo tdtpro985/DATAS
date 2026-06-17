@@ -56,16 +56,9 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     <!-- CSS -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-theme.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/header.css?v=6">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=3">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     
