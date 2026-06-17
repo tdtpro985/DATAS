@@ -4,7 +4,8 @@
 
 const FullReports = {
     filters: {
-        dateRange: 'month',
+        dateFrom: '',
+        dateTo: '',
         region: '',
         status: '',
         source: ''
@@ -83,8 +84,12 @@ const FullReports = {
     },
 
     setupFilters() {
-        document.getElementById('dateRange').addEventListener('change', (e) => {
-            this.filters.dateRange = e.target.value;
+        document.getElementById('dateFrom').addEventListener('change', (e) => {
+            this.filters.dateFrom = e.target.value;
+            this.renderAllSections();
+        });
+        document.getElementById('dateTo').addEventListener('change', (e) => {
+            this.filters.dateTo = e.target.value;
             this.renderAllSections();
         });
         document.getElementById('regionFilter').addEventListener('change', (e) => {
@@ -134,20 +139,10 @@ const FullReports = {
         sources.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sourceSelect.appendChild(o); });
     },
 
-    // ── Returns current date in PHT (Asia/Manila) as ISO string part ──
-    phTodayStr() {
-        const opts = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' };
-        const parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(new Date());
-        const m = {};
-        parts.forEach(p => { if (p.type !== 'literal') m[p.type] = p.value; });
-        return m.year + '-' + m.month + '-' + m.day; // "2024-06-17"
-    },
-
-    // ── Parses a publication_date to midnight PHT (as epoch ms) ──
-    // publication_date is always a date string like "2024-06-17" without time
+    // ── Parses a date string to midnight PHT (as epoch ms) ──
+    // Dates like "2026-06-17" are treated as PHT midnight
     phDateMs(dateStr) {
         if (!dateStr) return null;
-        // publication_date is date-only like "2024-06-17" - treat as PHT midnight
         return Date.parse(dateStr + 'T00:00:00+08:00');
     },
 
@@ -156,36 +151,16 @@ const FullReports = {
         if (this.filters.region) filtered = filtered.filter(p => (p.project_region || p.region) === this.filters.region);
         if (this.filters.status) filtered = filtered.filter(p => p.status === this.filters.status);
         if (this.filters.source) filtered = filtered.filter(p => p.source === this.filters.source);
-        if (this.filters.dateRange !== 'all') {
-            const todayStr = this.phTodayStr(); // e.g. "2024-06-17"
-            let cutoffMs = Date.parse(todayStr + 'T00:00:00+08:00');
-            const oneDayMs = 86400000;
 
-            switch (this.filters.dateRange) {
-                case 'today':
-                    // projects with publication_date == today
-                    filtered = filtered.filter(p => {
-                        const pdMs = this.phDateMs(p.publication_date);
-                        return pdMs !== null && pdMs === cutoffMs;
-                    });
-                    return filtered;
-                case 'week':
-                    cutoffMs -= 7 * oneDayMs;
-                    break;
-                case 'month':
-                    cutoffMs -= 30 * oneDayMs;
-                    break;
-                case 'quarter':
-                    cutoffMs -= 90 * oneDayMs;
-                    break;
-                case 'year':
-                    cutoffMs -= 365 * oneDayMs;
-                    break;
-            }
-
+        // Date range filter using calendar inputs
+        const df = this.filters.dateFrom;
+        const dt = this.filters.dateTo;
+        if (df || dt) {
+            const fromMs = df ? this.phDateMs(df) : -Infinity;
+            const toMs   = dt ? this.phDateMs(dt) + 86400000 : Infinity; // end of day
             filtered = filtered.filter(p => {
                 const pdMs = this.phDateMs(p.publication_date);
-                return pdMs !== null && pdMs >= cutoffMs;
+                return pdMs !== null && pdMs >= fromMs && pdMs < toMs;
             });
         }
         return filtered;

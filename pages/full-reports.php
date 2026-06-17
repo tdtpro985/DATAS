@@ -357,16 +357,12 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     <!-- Filter Bar -->
     <div class="filter-bar">
         <div class="filter-group">
-            <label>Date Range</label>
-            <select id="dateRange">
-                <option value="all">All Time</option>
-                <option value="today">Today</option>
-                <option value="week">This Week</option>
-                <option value="month" selected>This Month</option>
-                <option value="quarter">This Quarter</option>
-                <option value="year">This Year</option>
-                <option value="custom">Custom Range</option>
-            </select>
+            <label>Date From</label>
+            <input type="date" id="dateFrom">
+        </div>
+        <div class="filter-group">
+            <label>Date To</label>
+            <input type="date" id="dateTo">
         </div>
         <div class="filter-group">
             <label>Region</label>
