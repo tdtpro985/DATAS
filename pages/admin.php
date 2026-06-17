@@ -135,53 +135,6 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                     </div>
                 </div>
 
-                <!-- Sales Rep Rankings -->
-                <div style="margin-bottom: 2rem;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <h3 style="margin:0;font-size:1.1rem;color:var(--text-primary);">
-                            🏆 Top Sales Representatives
-                        </h3>
-                        <div style="display: flex; gap: 0.5rem;">
-                            <select id="salesRepPeriodFilter" style="padding: 0.5rem; background: var(--bg-input); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem;">
-                                <option value="all">All Time</option>
-                                <option value="daily">Today</option>
-                                <option value="weekly">This Week</option>
-                                <option value="monthly" selected>This Month</option>
-                            </select>
-                            <select id="salesRepRegionFilter" style="padding: 0.5rem; background: var(--bg-input); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem;">
-                                <option value="">All Regions</option>
-                                <option value="NCR">NCR</option>
-                                <option value="Region I">Region I</option>
-                                <option value="Region II">Region II</option>
-                                <option value="Region III">Region III</option>
-                                <option value="Region IV-A">Region IV-A</option>
-                                <option value="Region IV-B">Region IV-B</option>
-                                <option value="Region V">Region V</option>
-                                <option value="Region VI">Region VI</option>
-                                <option value="Region VII">Region VII</option>
-                                <option value="Region XI">Region XI</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th style="width: 60px;">Rank</th>
-                                    <th>Sales Representative</th>
-                                    <th>Branch</th>
-                                    <th>Projects Processed</th>
-                                    <th>Total Value (₱)</th>
-                                    <th>Last Project</th>
-                                </tr>
-                            </thead>
-                            <tbody id="salesRepRankingBody">
-                                <tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--text-dim);">Loading…</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
                 <!-- Recent Activity -->
                 <div>
                     <h3 style="margin:0 0 1rem;font-size:1.1rem;color:var(--text-primary);">Recent Projects</h3>
