@@ -807,30 +807,49 @@ const FullReports = {
                     .badge-success { background:rgba(16,185,129,0.15); color:#34d399; }
                     .badge-warning { background:rgba(245,158,11,0.15); color:#fcd34d; }
                     .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
-                    .sr-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200000; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
-                    .sr-modal-overlay.active { display:flex; }
-                    .sr-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:900px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:200001; }
+                    
+                    /* Detail Modal - Exact match with SR Performance */
+                    .detail-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:100000; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
+                    .detail-modal-overlay.active { display:flex; }
+                    .detail-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:1100px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; }
                     @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:none; } }
-                    .sr-modal-close { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
-                    .sr-modal-close:hover { background:rgba(255,255,255,0.12); color:var(--text-primary); }
-                    .sr-modal-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
-                    .sr-modal-avatar { width:52px; height:52px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.4rem; color:#000; }
-                    .sr-modal-name { font-size:1.2rem; font-weight:800; color:var(--text-primary); }
-                    .sr-modal-email { font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem; }
-                    .sr-modal-section { margin-bottom:1.5rem; }
-                    .sr-modal-section-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.06); }
-                    .sr-modal-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
-                    .sr-modal-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-md); padding:0.75rem 1rem; }
-                    .sr-modal-stat-label { font-size:0.68rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; }
-                    .sr-modal-stat-val { font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:0.15rem; }
+                    
+                    .modal-close-btn { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s, color 0.15s; }
+                    .modal-close-btn:hover { background:rgba(255,255,255,0.12); color:var(--text-primary); }
+                    
+                    .modal-sr-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+                    .modal-avatar { width:52px; height:52px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.4rem; color:#000; flex-shrink:0; }
+                    .modal-sr-name { font-size:1.2rem; font-weight:800; color:var(--text-primary); }
+                    .modal-sr-email { font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem; }
+                    .modal-sr-branch { display:inline-block; margin-top:0.3rem; font-size:0.72rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.1rem 0.55rem; border-radius:999px; font-weight:700; }
+                    
+                    .modal-section { margin-bottom:1.5rem; }
+                    .modal-section-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+                    
+                    .modal-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+                    .modal-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-md); padding:0.75rem 1rem; }
+                    .modal-stat-label { font-size:0.68rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
+                    .modal-stat-val { font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:0.15rem; }
+                    .modal-stat-val.c-green { color:#10B981; }
+                    .modal-stat-val.c-blue { color:#3B82F6; }
+                    .modal-stat-val.c-yellow { color:#F59E0B; }
+                    .modal-stat-val.c-purple { color:#8B5CF6; }
+                    .modal-stat-val.c-orange { color:var(--orange-500); }
+                    
+                    .modal-tracking-row { display:flex; gap:0.6rem; }
+                    .modal-track-badge { flex:1; text-align:center; padding:0.6rem; border-radius:var(--radius-md); font-size:0.75rem; font-weight:700; }
+                    .modal-track-badge .mtn { font-size:1.4rem; font-weight:800; display:block; }
+                    .modal-track-ns { background:rgba(108,117,125,0.15); color:#adb5bd; }
+                    .modal-track-ip { background:rgba(59,130,246,0.12); color:#60a5fa; }
+                    .modal-track-co { background:rgba(16,185,129,0.12); color:#34d399; }
                     
                     @media (max-width: 768px) {
-                        .sr-modal { width:100%; max-width:95vw; padding:1.5rem; }
-                        .sr-modal-stats { grid-template-columns:repeat(2,1fr); }
+                        .detail-modal { width:100%; max-width:95vw; padding:1.5rem; }
+                        .modal-stat-grid { grid-template-columns:repeat(2,1fr); }
                     }
                     
                     @media (max-width: 480px) {
-                        .sr-modal-stats { grid-template-columns:1fr; }
+                        .modal-stat-grid { grid-template-columns:1fr; }
                     }
                 `;
                 document.head.appendChild(style);
@@ -1277,25 +1296,31 @@ const FullReports = {
         document.getElementById('srModalComplete').textContent = rep.complete_count || 0;
 
         // Show modal
-        const modal = document.getElementById('srDetailModal');
-        modal.classList.add('active');
+        const overlay = document.getElementById('srDetailModal');
+        overlay.classList.add('active');
+        
+        // Setup close button handler
+        const closeBtn = document.getElementById('closeSRDetailModal');
+        if (closeBtn) {
+            closeBtn.onclick = () => this.closeSRModal();
+        }
         
         // Close on escape or click outside
         const closeHandler = (e) => {
-            if (e.key === 'Escape' || e.target === modal) {
+            if (e.key === 'Escape' || e.target === overlay) {
                 this.closeSRModal();
                 document.removeEventListener('keydown', closeHandler);
-                modal.removeEventListener('click', closeHandler);
+                overlay.removeEventListener('click', closeHandler);
             }
         };
         document.addEventListener('keydown', closeHandler);
-        modal.addEventListener('click', closeHandler);
+        overlay.addEventListener('click', closeHandler);
     },
 
     closeSRModal() {
-        const modal = document.getElementById('srDetailModal');
-        if (modal) {
-            modal.classList.remove('active');
+        const overlay = document.getElementById('srDetailModal');
+        if (overlay) {
+            overlay.classList.remove('active');
         }
     }
 };
