@@ -82,23 +82,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             box-sizing: border-box;
         }
 
-        .projects-table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
-        
-        .projects-table th:nth-child(1) { width: 16%; }
-        .projects-table th:nth-child(2) { width: 20%; }
-        .projects-table th:nth-child(3) { width: 10%; }
-        .projects-table th:nth-child(4) { width: 8%; }
-        .projects-table th:nth-child(5) { width: 10%; }
-        .projects-table th:nth-child(6) { width: 11%; }
-        .projects-table th:nth-child(7) { width: 13%; }
-        .projects-table th:nth-child(8) { width: 12%; }
-
-        .projects-table td.col-tracking { text-align: center; }
-
         /* ── Sales Tracking Form ── */
         .sales-tracking-section {
             background: rgba(255, 128, 0, 0.05);
@@ -286,25 +269,11 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 
         @media (max-width: 1200px) {
             .projects-container { padding: 1.5rem 1rem; }
-            .projects-table { min-width: 800px; }
         }
 
         @media (max-width: 768px) {
             .projects-container { padding: 1rem 0.75rem; }
-
-            .projects-toolbar {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 1rem;
-            }
-
-            .search-box { min-width: 100%; }
             .table-wrapper { max-height: calc(100vh - 400px); }
-            
-            .projects-table { min-width: 700px; font-size: 0.8rem; }
-            
-            .projects-table th,
-            .projects-table td { padding: 0.75rem 0.5rem; }
         }
     </style>
     
