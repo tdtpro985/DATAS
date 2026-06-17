@@ -113,15 +113,18 @@ if ($role === 'encoder') {
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            height: 45px;
+            min-height: 45px;
             border-bottom: 2px solid #ff8000;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
         
         .header-left {
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            flex-shrink: 0;
         }
         
         .logo {
@@ -130,13 +133,15 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #ff8000, #ffa500);
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            flex-shrink: 0;
         }
         
         .title {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             color: #fff;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
+            white-space: nowrap;
         }
         
         .title .brand {
@@ -147,47 +152,56 @@ if ($role === 'encoder') {
         .header-right {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.6rem;
+            flex: 1;
+            justify-content: flex-end;
+            flex-wrap: wrap;
         }
         
         .header-controls {
             display: flex;
-            gap: 1rem;
+            gap: 0.6rem;
             align-items: center;
+            flex-wrap: wrap;
         }
         
         .control-group {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 0.2rem;
+            gap: 0.15rem;
         }
         
         .control-label {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             color: #888;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         .control-select {
             background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
             border: 1px solid #555;
             color: #fff;
-            padding: 0.4rem 1.2rem 0.4rem 0.6rem;
+            padding: 0.35rem 1.8rem 0.35rem 0.55rem;
             border-radius: 6px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             cursor: pointer;
-            min-width: 80px;
+            min-width: 85px;
+            max-width: 120px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
             appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8000' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 0.4rem center;
-            background-size: 12px;
+            background-size: 11px;
             font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .control-select:hover {
@@ -223,24 +237,27 @@ if ($role === 'encoder') {
         .sync-status {
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            font-size: 0.75rem;
+            gap: 0.3rem;
+            font-size: 0.7rem;
             color: #10b981;
+            white-space: nowrap;
         }
         
         .sync-dot {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
             background: #10b981;
             border-radius: 50%;
             animation: pulse 2s infinite;
             box-shadow: 0 0 4px rgba(16, 185, 129, 0.5);
+            flex-shrink: 0;
         }
         
         .time-display {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #ccc;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         /* Export Button */
@@ -248,6 +265,21 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #ff8000, #ffa500);
             color: #000;
             border: none;
+            padding: 0.35rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
             padding: 0.4rem 1rem;
             border-radius: 6px;
             font-size: 0.75rem;
@@ -274,7 +306,124 @@ if ($role === 'encoder') {
         }
         
         .export-icon {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Responsive Header Adjustments */
+        @media (max-width: 1400px) {
+            .header-controls {
+                gap: 0.5rem;
+            }
+            
+            .control-select {
+                min-width: 75px;
+                font-size: 0.65rem;
+                padding: 0.3rem 1.6rem 0.3rem 0.5rem;
+            }
+            
+            .control-label {
+                font-size: 0.55rem;
+            }
+            
+            .export-button {
+                padding: 0.3rem 0.7rem;
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 1200px) {
+            .title {
+                font-size: 0.85rem;
+            }
+            
+            .header-controls {
+                gap: 0.4rem;
+            }
+            
+            .control-group {
+                gap: 0.1rem;
+            }
+            
+            .control-select {
+                min-width: 70px;
+                max-width: 100px;
+                font-size: 0.6rem;
+            }
+            
+            .sync-status,
+            .time-display {
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .dashboard-header {
+                padding: 0.3rem 0.6rem;
+            }
+            
+            .header-left {
+                gap: 0.5rem;
+            }
+            
+            .title {
+                font-size: 0.8rem;
+            }
+            
+            .header-controls {
+                gap: 0.3rem;
+            }
+            
+            .control-select {
+                min-width: 65px;
+                padding: 0.25rem 1.5rem 0.25rem 0.45rem;
+            }
+            
+            .export-button {
+                padding: 0.25rem 0.6rem;
+                font-size: 0.6rem;
+                gap: 0.25rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                min-height: auto;
+                padding: 0.5rem;
+                gap: 0.5rem;
+            }
+            
+            .header-left,
+            .header-right {
+                width: 100%;
+            }
+            
+            .header-right {
+                justify-content: space-between;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .control-group {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .control-select {
+                width: 100%;
+                min-width: 60px;
+                font-size: 0.65rem;
+            }
+            
+            .export-button {
+                width: 100%;
+                justify-content: center;
+                margin-top: 0.3rem;
+            }
         }
         
         /* Export Modal Styles */
