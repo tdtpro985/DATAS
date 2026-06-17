@@ -339,6 +339,12 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
                 grid-template-columns: 1fr;
             }
         }
+
+        /* Export Modal - Explicit Rules */
+        #exportModal .modal-box {
+            position: relative;
+            z-index: 1;
+        }
     </style>
     
     <!-- Modern Select Dropdowns Styling -->
@@ -393,7 +399,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
                 <option value="">All Sources</option>
             </select>
         </div>
-        <button class="btn-export" id="btnExportReport" type="button" onclick="alert('EXPORT CLICKED!'); document.getElementById('exportModal').style.display='flex'; document.body.style.overflow='hidden';">
+        <button class="btn-export" id="btnExportReport" type="button" onclick="openExportModal();">
             <span>📥</span>
             <span>Export Report</span>
         </button>
@@ -504,7 +510,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script src="<?= $base ?>/static/js/full-reports.js?v=1"></script>
 
 <!-- Export Modal -->
-<div class="modal-overlay" id="exportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100000;align-items:center;justify-content:center;backdrop-filter:blur(3px);">
+<div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);z-index:999999;align-items:center;justify-content:center;transition:opacity 0.2s;">
     <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;width:520px;max-width:95%;max-height:90vh;overflow-y:auto;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
             <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text-primary);">📥 Export Report</h3>
@@ -561,8 +567,18 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 </div>
 <script>
-function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
-function closeExportModal() { document.getElementById('exportModal').style.display = 'none'; document.body.style.overflow = ''; }
+function openExportModal() { 
+    const modal = document.getElementById('exportModal');
+    modal.style.visibility = 'visible';
+    modal.style.opacity = '1';
+    document.body.style.overflow = 'hidden'; 
+}
+function closeExportModal() { 
+    const modal = document.getElementById('exportModal');
+    modal.style.visibility = 'hidden';
+    modal.style.opacity = '0';
+    document.body.style.overflow = ''; 
+}
 </script>
 </body>
 </html>
