@@ -115,6 +115,16 @@ if ($role !== 'superadmin') {
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
+        /* Vertical dividers between rows — each row is a column */
+        .user-card .meta-row + .meta-row {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .user-card .meta-value {
+            padding-left: 1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
         .user-card .meta-row:last-of-type {
             border-bottom: none;
         }

@@ -251,6 +251,16 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
+        /* Vertical divider — each info row is a column */
+        .sr-card .info-row + .info-row {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sr-card .info-value {
+            padding-left: 1rem;
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
         .sr-card .info-row:last-of-type {
             border-bottom: none;
         }
