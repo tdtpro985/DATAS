@@ -12,7 +12,7 @@ let currentFilters = {
     region: '',
     status: '',
     source: '',
-    sort: 'desc'
+    sort: 'publication_date_desc' // Default to newest published first
 };
 let selectedProjectId = null;
 let salesReps = [];
@@ -129,11 +129,33 @@ async function loadProjects() {
         const data = await res.json();
         let projects = data.projects || [];
         
-        // Sort by publication date
-        const sortOrder = currentFilters.sort || 'desc';
+        // Sort by selected field and order
+        const sortValue = currentFilters.sort || 'publication_date_desc';
+        
+        // Parse sort value (e.g., "publication_date_desc" -> field: "publication_date", order: "desc")
+        let sortField = 'publication_date';
+        let sortOrder = 'desc';
+        
+        if (sortValue.includes('_')) {
+            const parts = sortValue.split('_');
+            sortOrder = parts[parts.length - 1]; // Last part is order (asc/desc)
+            sortField = parts.slice(0, -1).join('_'); // Everything before last part is field name
+        } else {
+            // Backward compatibility: if just "desc" or "asc", use publication_date
+            sortOrder = sortValue;
+        }
+        
         projects.sort((a, b) => {
-            const dateA = new Date(a.publication_date || a.published_date || a.published_at || 0);
-            const dateB = new Date(b.publication_date || b.published_date || b.published_at || 0);
+            let dateA, dateB;
+            
+            if (sortField === 'publication_date') {
+                dateA = new Date(a.publication_date || a.published_date || a.published_at || 0);
+                dateB = new Date(b.publication_date || b.published_date || b.published_at || 0);
+            } else if (sortField === 'created_at') {
+                dateA = new Date(a.created_at || 0);
+                dateB = new Date(b.created_at || 0);
+            }
+            
             return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;
         });
         

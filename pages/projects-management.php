@@ -1081,8 +1081,14 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
                 <option value="">All Sources</option>
             </select>
             <select id="sortFilter" class="pm-filter">
-                <option value="desc">📅 Newest First</option>
-                <option value="asc">📅 Oldest First</option>
+                <optgroup label="📅 By Published Date">
+                    <option value="publication_date_desc">Newest First</option>
+                    <option value="publication_date_asc">Oldest First</option>
+                </optgroup>
+                <optgroup label="📝 By Encoded Date">
+                    <option value="created_at_desc">Newest First</option>
+                    <option value="created_at_asc">Oldest First</option>
+                </optgroup>
             </select>
         </div>
 

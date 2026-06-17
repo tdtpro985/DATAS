@@ -122,6 +122,19 @@ select.form-control option,
     transition: all 0.2s ease !important;
 }
 
+/* ── Optgroup Styling ── */
+select optgroup,
+.filter-select optgroup,
+.control-select optgroup {
+    background: #0f172a !important;
+    color: #ff8000 !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    padding: 0.5rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+}
+
 /* ── Option Hover/Selected State ── */
 select option:hover,
 select option:focus,
