@@ -140,7 +140,8 @@ async function loadProjects() {
         // Store projects data globally for viewProject function
         window.currentProjectsData = data;
         
-        // Populate source filter dynamically from project data
+        // Populate filters dynamically from project data
+        populateRegionFilter(projects);
         populateSourceFilter(projects);
         
         // Render table headers based on view
@@ -1690,6 +1691,40 @@ async function proceedWithBulkAssignment() {
     }
     
     console.log('[PM] ===== proceedWithBulkAssignment END =====');
+}
+
+// Populate region filter dynamically from project data
+function populateRegionFilter(projects) {
+    const regionFilter = document.getElementById('regionFilter');
+    if (!regionFilter) return;
+    
+    // Preserve current selection
+    const currentValue = regionFilter.value;
+    
+    // Collect unique regions from projects
+    const regions = new Set();
+    projects.forEach(p => {
+        if (p.region && p.region.trim()) {
+            regions.add(p.region.trim());
+        }
+    });
+    
+    // Sort regions alphabetically
+    const sortedRegions = [...regions].sort();
+    
+    // Rebuild options
+    regionFilter.innerHTML = '<option value="">All Regions</option>';
+    sortedRegions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionFilter.appendChild(option);
+    });
+    
+    // Restore previous selection if it still exists
+    if (currentValue) {
+        regionFilter.value = currentValue;
+    }
 }
 
 console.log('[PM] All functions loaded successfully');

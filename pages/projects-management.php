@@ -1063,16 +1063,6 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             <input type="text" id="searchInput" placeholder="Search projects..." class="pm-search">
             <select id="regionFilter" class="pm-filter">
                 <option value="">All Regions</option>
-                <option value="NCR">NCR</option>
-                <option value="Region I">Region I</option>
-                <option value="Region II">Region II</option>
-                <option value="Region III">Region III</option>
-                <option value="Region IV-A">Region IV-A</option>
-                <option value="Region IV-B">Region IV-B</option>
-                <option value="Region V">Region V</option>
-                <option value="Region VI">Region VI</option>
-                <option value="Region VII">Region VII</option>
-                <option value="Region XI">Region XI</option>
             </select>
             <select id="statusFilter" class="pm-filter">
                 <option value="">All Status</option>

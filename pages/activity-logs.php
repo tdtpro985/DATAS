@@ -309,7 +309,6 @@ if (!in_array($role, ['admin', 'superadmin'], true)) {
     <!-- Activity Type Tabs -->
     <div class="activity-tabs">
         <button class="tab-btn active" data-type="">All Activities</button>
-        <button class="tab-btn" data-type="USER_LOGIN">User Logins</button>
         <button class="tab-btn" data-type="PROJECT">Projects</button>
         <button class="tab-btn" data-type="PLATFORM">Platforms</button>
         <button class="tab-btn" data-type="USER">User Management</button>
