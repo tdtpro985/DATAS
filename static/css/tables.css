@@ -42,6 +42,7 @@
     border-collapse: separate;
     border-spacing: 0;
     font-size: var(--text-sm);
+    table-layout: auto; /* Auto-fit columns to content */
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -61,8 +62,9 @@
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: var(--sp-4) var(--sp-4);
-    text-align: left;
+    text-align: center; /* Center align headers */
     border-bottom: 2px solid rgba(255, 128, 0, 0.25);
+    border-right: 1px solid rgba(255, 255, 255, 0.08); /* Vertical divider */
     position: sticky;
     top: 0;
     z-index: 10;
@@ -78,6 +80,7 @@
 .data-table thead th:last-child {
     border-top-right-radius: var(--radius-lg);
     padding-right: var(--sp-5);
+    border-right: none; /* Remove right border on last column */
 }
 
 .data-table thead th:hover {
@@ -188,27 +191,29 @@
     padding: var(--sp-4) var(--sp-4);
     color: var(--text-primary);
     vertical-align: middle;
+    text-align: center; /* Center align all data */
+    border-right: 1px solid rgba(255, 255, 255, 0.05); /* Vertical divider */
     transition: all var(--transition-fast);
 }
 
 .data-table tbody td:first-child {
     padding-left: var(--sp-5);
-    font-weight: 600;
 }
 
 .data-table tbody td:last-child {
     padding-right: var(--sp-5);
+    border-right: none; /* Remove right border on last column */
 }
 
 /* Cell types */
 .table-cell-number {
-    text-align: right;
+    text-align: center;
     font-variant-numeric: tabular-nums;
     font-weight: 600;
 }
 
 .table-cell-currency {
-    text-align: right;
+    text-align: center;
     font-variant-numeric: tabular-nums;
     font-weight: 700;
     color: var(--success-500);
@@ -218,6 +223,7 @@
     color: var(--text-secondary);
     font-size: var(--text-xs);
     white-space: nowrap;
+    text-align: center;
 }
 
 .table-cell-nowrap {
@@ -225,10 +231,21 @@
 }
 
 .table-cell-truncate {
-    max-width: 200px;
+    max-width: 250px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    text-align: center;
+}
+
+/* Left align for text-heavy columns */
+.table-cell-left {
+    text-align: left !important;
+}
+
+/* Right align for numbers */
+.table-cell-right {
+    text-align: right !important;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -406,11 +423,17 @@
 @media (max-width: 768px) {
     .table-wrapper {
         border-radius: var(--radius-lg);
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
+    }
+
+    .data-table {
+        min-width: 800px; /* Ensure table doesn't collapse too much */
     }
 
     .data-table thead th,
     .data-table tbody td {
-        padding: var(--sp-3);
+        padding: var(--sp-3) var(--sp-2);
         font-size: var(--text-xs);
     }
 
@@ -425,7 +448,7 @@
     }
 
     .table-cell-truncate {
-        max-width: 120px;
+        max-width: 150px;
     }
 
     .pagination-controls {
@@ -436,6 +459,27 @@
     .pagination-buttons {
         width: 100%;
         justify-content: center;
+    }
+}
+
+/* Tablet view */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .data-table thead th,
+    .data-table tbody td {
+        padding: var(--sp-3) var(--sp-3);
+        font-size: var(--text-xs);
+    }
+}
+
+/* Large screens - more spacing */
+@media (min-width: 1440px) {
+    .data-table thead th,
+    .data-table tbody td {
+        padding: var(--sp-5) var(--sp-5);
+    }
+    
+    .table-cell-truncate {
+        max-width: 350px;
     }
 }
 
@@ -452,9 +496,54 @@
 
 /* Bordered table variant */
 .data-table.table-bordered tbody td {
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .data-table.table-bordered tbody td:last-child {
     border-right: none;
+}
+
+.data-table.table-bordered thead th {
+    border-right: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.data-table.table-bordered thead th:last-child {
+    border-right: none;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ENHANCED RESPONSIVE TABLE WRAPPER
+══════════════════════════════════════════════════════════ */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(26, 29, 37, 0.5) 0%, rgba(20, 23, 31, 0.7) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-lg);
+}
+
+.table-responsive .data-table {
+    margin-bottom: 0;
+}
+
+/* Horizontal scroll indicator */
+.table-responsive::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 128, 0, 0.05) 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--transition-base);
+}
+
+.table-responsive:hover::after {
+    opacity: 1;
 }
