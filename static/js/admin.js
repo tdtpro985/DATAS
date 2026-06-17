@@ -672,34 +672,18 @@ function formatShortCurrency(value) {
 
 // Navigation function for dashboard cards
 function navigateTo(page) {
-    // Map card destinations to sidebar pages
+    // Map card destinations to actual page URLs
     const pageMap = {
-        'users': 'users',
-        'sales-reps': 'sales-reps',
-        'projects': 'projects',
-        'priority-projects': 'priority-projects',
-        'reports': 'reports'
+        'users': _B + '/admin/users',
+        'sales-reps': _B + '/sales-reps',
+        'projects': _B + '/admin/projects',
+        'priority-projects': _B + '/admin/priority-projects',
+        'reports': _B + '/reports'
     };
     
-    const targetPage = pageMap[page];
-    if (!targetPage) return;
+    const targetUrl = pageMap[page];
+    if (!targetUrl) return;
     
-    // Hide all admin pages
-    document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
-    
-    // Show target page
-    const pageElement = document.getElementById('page-' + targetPage);
-    if (pageElement) {
-        pageElement.classList.add('active');
-    }
-    
-    // Update sidebar active state
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    const navItem = document.querySelector(`.nav-item[data-page="${targetPage}"]`);
-    if (navItem) {
-        navItem.classList.add('active');
-    }
-    
-    // Scroll to top
-    window.scrollTo(0, 0);
+    // Navigate to the actual page
+    window.location.href = targetUrl;
 }
