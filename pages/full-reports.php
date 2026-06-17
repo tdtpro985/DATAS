@@ -444,6 +444,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         <button onclick="FullReports.scrollToSection('projectAnalyticsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">📊 Projects</button>
         <button onclick="FullReports.scrollToSection('contractorAnalyticsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🏢 Contractors</button>
         <button onclick="FullReports.scrollToSection('salesPerformanceSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">💼 Sales</button>
+        <button onclick="FullReports.scrollToSection('srPerformanceSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">📊 SR Performance</button>
         <button onclick="FullReports.scrollToSection('geographicAnalysisSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🗺️ Geographic</button>
         <button onclick="FullReports.scrollToSection('materialRequirementsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🔩 Materials</button>
         <button onclick="FullReports.scrollToSection('encodingPerformanceSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">⌨️ Encoding</button>
@@ -550,6 +551,20 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             <h2>Sales Performance</h2>
         </div>
         <div id="salesPerformance">
+            <div class="loading">
+                <div class="spinner"></div>
+                <span>Loading data...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- SR Performance Report -->
+    <div class="report-section" id="srPerformanceSec">
+        <div class="section-header">
+            <span class="section-icon">📊</span>
+            <h2>SR Performance Report</h2>
+        </div>
+        <div id="srPerformanceReport">
             <div class="loading">
                 <div class="spinner"></div>
                 <span>Loading data...</span>

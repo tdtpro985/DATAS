@@ -360,6 +360,7 @@ const FullReports = {
         this.renderProjectAnalytics();
         this.renderContractorAnalytics();
         this.renderSalesPerformance();
+        this.renderSRPerformance();
         this.renderGeographicAnalysis();
         this.renderMaterialRequirements();
         this.renderEncodingPerformance();
@@ -456,6 +457,11 @@ const FullReports = {
                 <div class="stat-label">💼 Sales Performance</div>
                 <div class="stat-value">₱${this.formatNumber(totalValue)}</div>
                 <div class="stat-sublabel">Top SR: ${this.escapeHtml(topSalesRepName.substring(0,15))}${topSalesRepName.length > 15 ? '...' : ''} →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('srPerformanceSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">📊 SR Performance</div>
+                <div class="stat-value">${Object.keys(bySalesRep).filter(k => k !== 'Unassigned').length} Sales Reps</div>
+                <div class="stat-sublabel">Detailed funnel metrics →</div>
             </div>
             <div class="stat-card" onclick="FullReports.scrollToSection('geographicAnalysisSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
                 <div class="stat-label">🗺️ Geographic Distribution</div>
@@ -603,6 +609,130 @@ const FullReports = {
             </div>
             <div class="chart-container"><div class="chart-title">Sales Tracking Funnel</div><canvas id="chartSalesFunnel"></canvas></div>`;
         setTimeout(() => this.renderSalesFunnelChart(trackingCounts), 100);
+    },
+
+    /* ── SR Performance Report ── */
+    async renderSRPerformance() {
+        const container = document.getElementById('srPerformanceReport');
+        container.innerHTML = '<div class="loading"><div class="spinner"></div><span>Loading SR Performance data...</span></div>';
+
+        try {
+            const range = this.getPeriodDateRange(this.filters.period);
+            const params = new URLSearchParams({
+                date_from: range.from,
+                date_to: range.to
+            });
+
+            const res = await fetch(`${BASE}/api/v1/users/sr-performance?${params}`, { credentials: 'include' });
+            if (!res.ok) throw new Error('Failed to load SR Performance data');
+            
+            const data = await res.json();
+            const reps = data.reps || [];
+            const summary = data.summary || {};
+
+            if (reps.length === 0) {
+                container.innerHTML = '<div style="text-align:center;padding:3rem;color:var(--text-secondary);"><div style="font-size:2.5rem;margin-bottom:0.75rem;">📭</div><div style="font-size:1rem;font-weight:700;color:var(--text-primary);">No SR Performance Data</div><div style="font-size:0.8rem;margin-top:0.35rem;">No sales tracking records found for the selected period.</div></div>';
+                return;
+            }
+
+            // Build stats grid
+            let statsHtml = `<div class="stats-grid">
+                <div class="stat-card"><div class="stat-label">Active SRs</div><div class="stat-value">${summary.total_reps || 0}</div><div class="stat-sublabel">with tracked activity</div></div>
+                <div class="stat-card"><div class="stat-label">Total Assigned</div><div class="stat-value">${(summary.total_assigned || 0).toLocaleString()}</div><div class="stat-sublabel">projects tracked</div></div>
+                <div class="stat-card"><div class="stat-label">Contacted</div><div class="stat-value">${(summary.total_contacted || 0).toLocaleString()}</div><div class="stat-sublabel">clients reached</div></div>
+                <div class="stat-card"><div class="stat-label">SQL Yes</div><div class="stat-value">${(summary.total_sql_yes || 0).toLocaleString()}</div><div class="stat-sublabel">qualified leads</div></div>
+                <div class="stat-card"><div class="stat-label">Quoted</div><div class="stat-value">${(summary.total_quoted || 0).toLocaleString()}</div><div class="stat-sublabel">proposals sent</div></div>
+                <div class="stat-card"><div class="stat-label">Total Wins</div><div class="stat-value">${(summary.total_wins || 0).toLocaleString()}</div><div class="stat-sublabel">closed deals</div></div>
+                <div class="stat-card"><div class="stat-label">Win Amount</div><div class="stat-value">₱${this.formatNumber(summary.total_win_amount || 0)}</div><div class="stat-sublabel">total won value</div></div>
+                <div class="stat-card"><div class="stat-label">Pipeline Value</div><div class="stat-value">₱${this.formatNumber(summary.total_pipeline_value || 0)}</div><div class="stat-sublabel">total project value</div></div>
+            </div>`;
+
+            // Build table rows
+            let tableRows = reps.slice(0, 10).map((r, idx) => {
+                const rank = idx + 1;
+                let rankBadge = `<span class="rank-badge rank-n">${rank}</span>`;
+                if (rank === 1) rankBadge = '<span class="rank-badge rank-1">🥇 1</span>';
+                else if (rank === 2) rankBadge = '<span class="rank-badge rank-2">🥈 2</span>';
+                else if (rank === 3) rankBadge = '<span class="rank-badge rank-3">🥉 3</span>';
+
+                const initial = r.full_name ? r.full_name.charAt(0).toUpperCase() : '?';
+                const winRate = r.win_rate || 0;
+                let winBadge = 'badge-danger';
+                if (winRate >= 30) winBadge = 'badge-success';
+                else if (winRate >= 15) winBadge = 'badge-warning';
+
+                const fullCycle = r.avg_days_full_cycle !== null ? r.avg_days_full_cycle.toFixed(1) + ' days' : '—';
+
+                // Funnel mini bars
+                const maxFunnel = Math.max(r.total_assigned, r.contacted_count, r.sql_yes_count, r.quoted_count, r.win_count, 1);
+                const funnelHtml = `<div class="funnel-mini">
+                    <div class="funnel-row"><span class="funnel-label">Assigned</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.total_assigned/maxFunnel*100}%;background:#3b82f6;"></div></div><span class="funnel-num">${r.total_assigned}</span></div>
+                    <div class="funnel-row"><span class="funnel-label">Contacted</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.contacted_count/maxFunnel*100}%;background:#8b5cf6;"></div></div><span class="funnel-num">${r.contacted_count}</span></div>
+                    <div class="funnel-row"><span class="funnel-label">SQL Yes</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.sql_yes_count/maxFunnel*100}%;background:#f59e0b;"></div></div><span class="funnel-num">${r.sql_yes_count}</span></div>
+                    <div class="funnel-row"><span class="funnel-label">Quoted</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.quoted_count/maxFunnel*100}%;background:#10b981;"></div></div><span class="funnel-num">${r.quoted_count}</span></div>
+                    <div class="funnel-row"><span class="funnel-label">Win</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.win_count/maxFunnel*100}%;background:#f97316;"></div></div><span class="funnel-num">${r.win_count}</span></div>
+                </div>`;
+
+                return `<tr>
+                    <td>${rankBadge}</td>
+                    <td><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
+                    <td class="num-cell">${r.total_assigned}</td>
+                    <td>${funnelHtml}</td>
+                    <td class="num-cell">${fullCycle}</td>
+                    <td class="num-cell"><span class="badge ${winBadge}">${winRate.toFixed(1)}%</span></td>
+                </tr>`;
+            }).join('');
+
+            container.innerHTML = `${statsHtml}
+                <div class="data-table-wrapper">
+                    <table class="data-table" style="font-size:0.875rem;">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Sales Rep</th>
+                                <th class="num-cell">Assigned</th>
+                                <th>Funnel Breakdown</th>
+                                <th class="num-cell">⚡ Full Cycle</th>
+                                <th class="num-cell">Win Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRows}</tbody>
+                    </table>
+                </div>`;
+
+            // Add missing styles inline if needed
+            if (!document.querySelector('style[data-sr-perf-styles]')) {
+                const style = document.createElement('style');
+                style.setAttribute('data-sr-perf-styles', 'true');
+                style.textContent = `
+                    .rank-badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
+                    .rank-1 { background:rgba(255,193,7,0.15); color:#FFD700; }
+                    .rank-2 { background:rgba(192,192,192,0.15); color:#C0C0C0; }
+                    .rank-3 { background:rgba(205,127,50,0.15); color:#CD7F32; }
+                    .rank-n { background:rgba(255,255,255,0.06); color:var(--text-secondary); }
+                    .sr-name-cell { display:flex; align-items:center; gap:0.7rem; }
+                    .sr-avatar { width:34px; height:34px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem; color:#000; flex-shrink:0; }
+                    .sr-name { font-weight:700; color:var(--text-primary); line-height:1.2; font-size:0.875rem; }
+                    .sr-email { font-size:0.72rem; color:var(--text-muted); }
+                    .sr-branch { display:inline-block; margin-top:0.2rem; font-size:0.68rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.08rem 0.45rem; border-radius:999px; font-weight:700; }
+                    .funnel-mini { display:flex; flex-direction:column; gap:0.3rem; min-width:190px; }
+                    .funnel-row { display:flex; align-items:center; gap:0.4rem; }
+                    .funnel-label { font-size:0.65rem; color:var(--text-secondary); width:55px; flex-shrink:0; font-weight:600; }
+                    .funnel-bar-wrap { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
+                    .funnel-bar { height:100%; border-radius:3px; transition:width 0.4s ease; }
+                    .funnel-num { font-size:0.68rem; font-weight:700; color:var(--text-primary); width:20px; text-align:right; flex-shrink:0; }
+                    .badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; }
+                    .badge-success { background:rgba(16,185,129,0.15); color:#34d399; }
+                    .badge-warning { background:rgba(245,158,11,0.15); color:#fcd34d; }
+                    .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
+                `;
+                document.head.appendChild(style);
+            }
+
+        } catch (error) {
+            console.error('[FULL REPORTS] SR Performance error:', error);
+            container.innerHTML = '<div style="text-align:center;padding:3rem;color:#ef4444;"><div style="font-size:2rem;margin-bottom:0.5rem;">⚠️</div><div>Failed to load SR Performance data</div></div>';
+        }
     },
 
     /* ── Geographic Analysis ── */
