@@ -17,6 +17,13 @@
  */
 function logActivity($db, $userId, $actionType, $entityType, $entityId, $description, $metadata = null) {
     try {
+        // Check if activity_logs table exists
+        $tableCheck = $db->query("SHOW TABLES LIKE 'activity_logs'");
+        if ($tableCheck->rowCount() === 0) {
+            // Table doesn't exist, skip logging silently
+            return false;
+        }
+        
         $ipAddress = $_SERVER['REMOTE_ADDR'] ?? null;
         $userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? substr($_SERVER['HTTP_USER_AGENT'], 0, 255) : null;
         
@@ -41,6 +48,7 @@ function logActivity($db, $userId, $actionType, $entityType, $entityId, $descrip
         return true;
     } catch (Exception $e) {
         error_log('Activity logging failed: ' . $e->getMessage());
+        error_log('Stack trace: ' . $e->getTraceAsString());
         // Don't throw - activity logging should not break the main flow
         return false;
     }
