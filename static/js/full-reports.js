@@ -365,6 +365,14 @@ const FullReports = {
         this.renderEncodingPerformance();
     },
 
+    // ── Smooth scroll to section helper ──
+    scrollToSection(elementId) {
+        const el = document.getElementById(elementId);
+        if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    },
+
     renderExecutiveSummary() {
         const projects = this.getFilteredProjects();
         const totalValue = projects.reduce((sum, p) => sum + (parseFloat(p.project_value) || 0), 0);
@@ -373,12 +381,36 @@ const FullReports = {
         const statusCounts = {};
         projects.forEach(p => { const s = p.status || 'Unknown'; statusCounts[s] = (statusCounts[s]||0)+1; });
         document.getElementById('executiveSummary').innerHTML = `
-            <div class="stat-card"><div class="stat-label">Total Projects</div><div class="stat-value">${projects.length.toLocaleString()}</div><div class="stat-sublabel">Active projects in system</div></div>
-            <div class="stat-card"><div class="stat-label">Total Contractors</div><div class="stat-value">${uniqueContractors.size.toLocaleString()}</div><div class="stat-sublabel">Unique contractors</div></div>
-            <div class="stat-card"><div class="stat-label">Pipeline Value</div><div class="stat-value">₱${this.formatNumber(totalValue)}</div><div class="stat-sublabel">Total project value</div></div>
-            <div class="stat-card"><div class="stat-label">Average Project Value</div><div class="stat-value">₱${this.formatNumber(avgValue)}</div><div class="stat-sublabel">Per project average</div></div>
-            <div class="stat-card"><div class="stat-label">Priority Projects</div><div class="stat-value">${(statusCounts.Priority||0).toLocaleString()}</div><div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Priority||0)/projects.length*100).toFixed(1) : '0.0'}% of total</div></div>
-            <div class="stat-card"><div class="stat-label">Awarded Projects</div><div class="stat-value">${(statusCounts.Awarded||0).toLocaleString()}</div><div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Awarded||0)/projects.length*100).toFixed(1) : '0.0'}% of total</div></div>`;
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">📋 Total Projects</div>
+                <div class="stat-value">${projects.length.toLocaleString()}</div>
+                <div class="stat-sublabel">Click to view Project Analytics →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('contractorAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🏢 Total Contractors</div>
+                <div class="stat-value">${uniqueContractors.size.toLocaleString()}</div>
+                <div class="stat-sublabel">Click to view Contractor Analytics →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">💰 Pipeline Value</div>
+                <div class="stat-value">₱${this.formatNumber(totalValue)}</div>
+                <div class="stat-sublabel">Click to view Project Analytics →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">📊 Average Project Value</div>
+                <div class="stat-value">₱${this.formatNumber(avgValue)}</div>
+                <div class="stat-sublabel">Click to view Project Analytics →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🚨 Priority Projects</div>
+                <div class="stat-value">${(statusCounts.Priority||0).toLocaleString()}</div>
+                <div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Priority||0)/projects.length*100).toFixed(1) : '0.0'}% · Click for details →</div>
+            </div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🏆 Awarded Projects</div>
+                <div class="stat-value">${(statusCounts.Awarded||0).toLocaleString()}</div>
+                <div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Awarded||0)/projects.length*100).toFixed(1) : '0.0'}% · Click for details →</div>
+            </div>`;
     },
 
     /* ── Project Analytics ── */
