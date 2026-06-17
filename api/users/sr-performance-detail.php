@@ -4,6 +4,9 @@
    Returns per-project tracking timestamps for one SR.
    ============================================================ */
 
+// Ensure all PHP date/time functions use Philippine Time (UTC+8)
+date_default_timezone_set('Asia/Manila');
+
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
 
@@ -106,7 +109,15 @@ try {
     // Total for percentage calculation (use processing as fallback for full cycle)
     $totalSec = $avgFullCycleSec ?? $avgProcessingSec;
 
-    $projects = array_map(function ($r) {
+    // Helper: append +08:00 offset to a MySQL datetime string so browsers
+    // parse it as Philippine Time (UTC+8) instead of local/UTC.
+    $phTs = function(?string $dt): ?string {
+        if ($dt === null || $dt === '') return null;
+        // MySQL returns "YYYY-MM-DD HH:MM:SS" — convert to ISO 8601 with offset
+        return str_replace(' ', 'T', $dt) . '+08:00';
+    };
+
+    $projects = array_map(function ($r) use ($phTs) {
         return [
             'project_id'       => (int) $r['project_id'],
             'project_name'     => $r['project_name'],
@@ -118,13 +129,13 @@ try {
             'to_win'           => $r['to_win'],
             'wa_amount'        => (float) ($r['wa_amount'] ?? 0),
             'tracking_status'  => $r['tracking_status'],
-            'assigned_at'      => $r['assigned_at'],
-            'contacted_at'     => $r['contacted_at'],
-            'sales_qualified_at' => $r['sales_qualified_at'],
-            'quoted_at'        => $r['quoted_at'],
-            'to_win_at'        => $r['to_win_at'],
+            'assigned_at'      => $phTs($r['assigned_at']),
+            'contacted_at'     => $phTs($r['contacted_at']),
+            'sales_qualified_at' => $phTs($r['sales_qualified_at']),
+            'quoted_at'        => $phTs($r['quoted_at']),
+            'to_win_at'        => $phTs($r['to_win_at']),
             'full_cycle_seconds' => $r['full_cycle_seconds'] !== null ? (int)$r['full_cycle_seconds'] : null,
-            'tracking_updated' => $r['tracking_updated'],
+            'tracking_updated' => $phTs($r['tracking_updated']),
         ];
     }, $rows);
 

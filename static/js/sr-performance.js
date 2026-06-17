@@ -408,8 +408,16 @@ async function loadProjectTimestamps(srId) {
 function fmtTs(dateStr) {
     if (!dateStr) return '—';
     const d = new Date(dateStr);
-    return d.toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' })
-        + ' ' + d.toLocaleTimeString('en-PH', { hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true });
+    if (isNaN(d.getTime())) return '—';
+    // Always display in Philippine Time (Asia/Manila, UTC+8) regardless of browser locale
+    return d.toLocaleDateString('en-PH', {
+            timeZone: 'Asia/Manila',
+            month: 'short', day: 'numeric', year: 'numeric'
+        })
+        + ' ' + d.toLocaleTimeString('en-PH', {
+            timeZone: 'Asia/Manila',
+            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+        });
 }
 
 function fmtSec(sec) {

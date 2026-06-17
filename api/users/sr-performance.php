@@ -1,4 +1,7 @@
 <?php
+// Ensure all PHP date/time functions use Philippine Time (UTC+8)
+date_default_timezone_set('Asia/Manila');
+
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
 
@@ -138,7 +141,12 @@ try {
             || (int)$r['complete_count']    > 0;
     });
 
-    $reps = array_values(array_map(function ($r) {
+    // Helper: append +08:00 offset to a MySQL datetime string so browsers
+    // parse it as Philippine Time (UTC+8) instead of local/UTC.
+    $phTs = fn(?string $dt): ?string =>
+        ($dt !== null && $dt !== '') ? str_replace(' ', 'T', $dt) . '+08:00' : null;
+
+    $reps = array_values(array_map(function ($r) use ($phTs) {
         $assigned  = (int) $r['total_assigned'];
         $contacted = (int) $r['contacted_count'];
         $sqlYes    = (int) $r['sql_yes_count'];
@@ -163,7 +171,7 @@ try {
             'complete_count'       => (int) $r['complete_count'],
             'total_pipeline_value' => (float) $r['total_pipeline_value'],
             'total_win_amount'     => (float) $r['total_win_amount'],
-            'last_activity'        => $r['last_activity'],
+            'last_activity'        => $phTs($r['last_activity']),
 
             // Timing (null if migration not yet run)
             'avg_days_to_contact'     => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
