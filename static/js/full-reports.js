@@ -565,13 +565,28 @@ const FullReports = {
         });
     },
 
-    // ── Export Report ──
+    // ── Helper: convert array of arrays to worksheet with column widths ──
+    _makeSheet(data, headers) {
+        const wsData = [headers, ...data];
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+        // Auto-fit column widths (approximate)
+        const colWidths = headers.map((h, i) => {
+            const maxLen = Math.max(
+                h ? h.toString().length : 10,
+                ...data.map(r => (r[i] ? r[i].toString().length : 0))
+            );
+            return { wch: Math.min(Math.max(maxLen + 2, 12), 40) };
+        });
+        ws['!cols'] = colWidths;
+        return ws;
+    },
+
+    // ── Export Report (Multiple Excel Sheets) ──
     exportReport() {
         const df = document.getElementById('exportDateFrom').value;
         const dt = document.getElementById('exportDateTo').value;
         const errEl = document.getElementById('exportDateError');
 
-        // Validate date range
         if (!df || !dt) {
             errEl.textContent = 'Please select both Date From and Date To.';
             errEl.style.display = 'block';
@@ -583,39 +598,27 @@ const FullReports = {
             return;
         }
 
-        // Get date mode from export toggles
         const expPub = document.getElementById('exportTogglePub');
         const mode = expPub && expPub.style.background === 'var(--primary)' ? 'published' : 'encoded';
         
         const fromMs = this.phDateMs(df);
         const toMs   = this.phDateMs(dt) + 86400000;
         
-        // Check for zero-data days (more efficient - only check within range)
-        let zeroDay = null;
         let foundProjects = false;
         for (let d = fromMs; d < toMs; d += 86400000) {
-            const dayStr = new Date(d).toISOString().slice(0, 10);
             const dayProjects = this.data.projects.filter(p => {
                 const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
                 const pMs = this.phDateMs(dStr);
                 return pMs !== null && pMs >= d && pMs < d + 86400000;
             });
-            if (dayProjects.length > 0) {
-                foundProjects = true;
-                break; // At least one day has data, proceed
-            }
+            if (dayProjects.length > 0) { foundProjects = true; break; }
         }
-        
         if (!foundProjects) {
-            // Find the formatted date range for error message
-            const d = new Date(df + 'T00:00:00+08:00');
-            const formatted = d.toLocaleDateString('en-PH', { month: '2-digit', day: '2-digit' });
             errEl.textContent = `No data found for ${df}. Please select a date range with data.`;
             errEl.style.display = 'block';
             return;
         }
 
-        // Get selected sections
         const checkboxes = document.querySelectorAll('.export-section:checked');
         if (checkboxes.length === 0) {
             errEl.textContent = 'Please select at least one section to export.';
@@ -624,26 +627,34 @@ const FullReports = {
         }
         errEl.style.display = 'none';
 
-        // Prepare filtered data - save original filters
-        const origFilters = {
-            dateFrom: this.filters.dateFrom,
-            dateTo: this.filters.dateTo,
-            dateMode: this.filters.dateMode,
-            region: this.filters.region,
-            status: this.filters.status,
-            source: this.filters.source
-        };
-        
+        const origFilters = { dateFrom: this.filters.dateFrom, dateTo: this.filters.dateTo, dateMode: this.filters.dateMode, region: this.filters.region, status: this.filters.status, source: this.filters.source };
         this.filters.dateFrom = df;
         this.filters.dateTo = dt;
         this.filters.dateMode = mode;
         const projects = this.getFilteredProjects();
 
-        // Build CSV rows
-        let csv = '\uFEFF'; // BOM for Excel UTF-8
-        csv += `TDT Powersteel - Full Report Export\n`;
-        csv += `Date Range: ${df} to ${dt} (${mode === 'published' ? 'Published' : 'Encoded'})\n\n`;
+        // ── Create new workbook ──
+        const wb = XLSX.utils.book_new();
 
+        // ── SHEET 1: Summary / Cover ──
+        const summaryData = [
+            ['TDT POWERSTEEL CORPORATION'],
+            ['Full Report Export'],
+            [`Date Range: ${df} to ${dt} (${mode === 'published' ? 'Published' : 'Encoded'})`],
+            [`Generated: ${new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`],
+            [`Total Projects: ${projects.length}`],
+            [],
+            ['SECTION', 'STATUS'],
+            ...Array.from(checkboxes).map(cb => {
+                const labels = { executive: 'Executive Summary', projects: 'Project Analytics', contractors: 'Contractor Analytics', sales: 'Sales Performance', geographic: 'Geographic Distribution', material: 'Material Requirements', encoding: 'Encoding Performance' };
+                return [labels[cb.value] || cb.value, '✓ Included'];
+            })
+        ];
+        const wsCover = XLSX.utils.aoa_to_sheet(summaryData);
+        wsCover['!cols'] = [{ wch: 40 }, { wch: 20 }];
+        XLSX.utils.book_append_sheet(wb, wsCover, 'Summary');
+
+        // ── Build sheets per selected section ──
         checkboxes.forEach(cb => {
             const section = cb.value;
             switch (section) {
@@ -653,19 +664,21 @@ const FullReports = {
                     const uniqueContractors = new Set(projects.map(p => p.contractor_name).filter(Boolean));
                     const statusCounts = {};
                     projects.forEach(p => { const s = p.status || 'Unknown'; statusCounts[s] = (statusCounts[s]||0)+1; });
-                    csv += `Executive Summary\n`;
-                    csv += `Metric,Value\n`;
-                    csv += `Total Projects,${projects.length}\n`;
-                    csv += `Total Contractors,${uniqueContractors.size}\n`;
-                    csv += `Pipeline Value,₱${this.formatNumber(totalValue)}\n`;
-                    csv += `Average Project Value,₱${this.formatNumber(avgValue)}\n`;
-                    csv += `Priority Projects,${statusCounts.Priority||0}\n`;
-                    csv += `Awarded Projects,${statusCounts.Awarded||0}\n\n`;
+
+                    const data = [
+                        ['Total Projects', projects.length],
+                        ['Total Contractors', uniqueContractors.size],
+                        ['Pipeline Value (₱)', `₱${this.formatExportNumber(totalValue)}`],
+                        ['Average Project Value (₱)', `₱${this.formatExportNumber(avgValue)}`],
+                        ['Priority Projects', statusCounts.Priority||0],
+                        ['Awarded Projects', statusCounts.Awarded||0]
+                    ];
+                    const ws = this._makeSheet(data, ['Metric', 'Value']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Executive');
                     break;
                 }
                 case 'projects': {
-                    const byRegion = {};
-                    const byStatus = {};
+                    const byRegion = {}, byStatus = {};
                     projects.forEach(p => {
                         const r = p.project_region || p.region || 'Unknown';
                         if (!byRegion[r]) byRegion[r] = { count:0, value:0 };
@@ -673,17 +686,29 @@ const FullReports = {
                         const s = p.status || 'Unknown';
                         byStatus[s] = (byStatus[s]||0)+1;
                     });
-                    csv += `Project Analytics - By Region\n`;
-                    csv += `Region,Count,Total Value,Avg Value\n`;
-                    Object.entries(byRegion).sort((a,b)=>b[1].value-a[1].value).forEach(([r,d])=> {
-                        csv += `"${r}",${d.count},₱${this.formatNumber(d.value)},₱${d.count > 0 ? this.formatNumber(d.value/d.count) : '0.00'}\n`;
-                    });
-                    csv += `\nProject Analytics - By Status\n`;
-                    csv += `Status,Count,Percentage\n`;
-                    Object.entries(byStatus).sort((a,b)=>b[1]-a[1]).forEach(([s,c])=> {
-                        csv += `"${s}",${c},${projects.length > 0 ? (c/projects.length*100).toFixed(2) : '0.00'}%\n`;
-                    });
-                    csv += '\n';
+
+                    // Build combined Projects sheet: Region table + Status table stacked
+                    const regionRows = Object.entries(byRegion)
+                        .sort((a,b) => b[1].value - a[1].value)
+                        .map(([r,d], i) => [i+1, r, d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
+                    
+                    const statusRows = Object.entries(byStatus)
+                        .sort((a,b) => b[1] - a[1])
+                        .map(([s,c]) => [s, c, projects.length > 0 ? (c/projects.length*100).toFixed(2)+'%' : '0.00%']);
+
+                    // Stack: Region table header + rows + blank + Status header + Status rows
+                    const allData = [
+                        ['PROJECTS BY REGION', '', '', ''],
+                        ['#', 'Region', 'Count', 'Total Value', 'Avg Value'],
+                        ...regionRows,
+                        [],
+                        ['PROJECTS BY STATUS', '', ''],
+                        ['Status', 'Count', 'Percentage'],
+                        ...statusRows
+                    ];
+                    const ws = XLSX.utils.aoa_to_sheet(allData);
+                    ws['!cols'] = [{ wch: 6 }, { wch: 30 }, { wch: 12 }, { wch: 18 }, { wch: 18 }];
+                    XLSX.utils.book_append_sheet(wb, ws, 'Projects');
                     break;
                 }
                 case 'contractors': {
@@ -696,23 +721,19 @@ const FullReports = {
                         if (p.source) byCont[n].sources.add(p.source);
                         const r = p.project_region||p.region; if (r) byCont[n].regions.add(r);
                     });
-                    csv += `Contractor Analytics\n`;
-                    csv += `Name,Sources,Regions,Count,Total Value,Avg Value\n`;
-                    Object.entries(byCont).sort((a,b)=>b[1].value-a[1].value).forEach(([n,d])=> {
-                        csv += `"${n}","${Array.from(d.sources).join('; ')}","${Array.from(d.regions).join('; ')}",${d.count},₱${this.formatNumber(d.value)},₱${d.count > 0 ? this.formatNumber(d.value/d.count) : '0.00'}\n`;
-                    });
-                    csv += '\n';
+                    const data = Object.entries(byCont)
+                        .sort((a,b) => b[1].value - a[1].value)
+                        .map(([n,d], i) => [i+1, n, Array.from(d.sources).join(', '), Array.from(d.regions).join(', '), d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
+                    const ws = this._makeSheet(data, ['#', 'Contractor', 'Sources', 'Regions', 'Projects', 'Total Value', 'Avg Value']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Contractors');
                     break;
                 }
                 case 'sales': {
                     const tc = { 'Not Started':0, 'In Progress':0, 'Complete':0 };
                     projects.forEach(p => { const s = p.sales_tracking_status||'Not Started'; tc[s] = (tc[s]||0)+1; });
-                    csv += `Sales Performance\n`;
-                    csv += `Status,Count,Percentage\n`;
-                    Object.entries(tc).forEach(([s,c])=> {
-                        csv += `"${s}",${c},${projects.length > 0 ? (c/projects.length*100).toFixed(1) : '0.0'}%\n`;
-                    });
-                    csv += '\n';
+                    const data = Object.entries(tc).map(([s,c]) => [s, c, projects.length > 0 ? (c/projects.length*100).toFixed(1)+'%' : '0.0%']);
+                    const ws = this._makeSheet(data, ['Status', 'Count', 'Percentage']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Sales');
                     break;
                 }
                 case 'geographic': {
@@ -723,12 +744,12 @@ const FullReports = {
                         byProv[prov].count++;
                         byProv[prov].value += parseFloat(p.project_value)||0;
                     });
-                    csv += `Geographic Distribution (Top 20)\n`;
-                    csv += `Province,Count,Total Value\n`;
-                    Object.entries(byProv).sort((a,b)=>b[1].count-a[1].count).slice(0,20).forEach(([p,d])=> {
-                        csv += `"${p}",${d.count},₱${this.formatNumber(d.value)}\n`;
-                    });
-                    csv += '\n';
+                    const data = Object.entries(byProv)
+                        .sort((a,b) => b[1].count - a[1].count)
+                        .slice(0, 20)
+                        .map(([p,d], i) => [i+1, p, d.count, this.formatExportNumber(d.value)]);
+                    const ws = this._makeSheet(data, ['#', 'Province', 'Count', 'Total Value']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Geographic');
                     break;
                 }
                 case 'material': {
@@ -741,10 +762,9 @@ const FullReports = {
                         totals['Wide Flange'] += parseFloat(p.wide_flange)||0;
                         totals['GI/BI']       += parseFloat(p.gi_bi)||0;
                     });
-                    csv += `Material Requirements\n`;
-                    csv += `Material,Total Value\n`;
-                    Object.entries(totals).forEach(([k,v])=> { csv += `"${k}",₱${v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}\n`; });
-                    csv += '\n';
+                    const data = Object.entries(totals).map(([k,v]) => [k, `₱${v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}`]);
+                    const ws = this._makeSheet(data, ['Material', 'Total Value']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Materials');
                     break;
                 }
                 case 'encoding': {
@@ -759,34 +779,38 @@ const FullReports = {
                         if (p.is_illegitimate||p.illegitimate) byEnc[name].illegitimate++;
                         else byEnc[name].legitimate++;
                     });
-                    csv += `Encoding Performance\n`;
-                    csv += `Encoder,Total,Legitimate,Illegitimate,Percentage\n`;
-                    Object.entries(byEnc).sort((a,b)=>b[1].total-a[1].total).forEach(([n,s])=> {
-                        csv += `"${n}",${s.total},${s.legitimate},${s.illegitimate},${projects.length > 0 ? (s.total/projects.length*100).toFixed(2) : '0.00'}%\n`;
-                    });
-                    csv += '\n';
+                    const data = Object.entries(byEnc)
+                        .sort((a,b) => b[1].total - a[1].total)
+                        .map(([n,s], i) => [i+1, n, s.total, s.legitimate, s.illegitimate, projects.length > 0 ? (s.total/projects.length*100).toFixed(2)+'%' : '0.00%']);
+                    const ws = this._makeSheet(data, ['#', 'Encoder', 'Total', 'Legitimate', 'Illegitimate', 'Share']);
+                    XLSX.utils.book_append_sheet(wb, ws, 'Encoding');
                     break;
                 }
             }
         });
 
-        // Restore original filters
-        Object.assign(this.filters, origFilters);
-
-        // Download CSV
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        // ── Write XLSX file and download ──
+        const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array', bookSST: false });
+        const blob = new Blob([wbout], { type: 'application/octet-stream' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `TDT_Report_${df}_to_${dt}.csv`;
+        link.download = `TDT_Report_${df}_to_${dt}.xlsx`;
         link.click();
         URL.revokeObjectURL(link.href);
 
+        // Restore original filters
+        Object.assign(this.filters, origFilters);
         closeExportModal();
         
-        // Show success message
         if (typeof Toast !== 'undefined' && Toast.success) {
-            Toast.success('Report exported successfully!');
+            Toast.success('Report exported as Excel with multiple sheets!');
         }
+    },
+
+    // ── Export-friendly number formatter (no K/M/B abbreviations, full number) ──
+    formatExportNumber(num) {
+        if (num === null || num === undefined || isNaN(num)) return '0.00';
+        return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 };
 

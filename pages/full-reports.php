@@ -37,6 +37,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- SheetJS for Excel export with multiple sheets -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
     
     <style>
         :root {
