@@ -647,6 +647,9 @@ const FullReports = {
                 <div class="stat-card"><div class="stat-label">Pipeline Value</div><div class="stat-value">₱${this.formatNumber(summary.total_pipeline_value || 0)}</div><div class="stat-sublabel">total project value</div></div>
             </div>`;
 
+            // Store reps data for modal access
+            this.srPerformanceData = reps;
+
             // Build table rows
             let tableRows = reps.slice(0, 10).map((r, idx) => {
                 const rank = idx + 1;
@@ -673,7 +676,7 @@ const FullReports = {
                     <div class="funnel-row"><span class="funnel-label">Win</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.win_count/maxFunnel*100}%;background:#f97316;"></div></div><span class="funnel-num">${r.win_count}</span></div>
                 </div>`;
 
-                return `<tr>
+                return `<tr onclick="FullReports.showSRDetails(${r.id})" style="cursor:pointer;">
                     <td>${rankBadge}</td>
                     <td><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
                     <td class="num-cell">${r.total_assigned}</td>
@@ -705,6 +708,10 @@ const FullReports = {
                 const style = document.createElement('style');
                 style.setAttribute('data-sr-perf-styles', 'true');
                 style.textContent = `
+                    #srPerformanceReport .data-table td { border-right:1px solid rgba(255,255,255,0.06); }
+                    #srPerformanceReport .data-table td:last-child { border-right:none; }
+                    #srPerformanceReport .data-table tbody tr:hover { background:rgba(255,128,0,0.08); transform:scale(1.005); }
+                    #srPerformanceReport .data-table tbody tr { transition:all 0.2s ease; }
                     .rank-badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
                     .rank-1 { background:rgba(255,193,7,0.15); color:#FFD700; }
                     .rank-2 { background:rgba(192,192,192,0.15); color:#C0C0C0; }
@@ -725,6 +732,22 @@ const FullReports = {
                     .badge-success { background:rgba(16,185,129,0.15); color:#34d399; }
                     .badge-warning { background:rgba(245,158,11,0.15); color:#fcd34d; }
                     .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
+                    .sr-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:100000; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
+                    .sr-modal-overlay.active { display:flex; }
+                    .sr-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:900px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; }
+                    @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:none; } }
+                    .sr-modal-close { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
+                    .sr-modal-close:hover { background:rgba(255,255,255,0.12); color:var(--text-primary); }
+                    .sr-modal-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
+                    .sr-modal-avatar { width:52px; height:52px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.4rem; color:#000; }
+                    .sr-modal-name { font-size:1.2rem; font-weight:800; color:var(--text-primary); }
+                    .sr-modal-email { font-size:0.8rem; color:var(--text-muted); margin-top:0.15rem; }
+                    .sr-modal-section { margin-bottom:1.5rem; }
+                    .sr-modal-section-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+                    .sr-modal-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
+                    .sr-modal-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-md); padding:0.75rem 1rem; }
+                    .sr-modal-stat-label { font-size:0.68rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; }
+                    .sr-modal-stat-val { font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:0.15rem; }
                 `;
                 document.head.appendChild(style);
             }
@@ -1110,6 +1133,86 @@ const FullReports = {
     formatExportNumber(num) {
         if (num === null || num === undefined || isNaN(num)) return '0.00';
         return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    },
+
+    // ── SR Performance Modal Functions ──
+    showSRDetails(srId) {
+        const rep = this.srPerformanceData?.find(r => r.id === srId);
+        if (!rep) {
+            console.error('[FULL REPORTS] SR not found:', srId);
+            return;
+        }
+
+        // Populate modal
+        const initial = rep.full_name ? rep.full_name.charAt(0).toUpperCase() : '?';
+        document.getElementById('srModalAvatar').textContent = initial;
+        document.getElementById('srModalName').textContent = rep.full_name || '—';
+        document.getElementById('srModalEmail').textContent = rep.email || '—';
+        
+        const branchEl = document.getElementById('srModalBranch');
+        if (rep.branch) {
+            branchEl.textContent = rep.branch;
+            branchEl.style.display = 'inline-block';
+        } else {
+            branchEl.style.display = 'none';
+        }
+
+        // Overview stats
+        document.getElementById('srModalAssigned').textContent = rep.total_assigned || 0;
+        document.getElementById('srModalContacted').textContent = rep.contacted_count || 0;
+        document.getElementById('srModalSqlYes').textContent = rep.sql_yes_count || 0;
+        document.getElementById('srModalSqlNo').textContent = rep.sql_no_count || 0;
+        document.getElementById('srModalQuoted').textContent = rep.quoted_count || 0;
+        document.getElementById('srModalWins').textContent = rep.win_count || 0;
+        document.getElementById('srModalWinRate').textContent = (rep.win_rate || 0).toFixed(1) + '%';
+        document.getElementById('srModalWinAmount').textContent = '₱' + this.formatNumber(rep.total_win_amount || 0);
+        document.getElementById('srModalPipeline').textContent = '₱' + this.formatNumber(rep.total_pipeline_value || 0);
+
+        // Conversion rates
+        document.getElementById('srModalContactRate').textContent = (rep.contact_rate || 0).toFixed(1) + '%';
+        document.getElementById('srModalSqlRate').textContent = (rep.sql_rate || 0).toFixed(1) + '%';
+        document.getElementById('srModalQuoteRate').textContent = (rep.quote_rate || 0).toFixed(1) + '%';
+        document.getElementById('srModalWinRate2').textContent = (rep.win_rate || 0).toFixed(1) + '%';
+
+        // Speed metrics (if available)
+        const timingSection = document.getElementById('srModalTimingSection');
+        if (rep.avg_days_full_cycle !== null && rep.avg_days_full_cycle !== undefined) {
+            timingSection.style.display = 'block';
+            document.getElementById('srModalFullCycle').textContent = rep.avg_days_full_cycle.toFixed(1) + ' days';
+            document.getElementById('srModalToContact').textContent = rep.avg_days_to_contact !== null ? rep.avg_days_to_contact.toFixed(1) + ' days' : '—';
+            document.getElementById('srModalToQuote').textContent = rep.avg_days_contact_to_quote !== null ? rep.avg_days_contact_to_quote.toFixed(1) + ' days' : '—';
+            document.getElementById('srModalToSql').textContent = rep.avg_days_quote_to_sql !== null ? rep.avg_days_quote_to_sql.toFixed(1) + ' days' : '—';
+            document.getElementById('srModalToWin').textContent = rep.avg_days_sql_to_win !== null ? rep.avg_days_sql_to_win.toFixed(1) + ' days' : '—';
+        } else {
+            timingSection.style.display = 'none';
+        }
+
+        // Tracking status
+        document.getElementById('srModalNotStarted').textContent = rep.not_started_count || 0;
+        document.getElementById('srModalInProgress').textContent = rep.in_progress_count || 0;
+        document.getElementById('srModalComplete').textContent = rep.complete_count || 0;
+
+        // Show modal
+        const modal = document.getElementById('srDetailModal');
+        modal.classList.add('active');
+        
+        // Close on escape or click outside
+        const closeHandler = (e) => {
+            if (e.key === 'Escape' || e.target === modal) {
+                this.closeSRModal();
+                document.removeEventListener('keydown', closeHandler);
+                modal.removeEventListener('click', closeHandler);
+            }
+        };
+        document.addEventListener('keydown', closeHandler);
+        modal.addEventListener('click', closeHandler);
+    },
+
+    closeSRModal() {
+        const modal = document.getElementById('srDetailModal');
+        if (modal) {
+            modal.classList.remove('active');
+        }
     }
 };
 

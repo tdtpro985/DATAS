@@ -620,6 +620,62 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/full-reports.js?v=2"></script>
 
+<!-- SR Detail Modal -->
+<div class="sr-modal-overlay" id="srDetailModal">
+    <div class="sr-modal">
+        <button class="sr-modal-close" onclick="FullReports.closeSRModal()">✕</button>
+        <div class="sr-modal-header">
+            <div class="sr-modal-avatar" id="srModalAvatar">?</div>
+            <div>
+                <div class="sr-modal-name" id="srModalName">—</div>
+                <div class="sr-modal-email" id="srModalEmail">—</div>
+                <span class="sr-branch" id="srModalBranch" style="display:none;"></span>
+            </div>
+        </div>
+        <div class="sr-modal-section">
+            <div class="sr-modal-section-title">Overview</div>
+            <div class="sr-modal-stats">
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Assigned</div><div class="sr-modal-stat-val" id="srModalAssigned">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Contacted</div><div class="sr-modal-stat-val" id="srModalContacted">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">SQL Yes</div><div class="sr-modal-stat-val" id="srModalSqlYes">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">SQL No</div><div class="sr-modal-stat-val" id="srModalSqlNo">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Quoted</div><div class="sr-modal-stat-val" id="srModalQuoted">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Wins</div><div class="sr-modal-stat-val" id="srModalWins">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Win Rate</div><div class="sr-modal-stat-val" id="srModalWinRate">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Win Amount</div><div class="sr-modal-stat-val" id="srModalWinAmount">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Pipeline Value</div><div class="sr-modal-stat-val" id="srModalPipeline">—</div></div>
+            </div>
+        </div>
+        <div class="sr-modal-section">
+            <div class="sr-modal-section-title">Conversion Rates</div>
+            <div class="sr-modal-stats" style="grid-template-columns:repeat(2,1fr);">
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Contact Rate</div><div class="sr-modal-stat-val" id="srModalContactRate">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">SQL Rate</div><div class="sr-modal-stat-val" id="srModalSqlRate">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Quote Rate</div><div class="sr-modal-stat-val" id="srModalQuoteRate">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Win Rate</div><div class="sr-modal-stat-val" id="srModalWinRate2">—</div></div>
+            </div>
+        </div>
+        <div class="sr-modal-section" id="srModalTimingSection" style="display:none;">
+            <div class="sr-modal-section-title">⚡ Speed Metrics</div>
+            <div class="sr-modal-stats" style="grid-template-columns:repeat(2,1fr);">
+                <div class="sr-modal-stat" style="grid-column:1/-1;"><div class="sr-modal-stat-label">Full Cycle (Assign → Win)</div><div class="sr-modal-stat-val" id="srModalFullCycle">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Assign → Contact</div><div class="sr-modal-stat-val" id="srModalToContact">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Contact → Quote</div><div class="sr-modal-stat-val" id="srModalToQuote">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Quote → SQL</div><div class="sr-modal-stat-val" id="srModalToSql">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">SQL → Win</div><div class="sr-modal-stat-val" id="srModalToWin">—</div></div>
+            </div>
+        </div>
+        <div class="sr-modal-section">
+            <div class="sr-modal-section-title">Tracking Status</div>
+            <div class="sr-modal-stats">
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Not Started</div><div class="sr-modal-stat-val" id="srModalNotStarted">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">In Progress</div><div class="sr-modal-stat-val" id="srModalInProgress">—</div></div>
+                <div class="sr-modal-stat"><div class="sr-modal-stat-label">Complete</div><div class="sr-modal-stat-val" id="srModalComplete">—</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Export Modal -->
 <div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
     <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;width:540px;max-width:90vw;max-height:85vh;overflow-y:auto;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
