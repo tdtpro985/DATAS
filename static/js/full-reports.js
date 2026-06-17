@@ -1281,11 +1281,11 @@ const FullReports = {
         const timingSection = document.getElementById('srModalTimingSection');
         if (rep.avg_days_full_cycle !== null && rep.avg_days_full_cycle !== undefined) {
             timingSection.style.display = 'block';
-            document.getElementById('srModalFullCycle').textContent = rep.avg_days_full_cycle.toFixed(1) + ' days';
-            document.getElementById('srModalToContact').textContent = rep.avg_days_to_contact !== null ? rep.avg_days_to_contact.toFixed(1) + ' days' : '—';
-            document.getElementById('srModalToQuote').textContent = rep.avg_days_contact_to_quote !== null ? rep.avg_days_contact_to_quote.toFixed(1) + ' days' : '—';
-            document.getElementById('srModalToSql').textContent = rep.avg_days_quote_to_sql !== null ? rep.avg_days_quote_to_sql.toFixed(1) + ' days' : '—';
-            document.getElementById('srModalToWin').textContent = rep.avg_days_sql_to_win !== null ? rep.avg_days_sql_to_win.toFixed(1) + ' days' : '—';
+            document.getElementById('srModalFullCycle').textContent = this.formatDetailedTime(rep.avg_days_full_cycle);
+            document.getElementById('srModalToContact').textContent = rep.avg_days_to_contact !== null ? this.formatDetailedTime(rep.avg_days_to_contact) : '—';
+            document.getElementById('srModalToQuote').textContent = rep.avg_days_contact_to_quote !== null ? this.formatDetailedTime(rep.avg_days_contact_to_quote) : '—';
+            document.getElementById('srModalToSql').textContent = rep.avg_days_quote_to_sql !== null ? this.formatDetailedTime(rep.avg_days_quote_to_sql) : '—';
+            document.getElementById('srModalToWin').textContent = rep.avg_days_sql_to_win !== null ? this.formatDetailedTime(rep.avg_days_sql_to_win) : '—';
         } else {
             timingSection.style.display = 'none';
         }
@@ -1322,6 +1322,25 @@ const FullReports = {
         if (overlay) {
             overlay.classList.remove('active');
         }
+    },
+
+    // Helper: format days as detailed time (days, hours, minutes, seconds)
+    formatDetailedTime(days) {
+        if (days === null || days === undefined) return '—';
+        
+        const totalSeconds = Math.floor(days * 24 * 60 * 60);
+        const d = Math.floor(totalSeconds / (24 * 60 * 60));
+        const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
+        const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+        const s = totalSeconds % 60;
+
+        const parts = [];
+        if (d > 0) parts.push(`${d}d`);
+        if (h > 0) parts.push(`${h}h`);
+        if (m > 0) parts.push(`${m}m`);
+        if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+
+        return parts.join(' ');
     }
 };
 
