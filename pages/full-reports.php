@@ -393,7 +393,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
                 <option value="">All Sources</option>
             </select>
         </div>
-        <button class="btn-export" onclick="exportReport()">
+        <button class="btn-export" onclick="openExportModal()">
             <span>📥</span>
             <span>Export Report</span>
         </button>
@@ -505,5 +505,67 @@ const BASE = '<?= $base ?>';
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/full-reports.js?v=1"></script>
 
+<!-- Export Modal -->
+<div class="modal-overlay" id="exportModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100000;align-items:center;justify-content:center;backdrop-filter:blur(3px);">
+    <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;width:520px;max-width:95%;max-height:90vh;overflow-y:auto;padding:2rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text-primary);">📥 Export Report</h3>
+            <button onclick="closeExportModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+        </div>
+        <div style="margin-bottom:1.25rem;">
+            <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Date Basis</label>
+            <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
+                <button id="exportTogglePub" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">Published</button>
+                <button id="exportToggleEnc" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;">Encoded</button>
+            </div>
+        </div>
+        <div style="display:flex;gap:1rem;margin-bottom:1.25rem;">
+            <div style="flex:1;display:flex;flex-direction:column;gap:0.4rem;">
+                <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">Date From</label>
+                <input type="date" id="exportDateFrom" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
+            </div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:0.4rem;">
+                <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">Date To</label>
+                <input type="date" id="exportDateTo" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
+            </div>
+        </div>
+        <div id="exportDateError" style="display:none;font-size:0.75rem;color:#f87171;margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:rgba(239,68,68,0.1);border-radius:6px;"></div>
+        <div style="margin-bottom:1.5rem;">
+            <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.6rem;">Sections to Export</label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;">
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="executive" checked style="accent-color:var(--primary);"> 📈 Executive Summary
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="projects" checked style="accent-color:var(--primary);"> 📊 Project Analytics
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="contractors" checked style="accent-color:var(--primary);"> 🏢 Contractor Analytics
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="sales" checked style="accent-color:var(--primary);"> 💼 Sales Performance
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="geographic" checked style="accent-color:var(--primary);"> 🗺️ Geographic
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);">
+                    <input type="checkbox" class="export-section" value="material" checked style="accent-color:var(--primary);"> 🔩 Material Req.
+                </label>
+                <label class="export-check" style="display:flex;align-items:center;gap:0.5rem;padding:0.45rem 0.6rem;background:rgba(255,255,255,0.03);border-radius:6px;cursor:pointer;font-size:0.82rem;color:var(--text-primary);grid-column:1/-1;">
+                    <input type="checkbox" class="export-section" value="encoding" checked style="accent-color:var(--primary);"> ⌨️ Encoding Performance
+                </label>
+            </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+            <button onclick="closeExportModal()" style="flex:1;padding:0.65rem;border:1px solid var(--border-color);border-radius:8px;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.85rem;cursor:pointer;">Cancel</button>
+            <button onclick="FullReports.exportReport()" style="flex:1;padding:0.65rem;border:none;border-radius:8px;background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;font-weight:700;font-size:0.85rem;cursor:pointer;">Download Report</button>
+        </div>
+    </div>
+</div>
+<script>
+const BASE = '<?= $base ?>';
+function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
+function closeExportModal() { document.getElementById('exportModal').style.display = 'none'; document.body.style.overflow = ''; }
+</script>
 </body>
 </html>

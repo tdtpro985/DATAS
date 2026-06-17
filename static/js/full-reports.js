@@ -132,6 +132,35 @@ const FullReports = {
             pubBtn.addEventListener('click', () => activate('published'));
             encBtn.addEventListener('click', () => activate('encoded'));
         }
+
+        // Export modal toggle (Published / Encoded)
+        const expPub = document.getElementById('exportTogglePub');
+        const expEnc = document.getElementById('exportToggleEnc');
+        if (expPub && expEnc) {
+            const expActivate = (mode) => {
+                if (mode === 'published') {
+                    expPub.style.background = 'var(--primary)';
+                    expPub.style.color = '#fff';
+                    expEnc.style.background = 'transparent';
+                    expEnc.style.color = 'var(--text-secondary)';
+                } else {
+                    expEnc.style.background = 'var(--primary)';
+                    expEnc.style.color = '#fff';
+                    expPub.style.background = 'transparent';
+                    expPub.style.color = 'var(--text-secondary)';
+                }
+            };
+            expPub.addEventListener('click', () => expActivate('published'));
+            expEnc.addEventListener('click', () => expActivate('encoded'));
+        }
+
+        // Escape key closes export modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('exportModal');
+                if (modal && modal.style.display === 'flex') closeExportModal();
+            }
+        });
     },
 
     async loadAllData() {
@@ -503,9 +532,214 @@ const FullReports = {
             type:'line', data:{ labels:sorted, datasets:[{ label:'Projects Published', data:sorted.map(m=>byMonth[m]), backgroundColor:'rgba(249,115,22,0.1)', borderColor:'rgba(249,115,22,1)', borderWidth:3, fill:true, tension:0.4, pointRadius:5, pointBackgroundColor:'rgba(249,115,22,1)', pointBorderColor:'#fff', pointBorderWidth:2 }] },
             options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2.5, plugins:{ legend:{display:true,labels:{color:'#94a3b8'}}, tooltip:{backgroundColor:'rgba(30,41,59,0.95)',titleColor:'#f97316',bodyColor:'#f1f5f9',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#94a3b8'}, grid:{color:'rgba(255,255,255,0.05)'} }, x:{ ticks:{color:'#94a3b8'}, grid:{display:false} } } }
         });
+    },
+
+    // ── Export Report ──
+    exportReport() {
+        const df = document.getElementById('exportDateFrom').value;
+        const dt = document.getElementById('exportDateTo').value;
+        const errEl = document.getElementById('exportDateError');
+
+        // Validate date range
+        if (!df || !dt) {
+            errEl.textContent = 'Please select both Date From and Date To.';
+            errEl.style.display = 'block';
+            return;
+        }
+        if (df > dt) {
+            errEl.textContent = 'Date From cannot be after Date To.';
+            errEl.style.display = 'block';
+            return;
+        }
+
+        // Check for zero-data single day
+        const modePub = document.getElementById('exportTogglePub').style.background === 'var(--primary)';
+        const mode = modePub ? 'published' : 'encoded';
+        const fromMs = this.phDateMs(df);
+        const toMs   = this.phDateMs(dt) + 86400000;
+        const dayMs  = 86400000;
+        let zeroDay = null;
+        for (let d = fromMs; d < toMs; d += dayMs) {
+            const dayStr = new Date(d).toISOString().slice(0, 10).replace('T', '');
+            const dayProjects = this.data.projects.filter(p => {
+                const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
+                const pMs = this.phDateMs(dStr);
+                return pMs !== null && pMs >= d && pMs < d + dayMs;
+            });
+            if (dayProjects.length === 0) {
+                zeroDay = dayStr;
+                break;
+            }
+        }
+        if (zeroDay) {
+            const d = new Date(zeroDay + 'T00:00:00+08:00');
+            const formatted = d.toLocaleDateString('en-PH', { month: '2-digit', day: '2-digit' });
+            errEl.textContent = `No data found for ${formatted}. Please select a date range with data.`;
+            errEl.style.display = 'block';
+            return;
+        }
+
+        // Get selected sections
+        const checkboxes = document.querySelectorAll('.export-section:checked');
+        if (checkboxes.length === 0) {
+            errEl.textContent = 'Please select at least one section to export.';
+            errEl.style.display = 'block';
+            return;
+        }
+        errEl.style.display = 'none';
+
+        // Prepare filtered data
+        const origFilters = { ...this.filters };
+        this.filters.dateFrom = df;
+        this.filters.dateTo = dt;
+        this.filters.dateMode = mode;
+        const projects = this.getFilteredProjects();
+
+        // Build CSV rows
+        let csv = '\uFEFF'; // BOM for Excel UTF-8
+        csv += `TDT Powersteel - Full Report Export\n`;
+        csv += `Date Range: ${df} to ${dt} (${mode === 'published' ? 'Published' : 'Encoded'})\n\n`;
+
+        checkboxes.forEach(cb => {
+            const section = cb.value;
+            switch (section) {
+                case 'executive': {
+                    const totalValue = projects.reduce((s, p) => s + (parseFloat(p.project_value) || 0), 0);
+                    const avgValue = projects.length > 0 ? totalValue / projects.length : 0;
+                    const uniqueContractors = new Set(projects.map(p => p.contractor_name).filter(Boolean));
+                    const statusCounts = {};
+                    projects.forEach(p => { const s = p.status || 'Unknown'; statusCounts[s] = (statusCounts[s]||0)+1; });
+                    csv += `Executive Summary\n`;
+                    csv += `Metric,Value\n`;
+                    csv += `Total Projects,${projects.length}\n`;
+                    csv += `Total Contractors,${uniqueContractors.size}\n`;
+                    csv += `Pipeline Value,₱${this.formatNumber(totalValue)}\n`;
+                    csv += `Average Project Value,₱${this.formatNumber(avgValue)}\n`;
+                    csv += `Priority Projects,${statusCounts.Priority||0}\n`;
+                    csv += `Awarded Projects,${statusCounts.Awarded||0}\n\n`;
+                    break;
+                }
+                case 'projects': {
+                    const byRegion = {};
+                    const byStatus = {};
+                    projects.forEach(p => {
+                        const r = p.project_region || p.region || 'Unknown';
+                        if (!byRegion[r]) byRegion[r] = { count:0, value:0 };
+                        byRegion[r].count++; byRegion[r].value += parseFloat(p.project_value)||0;
+                        const s = p.status || 'Unknown';
+                        byStatus[s] = (byStatus[s]||0)+1;
+                    });
+                    csv += `Project Analytics - By Region\n`;
+                    csv += `Region,Count,Total Value,Avg Value\n`;
+                    Object.entries(byRegion).sort((a,b)=>b[1].value-a[1].value).forEach(([r,d])=> {
+                        csv += `"${r}",${d.count},₱${this.formatNumber(d.value)},₱${this.formatNumber(d.value/d.count)}\n`;
+                    });
+                    csv += `\nProject Analytics - By Status\n`;
+                    csv += `Status,Count,Percentage\n`;
+                    Object.entries(byStatus).sort((a,b)=>b[1]-a[1]).forEach(([s,c])=> {
+                        csv += `"${s}",${c},${(c/projects.length*100).toFixed(2)}%\n`;
+                    });
+                    csv += '\n';
+                    break;
+                }
+                case 'contractors': {
+                    const byCont = {};
+                    projects.forEach(p => {
+                        const n = p.contractor_name || 'Unknown';
+                        if (!byCont[n]) byCont[n] = { count:0, value:0, sources:new Set(), regions:new Set() };
+                        byCont[n].count++;
+                        byCont[n].value += parseFloat(p.project_value)||0;
+                        if (p.source) byCont[n].sources.add(p.source);
+                        const r = p.project_region||p.region; if (r) byCont[n].regions.add(r);
+                    });
+                    csv += `Contractor Analytics\n`;
+                    csv += `Name,Sources,Regions,Count,Total Value,Avg Value\n`;
+                    Object.entries(byCont).sort((a,b)=>b[1].value-a[1].value).forEach(([n,d])=> {
+                        csv += `"${n}","${Array.from(d.sources).join('; ')}","${Array.from(d.regions).join('; ')}",${d.count},₱${this.formatNumber(d.value)},₱${this.formatNumber(d.value/d.count)}\n`;
+                    });
+                    csv += '\n';
+                    break;
+                }
+                case 'sales': {
+                    const tc = { 'Not Started':0, 'In Progress':0, 'Complete':0 };
+                    projects.forEach(p => { const s = p.sales_tracking_status||'Not Started'; tc[s] = (tc[s]||0)+1; });
+                    csv += `Sales Performance\n`;
+                    csv += `Status,Count,Percentage\n`;
+                    Object.entries(tc).forEach(([s,c])=> {
+                        csv += `"${s}",${c},${(c/projects.length*100).toFixed(1)}%\n`;
+                    });
+                    csv += '\n';
+                    break;
+                }
+                case 'geographic': {
+                    const byProv = {};
+                    projects.forEach(p => {
+                        const prov = p.project_province||'Unknown';
+                        if (!byProv[prov]) byProv[prov] = { count:0, value:0 };
+                        byProv[prov].count++;
+                        byProv[prov].value += parseFloat(p.project_value)||0;
+                    });
+                    csv += `Geographic Distribution (Top 20)\n`;
+                    csv += `Province,Count,Total Value\n`;
+                    Object.entries(byProv).sort((a,b)=>b[1].count-a[1].count).slice(0,20).forEach(([p,d])=> {
+                        csv += `"${p}",${d.count},₱${this.formatNumber(d.value)}\n`;
+                    });
+                    csv += '\n';
+                    break;
+                }
+                case 'material': {
+                    let totals = { 'Sheet Pile':0, 'MS Plate':0, 'Angle Bars':0, 'Channel Bars':0, 'Wide Flange':0, 'GI/BI':0 };
+                    projects.forEach(p => {
+                        totals['Sheet Pile']  += parseFloat(p.sheet_pile_amount)||0;
+                        totals['MS Plate']    += parseFloat(p.ms_plate)||0;
+                        totals['Angle Bars']  += parseFloat(p.angle_bars)||0;
+                        totals['Channel Bars']+= parseFloat(p.channel_bars)||0;
+                        totals['Wide Flange'] += parseFloat(p.wide_flange)||0;
+                        totals['GI/BI']       += parseFloat(p.gi_bi)||0;
+                    });
+                    csv += `Material Requirements\n`;
+                    csv += `Material,Total Value\n`;
+                    Object.entries(totals).forEach(([k,v])=> { csv += `"${k}",₱${v.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0})}\n`; });
+                    csv += '\n';
+                    break;
+                }
+                case 'encoding': {
+                    const userMap = {};
+                    this.data.users.forEach(u => userMap[u.id] = u);
+                    const byEnc = {};
+                    projects.forEach(p => {
+                        const eid = p.encoded_by;
+                        let name = eid ? (userMap[eid] ? (userMap[eid].full_name||userMap[eid].email||'User '+eid) : 'Unknown User #'+eid) : 'No Encoder Assigned';
+                        if (!byEnc[name]) byEnc[name] = { total:0, legitimate:0, illegitimate:0 };
+                        byEnc[name].total++;
+                        if (p.is_illegitimate||p.illegitimate) byEnc[name].illegitimate++;
+                        else byEnc[name].legitimate++;
+                    });
+                    csv += `Encoding Performance\n`;
+                    csv += `Encoder,Total,Legitimate,Illegitimate,Percentage\n`;
+                    Object.entries(byEnc).sort((a,b)=>b[1].total-a[1].total).forEach(([n,s])=> {
+                        csv += `"${n}",${s.total},${s.legitimate},${s.illegitimate},${(s.total/projects.length*100).toFixed(2)}%\n`;
+                    });
+                    csv += '\n';
+                    break;
+                }
+            }
+        });
+
+        // Restore original filters
+        Object.assign(this.filters, origFilters);
+
+        // Download CSV
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `TDT_Report_${df}_to_${dt}.csv`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+
+        closeExportModal();
+        Toast.success('Report exported successfully!');
     }
 };
-
-function exportReport() { Toast.info('Export functionality coming soon'); }
 
 document.addEventListener('DOMContentLoaded', () => { FullReports.init(); });
