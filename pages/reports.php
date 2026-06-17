@@ -4873,6 +4873,24 @@ if ($role === 'encoder') {
                     // Don't auto-select any specific month
                     monthSelect.appendChild(option);
                 });
+                
+                // Initialize or refresh CustomSelect for this dropdown
+                setTimeout(() => {
+                    if (window.customSelectInstances && window.customSelectInstances.monthSelect) {
+                        // Refresh existing instance
+                        window.customSelectInstances.monthSelect.refresh();
+                    } else if (window.CustomSelect) {
+                        // Initialize new instance
+                        const instance = new CustomSelect(monthSelect, {
+                            searchable: false,
+                            placeholder: 'All Months'
+                        });
+                        if (!window.customSelectInstances) {
+                            window.customSelectInstances = {};
+                        }
+                        window.customSelectInstances.monthSelect = instance;
+                    }
+                }, 100);
             },
 
             renderFallback() {
@@ -4886,11 +4904,37 @@ if ($role === 'encoder') {
                                   'July', 'August', 'September', 'October', 'November', 'December'];
                 
                 monthSelect.innerHTML = '';
+                
+                // Add "All Months" option
+                const allOption = document.createElement('option');
+                allOption.value = 'all';
+                allOption.textContent = 'All Months';
+                allOption.selected = true;
+                monthSelect.appendChild(allOption);
+                
+                // Add current month as fallback
                 const option = document.createElement('option');
                 option.value = `${currentMonth}-${currentYear}`;
-                option.textContent = `${monthNames[currentMonth - 1]} ${currentYear} (No data)`;
-                option.selected = true;
+                option.textContent = `${monthNames[currentMonth - 1]} ${currentYear}`;
                 monthSelect.appendChild(option);
+                
+                // Initialize or refresh CustomSelect for this dropdown
+                setTimeout(() => {
+                    if (window.customSelectInstances && window.customSelectInstances.monthSelect) {
+                        // Refresh existing instance
+                        window.customSelectInstances.monthSelect.refresh();
+                    } else if (window.CustomSelect) {
+                        // Initialize new instance
+                        const instance = new CustomSelect(monthSelect, {
+                            searchable: false,
+                            placeholder: 'All Months'
+                        });
+                        if (!window.customSelectInstances) {
+                            window.customSelectInstances = {};
+                        }
+                        window.customSelectInstances.monthSelect = instance;
+                    }
+                }, 100);
             }
         };
         
@@ -5949,12 +5993,15 @@ if ($role === 'encoder') {
             App.cleanup();
         });
         
-        // Initialize custom select dropdowns for all control-select elements
+        // Store custom select instances globally for refresh
+        window.customSelectInstances = {};
+        
+        // Initialize custom select dropdowns AFTER DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize control dropdowns with custom select
-            const controlSelects = document.querySelectorAll('.control-select');
+            // Initialize all control selects EXCEPT month-select (it will be initialized after data loads)
+            const controlSelects = document.querySelectorAll('.control-select:not(#month-select)');
             controlSelects.forEach(select => {
-                new CustomSelect(select, {
+                const instance = new CustomSelect(select, {
                     searchable: false,
                     placeholder: select.options[select.selectedIndex]?.text || 'Select...'
                 });
