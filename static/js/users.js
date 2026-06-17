@@ -95,7 +95,13 @@ async function loadUsers() {
 
 function renderUsers() {
     if (!filteredUsers.length) {
-        usersListEl.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-secondary);">No users found</div>';
+        usersListEl.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <h3>No Users Found</h3>
+                <p>Try adjusting your search or create a new user</p>
+            </div>
+        `;
         return;
     }
 
@@ -113,36 +119,37 @@ function renderUsers() {
     const sortedRoles = Object.keys(usersByRole)
         .sort((a, b) => ROLE_ORDER.indexOf(a) - ROLE_ORDER.indexOf(b));
 
-    let html = '<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:1.5rem;">';
+    let html = '<div class="users-grid">';
 
     sortedRoles.forEach(role => {
         const group = usersByRole[role];
         const count = group.length;
         const label = roleNames[role] || ROLE_LABELS.unknown;
+        const safeRole = escapeHtml(role).replace(/'/g, "\\'");
 
         html += `
-            <div class="branch-card" onclick="toggleRoleExpand('${escapeHtml(role).replace(/'/g, "\\'")}')" style="cursor:pointer;">
-                <div class="branch-card-header">
-                    <h2 style="margin:0; font-size:1.25rem; font-weight:700; color:var(--text-primary);">${escapeHtml(label)}</h2>
-                    <span class="badge badge-info" style="font-size:0.75rem;">${count} ${count === 1 ? 'USER' : 'USERS'}</span>
+            <div class="role-group-card" onclick="toggleRoleExpand('${safeRole}')">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                    <h3>${escapeHtml(label)}</h3>
+                    <span class="user-count">${count} ${count === 1 ? 'USER' : 'USERS'}</span>
                 </div>
-                <div class="branch-stats">
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Users</div>
-                        <div class="branch-stat-value">${count}</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-label">Users</div>
+                        <div class="stat-value">${count}</div>
                     </div>
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Created</div>
-                        <div class="branch-stat-value">${formatDate(group[0].created_at)}</div>
+                    <div class="stat-item">
+                        <div class="stat-label">Created</div>
+                        <div class="stat-value">${formatDate(group[0].created_at)}</div>
                     </div>
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Last updated</div>
-                        <div class="branch-stat-value">${formatDate(group[group.length - 1].created_at)}</div>
+                    <div class="stat-item">
+                        <div class="stat-label">Latest</div>
+                        <div class="stat-value">${formatDate(group[group.length - 1].created_at)}</div>
                     </div>
                 </div>
-                <div class="branch-expand-indicator">
-                    <span style="font-size:0.875rem; color:var(--text-secondary);">Click to view users</span>
-                    <span style="font-size:1.25rem; color:var(--orange-500);">▼</span>
+                <div class="expand-hint">
+                    <span>Click to view users</span>
+                    <span class="arrow">▼</span>
                 </div>
             </div>
         `;
@@ -175,18 +182,17 @@ window.toggleRoleExpand = function(roleName) {
     expandedSection.style.display = 'block';
 
     let html = `
-        <div style="background: rgba(255, 128, 0, 0.05); border: 2px solid var(--orange-500); border-radius: 12px; padding: 1.5rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; gap:1rem; flex-wrap:wrap;">
+        <div class="expanded-section">
+            <div class="expanded-header">
                 <div>
-                    <h2 style="margin:0 0 0.25rem; font-size:1.5rem; font-weight:700; color:var(--text-primary);">${escapeHtml(roleLabel)}</h2>
-                    <p style="margin:0; color:var(--text-secondary); font-size:0.875rem;">${usersInRole.length} ${usersInRole.length === 1 ? 'user' : 'users'} in this role</p>
+                    <h2>${escapeHtml(roleLabel)}</h2>
+                    <p>${usersInRole.length} ${usersInRole.length === 1 ? 'user' : 'users'} in this role</p>
                 </div>
-                <button onclick="toggleRoleExpand('${escapeHtml(roleName).replace(/'/g, "\\'")}'); event.stopPropagation();" 
-                        style="padding:0.5rem 1rem; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2); border-radius:8px; color:var(--text-primary); cursor:pointer; font-size:0.875rem; font-weight:600;">
+                <button class="close-btn" onclick="toggleRoleExpand('${escapeHtml(roleName).replace(/'/g, "\\'")}'); event.stopPropagation();">
                     Close ✕
                 </button>
             </div>
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1rem;">
+            <div class="users-grid">
                 ${usersInRole.map(u => renderUserCard(u)).join('')}
             </div>
         </div>
@@ -198,36 +204,34 @@ window.toggleRoleExpand = function(roleName) {
 
 function renderUserCard(u) {
     const initials = u.full_name ? u.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '?';
+    const roleBadgeClass = 'badge badge-role-' + (u.role || 'unknown');
+
     return `
-        <div class="sales-rep-card" style="cursor:default;">
+        <div class="user-card">
             <div style="display:flex; align-items:flex-start; gap:1rem; margin-bottom:1rem;">
-                <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--orange-500), var(--orange-600)); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:1.1rem; color:#000; flex-shrink:0;">
-                    ${escapeHtml(initials)}
-                </div>
+                <div class="avatar">${escapeHtml(initials)}</div>
                 <div style="flex:1; min-width:0;">
-                    <h3 style="margin:0 0 0.25rem; font-size:1rem; font-weight:600; color:var(--text-primary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(u.full_name)}</h3>
-                    <p style="margin:0; font-size:0.8rem; color:var(--text-secondary); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(u.email)}</p>
+                    <h3>${escapeHtml(u.full_name)}</h3>
+                    <p class="email">${escapeHtml(u.email)}</p>
                 </div>
             </div>
-            <div style="display:flex; flex-direction:column; gap:0.75rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; color:var(--text-secondary);">Role</span>
-                    <span class="badge badge-secondary" style="text-transform:none;">${escapeHtml(ROLE_LABELS[u.role] || ROLE_LABELS.unknown)}</span>
-                </div>
-                ${u.branch ? `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; color:var(--text-secondary);">Branch</span>
-                    <span style="font-size:0.8rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.1rem 0.5rem; border-radius:999px; font-weight:600;">${escapeHtml(u.branch)}</span>
-                </div>` : ''}
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span style="font-size:0.8rem; color:var(--text-secondary);">Created</span>
-                    <span style="font-size:0.8rem; color:var(--text-muted);">${formatDate(u.created_at)}</span>
-                </div>
-                <div style="display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.5rem;">
-                    <button class="btn-outline" style="flex:1; min-width:96px;" onclick="viewUser(${u.id}); event.stopPropagation();">View</button>
-                    <button class="btn-primary" style="flex:1; min-width:96px;" onclick="editUser(${u.id}); event.stopPropagation();">Edit</button>
-                    <button class="btn-danger" style="flex:1; min-width:96px;" onclick="deleteUserConfirm(${u.id}); event.stopPropagation();">Delete</button>
-                </div>
+            <div class="meta-row">
+                <span class="meta-label">Role</span>
+                <span class="meta-value"><span class="${roleBadgeClass}">${escapeHtml(ROLE_LABELS[u.role] || ROLE_LABELS.unknown)}</span></span>
+            </div>
+            ${u.branch ? `
+            <div class="meta-row">
+                <span class="meta-label">Branch</span>
+                <span class="meta-value"><span class="branch-tag">${escapeHtml(u.branch)}</span></span>
+            </div>` : ''}
+            <div class="meta-row">
+                <span class="meta-label">Created</span>
+                <span class="meta-value" style="color:var(--text-muted);font-weight:400;font-size:0.78rem;">${formatDate(u.created_at)}</span>
+            </div>
+            <div class="card-actions">
+                <button class="btn btn-secondary btn-sm" onclick="viewUser(${u.id}); event.stopPropagation();">View</button>
+                <button class="btn btn-primary btn-sm" onclick="editUser(${u.id}); event.stopPropagation();">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="deleteUserConfirm(${u.id}); event.stopPropagation();">Delete</button>
             </div>
         </div>
     `;

@@ -2,33 +2,19 @@
    Sales Representatives Management
    ============================================================ */
 
-// Note: this API endpoint lives under /api/v1, matching the central API router.
 const API_BASE = (typeof BASE !== 'undefined' ? BASE : '') + '/api/v1';
 
-// State
 let currentEditId = null;
 let salesReps = [];
 let filteredReps = [];
 
-// DOM Elements
 const searchInput = document.getElementById('searchInput');
-const addSalesRepBtn = document.getElementById('addSalesRepBtn');
+const branchesContainer = document.getElementById('branchesContainer');
 const salesRepModal = document.getElementById('salesRepModal');
 const salesRepForm = document.getElementById('salesRepForm');
 const closeModal = document.getElementById('closeModal');
-const cancelBtn = document.getElementById('cancelBtn');
 const modalTitle = document.getElementById('modalTitle');
-const submitBtn = document.getElementById('submitBtn');
-const submitText = document.getElementById('submitText');
-const submitLoader = document.getElementById('submitLoader');
 const formError = document.getElementById('formError');
-const deleteModal = document.getElementById('deleteModal');
-const closeDeleteModal = document.getElementById('closeDeleteModal');
-const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-const deleteUserName = document.getElementById('deleteUserName');
-const deleteText = document.getElementById('deleteText');
-const deleteLoader = document.getElementById('deleteLoader');
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -36,27 +22,31 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
 });
 
-// Setup Event Listeners
 function setupEventListeners() {
-    if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'superadmin') {
-        const addBtn = document.getElementById('addSalesRepBtn');
-        if (addBtn) addBtn.addEventListener('click', () => openModal());
-        if (cancelBtn) cancelBtn.addEventListener('click', () => closeModalHandler());
-        if (salesRepForm) salesRepForm.addEventListener('submit', handleSubmit);
-    }
-    if (closeModal) closeModal.addEventListener('click', () => closeModalHandler());
+    const addBtn = document.getElementById('addSalesRepBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    
+    if (addBtn) addBtn.addEventListener('click', () => openModal());
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModalHandler);
+    if (saveBtn) saveBtn.addEventListener('click', handleSubmit);
+    if (salesRepForm) salesRepForm.addEventListener('submit', (e) => { e.preventDefault(); handleSubmit(); });
+    if (closeModal) closeModal.addEventListener('click', closeModalHandler);
     if (searchInput) searchInput.addEventListener('input', handleSearch);
     
-    // Delete modal
-    if (closeDeleteModal) closeDeleteModal.addEventListener('click', () => closeDeleteModalHandler());
-    if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => closeDeleteModalHandler());
+    // Password toggle
+    const togglePwd = document.getElementById('togglePwd');
+    if (togglePwd) {
+        togglePwd.addEventListener('click', () => {
+            const pwdInput = document.getElementById('password');
+            const type = pwdInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            pwdInput.setAttribute('type', type);
+            togglePwd.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+    }
     
-    // Close modals on overlay click
     if (salesRepModal) salesRepModal.addEventListener('click', (e) => {
         if (e.target === salesRepModal) closeModalHandler();
-    });
-    if (deleteModal) deleteModal.addEventListener('click', (e) => {
-        if (e.target === deleteModal) closeDeleteModalHandler();
     });
 }
 
@@ -80,168 +70,136 @@ async function loadSalesReps() {
     }
 }
 
-// Render Sales Reps as Branch Cards with Overview
+// Render Branch Cards
 function renderSalesReps() {
-    const container = document.getElementById('salesRepsContainer');
+    if (!branchesContainer) return;
     
     if (filteredReps.length === 0) {
-        container.innerHTML = `
-            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                <h3 style="margin: 0 0 0.5rem;">No sales representatives found</h3>
-                <p style="margin: 0; font-size: 0.875rem;">Try adjusting your search</p>
+        branchesContainer.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">👤</div>
+                <h3>No Sales Representatives Found</h3>
+                <p>Try adjusting your search or add a new sales rep</p>
             </div>
         `;
         return;
     }
     
-    // Group sales reps by branch
     const repsByBranch = {};
     filteredReps.forEach(rep => {
         const branch = rep.branch || 'Unassigned';
-        if (!repsByBranch[branch]) {
-            repsByBranch[branch] = [];
-        }
+        if (!repsByBranch[branch]) repsByBranch[branch] = [];
         repsByBranch[branch].push(rep);
     });
     
-    // Sort branches alphabetically
     const sortedBranches = Object.keys(repsByBranch).sort();
-    
-    // Render branch cards
-    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem;">';
+    let html = '<div class="sr-branches-grid">';
     
     sortedBranches.forEach(branch => {
         const reps = repsByBranch[branch];
         const repCount = reps.length;
-        
-        // TODO: Calculate actual project counts from API
-        const assignedProjects = 0;
-        const processedProjects = 0;
+        const safeBranch = escapeHtml(branch).replace(/'/g, "\\'");
         
         html += `
-            <div class="branch-card" onclick="toggleBranchExpand('${escapeHtml(branch).replace(/'/g, "\\'")}')">
-                <div class="branch-card-header">
-                    <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(branch)}</h2>
-                    <span class="badge badge-info" style="font-size: 0.75rem;">${repCount} ${repCount === 1 ? 'REP' : 'REPS'}</span>
+            <div class="sr-branch-card" onclick="toggleBranchExpand('${safeBranch}')">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                    <h3>${escapeHtml(branch)}</h3>
+                    <span class="branch-badge">${repCount} ${repCount === 1 ? 'REP' : 'REPS'}</span>
                 </div>
-                
-                <div class="branch-stats">
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Sales Representatives</div>
-                        <div class="branch-stat-value">${repCount}</div>
+                <div class="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-label">Sales Reps</div>
+                        <div class="stat-value">${repCount}</div>
                     </div>
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Assigned Projects</div>
-                        <div class="branch-stat-value">${assignedProjects}</div>
+                    <div class="stat-item">
+                        <div class="stat-label">Assigned</div>
+                        <div class="stat-value">0</div>
                     </div>
-                    <div class="branch-stat-item">
-                        <div class="branch-stat-label">Processed Projects</div>
-                        <div class="branch-stat-value">${processedProjects}</div>
+                    <div class="stat-item">
+                        <div class="stat-label">Processed</div>
+                        <div class="stat-value">0</div>
                     </div>
                 </div>
-                
-                <div class="branch-expand-indicator">
-                    <span style="font-size: 0.875rem; color: var(--text-secondary);">Click to view sales reps</span>
-                    <span style="font-size: 1.25rem; color: var(--orange-500);">▼</span>
+                <div class="expand-hint">
+                    <span>Click to view sales reps</span>
+                    <span class="arrow">▼</span>
                 </div>
             </div>
         `;
     });
     
-    html += '</div>';
-    
-    // Add expanded branch section (hidden by default)
-    html += '<div id="expandedBranchSection" style="display: none; margin-top: 2rem;"></div>';
-    
-    container.innerHTML = html;
+    html += '</div><div id="expandedBranchSection" style="display:none; margin-top:2rem;"></div>';
+    branchesContainer.innerHTML = html;
 }
 
-// Toggle branch expansion to show sales reps
+// Toggle branch expansion
 window.toggleBranchExpand = function(branchName) {
     const expandedSection = document.getElementById('expandedBranchSection');
     const reps = filteredReps.filter(rep => (rep.branch || 'Unassigned') === branchName);
     
-    // If clicking the same branch, collapse it
     if (expandedSection.dataset.currentBranch === branchName && expandedSection.style.display !== 'none') {
         expandedSection.style.display = 'none';
         expandedSection.dataset.currentBranch = '';
         return;
     }
     
-    // Show the expanded section with sales rep cards
     expandedSection.dataset.currentBranch = branchName;
     expandedSection.style.display = 'block';
     
+    const safeBranch = escapeHtml(branchName).replace(/'/g, "\\'");
+    
     let html = `
-        <div style="background: rgba(255, 128, 0, 0.05); border: 2px solid var(--orange-500); border-radius: 12px; padding: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <div class="sr-expanded">
+            <div class="sr-expanded-header">
                 <div>
-                    <h2 style="margin: 0 0 0.25rem; font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">${escapeHtml(branchName)}</h2>
-                    <p style="margin: 0; color: var(--text-secondary); font-size: 0.875rem;">${reps.length} Sales ${reps.length === 1 ? 'Representative' : 'Representatives'}</p>
+                    <h2>${escapeHtml(branchName)}</h2>
+                    <p>${reps.length} Sales ${reps.length === 1 ? 'Representative' : 'Representatives'}</p>
                 </div>
-                <button onclick="toggleBranchExpand('${escapeHtml(branchName).replace(/'/g, "\\'")}'); event.stopPropagation();" 
-                        style="padding: 0.5rem 1rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); 
-                               border-radius: 8px; color: var(--text-primary); cursor: pointer; font-size: 0.875rem; font-weight: 600;">
-                    Close ✕
-                </button>
+                <button class="btn btn-secondary btn-sm" onclick="toggleBranchExpand('${safeBranch}'); event.stopPropagation();">Close ✕</button>
             </div>
-            
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+            <div class="sr-cards-grid">
                 ${reps.map(rep => renderSalesRepCard(rep)).join('')}
             </div>
         </div>
     `;
     
     expandedSection.innerHTML = html;
-    
-    // Scroll to expanded section
     expandedSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 };
 
-// Render individual sales rep card
+// Render individual Sales Rep card
 function renderSalesRepCard(rep) {
-    const isOnline = rep.is_online || false;
-    const statusBadge = isOnline 
-        ? '<span class="badge badge-success">Online</span>'
-        : '<span class="badge badge-secondary">Offline</span>';
-    
-    const remainingProjects = 0; // TODO: Get actual count from API
-    
     const initials = rep.full_name ? rep.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '?';
-    
     return `
-        <div class="sales-rep-card" onclick="viewSalesRep(${rep.id}); event.stopPropagation();" style="cursor: pointer;">
-            <div style="display: flex; align-items: start; gap: 1rem; margin-bottom: 1rem;">
-                <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--orange-500), var(--orange-600)); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.1rem; color: #000; flex-shrink: 0;">
-                    ${initials}
-                </div>
-                <div style="flex: 1; min-width: 0;">
-                    <h3 style="margin: 0 0 0.25rem; font-size: 1rem; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(rep.full_name)}</h3>
-                    <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(rep.email)}</p>
+        <div class="sr-card" onclick="openModal(${JSON.stringify(rep).replace(/"/g, '"')}); event.stopPropagation();">
+            <div style="display:flex; align-items:flex-start; gap:1rem; margin-bottom:1rem;">
+                <div class="avatar">${escapeHtml(initials)}</div>
+                <div style="flex:1; min-width:0;">
+                    <h3>${escapeHtml(rep.full_name)}</h3>
+                    <p class="email-label">${escapeHtml(rep.email)}</p>
                 </div>
             </div>
-            
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Status</span>
-                    ${statusBadge}
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Projects</span>
-                    <span class="badge badge-info">${remainingProjects}</span>
-                </div>
-                
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="font-size: 0.8rem; color: var(--text-secondary);">Created</span>
-                    <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(rep.created_at)}</span>
-                </div>
+            <div class="info-row">
+                <span class="info-label">Branch</span>
+                <span class="info-value"><span class="branch-pill">${escapeHtml(rep.branch || 'Unassigned')}</span></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Contact</span>
+                <span class="info-value">${rep.contact_number ? escapeHtml(rep.contact_number) : '<span style="color:var(--text-muted);">—</span>'}</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Created</span>
+                <span class="info-value" style="color:var(--text-muted);font-weight:400;font-size:0.78rem;">${formatDate(rep.created_at)}</span>
+            </div>
+            <div class="sr-footer">
+                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openModal(${JSON.stringify(rep).replace(/"/g, '"')})">Edit</button>
+                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); promptDelete(${rep.id}, '${escapeHtml(rep.full_name)}')">Delete</button>
             </div>
         </div>
     `;
 }
 
-// Search Handler
+// Search
 function handleSearch(e) {
     const query = e.target.value.toLowerCase();
     filteredReps = salesReps.filter(rep => 
@@ -256,156 +214,27 @@ function handleSearch(e) {
 function openModal(rep = null) {
     currentEditId = rep ? rep.id : null;
     
+    salesRepForm.reset();
+    document.getElementById('editId').value = rep ? rep.id : '';
+    document.getElementById('fullName').value = rep ? rep.full_name : '';
+    document.getElementById('email').value = rep ? rep.email : '';
+    document.getElementById('branch').value = rep ? (rep.branch || '') : '';
+    document.getElementById('contactNumber').value = rep ? (rep.contact_number || '') : '';
+    
     if (rep) {
-        // View/Edit mode
-        modalTitle.textContent = 'Sales Representative Details';
-        document.getElementById('salesRepId').value = rep.id;
-        document.getElementById('email').value = rep.email;
-        document.getElementById('fullName').value = rep.full_name;
-        document.getElementById('branch').value = rep.branch || '';
-        document.getElementById('passwordGroup').style.display = 'none';
-        document.getElementById('confirmPasswordGroup').style.display = 'none';
+        modalTitle.textContent = 'Edit Sales Representative';
         document.getElementById('password').removeAttribute('required');
-        document.getElementById('confirmPassword').removeAttribute('required');
-        
-        // Show account details
-        document.getElementById('createdAtDisplay').innerHTML = formatDateTime(rep.created_at);
-        
-        // Show login status with last seen
-        let statusHtml = '';
-        if (rep.is_online) {
-            statusHtml = '<span class="badge badge-success">Online</span>';
-        } else {
-            statusHtml = '<span class="badge badge-secondary">Offline</span>';
-            if (rep.last_seen) {
-                const lastSeen = formatLastSeen(rep.last_seen);
-                statusHtml += `<br><small style="color: #94a3b8; font-size: 0.75rem; margin-top: 0.25rem; display: block;">Last seen: ${lastSeen}</small>`;
-            }
-        }
-        document.getElementById('loginStatusDisplay').innerHTML = statusHtml;
-        
-        // Show total projects from sales_tracking (all time)
-        const totalCount = rep.total_projects_count || 0;
-        document.getElementById('totalProjectsBadge').textContent = totalCount + (totalCount === 1 ? ' project' : ' projects');
-        
-        // Show pending projects section — superadmin only
-        if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'superadmin') {
-            const pendingSection = document.getElementById('pendingProjectsSection');
-            if (pendingSection) {
-                pendingSection.style.display = 'block';
-            }
-        }
-        
-        // Show edit/delete buttons (superadmin only — admin sees close-only rendered server-side)
-        const editBtns = document.getElementById('editButtons');
-        const createBtns = document.getElementById('createButtons');
-        if (editBtns)  editBtns.style.display = 'flex';
-        if (createBtns) createBtns.style.display = 'none';
-        
-        // Make fields readonly initially
-        document.getElementById('email').setAttribute('readonly', 'readonly');
-        document.getElementById('fullName').setAttribute('readonly', 'readonly');
-        document.getElementById('branch').setAttribute('disabled', 'disabled');
+        document.querySelector('#passwordGroup small').textContent = 'Leave blank to keep current password';
     } else {
-        // Add mode
         modalTitle.textContent = 'Add Sales Representative';
-        salesRepForm.reset();
-        document.getElementById('passwordGroup').style.display = 'block';
-        document.getElementById('confirmPasswordGroup').style.display = 'block';
         document.getElementById('password').setAttribute('required', 'required');
-        document.getElementById('confirmPassword').setAttribute('required', 'required');
-        
-        // Hide account details
-        const pendingSection = document.getElementById('pendingProjectsSection');
-        if (pendingSection) pendingSection.style.display = 'none';
-        
-        // Show create buttons
-        document.getElementById('editButtons').style.display = 'none';
-        document.getElementById('createButtons').style.display = 'flex';
-        
-        // Make fields editable
-        document.getElementById('email').removeAttribute('readonly');
-        document.getElementById('fullName').removeAttribute('readonly');
-        document.getElementById('branch').removeAttribute('disabled');
+        document.querySelector('#passwordGroup small').textContent = 'Minimum 8 characters';
     }
     
     formError.style.display = 'none';
     salesRepModal.classList.add('active');
 }
 
-// Load Pending Projects for Sales Rep
-async function loadPendingProjects(salesRepId) {
-    const tbody = document.getElementById('pendingProjectsBody');
-    tbody.innerHTML = '<tr><td colspan="6" class="loading-text">Loading pending projects...</td></tr>';
-    
-    try {
-        // TODO: Create API endpoint to get pending projects for sales rep
-        // For now, show placeholder
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="6" style="text-align: center; padding: 2rem; color: #94a3b8;">
-                    <div>No pending projects</div>
-                    <div style="font-size: 0.875rem; margin-top: 0.5rem;">
-                        Projects will appear here when they need sales tracking updates
-                    </div>
-                </td>
-            </tr>
-        `;
-        
-        // Update total projects badge
-        document.getElementById('totalProjectsBadge').textContent = '0 projects';
-    } catch (error) {
-        console.error('Error loading pending projects:', error);
-        tbody.innerHTML = '<tr><td colspan="6" class="error-text">Error loading projects</td></tr>';
-    }
-}
-
-// Enable editing
-window.enableEdit = function() {
-    document.getElementById('email').removeAttribute('readonly');
-    document.getElementById('fullName').removeAttribute('readonly');
-    document.getElementById('branch').removeAttribute('disabled');
-    document.getElementById('passwordGroup').style.display = 'block';
-    document.getElementById('confirmPasswordGroup').style.display = 'block';
-    
-    // Change buttons
-    document.getElementById('viewModeButtons').style.display = 'none';
-    document.getElementById('editModeButtons').style.display = 'flex';
-};
-
-// Cancel editing
-window.cancelEdit = function() {
-    const rep = salesReps.find(r => r.id === currentEditId);
-    if (rep) {
-        // Restore original values
-        document.getElementById('email').value = rep.email;
-        document.getElementById('fullName').value = rep.full_name;
-        document.getElementById('branch').value = rep.branch || '';
-        
-        // Make readonly again
-        document.getElementById('email').setAttribute('readonly', 'readonly');
-        document.getElementById('fullName').setAttribute('readonly', 'readonly');
-        document.getElementById('branch').setAttribute('disabled', 'disabled');
-        document.getElementById('passwordGroup').style.display = 'none';
-        document.getElementById('confirmPasswordGroup').style.display = 'none';
-        
-        // Change buttons back
-        document.getElementById('viewModeButtons').style.display = 'flex';
-        document.getElementById('editModeButtons').style.display = 'none';
-    }
-};
-
-// Confirm delete
-window.confirmDelete = function() {
-    if (typeof USER_ROLE !== 'undefined' && USER_ROLE !== 'superadmin') return;
-    const rep = salesReps.find(r => r.id === currentEditId);
-    if (rep) {
-        closeModalHandler();
-        deleteSalesRep(rep.id, rep.full_name);
-    }
-};
-
-// Close Modal
 function closeModalHandler() {
     salesRepModal.classList.remove('active');
     salesRepForm.reset();
@@ -413,191 +242,92 @@ function closeModalHandler() {
 }
 
 // Handle Form Submit
-async function handleSubmit(e) {
-    e.preventDefault();
+async function handleSubmit() {
+    const fullName = document.getElementById('fullName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const branch = document.getElementById('branch').value;
+    const password = document.getElementById('password').value;
+    const contactNumber = document.getElementById('contactNumber').value.trim();
     
-    const formData = new FormData(salesRepForm);
-    const data = Object.fromEntries(formData.entries());
-    
-    // Validate passwords match (if creating new)
-    if (!currentEditId) {
-        if (data.password !== data.confirm_password) {
-            showFormError('Passwords do not match');
-            return;
-        }
-        
-        if (data.password.length < 8) {
-            showFormError('Password must be at least 8 characters');
-            return;
-        }
+    if (!fullName || !email || !branch) {
+        showFormError('Full Name, Email, and Branch are required');
+        return;
     }
     
-    // Show loading
-    submitBtn.disabled = true;
-    submitText.style.display = 'none';
-    submitLoader.style.display = 'inline-block';
-    formError.style.display = 'none';
+    if (!currentEditId && password.length < 8) {
+        showFormError('Password must be at least 8 characters');
+        return;
+    }
+    
+    const payload = { full_name: fullName, email, branch };
+    if (password) payload.password = password;
+    if (contactNumber) payload.contact_number = contactNumber;
     
     try {
-        const url = currentEditId 
-            ? `${API_BASE}/users/sales-reps/${currentEditId}`
-            : `${API_BASE}/users/sales-reps`;
-        
+        const url = currentEditId ? `${API_BASE}/users/sales-reps/${currentEditId}` : `${API_BASE}/users/sales-reps`;
         const method = currentEditId ? 'PUT' : 'POST';
         
         const response = await fetch(url, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: data.email,
-                full_name: data.full_name,
-                branch: data.branch,
-                password: data.password || undefined
-            })
+            method,
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
         
         const result = await response.json();
-        
-        console.log('API Response:', { status: response.status, ok: response.ok, result });
-        
         if (response.ok && result.success) {
             closeModalHandler();
             await loadSalesReps();
-            showSuccess(currentEditId ? 'Sales representative updated successfully' : 'Sales representative created successfully');
+            showSuccess(currentEditId ? 'Sales rep updated' : 'Sales rep created');
         } else {
             showFormError(result.message || 'Operation failed');
         }
     } catch (error) {
         console.error('Error:', error);
-        showFormError('An error occurred. Please try again.');
-    } finally {
-        submitBtn.disabled = false;
-        submitText.style.display = 'inline';
-        submitLoader.style.display = 'none';
+        showFormError('An error occurred');
     }
 }
 
-// Delete Sales Rep
-let deleteUserId = null;
-
-window.deleteSalesRep = function(id, name) {
-    deleteUserId = id;
-    deleteUserName.textContent = name;
-    deleteModal.classList.add('active');
-};
-
-function closeDeleteModalHandler() {
-    deleteModal.classList.remove('active');
-    deleteUserId = null;
+// Delete
+function promptDelete(id, name) {
+    if (typeof ModalSystem !== 'undefined') {
+        ModalSystem.confirm({
+            title: 'Delete Sales Representative',
+            message: `Delete ${name}? This action cannot be undone.`,
+            confirmText: 'Delete',
+            cancelText: 'Cancel',
+            type: 'danger'
+        }).then(confirmed => {
+            if (confirmed) deleteSalesRep(id);
+        });
+    } else {
+        if (confirm(`Delete ${name}? This action cannot be undone.`)) deleteSalesRep(id);
+    }
 }
 
-confirmDeleteBtn.addEventListener('click', async () => {
-    if (!deleteUserId) return;
-    
-    // Show loading
-    confirmDeleteBtn.disabled = true;
-    deleteText.style.display = 'none';
-    deleteLoader.style.display = 'inline-block';
-    
+async function deleteSalesRep(id) {
     try {
-        const response = await fetch(`${API_BASE}/users/sales-reps/${deleteUserId}`, {
-            method: 'DELETE'
-        });
-        
+        const response = await fetch(`${API_BASE}/users/sales-reps/${id}`, { method: 'DELETE' });
         const result = await response.json();
-        
         if (result.success) {
-            closeDeleteModalHandler();
             loadSalesReps();
-            showSuccess('Sales representative deleted successfully');
+            showSuccess('Sales rep deleted');
         } else {
-            showError(result.message || 'Failed to delete sales representative');
+            showError(result.message || 'Failed to delete');
         }
     } catch (error) {
         console.error('Error:', error);
-        showError('An error occurred. Please try again.');
-    } finally {
-        confirmDeleteBtn.disabled = false;
-        deleteText.style.display = 'inline';
-        deleteLoader.style.display = 'none';
+        showError('An error occurred');
     }
-});
+}
 
-// Utility Functions
+// Utility
 function showFormError(message) {
     formError.textContent = message;
     formError.style.display = 'block';
-    formError.classList.add('animate-shake');
-    setTimeout(() => formError.classList.remove('animate-shake'), 500);
+    setTimeout(() => formError.style.display = 'none', 5000);
 }
 
-function showError(message) {
-    Toast.error(message);
-}
-
-function showSuccess(message) {
-    Toast.success(message);
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-function formatDate(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-}
-
-function formatDateTime(dateString) {
-    const date = new Date(dateString);
-    const dateStr = date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-    const timeStr = date.toLocaleTimeString('en-US', {
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    });
-    return `${dateStr}<br><small style="color: #888;">${timeStr}</small>`;
-}
-
-function formatLastSeen(dateString) {
-    if (!dateString) return 'Never';
-    
-    const now = new Date();
-    const lastSeen = new Date(dateString);
-    const diffMs = now - lastSeen;
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-    
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-    if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-    
-    // More than a week, show date
-    return lastSeen.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: now.getFullYear() !== lastSeen.getFullYear() ? 'numeric' : undefined
-    });
-}
-
-// View Sales Rep Details
-window.viewSalesRep = function(id) {
-    const rep = salesReps.find(r => r.id === id);
-    if (rep) {
-        openModal(rep);
-    }
-};
+function showError(message) { if (typeof Toast !== 'undefined') Toast.error(message); }
+function showSuccess(message) { if (typeof Toast !== 'undefined') Toast.success(message); }
+function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
+function formatDate(s) { if (!s) return '—'; return new Date(s).toLocaleDateString(); }

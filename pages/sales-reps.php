@@ -10,11 +10,9 @@ ini_set('session.cookie_httponly', 1);
 ini_set('session.use_strict_mode', 1);
 session_start();
 
-// Compute base path
 $scriptDir = rtrim(dirname(dirname($_SERVER['SCRIPT_NAME'])), '/');
 $base = $scriptDir;
 
-// Check authentication
 if (empty($_SESSION['user'])) {
     header('Location: ' . $base . '/login');
     exit;
@@ -23,7 +21,6 @@ if (empty($_SESSION['user'])) {
 $role = $_SESSION['user']['role'] ?? '';
 $fullName = $_SESSION['user']['full_name'] ?? ($_SESSION['user']['email'] ?? '');
 
-// Only superadmin and admin can access
 if ($role !== 'superadmin' && $role !== 'admin') {
     header('Location: ' . $base . '/');
     exit;
@@ -34,16 +31,12 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Representatives - TDT Powersteel</title>
+    <title>Sales Representatives | TDT Powersteel SILEP</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png" />
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    
-    <!-- CSS -->
+
+    <!-- Core Styles -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
@@ -52,218 +45,425 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
+
+    <style>
+        /* ── Branch Card ── */
+        .sr-branch-card {
+            background: linear-gradient(135deg, rgba(26, 29, 35, 0.95) 0%, rgba(17, 20, 26, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sr-branch-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-500), rgba(255, 152, 0, 0.5));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sr-branch-card:hover {
+            border-color: rgba(255, 152, 0, 0.3);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.3), 0 0 30px rgba(255, 128, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .sr-branch-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .sr-branch-card h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .sr-branch-card .branch-badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            background: rgba(255, 128, 0, 0.15);
+            color: var(--orange-500);
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+        }
+
+        .sr-branch-card .stats-row {
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .sr-branch-card .stat-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .sr-branch-card .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.2rem;
+        }
+
+        .sr-branch-card .stat-value {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .sr-branch-card .expand-hint {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sr-branch-card .expand-hint .arrow {
+            transition: transform 0.3s;
+            color: var(--orange-500);
+        }
+
+        /* ── Expanded Section ── */
+        .sr-expanded {
+            background: rgba(255, 128, 0, 0.05);
+            border: 1px solid var(--orange-500);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .sr-expanded-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.25rem;
+        }
+
+        .sr-expanded-header h2 {
+            margin: 0 0 0.25rem;
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .sr-expanded-header p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* ── Sales Rep Card ── */
+        .sr-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sr-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--orange-500), rgba(255, 152, 0, 0.5));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .sr-card:hover {
+            border-color: rgba(255, 152, 0, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(255, 128, 0, 0.15);
+        }
+
+        .sr-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .sr-card .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--orange-500), #FFA500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: #000;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
+        }
+
+        .sr-card h3 {
+            margin: 0 0 0.25rem;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sr-card .email-label {
+            margin: 0;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .sr-card .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .sr-card .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .sr-card .info-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .sr-card .info-value {
+            font-size: 0.8rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .sr-card .info-value.branch-pill {
+            background: rgba(255, 128, 0, 0.1);
+            color: var(--orange-400);
+            padding: 0.15rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+        }
+
+        .sr-footer {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .sr-footer .btn { flex: 1; min-width: 0; }
+
+        /* ── Grid layout ── */
+        .sr-branches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .sr-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        /* ── Map Modal ── */
+        #mapModal .modal-content {
+            max-width: 900px;
+        }
+
+        #map {
+            width: 100%;
+            height: 400px;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sr-branches-grid,
+            .sr-cards-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .sr-branch-card .stats-row {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .sr-expanded {
+                padding: 1rem;
+                margin-top: 1rem;
+            }
+
+            .sr-footer {
+                flex-direction: column;
+            }
+
+            #map {
+                height: 280px;
+            }
+        }
+    </style>
 </head>
 <body data-role="<?= $role ?>">
 
 <?php include __DIR__ . '/sidebar.php'; ?>
 
-<div class="dashboard">
-    
-    <div class="card animate-fadeInUp" style="grid-column: 1 / -1; margin-bottom: var(--sp-4);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-5);">
-            <div>
-                <h1 style="font-size: var(--text-2xl); font-weight: 800; margin: 0; color: var(--text-primary);">
-                    Sales Representatives
-                </h1>
-                <p style="margin: 0.5rem 0 0; color: var(--text-secondary); font-size: var(--text-sm);">
-                    Manage sales representative accounts by branch
-                </p>
-            </div>
-            <?php if ($role === 'superadmin'): ?>
-            <button class="btn-primary" id="addSalesRepBtn" style="display: flex; align-items: center; gap: 0.5rem;">
-                <span>+</span> Add Sales Representative
-            </button>
-            <?php endif; ?>
-        </div>
+<div class="ap-shell">
+    <div class="ap-main">
+        <div class="dashboard">
+            <div class="card animate-fadeInUp">
+                <!-- Header -->
+                <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; gap:1rem; flex-wrap:wrap;">
+                    <div>
+                        <h2 class="card-title" style="margin:0; font-size:1.375rem;">👤 Sales Representatives</h2>
+                        <p style="margin:0.35rem 0 0; color:var(--text-secondary); font-size:0.9rem;">
+                            Manage sales representative accounts by branch
+                        </p>
+                    </div>
+                    <?php if ($role === 'superadmin'): ?>
+                    <button class="btn btn-primary" id="addSalesRepBtn">
+                        <span>+</span> Add Sales Rep
+                    </button>
+                    <?php endif; ?>
+                </div>
 
-        <div style="margin-bottom: var(--sp-4);">
-            <input type="text" id="searchInput" placeholder="Search by name or email..." 
-                   style="width: 100%; max-width: 400px; padding: 0.75rem 1rem; background: var(--bg-input); 
-                          border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-md); 
-                          color: var(--text-primary); font-size: 0.9rem;">
-        </div>
-        
-        <!-- Sales Reps Cards by Branch -->
-        <div id="salesRepsContainer">
-            <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
-                Loading...
-            </div>
-        </div>
-    </div>
-
-</div> <!-- .dashboard -->
-
-<!-- Add/Edit Sales Rep Modal -->
-<div class="modal-overlay" id="salesRepModal">
-    <div class="modal-content" style="max-width: 900px; width: 95%; max-height: 80vh; display: flex; flex-direction: column;">
-        <!-- Header - Fixed -->
-        <div class="modal-header" style="flex-shrink: 0;">
-            <h2 id="modalTitle">Sales Representative Details</h2>
-            <button class="modal-close" id="closeModal">&times;</button>
-        </div>
-        
-        <!-- Body - Scrollable -->
-        <div style="flex: 1; overflow-y: auto; overflow-x: hidden; padding: 1.5rem;">
-            <form id="salesRepForm">
-                <input type="hidden" id="salesRepId" name="id">
-                
-                <!-- Account Information Section -->
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-                    <h3 style="margin: 0 0 1rem; color: var(--orange-500); font-size: 1rem; font-weight: 700;">
-                        Account Information
-                    </h3>
-                    
-                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="email">Email *</label>
-                            <input type="email" id="email" name="email" required placeholder="e.g. john.doe@tdtpowersteel.com">
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="fullName">Full Name *</label>
-                            <input type="text" id="fullName" name="full_name" required>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label for="branch">Branch *</label>
-                            <select id="branch" name="branch" required>
-                                <option value="">Select Branch</option>
-                                <option value="TDT Manila">TDT Manila</option>
-                                <option value="TDT Cagayan De Oro">TDT Cagayan De Oro</option>
-                                <option value="TDT Cebu">TDT Cebu</option>
-                                <option value="TDT Davao">TDT Davao</option>
-                                <option value="TDT General Santos">TDT General Santos</option>
-                                <option value="TDT Ilocos">TDT Ilocos</option>
-                                <option value="TDT Iloilo">TDT Iloilo</option>
-                                <option value="TDT Isabela">TDT Isabela</option>
-                                <option value="TDT Legazpi">TDT Legazpi</option>
-                                <option value="PS Manila">PS Manila</option>
-                                <option value="PS Laug">PS Laug</option>
-                                <option value="PS Batangas">PS Batangas</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Login Status</label>
-                            <div id="loginStatusDisplay" style="padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 6px;">
-                                <span class="badge badge-secondary">⚫ Offline</span>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group" id="passwordGroup" style="margin-bottom: 0;">
-                            <label for="password">Password *</label>
-                            <input type="password" id="password" name="password">
-                            <small class="form-hint">Minimum 8 characters</small>
-                        </div>
-                        
-                        <div class="form-group" id="confirmPasswordGroup" style="margin-bottom: 0;">
-                            <label for="confirmPassword">Confirm Password *</label>
-                            <input type="password" id="confirmPassword" name="confirm_password">
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Account Created</label>
-                            <div id="createdAtDisplay" style="padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 6px; color: #94a3b8; font-size: 0.875rem;">
-                                —
-                            </div>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label>Total Projects</label>
-                            <div id="totalProjectsDisplay" style="padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 6px;">
-                                <span class="badge badge-info" id="totalProjectsBadge">0 projects</span>
-                            </div>
-                        </div>
+                <!-- Search -->
+                <div class="toolbar" style="margin-bottom:1.5rem;">
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="Search by name or email...">
                     </div>
                 </div>
-                
-                <!-- Pending Projects section removed -->
-                
-                <div class="error-message" id="formError" style="display: none; margin-top: 1rem;"></div>
-            </form>
-        </div>
-        
-        <!-- Footer - Fixed -->
-        <div style="flex-shrink: 0; padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2);">
-            <?php if ($role === 'superadmin'): ?>
-            <!-- Create Mode Buttons -->
-            <div id="createButtons" style="display: flex; gap: 0.75rem; justify-content: flex-end;">
-                <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
-                <button type="button" class="btn-primary" id="submitBtn" onclick="document.getElementById('salesRepForm').dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}))">
-                    <span id="submitText">Create Sales Rep</span>
-                    <span class="loader" id="submitLoader"></span>
-                </button>
-            </div>
-            
-            <!-- View/Edit Mode Buttons -->
-            <div id="editButtons" style="display: none;">
-                <!-- View Mode -->
-                <div id="viewModeButtons" style="display: flex; gap: 0.75rem;">
-                    <button type="button" class="btn-secondary" onclick="closeModalHandler()" style="flex: 1;">Close</button>
-                    <button type="button" class="btn-primary" onclick="enableEdit()" style="flex: 1;">
-                        Edit
-                    </button>
-                    <button type="button" class="btn-danger" onclick="confirmDelete()" style="flex: 1;">
-                        Delete
-                    </button>
+
+                <!-- Branch Cards Grid -->
+                <div id="branchesContainer">
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Loading sales representatives...</p>
+                    </div>
                 </div>
-                
-                <!-- Edit Mode -->
-                <div id="editModeButtons" style="display: none; gap: 0.75rem;">
-                    <button type="button" class="btn-secondary" onclick="cancelEdit()" style="flex: 1;">Cancel</button>
-                    <button type="button" class="btn-primary" onclick="document.getElementById('salesRepForm').dispatchEvent(new Event('submit', {bubbles: true, cancelable: true}))" style="flex: 1;">
-                        <span id="updateText">Save Changes</span>
-                        <span class="loader" id="updateLoader" style="display: none;"></span>
-                    </button>
-                </div>
+
+                <!-- Expanded Section -->
+                <div id="expandedSection" style="display:none;"></div>
             </div>
-            <?php else: ?>
-            <!-- Admin: Read-only, Close only -->
-            <div style="display: flex; justify-content: flex-end;">
-                <button type="button" class="btn-secondary" onclick="closeModalHandler()">Close</button>
-            </div>
-            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<!-- Delete Confirmation Modal -->
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal-content modal-small">
+<!-- ── Add/Edit Modal ── -->
+<div class="modal-overlay" id="salesRepModal">
+    <div class="modal-content" style="max-width:500px;">
         <div class="modal-header">
-            <h2>Confirm Delete</h2>
-            <button class="modal-close" id="closeDeleteModal">&times;</button>
+            <h2 id="modalTitle">Add Sales Representative</h2>
+            <button class="modal-close" id="closeModal">&times;</button>
         </div>
         <div class="modal-body">
-            <p>Are you sure you want to delete this sales representative?</p>
-            <p><strong id="deleteUserName"></strong></p>
-            <p class="text-danger">This action cannot be undone.</p>
+            <form id="salesRepForm">
+                <input type="hidden" id="editId">
+
+                <div class="form-group">
+                    <label for="fullName">Full Name *</label>
+                    <input type="text" id="fullName" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+
+                <div class="form-group" id="passwordGroup">
+                    <label for="password">Password</label>
+                    <div style="position:relative;">
+                        <input type="password" id="password" class="form-control" style="padding-right:3rem;">
+                        <button type="button" id="togglePwd" style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--text-secondary);padding:0.25rem;transition:color 0.2s;">👁️</button>
+                    </div>
+                    <small style="font-size:0.75rem;color:var(--text-muted);margin-top:0.25rem;display:block;">Leave blank to keep current password</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="branch">Branch *</label>
+                    <select id="branch" class="form-control" required>
+                        <option value="">Select Branch</option>
+                        <option value="TDT Manila">TDT Manila</option>
+                        <option value="TDT Cagayan De Oro">TDT Cagayan De Oro</option>
+                        <option value="TDT Cebu">TDT Cebu</option>
+                        <option value="TDT Davao">TDT Davao</option>
+                        <option value="TDT General Santos">TDT General Santos</option>
+                        <option value="TDT Ilocos">TDT Ilocos</option>
+                        <option value="TDT Iloilo">TDT Iloilo</option>
+                        <option value="TDT Isabela">TDT Isabela</option>
+                        <option value="TDT Legazpi">TDT Legazpi</option>
+                        <option value="PS Manila">PS Manila</option>
+                        <option value="PS Laug">PS Laug</option>
+                        <option value="PS Batangas">PS Batangas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNumber">Contact Number</label>
+                    <input type="text" id="contactNumber" class="form-control" placeholder="Optional">
+                </div>
+
+                <div id="formError" style="display:none;color:#fca5a5;font-size:0.85rem;padding:0.5rem;background:rgba(239,68,68,0.1);border-radius:0.5rem;margin-top:0.5rem;"></div>
+            </form>
         </div>
-        <div class="modal-actions">
-            <button type="button" class="btn-secondary" id="cancelDeleteBtn">Cancel</button>
-            <button type="button" class="btn-danger" id="confirmDeleteBtn">
-                <span id="deleteText">Delete</span>
-                <span class="loader" id="deleteLoader"></span>
-            </button>
+        <div class="modal-footer" style="justify-content:flex-end; gap:0.75rem;">
+            <button class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveBtn">Save</button>
         </div>
     </div>
 </div>
 
+<!-- ── Location Map Modal ── -->
+<div class="modal-overlay" id="mapModal" style="z-index:100000;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>📍 Location Map</h2>
+            <button class="modal-close" id="closeMapModal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="map"></div>
+        </div>
+        <div class="modal-footer" style="justify-content:flex-end;">
+            <button class="btn btn-secondary" id="closeMapBtn">Close</button>
+        </div>
     </div>
+</div>
 
-</div> <!-- .dashboard -->
-</div> <!-- .ap-main -->
-</div> <!-- .ap-shell -->
-
-<script>const BASE = '<?= $base ?>'; const USER_ROLE = '<?= $role ?>';</script>
+<script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sales-reps.js?v=13"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id]').forEach(function(el) {
-        if (el.parentNode !== document.body) document.body.appendChild(el);
-    });
-});
-</script></body>
+<script src="<?= $base ?>/static/js/sales-reps.js?v=2"></script>
+</body>
 </html>
+</write_to_file>
