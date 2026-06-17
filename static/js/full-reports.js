@@ -677,12 +677,12 @@ const FullReports = {
                 </div>`;
 
                 return `<tr onclick="FullReports.showSRDetails(${r.id})" style="cursor:pointer;">
-                    <td>${rankBadge}</td>
-                    <td><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
-                    <td class="num-cell">${r.total_assigned}</td>
-                    <td>${funnelHtml}</td>
-                    <td class="num-cell">${fullCycle}</td>
-                    <td class="num-cell"><span class="badge ${winBadge}">${winRate.toFixed(1)}%</span></td>
+                    <td data-label="Rank">${rankBadge}</td>
+                    <td data-label="Sales Representative"><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
+                    <td data-label="Assigned" class="num-cell">${r.total_assigned}</td>
+                    <td data-label="Funnel Breakdown">${funnelHtml}</td>
+                    <td data-label="Full Cycle Time" class="num-cell">${fullCycle}</td>
+                    <td data-label="Win Rate" class="num-cell"><span class="badge ${winBadge}">${winRate.toFixed(1)}%</span></td>
                 </tr>`;
             }).join('');
 
@@ -708,10 +708,73 @@ const FullReports = {
                 const style = document.createElement('style');
                 style.setAttribute('data-sr-perf-styles', 'true');
                 style.textContent = `
+                    #srPerformanceReport .data-table-wrapper { overflow-x:visible; }
                     #srPerformanceReport .data-table td { border-right:1px solid rgba(255,255,255,0.06); }
                     #srPerformanceReport .data-table td:last-child { border-right:none; }
                     #srPerformanceReport .data-table tbody tr:hover { background:rgba(255,128,0,0.08); transform:scale(1.005); }
                     #srPerformanceReport .data-table tbody tr { transition:all 0.2s ease; }
+                    
+                    /* Responsive Card Layout */
+                    @media (max-width: 1200px) {
+                        #srPerformanceReport .data-table thead { display:none; }
+                        #srPerformanceReport .data-table, 
+                        #srPerformanceReport .data-table tbody,
+                        #srPerformanceReport .data-table tr {
+                            display:block;
+                            width:100%;
+                        }
+                        #srPerformanceReport .data-table tr {
+                            background:var(--bg-card);
+                            border:1px solid rgba(255,255,255,0.08);
+                            border-radius:12px;
+                            padding:1.25rem;
+                            margin-bottom:1rem;
+                            cursor:pointer;
+                            transition:all 0.2s ease;
+                        }
+                        #srPerformanceReport .data-table tr:hover {
+                            background:rgba(255,128,0,0.08);
+                            border-color:rgba(255,128,0,0.3);
+                            transform:translateY(-2px);
+                        }
+                        #srPerformanceReport .data-table td {
+                            display:block;
+                            border:none !important;
+                            padding:0.5rem 0;
+                            text-align:left !important;
+                        }
+                        #srPerformanceReport .data-table td:first-child {
+                            padding-bottom:1rem;
+                            margin-bottom:1rem;
+                            border-bottom:1px solid rgba(255,255,255,0.08) !important;
+                        }
+                        #srPerformanceReport .data-table td::before {
+                            content:attr(data-label);
+                            display:block;
+                            font-size:0.65rem;
+                            font-weight:700;
+                            text-transform:uppercase;
+                            letter-spacing:0.05em;
+                            color:var(--text-secondary);
+                            margin-bottom:0.5rem;
+                        }
+                        #srPerformanceReport .data-table td:first-child::before { content:''; display:none; }
+                        .sr-name-cell { margin-top:0.5rem; }
+                        .funnel-mini { min-width:100%; margin-top:0.5rem; }
+                    }
+                    
+                    @media (max-width: 768px) {
+                        .stats-grid { grid-template-columns:repeat(2,1fr); }
+                        .sr-modal { width:100%; max-width:95vw; padding:1.5rem; }
+                        .sr-modal-stats { grid-template-columns:1fr; }
+                    }
+                    
+                    @media (max-width: 480px) {
+                        .stats-grid { grid-template-columns:1fr; }
+                        .funnel-mini { min-width:100%; }
+                        .funnel-label { width:70px; font-size:0.7rem; }
+                    }
+                    
                     .rank-badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
                     .rank-1 { background:rgba(255,193,7,0.15); color:#FFD700; }
                     .rank-2 { background:rgba(192,192,192,0.15); color:#C0C0C0; }
