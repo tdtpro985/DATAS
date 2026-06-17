@@ -40,6 +40,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 });
 
+// ── Populate Region Filter ─────────────────────────────────────────────────────
+function populateRegionFilter(projects) {
+    const regionFilter = document.getElementById('regionFilter');
+    if (!regionFilter) return;
+    
+    // Preserve current selection
+    const currentValue = regionFilter.value;
+    
+    // Collect unique regions from projects
+    const regions = new Set();
+    projects.forEach(p => {
+        if (p.region && p.region.trim() && p.region !== '—') {
+            regions.add(p.region.trim());
+        }
+    });
+    
+    // Sort regions alphabetically
+    const sortedRegions = [...regions].sort();
+    
+    // Rebuild options
+    regionFilter.innerHTML = '<option value="">All Regions</option>';
+    sortedRegions.forEach(region => {
+        const option = document.createElement('option');
+        option.value = region;
+        option.textContent = region;
+        regionFilter.appendChild(option);
+    });
+    
+    // Restore previous selection if it still exists
+    if (currentValue) {
+        regionFilter.value = currentValue;
+    }
+}
+
 // ── Load Projects ─────────────────────────────────────────────────────────────
 async function loadProjects() {
     const tbody = document.getElementById('pm-table-body');
@@ -62,6 +96,9 @@ async function loadProjects() {
 
         const data = await res.json();
         let projects = data.projects || [];
+        
+        // Populate region filter dynamically from project data
+        populateRegionFilter(projects);
 
         // Filter by priority type (Non-Priority / Priority tab)
         if (currentView === 'priority') {
