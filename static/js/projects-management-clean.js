@@ -1698,16 +1698,21 @@ function populateRegionFilter(projects) {
     const regionFilter = document.getElementById('regionFilter');
     if (!regionFilter) return;
     
+    console.log('[PM] populateRegionFilter called with', projects.length, 'projects');
+    
     // Preserve current selection
     const currentValue = regionFilter.value;
     
     // Collect unique regions from projects
     const regions = new Set();
     projects.forEach(p => {
-        if (p.region && p.region.trim()) {
+        console.log('[PM] Project region:', p.region);
+        if (p.region && p.region.trim() && p.region !== '—') {
             regions.add(p.region.trim());
         }
     });
+    
+    console.log('[PM] Found regions:', Array.from(regions));
     
     // Sort regions alphabetically
     const sortedRegions = [...regions].sort();
@@ -1720,6 +1725,8 @@ function populateRegionFilter(projects) {
         option.textContent = region;
         regionFilter.appendChild(option);
     });
+    
+    console.log('[PM] Region filter populated with', sortedRegions.length, 'regions');
     
     // Restore previous selection if it still exists
     if (currentValue) {
