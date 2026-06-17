@@ -72,7 +72,11 @@ $_SESSION['user'] = [
 ];
 
 // Log login activity
-logActivity($db, $user['id'], ActivityType::USER_LOGIN, EntityType::USER, $user['id'], "User {$user['email']} logged in");
+try {
+    logActivity($db, $user['id'], ActivityType::USER_LOGIN, EntityType::USER, $user['id'], "User {$user['email']} logged in");
+} catch (Exception $e) {
+    error_log('Failed to log login activity: ' . $e->getMessage());
+}
 
 // Track session activity
 trackSessionActivity($user['id']);

@@ -183,6 +183,44 @@ const ActivityLogs = {
         this.filters.endDate = document.getElementById('endDate').value;
         this.filters.page = 1;
 
+        // Validate date range
+        if (this.filters.startDate && this.filters.endDate) {
+            const start = new Date(this.filters.startDate);
+            const end = new Date(this.filters.endDate);
+            
+            if (start > end) {
+                Toast.error('Start date cannot be after end date');
+                return;
+            }
+            
+            // Check if date range is too large (max 1 year)
+            const diffDays = (end - start) / (1000 * 60 * 60 * 24);
+            if (diffDays > 365) {
+                Toast.warning('Date range cannot exceed 1 year. Please select a smaller range.');
+                return;
+            }
+        }
+
+        // Validate individual dates
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+        
+        if (this.filters.startDate) {
+            const startDate = new Date(this.filters.startDate);
+            if (startDate > today) {
+                Toast.error('Start date cannot be in the future');
+                return;
+            }
+        }
+        
+        if (this.filters.endDate) {
+            const endDate = new Date(this.filters.endDate);
+            if (endDate > today) {
+                Toast.error('End date cannot be in the future');
+                return;
+            }
+        }
+
         this.loadLogs();
     },
 
