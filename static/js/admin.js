@@ -38,10 +38,22 @@ async function loadDashboardStats() {
     try {
         console.log('[Dashboard] Base path:', _B);
         
-        // Load total users
+        // Load users and count by role
         const usersRes = await fetch(_B + '/api/v1/users', { credentials: 'include' });
         const users = await parseJson(usersRes);
-        safeText('dash-total-users', Array.isArray(users) ? users.length : 0);
+        
+        if (Array.isArray(users)) {
+            // Count users by role
+            const superadminCount = users.filter(u => u.role === 'superadmin').length;
+            const adminCount = users.filter(u => u.role === 'admin').length;
+            const salesRepCount = users.filter(u => u.role === 'sales_rep').length;
+            const encoderCount = users.filter(u => u.role === 'encoder').length;
+            
+            safeText('dash-superadmin-count', superadminCount);
+            safeText('dash-admin-count', adminCount);
+            safeText('dash-salesrep-count', salesRepCount);
+            safeText('dash-encoder-count', encoderCount);
+        }
 
         // Load non-priority projects count
         const projectsRes = await fetch(_B + '/api/v1/projects?type=non-priority&page=1&size=1', { credentials: 'include' });

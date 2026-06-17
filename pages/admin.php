@@ -81,10 +81,31 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                 <!-- KPI Cards -->
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem;margin-bottom:2rem;">
                     <div class="ap-stat-card">
-                        <div class="ap-stat-icon">👥</div>
+                        <div class="ap-stat-icon">👑</div>
                         <div class="ap-stat-content">
-                            <div class="ap-stat-label">Total Users</div>
-                            <div class="ap-stat-value" id="dash-total-users">—</div>
+                            <div class="ap-stat-label">Superadmin</div>
+                            <div class="ap-stat-value" id="dash-superadmin-count">—</div>
+                        </div>
+                    </div>
+                    <div class="ap-stat-card">
+                        <div class="ap-stat-icon">👨‍💼</div>
+                        <div class="ap-stat-content">
+                            <div class="ap-stat-label">Admin (RSM)</div>
+                            <div class="ap-stat-value" id="dash-admin-count">—</div>
+                        </div>
+                    </div>
+                    <div class="ap-stat-card">
+                        <div class="ap-stat-icon">👤</div>
+                        <div class="ap-stat-content">
+                            <div class="ap-stat-label">Sales Reps</div>
+                            <div class="ap-stat-value" id="dash-salesrep-count">—</div>
+                        </div>
+                    </div>
+                    <div class="ap-stat-card">
+                        <div class="ap-stat-icon">⌨️</div>
+                        <div class="ap-stat-content">
+                            <div class="ap-stat-label">Encoders</div>
+                            <div class="ap-stat-value" id="dash-encoder-count">—</div>
                         </div>
                     </div>
                     <div class="ap-stat-card">
