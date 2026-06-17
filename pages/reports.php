@@ -280,19 +280,6 @@ if ($role === 'encoder') {
             white-space: nowrap;
             flex-shrink: 0;
         }
-            padding: 0.4rem 1rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
         
         .export-button:hover {
             background: linear-gradient(135deg, #ffa500, #ffb300);
@@ -1795,12 +1782,6 @@ if ($role === 'encoder') {
             background: #ff8000;
             transition: width 0.5s ease;
         }
-            color: #888;
-            margin-bottom: 0.6rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
         
         .contractors-table {
             flex: 1;
@@ -1988,16 +1969,6 @@ if ($role === 'encoder') {
         .category-bar {
             width: 50px;
             height: 3px;
-            background: #333;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        
-        .category-bar-fill {
-            height: 100%;
-            background: #ff8000;
-            transition: width 0.5s ease;
-        }
             background: #333;
             border-radius: 2px;
             overflow: hidden;

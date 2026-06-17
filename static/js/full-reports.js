@@ -1,5 +1,5 @@
 /* ============================================================
-   full-reports.js — Comprehensive Statistical Reports
+   full-reports.js — Comprehensive Statistical Reports (v2)
    ============================================================ */
 
 const FullReports = {
@@ -133,11 +133,13 @@ const FullReports = {
             encBtn.addEventListener('click', () => activate('encoded'));
         }
 
-        // Export modal toggle (Published / Encoded)
+        // Export modal toggle (Published / Encoded) - syncs with main filter date mode
         const expPub = document.getElementById('exportTogglePub');
         const expEnc = document.getElementById('exportToggleEnc');
         if (expPub && expEnc) {
-            const expActivate = (mode) => {
+            // Sync export toggles with current filter date mode
+            const syncExportToggle = () => {
+                const mode = this.filters.dateMode;
                 if (mode === 'published') {
                     expPub.style.background = 'var(--primary)';
                     expPub.style.color = '#fff';
@@ -150,29 +152,37 @@ const FullReports = {
                     expPub.style.color = 'var(--text-secondary)';
                 }
             };
+            
+            const expActivate = (mode) => {
+                // Update the main filter's dateMode when export toggle is clicked
+                this.filters.dateMode = mode;
+                syncExportToggle();
+            };
+            
             expPub.addEventListener('click', () => expActivate('published'));
             expEnc.addEventListener('click', () => expActivate('encoded'));
+            
+            // Store sync function for use when opening modal
+            this._syncExportToggle = syncExportToggle;
         }
 
-        // Export button opens modal - use capture phase
+        // Export button opens modal
         const exportBtn = document.getElementById('btnExportReport');
-        console.log('[EXPORT] Button found:', !!exportBtn);
         if (exportBtn) {
             exportBtn.addEventListener('click', function(e) {
-                console.log('[EXPORT] Button clicked via JS!');
                 e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
                 openExportModal();
-                console.log('[EXPORT] openExportModal called');
-            }, true); // use capture phase
+            });
         }
 
         // Escape key closes export modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('exportModal');
-                if (modal && modal.style.display === 'flex') closeExportModal();
+                // Check via visibility since that's how the modal is shown/hidden
+                if (modal && modal.style.visibility === 'visible') {
+                    closeExportModal();
+                }
             }
         });
     },
@@ -194,7 +204,9 @@ const FullReports = {
             this.populateFilters();
         } catch (error) {
             console.error('[FULL REPORTS] Load error:', error);
-            Toast.error('Failed to load report data');
+            if (typeof Toast !== 'undefined' && Toast.error) {
+                Toast.error('Failed to load report data');
+            }
         }
     },
 
@@ -217,7 +229,9 @@ const FullReports = {
         // If it contains a space, it's a MySQL datetime like "2024-01-15 14:30:00"
         // Extract just the date part
         const d = dateStr.includes(' ') ? dateStr.split(' ')[0] : dateStr;
-        return Date.parse(d + 'T00:00:00+08:00');
+        const parsed = Date.parse(d + 'T00:00:00+08:00');
+        // Return null for invalid dates instead of NaN
+        return isNaN(parsed) ? null : parsed;
     },
 
     getFilteredProjects() {
@@ -236,7 +250,9 @@ const FullReports = {
             filtered = filtered.filter(p => {
                 const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
                 const pdMs = this.phDateMs(dStr);
-                return pdMs !== null && pdMs >= fromMs && pdMs < toMs;
+                // Skip if date is null (invalid)
+                if (pdMs === null) return false;
+                return pdMs >= fromMs && pdMs < toMs;
             });
         }
         return filtered;
@@ -264,8 +280,8 @@ const FullReports = {
             <div class="stat-card"><div class="stat-label">Total Contractors</div><div class="stat-value">${uniqueContractors.size.toLocaleString()}</div><div class="stat-sublabel">Unique contractors</div></div>
             <div class="stat-card"><div class="stat-label">Pipeline Value</div><div class="stat-value">₱${this.formatNumber(totalValue)}</div><div class="stat-sublabel">Total project value</div></div>
             <div class="stat-card"><div class="stat-label">Average Project Value</div><div class="stat-value">₱${this.formatNumber(avgValue)}</div><div class="stat-sublabel">Per project average</div></div>
-            <div class="stat-card"><div class="stat-label">Priority Projects</div><div class="stat-value">${(statusCounts.Priority||0).toLocaleString()}</div><div class="stat-sublabel">${((statusCounts.Priority||0)/projects.length*100).toFixed(1)}% of total</div></div>
-            <div class="stat-card"><div class="stat-label">Awarded Projects</div><div class="stat-value">${(statusCounts.Awarded||0).toLocaleString()}</div><div class="stat-sublabel">${((statusCounts.Awarded||0)/projects.length*100).toFixed(1)}% of total</div></div>`;
+            <div class="stat-card"><div class="stat-label">Priority Projects</div><div class="stat-value">${(statusCounts.Priority||0).toLocaleString()}</div><div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Priority||0)/projects.length*100).toFixed(1) : '0.0'}% of total</div></div>
+            <div class="stat-card"><div class="stat-label">Awarded Projects</div><div class="stat-value">${(statusCounts.Awarded||0).toLocaleString()}</div><div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Awarded||0)/projects.length*100).toFixed(1) : '0.0'}% of total</div></div>`;
     },
 
     /* ── Project Analytics ── */
@@ -291,11 +307,11 @@ const FullReports = {
         });
 
         // Region table with sortable headers
-        let regionData = Object.entries(byRegion).map(([region, d]) => ({ region, count: d.count, value: d.value, avg: d.value/d.count }));
+        let regionData = Object.entries(byRegion).map(([region, d]) => ({ region, count: d.count, value: d.value, avg: d.count > 0 ? d.value/d.count : 0 }));
         regionData = this.sortData(regionData, this.sortState.regionTable.col, this.sortState.regionTable.dir);
 
         // Status table with sortable headers
-        let statusData = Object.entries(byStatus).map(([status, count]) => ({ status, count, pct: (count/projects.length*100) }));
+        let statusData = Object.entries(byStatus).map(([status, count]) => ({ status, count, pct: projects.length > 0 ? (count/projects.length*100) : 0 }));
         statusData = this.sortData(statusData, this.sortState.statusTable.col, this.sortState.statusTable.dir);
 
         document.getElementById('projectAnalytics').innerHTML = `
@@ -339,13 +355,13 @@ const FullReports = {
         });
 
         let contractors = Object.entries(byContractor).map(([name, d]) => ({
-            name, count: d.count, value: d.value, avgValue: d.value/d.count,
+            name, count: d.count, value: d.value, avgValue: d.count > 0 ? d.value/d.count : 0,
             sources: Array.from(d.sources).join(', '), regions: Array.from(d.regions).join(', ')
         }));
         contractors = this.sortData(contractors, this.sortState.contractorTable.col, this.sortState.contractorTable.dir);
 
         if (!this.contractorPagination) this.contractorPagination = { currentPage:1, pageSize:10 };
-        const totalPages = Math.ceil(contractors.length / this.contractorPagination.pageSize);
+        const totalPages = Math.max(1, Math.ceil(contractors.length / this.contractorPagination.pageSize));
         const startIdx = (this.contractorPagination.currentPage-1)*this.contractorPagination.pageSize;
         const pageData = contractors.slice(startIdx, startIdx+this.contractorPagination.pageSize);
 
@@ -358,11 +374,11 @@ const FullReports = {
                 <th onclick="FullReports.toggleSort('contractorTable','avgValue',FullReports.renderContractorAnalytics)" style="cursor:pointer">Avg Value${this.sortIcon('contractorTable','avgValue')}</th>
             </tr></thead><tbody>${pageData.map(c=>'<tr><td>'+this.escapeHtml(c.name)+'</td><td>'+this.escapeHtml(c.sources||'N/A')+'</td><td>'+this.escapeHtml(c.regions||'N/A')+'</td><td>'+c.count.toLocaleString()+'</td><td>₱'+this.formatNumber(c.value)+'</td><td>₱'+this.formatNumber(c.avgValue)+'</td></tr>').join('')||'<tr><td colspan="6" style="text-align:center;color:var(--text-secondary);">No data</td></tr>'}</tbody></table>
             <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--bg-card);border-top:1px solid var(--border-color);">
-                <div style="color:var(--text-secondary);font-size:0.85rem;">Showing ${startIdx+1}-${Math.min(startIdx+this.contractorPagination.pageSize,contractors.length)} of ${contractors.length}</div>
+                <div style="color:var(--text-secondary);font-size:0.85rem;">${contractors.length > 0 ? 'Showing '+(startIdx+1)+'-'+Math.min(startIdx+this.contractorPagination.pageSize,contractors.length)+' of '+contractors.length : 'No results'}</div>
                 <div style="display:flex;gap:0.5rem;">
                     <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage-1})" ${this.contractorPagination.currentPage===1?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage===1?'opacity:0.5;cursor:not-allowed;':''}">Previous</button>
-                    <span style="display:flex;align-items:center;padding:0 1rem;color:var(--text-primary);font-weight:600;font-size:0.85rem;">Page ${this.contractorPagination.currentPage} of ${totalPages}</span>
-                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage+1})" ${this.contractorPagination.currentPage===totalPages?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage===totalPages?'opacity:0.5;cursor:not-allowed;':''}">Next</button>
+                    <span style="display:flex;align-items:center;padding:0 1rem;color:var(--text-primary);font-weight:600;font-size:0.85rem;">Page ${this.contractorPagination.currentPage} of ${Math.max(1, totalPages)}</span>
+                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage+1})" ${this.contractorPagination.currentPage>=totalPages?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color:white;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage>=totalPages?'opacity:0.5;cursor:not-allowed;':''}">Next</button>
                 </div>
             </div></div>`;
     },
@@ -378,7 +394,7 @@ const FullReports = {
             if (p.source) byContractor[name].sources.add(p.source);
             const r = p.project_region||p.region; if (r) byContractor[name].regions.add(r);
         });
-        const totalPages = Math.ceil(Object.keys(byContractor).length / this.contractorPagination.pageSize);
+        const totalPages = Math.max(1, Math.ceil(Object.keys(byContractor).length / this.contractorPagination.pageSize));
         if (newPage >= 1 && newPage <= totalPages) {
             this.contractorPagination.currentPage = newPage;
             this.renderContractorAnalytics();
@@ -390,7 +406,7 @@ const FullReports = {
         const projects = this.getFilteredProjects();
         const trackingCounts = { 'Not Started':0, 'In Progress':0, 'Complete':0 };
         projects.forEach(p => { const s = p.sales_tracking_status||'Not Started'; trackingCounts[s] = (trackingCounts[s]||0)+1; });
-        const total = projects.length;
+        const total = projects.length || 1; // Avoid division by zero
         document.getElementById('salesPerformance').innerHTML = `
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-label">Not Started</div><div class="stat-value">${trackingCounts['Not Started'].toLocaleString()}</div><div class="stat-sublabel">${(trackingCounts['Not Started']/total*100).toFixed(1)}%</div></div>
@@ -456,7 +472,7 @@ const FullReports = {
             else byEncoder[name].legitimate++;
         });
 
-        let encoderData = Object.entries(byEncoder).map(([name, s]) => ({ name, total: s.total, legitimate: s.legitimate, illegitimate: s.illegitimate, pct: (s.total/projects.length*100) }));
+        let encoderData = Object.entries(byEncoder).map(([name, s]) => ({ name, total: s.total, legitimate: s.legitimate, illegitimate: s.illegitimate, pct: projects.length > 0 ? (s.total/projects.length*100) : 0 }));
         encoderData = this.sortData(encoderData, this.sortState.encoderTable.col, this.sortState.encoderTable.dir);
 
         document.getElementById('encodingPerformance').innerHTML = `
@@ -470,6 +486,7 @@ const FullReports = {
     },
 
     formatNumber(num) {
+        if (num === null || num === undefined || isNaN(num)) return '0.00';
         if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
         if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
         if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
@@ -566,29 +583,34 @@ const FullReports = {
             return;
         }
 
-        // Check for zero-data single day
-        const modePub = document.getElementById('exportTogglePub').style.background === 'var(--primary)';
-        const mode = modePub ? 'published' : 'encoded';
+        // Get date mode from export toggles
+        const expPub = document.getElementById('exportTogglePub');
+        const mode = expPub && expPub.style.background === 'var(--primary)' ? 'published' : 'encoded';
+        
         const fromMs = this.phDateMs(df);
         const toMs   = this.phDateMs(dt) + 86400000;
-        const dayMs  = 86400000;
+        
+        // Check for zero-data days (more efficient - only check within range)
         let zeroDay = null;
-        for (let d = fromMs; d < toMs; d += dayMs) {
-            const dayStr = new Date(d).toISOString().slice(0, 10).replace('T', '');
+        let foundProjects = false;
+        for (let d = fromMs; d < toMs; d += 86400000) {
+            const dayStr = new Date(d).toISOString().slice(0, 10);
             const dayProjects = this.data.projects.filter(p => {
                 const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
                 const pMs = this.phDateMs(dStr);
-                return pMs !== null && pMs >= d && pMs < d + dayMs;
+                return pMs !== null && pMs >= d && pMs < d + 86400000;
             });
-            if (dayProjects.length === 0) {
-                zeroDay = dayStr;
-                break;
+            if (dayProjects.length > 0) {
+                foundProjects = true;
+                break; // At least one day has data, proceed
             }
         }
-        if (zeroDay) {
-            const d = new Date(zeroDay + 'T00:00:00+08:00');
+        
+        if (!foundProjects) {
+            // Find the formatted date range for error message
+            const d = new Date(df + 'T00:00:00+08:00');
             const formatted = d.toLocaleDateString('en-PH', { month: '2-digit', day: '2-digit' });
-            errEl.textContent = `No data found for ${formatted}. Please select a date range with data.`;
+            errEl.textContent = `No data found for ${df}. Please select a date range with data.`;
             errEl.style.display = 'block';
             return;
         }
@@ -602,8 +624,16 @@ const FullReports = {
         }
         errEl.style.display = 'none';
 
-        // Prepare filtered data
-        const origFilters = { ...this.filters };
+        // Prepare filtered data - save original filters
+        const origFilters = {
+            dateFrom: this.filters.dateFrom,
+            dateTo: this.filters.dateTo,
+            dateMode: this.filters.dateMode,
+            region: this.filters.region,
+            status: this.filters.status,
+            source: this.filters.source
+        };
+        
         this.filters.dateFrom = df;
         this.filters.dateTo = dt;
         this.filters.dateMode = mode;
@@ -646,12 +676,12 @@ const FullReports = {
                     csv += `Project Analytics - By Region\n`;
                     csv += `Region,Count,Total Value,Avg Value\n`;
                     Object.entries(byRegion).sort((a,b)=>b[1].value-a[1].value).forEach(([r,d])=> {
-                        csv += `"${r}",${d.count},₱${this.formatNumber(d.value)},₱${this.formatNumber(d.value/d.count)}\n`;
+                        csv += `"${r}",${d.count},₱${this.formatNumber(d.value)},₱${d.count > 0 ? this.formatNumber(d.value/d.count) : '0.00'}\n`;
                     });
                     csv += `\nProject Analytics - By Status\n`;
                     csv += `Status,Count,Percentage\n`;
                     Object.entries(byStatus).sort((a,b)=>b[1]-a[1]).forEach(([s,c])=> {
-                        csv += `"${s}",${c},${(c/projects.length*100).toFixed(2)}%\n`;
+                        csv += `"${s}",${c},${projects.length > 0 ? (c/projects.length*100).toFixed(2) : '0.00'}%\n`;
                     });
                     csv += '\n';
                     break;
@@ -669,7 +699,7 @@ const FullReports = {
                     csv += `Contractor Analytics\n`;
                     csv += `Name,Sources,Regions,Count,Total Value,Avg Value\n`;
                     Object.entries(byCont).sort((a,b)=>b[1].value-a[1].value).forEach(([n,d])=> {
-                        csv += `"${n}","${Array.from(d.sources).join('; ')}","${Array.from(d.regions).join('; ')}",${d.count},₱${this.formatNumber(d.value)},₱${this.formatNumber(d.value/d.count)}\n`;
+                        csv += `"${n}","${Array.from(d.sources).join('; ')}","${Array.from(d.regions).join('; ')}",${d.count},₱${this.formatNumber(d.value)},₱${d.count > 0 ? this.formatNumber(d.value/d.count) : '0.00'}\n`;
                     });
                     csv += '\n';
                     break;
@@ -680,7 +710,7 @@ const FullReports = {
                     csv += `Sales Performance\n`;
                     csv += `Status,Count,Percentage\n`;
                     Object.entries(tc).forEach(([s,c])=> {
-                        csv += `"${s}",${c},${(c/projects.length*100).toFixed(1)}%\n`;
+                        csv += `"${s}",${c},${projects.length > 0 ? (c/projects.length*100).toFixed(1) : '0.0'}%\n`;
                     });
                     csv += '\n';
                     break;
@@ -732,7 +762,7 @@ const FullReports = {
                     csv += `Encoding Performance\n`;
                     csv += `Encoder,Total,Legitimate,Illegitimate,Percentage\n`;
                     Object.entries(byEnc).sort((a,b)=>b[1].total-a[1].total).forEach(([n,s])=> {
-                        csv += `"${n}",${s.total},${s.legitimate},${s.illegitimate},${(s.total/projects.length*100).toFixed(2)}%\n`;
+                        csv += `"${n}",${s.total},${s.legitimate},${s.illegitimate},${projects.length > 0 ? (s.total/projects.length*100).toFixed(2) : '0.00'}%\n`;
                     });
                     csv += '\n';
                     break;
@@ -752,7 +782,11 @@ const FullReports = {
         URL.revokeObjectURL(link.href);
 
         closeExportModal();
-        Toast.success('Report exported successfully!');
+        
+        // Show success message
+        if (typeof Toast !== 'undefined' && Toast.success) {
+            Toast.success('Report exported successfully!');
+        }
     }
 };
 

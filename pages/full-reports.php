@@ -373,8 +373,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         <div class="filter-group" style="min-width:auto;">
             <label>Date Basis</label>
             <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
-                <button id="dateTogglePublished" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.15s;">Published</button>
-                <button id="dateToggleEncoded" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;transition:background 0.15s,color 0.15s;">Encoded</button>
+                <button id="dateTogglePublished" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.15s;">Published</button>
+                <button id="dateToggleEncoded" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;transition:background 0.15s,color 0.15s;">Encoded</button>
             </div>
         </div>
         <div class="filter-group">
@@ -399,7 +399,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
                 <option value="">All Sources</option>
             </select>
         </div>
-        <button class="btn-export" id="btnExportReport" type="button" onclick="openExportModal();">
+        <button class="btn-export" id="btnExportReport" type="button">
             <span>📥</span>
             <span>Export Report</span>
         </button>
@@ -507,7 +507,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/full-reports.js?v=1"></script>
+<script src="<?= $base ?>/static/js/full-reports.js?v=2"></script>
 
 <!-- Export Modal -->
 <div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
@@ -519,8 +519,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         <div style="margin-bottom:1.25rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Date Basis</label>
             <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
-                <button id="exportTogglePub" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">Published</button>
-                <button id="exportToggleEnc" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;">Encoded</button>
+                <button id="exportTogglePub" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">Published</button>
+                <button id="exportToggleEnc" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;">Encoded</button>
             </div>
         </div>
         <div style="display:flex;gap:1rem;margin-bottom:1.25rem;">
