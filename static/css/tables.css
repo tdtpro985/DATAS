@@ -39,8 +39,7 @@
 
 .data-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
+    border-collapse: collapse; /* Changed to collapse for proper alignment */
     font-size: var(--text-sm);
     table-layout: auto; /* Auto-fit columns to content */
 }
@@ -73,12 +72,10 @@
 }
 
 .data-table thead th:first-child {
-    border-top-left-radius: var(--radius-lg);
     padding-left: var(--sp-5);
 }
 
 .data-table thead th:last-child {
-    border-top-right-radius: var(--radius-lg);
     padding-right: var(--sp-5);
     border-right: none; /* Remove right border on last column */
 }
