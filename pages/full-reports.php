@@ -620,6 +620,16 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/full-reports.js?v=2"></script>
 
+<script>
+// Move SR modal to body to escape any stacking context issues
+document.addEventListener('DOMContentLoaded', function() {
+    const srModal = document.getElementById('srDetailModal');
+    if (srModal && srModal.parentNode !== document.body) {
+        document.body.appendChild(srModal);
+    }
+});
+</script>
+
 <!-- SR Detail Modal -->
 <div class="sr-modal-overlay" id="srDetailModal">
     <div class="sr-modal">

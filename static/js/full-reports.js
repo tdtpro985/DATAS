@@ -807,9 +807,9 @@ const FullReports = {
                     .badge-success { background:rgba(16,185,129,0.15); color:#34d399; }
                     .badge-warning { background:rgba(245,158,11,0.15); color:#fcd34d; }
                     .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
-                    .sr-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:100000; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
+                    .sr-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.75); z-index:200000; align-items:center; justify-content:center; backdrop-filter:blur(3px); }
                     .sr-modal-overlay.active { display:flex; }
-                    .sr-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:900px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; }
+                    .sr-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:900px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:200001; }
                     @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:none; } }
                     .sr-modal-close { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.15s; }
                     .sr-modal-close:hover { background:rgba(255,255,255,0.12); color:var(--text-primary); }
