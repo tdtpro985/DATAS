@@ -22,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         // Filters
         $userId = isset($_GET['user_id']) ? (int)$_GET['user_id'] : null;
         $actionType = isset($_GET['action_type']) ? trim($_GET['action_type']) : null;
+        $actionTypePattern = isset($_GET['action_type_pattern']) ? trim($_GET['action_type_pattern']) : null;
         $entityType = isset($_GET['entity_type']) ? trim($_GET['entity_type']) : null;
         $startDate = isset($_GET['start_date']) ? trim($_GET['start_date']) : null;
         $endDate = isset($_GET['end_date']) ? trim($_GET['end_date']) : null;
@@ -35,7 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $params[':user_id'] = $userId;
         }
 
-        if ($actionType) {
+        // Support pattern matching for tabs (e.g., "PROJECT_" matches PROJECT_CREATE, PROJECT_UPDATE, etc.)
+        if ($actionTypePattern) {
+            $where[] = 'al.action_type LIKE :action_type_pattern';
+            $params[':action_type_pattern'] = $actionTypePattern . '%';
+        } elseif ($actionType) {
             $where[] = 'al.action_type = :action_type';
             $params[':action_type'] = $actionType;
         }

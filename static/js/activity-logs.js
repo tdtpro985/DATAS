@@ -38,9 +38,10 @@ const ActivityLogs = {
                 // Add active to clicked tab
                 e.target.classList.add('active');
                 
-                // Set filter
+                // Set filter - use LIKE for category-based filtering
                 const type = e.target.getAttribute('data-type');
                 this.filters.actionType = type;
+                this.filters.actionTypePattern = type ? type + '_' : ''; // Add underscore for prefix matching
                 this.filters.page = 1;
                 
                 // Reload logs
@@ -76,7 +77,12 @@ const ActivityLogs = {
                 size: this.filters.pageSize
             });
 
-            if (this.filters.actionType) params.append('action_type', this.filters.actionType);
+            // Use pattern matching for category tabs (e.g., "PROJECT_" matches PROJECT_CREATE, PROJECT_UPDATE, etc.)
+            if (this.filters.actionTypePattern) {
+                params.append('action_type_pattern', this.filters.actionTypePattern);
+            } else if (this.filters.actionType) {
+                params.append('action_type', this.filters.actionType);
+            }
             if (this.filters.userId) params.append('user_id', this.filters.userId);
             if (this.filters.entityType) params.append('entity_type', this.filters.entityType);
             if (this.filters.startDate) params.append('start_date', this.filters.startDate);
