@@ -676,8 +676,8 @@ function navigateTo(page) {
     const pageMap = {
         'users': _B + '/users',
         'sales-reps': _B + '/sales-reps',
-        'projects': _B + '/admin/projects',
-        'priority-projects': _B + '/admin/priority-projects',
+        'projects': _B + '/projects?type=non-priority',
+        'priority-projects': _B + '/projects?type=priority',
         'reports': _B + '/reports'
     };
     
