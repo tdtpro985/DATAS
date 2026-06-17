@@ -134,22 +134,59 @@ const FullReports = {
         sources.forEach(s => { const o = document.createElement('option'); o.value = s; o.textContent = s; sourceSelect.appendChild(o); });
     },
 
+    // ── Returns current date in PHT (Asia/Manila) as ISO string part ──
+    phTodayStr() {
+        const opts = { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' };
+        const parts = new Intl.DateTimeFormat('en-CA', opts).formatToParts(new Date());
+        const m = {};
+        parts.forEach(p => { if (p.type !== 'literal') m[p.type] = p.value; });
+        return m.year + '-' + m.month + '-' + m.day; // "2024-06-17"
+    },
+
+    // ── Parses a publication_date to midnight PHT (as epoch ms) ──
+    // publication_date is always a date string like "2024-06-17" without time
+    phDateMs(dateStr) {
+        if (!dateStr) return null;
+        // publication_date is date-only like "2024-06-17" - treat as PHT midnight
+        return Date.parse(dateStr + 'T00:00:00+08:00');
+    },
+
     getFilteredProjects() {
         let filtered = this.data.projects;
         if (this.filters.region) filtered = filtered.filter(p => (p.project_region || p.region) === this.filters.region);
         if (this.filters.status) filtered = filtered.filter(p => p.status === this.filters.status);
         if (this.filters.source) filtered = filtered.filter(p => p.source === this.filters.source);
         if (this.filters.dateRange !== 'all') {
-            const now = new Date();
-            const filterDate = new Date();
+            const todayStr = this.phTodayStr(); // e.g. "2024-06-17"
+            let cutoffMs = Date.parse(todayStr + 'T00:00:00+08:00');
+            const oneDayMs = 86400000;
+
             switch (this.filters.dateRange) {
-                case 'today':   filterDate.setHours(0,0,0,0); break;
-                case 'week':    filterDate.setDate(now.getDate()-7); break;
-                case 'month':   filterDate.setMonth(now.getMonth()-1); break;
-                case 'quarter': filterDate.setMonth(now.getMonth()-3); break;
-                case 'year':    filterDate.setFullYear(now.getFullYear()-1); break;
+                case 'today':
+                    // projects with publication_date == today
+                    filtered = filtered.filter(p => {
+                        const pdMs = this.phDateMs(p.publication_date);
+                        return pdMs !== null && pdMs === cutoffMs;
+                    });
+                    return filtered;
+                case 'week':
+                    cutoffMs -= 7 * oneDayMs;
+                    break;
+                case 'month':
+                    cutoffMs -= 30 * oneDayMs;
+                    break;
+                case 'quarter':
+                    cutoffMs -= 90 * oneDayMs;
+                    break;
+                case 'year':
+                    cutoffMs -= 365 * oneDayMs;
+                    break;
             }
-            filtered = filtered.filter(p => p.publication_date && new Date(p.publication_date) >= filterDate);
+
+            filtered = filtered.filter(p => {
+                const pdMs = this.phDateMs(p.publication_date);
+                return pdMs !== null && pdMs >= cutoffMs;
+            });
         }
         return filtered;
     },
