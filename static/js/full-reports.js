@@ -708,71 +708,83 @@ const FullReports = {
                 const style = document.createElement('style');
                 style.setAttribute('data-sr-perf-styles', 'true');
                 style.textContent = `
-                    #srPerformanceReport .data-table-wrapper { overflow-x:visible; }
-                    #srPerformanceReport .data-table td { border-right:1px solid rgba(255,255,255,0.06); }
-                    #srPerformanceReport .data-table td:last-child { border-right:none; }
-                    #srPerformanceReport .data-table tbody tr:hover { background:rgba(255,128,0,0.08); transform:scale(1.005); }
-                    #srPerformanceReport .data-table tbody tr { transition:all 0.2s ease; }
-                    
-                    /* Responsive Card Layout */
-                    @media (max-width: 1200px) {
-                        #srPerformanceReport .data-table thead { display:none; }
-                        #srPerformanceReport .data-table, 
-                        #srPerformanceReport .data-table tbody,
-                        #srPerformanceReport .data-table tr {
-                            display:block;
-                            width:100%;
-                        }
-                        #srPerformanceReport .data-table tr {
-                            background:var(--bg-card);
-                            border:1px solid rgba(255,255,255,0.08);
-                            border-radius:12px;
-                            padding:1.25rem;
-                            margin-bottom:1rem;
-                            cursor:pointer;
-                            transition:all 0.2s ease;
-                        }
-                        #srPerformanceReport .data-table tr:hover {
-                            background:rgba(255,128,0,0.08);
-                            border-color:rgba(255,128,0,0.3);
-                            transform:translateY(-2px);
-                        }
-                        #srPerformanceReport .data-table td {
-                            display:block;
-                            border:none !important;
-                            padding:0.5rem 0;
-                            text-align:left !important;
-                        }
-                        #srPerformanceReport .data-table td:first-child {
-                            padding-bottom:1rem;
-                            margin-bottom:1rem;
-                            border-bottom:1px solid rgba(255,255,255,0.08) !important;
-                        }
-                        #srPerformanceReport .data-table td::before {
-                            content:attr(data-label);
-                            display:block;
-                            font-size:0.65rem;
-                            font-weight:700;
-                            text-transform:uppercase;
-                            letter-spacing:0.05em;
-                            color:var(--text-secondary);
-                            margin-bottom:0.5rem;
-                        }
-                        #srPerformanceReport .data-table td:first-child::before { content:''; display:none; }
-                        .sr-name-cell { margin-top:0.5rem; }
-                        .funnel-mini { min-width:100%; margin-top:0.5rem; }
+                    #srPerformanceReport .data-table-wrapper { 
+                        overflow-x: auto;
+                        overflow-y: visible;
+                    }
+                    #srPerformanceReport .data-table { 
+                        table-layout: auto;
+                        width: 100%;
+                        white-space: normal;
+                    }
+                    #srPerformanceReport .data-table th,
+                    #srPerformanceReport .data-table td { 
+                        text-align: center;
+                        vertical-align: middle;
+                        padding: 0.8rem 0.5rem;
+                        border-right: 1px solid rgba(255,255,255,0.06);
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                        max-width: 250px;
+                    }
+                    #srPerformanceReport .data-table th:last-child,
+                    #srPerformanceReport .data-table td:last-child { 
+                        border-right: none; 
+                    }
+                    #srPerformanceReport .data-table tbody tr { 
+                        transition: all 0.2s ease; 
+                        cursor: pointer;
+                    }
+                    #srPerformanceReport .data-table tbody tr:hover { 
+                        background: rgba(255,128,0,0.08); 
+                        transform: scale(1.002);
                     }
                     
-                    @media (max-width: 768px) {
-                        .stats-grid { grid-template-columns:repeat(2,1fr); }
-                        .sr-modal { width:100%; max-width:95vw; padding:1.5rem; }
-                        .sr-modal-stats { grid-template-columns:1fr; }
+                    /* Column widths - auto based on content */
+                    #srPerformanceReport .data-table th:nth-child(1),
+                    #srPerformanceReport .data-table td:nth-child(1) { 
+                        width: auto;
+                        min-width: 60px;
+                    }
+                    #srPerformanceReport .data-table th:nth-child(2),
+                    #srPerformanceReport .data-table td:nth-child(2) { 
+                        width: auto;
+                        min-width: 180px;
+                    }
+                    #srPerformanceReport .data-table th:nth-child(3),
+                    #srPerformanceReport .data-table td:nth-child(3) { 
+                        width: auto;
+                        min-width: 80px;
+                    }
+                    #srPerformanceReport .data-table th:nth-child(4),
+                    #srPerformanceReport .data-table td:nth-child(4) { 
+                        width: auto;
+                        min-width: 200px;
+                    }
+                    #srPerformanceReport .data-table th:nth-child(5),
+                    #srPerformanceReport .data-table td:nth-child(5) { 
+                        width: auto;
+                        min-width: 100px;
+                    }
+                    #srPerformanceReport .data-table th:nth-child(6),
+                    #srPerformanceReport .data-table td:nth-child(6) { 
+                        width: auto;
+                        min-width: 90px;
                     }
                     
-                    @media (max-width: 480px) {
-                        .stats-grid { grid-template-columns:1fr; }
-                        .funnel-mini { min-width:100%; }
-                        .funnel-label { width:70px; font-size:0.7rem; }
+                    /* Center all content */
+                    #srPerformanceReport .sr-name-cell {
+                        display: flex;
+                        align-items: center;
+                        gap: 0.7rem;
+                        justify-content: center;
+                        text-align: center;
+                    }
+                    #srPerformanceReport .funnel-mini {
+                        margin: 0 auto;
+                    }
+                    #srPerformanceReport .num-cell {
+                        text-align: center !important;
                     }
                     
                     .rank-badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
@@ -785,13 +797,13 @@ const FullReports = {
                     .sr-name { font-weight:700; color:var(--text-primary); line-height:1.2; font-size:0.875rem; }
                     .sr-email { font-size:0.72rem; color:var(--text-muted); }
                     .sr-branch { display:inline-block; margin-top:0.2rem; font-size:0.68rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.08rem 0.45rem; border-radius:999px; font-weight:700; }
-                    .funnel-mini { display:flex; flex-direction:column; gap:0.3rem; min-width:190px; }
+                    .funnel-mini { display:flex; flex-direction:column; gap:0.3rem; min-width:190px; max-width:220px; }
                     .funnel-row { display:flex; align-items:center; gap:0.4rem; }
-                    .funnel-label { font-size:0.65rem; color:var(--text-secondary); width:55px; flex-shrink:0; font-weight:600; }
+                    .funnel-label { font-size:0.65rem; color:var(--text-secondary); width:55px; flex-shrink:0; font-weight:600; text-align:left; }
                     .funnel-bar-wrap { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
                     .funnel-bar { height:100%; border-radius:3px; transition:width 0.4s ease; }
                     .funnel-num { font-size:0.68rem; font-weight:700; color:var(--text-primary); width:20px; text-align:right; flex-shrink:0; }
-                    .badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; }
+                    .badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
                     .badge-success { background:rgba(16,185,129,0.15); color:#34d399; }
                     .badge-warning { background:rgba(245,158,11,0.15); color:#fcd34d; }
                     .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
@@ -811,6 +823,15 @@ const FullReports = {
                     .sr-modal-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-md); padding:0.75rem 1rem; }
                     .sr-modal-stat-label { font-size:0.68rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; }
                     .sr-modal-stat-val { font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:0.15rem; }
+                    
+                    @media (max-width: 768px) {
+                        .sr-modal { width:100%; max-width:95vw; padding:1.5rem; }
+                        .sr-modal-stats { grid-template-columns:repeat(2,1fr); }
+                    }
+                    
+                    @media (max-width: 480px) {
+                        .sr-modal-stats { grid-template-columns:1fr; }
+                    }
                 `;
                 document.head.appendChild(style);
             }
