@@ -856,6 +856,26 @@ const FullReports = {
         link.click();
         URL.revokeObjectURL(link.href);
 
+        // ── Log export activity to Activity Logs ──
+        try {
+            const sectionLabels = [];
+            checkboxes.forEach(cb => {
+                const labels = { executive: 'Executive Summary', projects: 'Project Analytics', contractors: 'Contractor Analytics', sales: 'Sales Performance', geographic: 'Geographic Distribution', material: 'Material Requirements', encoding: 'Encoding Performance' };
+                sectionLabels.push(labels[cb.value] || cb.value);
+            });
+            fetch(`${BASE}/api/v1/log-export`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    period: exportPeriod,
+                    dateMode: mode,
+                    sections: sectionLabels,
+                    projectCount: projects.length
+                })
+            }).catch(() => {}); // silently fail - don't block the user
+        } catch(e) {}
+
         Object.assign(this.filters, origFilters);
         closeExportModal();
         

@@ -72,6 +72,7 @@ elseif ($path === 'available-months')                                    { requi
 elseif ($path === 'locations')                                           { require __DIR__ . '/locations.php'; }
 elseif ($path === 'sync-status')                                         { require __DIR__ . '/sync-status.php'; }
 elseif ($path === 'activity-logs')                                       { require __DIR__ . '/activity-logs.php'; }
+elseif ($path === 'log-export')                                           { require __DIR__ . '/log-export.php'; }
 elseif ($path === 'projects/priority')                                   { require __DIR__ . '/projects/priority.php'; }
 elseif ($path === 'projects/unassigned')                                 { require __DIR__ . '/projects/unassigned.php'; }
 elseif ($path === 'projects/assigned')                                   { require __DIR__ . '/projects/assigned.php'; }
