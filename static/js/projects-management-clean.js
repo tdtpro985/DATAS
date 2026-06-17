@@ -275,8 +275,8 @@ function getTableRow(p) {
         <td style="font-weight:500;">${p.contractor_name || '—'}</td>
         <td>${p.project_name || '—'}</td>
         <td>${p.region || '—'}</td>
-        <td style="text-align:right;">${value}</td>
-        <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
+        <td>${value}</td>
+        <td><span class="status-circle ${statusClass}"></span></td>
     `;
     
     switch (currentView) {

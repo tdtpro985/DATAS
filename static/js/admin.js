@@ -93,8 +93,8 @@ async function loadDashboardStats() {
                         <td>${date}</td>
                         <td>${p.contractor_name || '—'}</td>
                         <td>${p.project_name || '—'}</td>
-                        <td style="text-align:right;">₱${value}</td>
-                        <td><span class="status-badge status-${statusClass}">${p.status || '—'}</span></td>
+                        <td>₱${value}</td>
+                        <td><span class="badge badge-${statusClass}">${p.status || '—'}</span></td>
                     </tr>`;
                 }).join('');
             } else {

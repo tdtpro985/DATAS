@@ -156,7 +156,7 @@ function getTableRow(p) {
         <td style="font-weight:500;">${escapeHtml(p.contractor_name || '—')}</td>
         <td>${escapeHtml(p.project_name || '—')}</td>
         <td>${escapeHtml(p.region || '—')}</td>
-        <td style="text-align:right;">${value}</td>
+        <td>${value}</td>
         <td><span class="status-badge status-${statusClass}">${escapeHtml(p.status || '—')}</span></td>
         <td><span class="tracking-badge ${trackingClass}">${escapeHtml(trackingStatus)}</span></td>
     </tr>`;
