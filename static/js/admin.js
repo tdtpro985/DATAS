@@ -674,7 +674,7 @@ function formatShortCurrency(value) {
 function navigateTo(page) {
     // Map card destinations to actual page URLs
     const pageMap = {
-        'users': _B + '/admin/users',
+        'users': _B + '/users',
         'sales-reps': _B + '/sales-reps',
         'projects': _B + '/admin/projects',
         'priority-projects': _B + '/admin/priority-projects',
