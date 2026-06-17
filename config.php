@@ -6,12 +6,19 @@
  * This file should NOT be committed to version control
  */
 
+// Set default timezone to Philippine Time (UTC+8)
+date_default_timezone_set('Asia/Manila');
+
 // Database Configuration - Production Settings
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'datas_db');
 define('DB_USER', 'root');
 define('DB_PASS', 'password');// Replace with actual password
 define('DB_CHARSET', 'utf8mb4');
+
+// Timezone Configuration
+define('APP_TIMEZONE', 'Asia/Manila');
+define('DB_TIMEZONE', '+08:00');
 
 // Security Configuration
 define('SESSION_TIMEOUT', 3600); // 1 hour in seconds

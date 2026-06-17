@@ -83,7 +83,10 @@ async function loadDashboardStats() {
         if (tbody) {
             if (recentData && Array.isArray(recentData.projects) && recentData.projects.length > 0) {
                 tbody.innerHTML = recentData.projects.map(p => {
-                    const date = new Date(p.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+                    // Use Philippine DateTime if available
+                    const date = window.PhilippineDateTime 
+                        ? PhilippineDateTime.formatDateShort(p.created_at)
+                        : new Date(p.created_at).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric' });
                     const value = (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
                     return `<tr>
@@ -147,7 +150,7 @@ function renderUsersPage(page) {
             <td style="font-weight:500;">${u.username} ${isMe ? '<span style="color:var(--text-muted);font-weight:400;">(You)</span>' : ''} ${resetBadge}</td>
             <td>${u.full_name || '—'}</td>
             <td><span class="role-badge role-${u.role}">${u.role}</span></td>
-            <td style="color:var(--text-dim);font-size:0.85rem;">${new Date(u.created_at).toLocaleDateString()}</td>
+            <td style="color:var(--text-dim);font-size:0.85rem;">${window.PhilippineDateTime ? PhilippineDateTime.formatDateNumeric(u.created_at) : new Date(u.created_at).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila' })}</td>
             <td>
                 <button class="action-toggle"
                         data-user='${userJson}'
@@ -405,7 +408,9 @@ function renderProjectsPage(page) {
     }
 
     tbody.innerHTML = projectsToRender.map(p => {
-        const dateTimeAdded = new Date(p.created_at).toLocaleString();
+        const dateTimeAdded = window.PhilippineDateTime 
+            ? PhilippineDateTime.formatDateTime(p.created_at)
+            : new Date(p.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
         const value = p.project_value ? parseFloat(p.project_value).toLocaleString() : '0';
 
         return `
@@ -466,7 +471,7 @@ function openProjectModal(projectId, source = 'all') {
 
     title.textContent = project.project_name || 'Project Details';
     detailList.innerHTML = `
-        <div class="detail-row"><span>Date & Time Added</span><strong>${new Date(project.created_at).toLocaleString()}</strong></div>
+        <div class="detail-row"><span>Date & Time Added</span><strong>${window.PhilippineDateTime ? PhilippineDateTime.formatDateTime(project.created_at) : new Date(project.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</strong></div>
         <div class="detail-row"><span>Source</span><strong>${project.source || '—'}</strong></div>
         <div class="detail-row"><span>Contractor</span><strong>${project.contractor_name || '—'}</strong></div>
         <div class="detail-row"><span>Contact Person</span><strong>${project.contact_person || '—'}</strong></div>
@@ -484,7 +489,7 @@ function openProjectModal(projectId, source = 'all') {
         <div class="detail-row"><span>Accomplishment</span><strong>${project.accomplishment_rate ? project.accomplishment_rate + '%' : '—'}</strong></div>
         <div class="detail-row"><span>Status</span><strong>${project.status || '—'}</strong></div>
         <div class="detail-row"><span>Encoded By</span><strong>${project.encoded_by_user || project.encoded_by || '—'}</strong></div>
-        <div class="detail-row"><span>Last Updated</span><strong>${new Date(project.updated_at).toLocaleString()}</strong></div>
+        <div class="detail-row"><span>Last Updated</span><strong>${window.PhilippineDateTime ? PhilippineDateTime.formatDateTime(project.updated_at) : new Date(project.updated_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}</strong></div>
     `;
     modal.style.display = 'flex';
 }
@@ -534,7 +539,9 @@ function renderPriorityProjects() {
     }
 
     tbody.innerHTML = allPriorityProjects.map(p => {
-        const dateTimeAdded = new Date(p.created_at).toLocaleString();
+        const dateTimeAdded = window.PhilippineDateTime 
+            ? PhilippineDateTime.formatDateTime(p.created_at)
+            : new Date(p.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
         const formatPHP = (val) => {
             const num = Number(val);
             return !isNaN(num) ? new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(num) : '—';
@@ -622,7 +629,9 @@ async function loadSalesRepRankings() {
             const rankBadge = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
             const value = rep.total_value.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             const lastProjectDate = rep.last_project_date 
-                ? new Date(rep.last_project_date).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })
+                ? (window.PhilippineDateTime 
+                    ? PhilippineDateTime.formatDateShort(rep.last_project_date)
+                    : new Date(rep.last_project_date).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric' }))
                 : '—';
 
             return `

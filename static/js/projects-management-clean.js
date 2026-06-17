@@ -236,7 +236,11 @@ function getTableHeaders() {
 // Get table row based on view
 function getTableRow(p) {
     const published = p.publication_date || p.published_date || p.published_at || null;
-    const publishedFormatted = published ? new Date(published).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+    const publishedFormatted = published 
+        ? (window.PhilippineDateTime 
+            ? PhilippineDateTime.formatDateShort(published)
+            : new Date(published).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric' }))
+        : '—';
     const value = formatCurrency(p.project_value);
     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
     
@@ -282,13 +286,18 @@ function getTableRow(p) {
             </tr>`;
             
         case 'archived':
-            const archivedDate = p.archived_at ? new Date(p.archived_at).toLocaleDateString('en-PH', { 
-                month: 'short', 
-                day: 'numeric', 
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            }) : '—';
+            const archivedDate = p.archived_at 
+                ? (window.PhilippineDateTime 
+                    ? PhilippineDateTime.formatDateShort(p.archived_at)
+                    : new Date(p.archived_at).toLocaleDateString('en-PH', { 
+                        timeZone: 'Asia/Manila',
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }))
+                : '—';
             return `<tr data-project="${encodeURIComponent(JSON.stringify(p))}" style="cursor:pointer; opacity:0.7;">
                 ${commonCells}
                 <td>${p.assigned_to_name || '—'}</td>

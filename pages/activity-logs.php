@@ -384,6 +384,7 @@ if (!in_array($role, ['admin', 'superadmin'], true)) {
 <script>
 const BASE = '<?= $base ?>';
 </script>
+<script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/activity-logs.js?v=1"></script>

@@ -122,7 +122,10 @@ const ActivityLogs = {
         const rows = logs.map(log => {
             const actionClass = this.getActionClass(log.action_type);
             const actionLabel = this.formatActionType(log.action_type);
-            const timestamp = new Date(log.created_at).toLocaleString();
+            // Use Philippine DateTime formatter
+            const timestamp = window.PhilippineDateTime 
+                ? PhilippineDateTime.formatActivityLog(log.created_at)
+                : new Date(log.created_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' });
             
             return `
                 <tr>

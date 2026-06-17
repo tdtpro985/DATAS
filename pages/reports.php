@@ -4108,6 +4108,9 @@ if ($role === 'encoder') {
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
+    <!-- Philippine DateTime Formatter -->
+    <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
+    
     <!-- Custom Select Dropdown -->
     <script src="<?= $base ?>/static/js/custom-select-dropdown.js"></script>
 
@@ -4189,23 +4192,30 @@ if ($role === 'encoder') {
             update() {
                 try {
                     const now = new Date();
-                    const timeStr = now.toLocaleTimeString('en-PH', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        second: '2-digit',
-                        hour12: true 
-                    });
+                    // Use Philippine DateTime formatter if available
+                    const timeStr = window.PhilippineDateTime 
+                        ? PhilippineDateTime.currentTime()
+                        : now.toLocaleTimeString('en-PH', { 
+                            timeZone: 'Asia/Manila',
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            second: '2-digit',
+                            hour12: true 
+                        });
                     
                     const timeElement = document.getElementById('current-time');
                     if (timeElement) timeElement.textContent = timeStr;
                     
                     // Update sync time (simulate last sync - 1 minute ago)
                     const syncTime = new Date(now.getTime() - 60000);
-                    const syncStr = syncTime.toLocaleTimeString('en-PH', { 
-                        hour: '2-digit', 
-                        minute: '2-digit',
-                        hour12: true 
-                    });
+                    const syncStr = window.PhilippineDateTime
+                        ? PhilippineDateTime.formatTimeShort(syncTime)
+                        : syncTime.toLocaleTimeString('en-PH', { 
+                            timeZone: 'Asia/Manila',
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            hour12: true 
+                        });
                     
                     const syncElement = document.getElementById('sync-time');
                     if (syncElement) syncElement.textContent = syncStr;

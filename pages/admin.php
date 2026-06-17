@@ -55,6 +55,9 @@ if ($role !== 'admin' && $role !== 'superadmin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
+    
+    <!-- Philippine DateTime -->
+    <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
 </head>
 
 <body data-role="<?= $role ?>">

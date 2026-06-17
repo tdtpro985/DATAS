@@ -134,8 +134,12 @@ async function loadProjects() {
 // ── Table Row ─────────────────────────────────────────────────────────────────
 function getTableRow(p) {
     const date = p.assigned_at
-        ? new Date(p.assigned_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' })
-        : new Date(p.created_at).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+        ? (window.PhilippineDateTime 
+            ? PhilippineDateTime.formatDateShort(p.assigned_at)
+            : new Date(p.assigned_at).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric' }))
+        : (window.PhilippineDateTime 
+            ? PhilippineDateTime.formatDateShort(p.created_at)
+            : new Date(p.created_at).toLocaleDateString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric' }));
     const value = typeof formatCurrency === 'function' ? formatCurrency(p.project_value) : (p.project_value || 0).toLocaleString('en-PH', { minimumFractionDigits: 2 });
     const statusClass = (p.status || '').toLowerCase().replace(/\s+/g, '-');
 
@@ -395,7 +399,7 @@ function viewProjectSR(projectId) {
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Date Assigned</div>
-                    <div class="detail-value">${project.assigned_at ? new Date(project.assigned_at).toLocaleDateString('en-PH', {month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
+                    <div class="detail-value">${project.assigned_at ? (window.PhilippineDateTime ? PhilippineDateTime.formatDate(project.assigned_at) : new Date(project.assigned_at).toLocaleDateString('en-PH', {timeZone:'Asia/Manila',month:'long',day:'numeric',year:'numeric'})) : '—'}</div>
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Encoded By</div>
@@ -403,7 +407,7 @@ function viewProjectSR(projectId) {
                 </div>
                 <div class="detail-item">
                     <div class="detail-label">Date Encoded</div>
-                    <div class="detail-value">${project.created_at ? new Date(project.created_at).toLocaleDateString('en-PH', {month:'long',day:'numeric',year:'numeric'}) : '—'}</div>
+                    <div class="detail-value">${project.created_at ? (window.PhilippineDateTime ? PhilippineDateTime.formatDate(project.created_at) : new Date(project.created_at).toLocaleDateString('en-PH', {timeZone:'Asia/Manila',month:'long',day:'numeric',year:'numeric'})) : '—'}</div>
                 </div>
             </div>
         </div>

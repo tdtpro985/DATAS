@@ -1033,6 +1033,9 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     
     <!-- Modern Select Dropdowns Styling -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
+    
+    <!-- Philippine DateTime -->
+    <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">

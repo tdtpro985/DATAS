@@ -542,6 +542,9 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
     
     <!-- Modern Select Dropdowns Styling -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
+    
+    <!-- Philippine DateTime -->
+    <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)$userId ?>">

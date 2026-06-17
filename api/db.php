@@ -31,8 +31,8 @@ function getDB(): PDO {
             // Add connection timeout and persistence
             PDO::ATTR_TIMEOUT            => 30,
             PDO::ATTR_PERSISTENT         => false,
-            // MySQL specific options
-            PDO::MYSQL_ATTR_INIT_COMMAND => "SET sql_mode=''",
+            // MySQL specific options - Set timezone to Philippine Time
+            PDO::MYSQL_ATTR_INIT_COMMAND => "SET sql_mode='', time_zone='+08:00'",
             PDO::MYSQL_ATTR_USE_BUFFERED_QUERY => true,
         ];
         try {
