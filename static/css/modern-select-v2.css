@@ -1,0 +1,292 @@
+/* ============================================================
+   MODERN SELECT DROPDOWNS V2 — Comprehensive Styling
+   ============================================================
+   Modern, sleek dropdown styling for all select elements
+   ============================================================ */
+
+/* ── Base Select Styling ── */
+select,
+.filter-select,
+.control-select,
+.nav-select,
+.sales-form-select,
+.form-group select,
+select.form-control,
+.pm-filter-select {
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    
+    /* Modern gradient background */
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    
+    /* Modern border with gradient effect */
+    border: 2px solid transparent !important;
+    background-image: 
+        linear-gradient(135deg, #0f172a, #1e293b),
+        linear-gradient(90deg, rgba(255, 128, 0, 0.2), rgba(255, 165, 0, 0.3)) !important;
+    background-origin: border-box !important;
+    background-clip: padding-box, border-box !important;
+    
+    color: #e2e8f0 !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    padding: 0.75rem 2.5rem 0.75rem 1rem !important;
+    border-radius: 10px !important;
+    cursor: pointer !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 
+        0 4px 6px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    position: relative !important;
+    
+    /* Custom arrow */
+    background-image: 
+        linear-gradient(135deg, #0f172a, #1e293b),
+        linear-gradient(90deg, rgba(255, 128, 0, 0.2), rgba(255, 165, 0, 0.3)),
+        url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat, no-repeat, no-repeat !important;
+    background-position: padding-box, border-box, right 0.75rem center !important;
+    background-size: auto, auto, 16px !important;
+}
+
+/* ── Hover State ── */
+select:hover,
+.filter-select:hover,
+.control-select:hover,
+.nav-select:hover,
+.sales-form-select:hover,
+.form-group select:hover,
+select.form-control:hover,
+.pm-filter-select:hover {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 2px solid #ff8000 !important;
+    box-shadow: 
+        0 8px 16px rgba(255, 128, 0, 0.25),
+        0 0 20px rgba(255, 128, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px) !important;
+    
+    /* Update arrow on hover */
+    background-image: 
+        linear-gradient(135deg, #1e293b, #334155),
+        url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffa500' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-position: padding-box, right 0.75rem center !important;
+    background-size: auto, 16px !important;
+}
+
+/* ── Focus / Active State ── */
+select:focus,
+select:active,
+.filter-select:focus,
+.control-select:focus,
+.nav-select:focus,
+.sales-form-select:focus,
+.form-group select:focus,
+select.form-control:focus,
+.pm-filter-select:focus {
+    outline: none !important;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    border: 2px solid #ff8000 !important;
+    box-shadow: 
+        0 0 0 4px rgba(255, 128, 0, 0.2),
+        0 8px 20px rgba(255, 128, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+    transform: translateY(-2px) !important;
+    
+    /* Animated arrow on focus */
+    background-image: 
+        linear-gradient(135deg, #1e293b, #334155),
+        url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffa500' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+    background-repeat: no-repeat, no-repeat !important;
+    background-position: padding-box, right 0.75rem center !important;
+    background-size: auto, 18px !important;
+}
+
+/* ── Dropdown Options ── */
+select option,
+.filter-select option,
+.control-select option,
+.nav-select option,
+.sales-form-select option,
+.form-group select option,
+select.form-control option,
+.pm-filter-select option {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    color: #e2e8f0 !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+}
+
+/* ── Option Hover/Selected State ── */
+select option:hover,
+select option:focus,
+select option:checked,
+select option:active {
+    background: linear-gradient(135deg, #ff8000 0%, #ffa500 100%) !important;
+    color: #000 !important;
+    font-weight: 600 !important;
+}
+
+/* ── Disabled State ── */
+select:disabled,
+select[disabled] {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(1) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* ── Small Variant ── */
+select.select-sm,
+.filter-select.select-sm {
+    padding: 0.5rem 2rem 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border-radius: 8px !important;
+}
+
+/* ── Large Variant ── */
+select.select-lg,
+.filter-select.select-lg {
+    padding: 1rem 3rem 1rem 1.25rem !important;
+    font-size: 1rem !important;
+    border-radius: 12px !important;
+}
+
+/* ── Scrollbar for Dropdown ── */
+select::-webkit-scrollbar {
+    width: 8px !important;
+}
+
+select::-webkit-scrollbar-track {
+    background: #0f172a !important;
+    border-radius: 4px !important;
+}
+
+select::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #ff8000, #ffa500) !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+select::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #ffa500, #ffb300) !important;
+}
+
+/* ── Animation ── */
+@keyframes selectFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+select:focus {
+    animation: selectFadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ── Glow Effect on Active ── */
+select:focus::before,
+select:active::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 128, 0, 0.3), rgba(255, 165, 0, 0.3));
+    filter: blur(10px);
+    z-index: -1;
+    opacity: 0.5;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* ── Firefox Specific Fixes ── */
+@-moz-document url-prefix() {
+    select,
+    .filter-select,
+    .control-select {
+        background-image: 
+            url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 0.75rem center !important;
+        background-size: 16px !important;
+        background-color: #0f172a !important;
+    }
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 768px) {
+    select,
+    .filter-select,
+    .control-select,
+    .nav-select,
+    .sales-form-select,
+    .form-group select,
+    select.form-control,
+    .pm-filter-select {
+        font-size: 0.8rem !important;
+        padding: 0.6rem 2rem 0.6rem 0.85rem !important;
+        border-radius: 8px !important;
+    }
+}
+
+/* ── Dark Mode Enhancements ── */
+@media (prefers-color-scheme: dark) {
+    select,
+    .filter-select,
+    .control-select {
+        box-shadow: 
+            0 4px 8px rgba(0, 0, 0, 0.5),
+            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+    }
+}
+
+/* ── Specific Context Overrides ── */
+
+/* Reports Page Filters */
+.control-group .control-select {
+    min-width: 120px !important;
+    font-size: 0.85rem !important;
+}
+
+/* Projects Toolbar */
+.projects-toolbar .filter-select,
+.pm-filters .filter-select {
+    padding: 0.7rem 2.5rem 0.7rem 1rem !important;
+}
+
+/* Sales Forms */
+.sales-form-select {
+    width: 100% !important;
+}
+
+/* Admin Panel */
+.ap-content select,
+.form-group select {
+    width: 100% !important;
+}
+
+/* Navigation Dropdowns */
+.nav-select {
+    padding: 0.6rem 2rem 0.6rem 0.85rem !important;
+    font-size: 0.85rem !important;
+}

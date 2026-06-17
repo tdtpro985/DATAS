@@ -3401,6 +3401,9 @@ if ($role === 'encoder') {
             }
         }
     </style>
+    
+    <!-- Modern Select Dropdowns Styling -->
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 <body>
     <div class="dashboard-container">

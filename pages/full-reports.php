@@ -340,6 +340,9 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             }
         }
     </style>
+    
+    <!-- Modern Select Dropdowns Styling -->
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>">
 

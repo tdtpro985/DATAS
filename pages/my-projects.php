@@ -539,6 +539,9 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
             pointer-events: none;
         }
     </style>
+    
+    <!-- Modern Select Dropdowns Styling -->
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)$userId ?>">

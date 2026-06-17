@@ -1030,6 +1030,9 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             flex-shrink: 0;
         }
     </style>
+    
+    <!-- Modern Select Dropdowns Styling -->
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">

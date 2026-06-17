@@ -1127,6 +1127,9 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             color: var(--orange-500, #f97316);
         }
     </style>
+    
+    <!-- Modern Select Dropdowns Styling -->
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
 
