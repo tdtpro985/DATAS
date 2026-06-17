@@ -4,75 +4,131 @@
    Fluid typography via clamp() â€” scales continuously
    ============================================================ */
 
-/* ---------- Design Tokens - TDT Powersteel Modern ---------- */
+/* ============================================================
+   DESIGN SYSTEM V2.0 - TDT POWERSTEEL ULTRA MODERN
+   Enhanced Color Palette, Typography & Spacing System
+   ============================================================ */
 :root {
-    /* Orange Palette - Based on TDT Logo */
-    --orange-50: #FFF5EB;
-    --orange-100: #FFE4CC;
-    --orange-200: #FFCC99;
-    --orange-300: #FFB366;
-    --orange-400: #FF9933;
-    --orange-500: #FF8000;  /* Primary Orange */
-    --orange-600: #E67300;
-    --orange-700: #CC6600;
-    --orange-800: #B35900;
-    --orange-900: #994D00;
+    /* ── Orange Palette - TDT Primary Brand ────────────────── */
+    --orange-50: #FFF8F0;
+    --orange-100: #FFEDD5;
+    --orange-200: #FED7AA;
+    --orange-300: #FDBA74;
+    --orange-400: #FB923C;
+    --orange-500: #FF8000;  /* Primary Brand Orange */
+    --orange-600: #EA6B00;
+    --orange-700: #C25500;
+    --orange-800: #9A4400;
+    --orange-900: #7C3600;
+    --orange-950: #451A00;
 
-    /* Dark/Gray Palette - Based on TDT Logo */
-    --gray-50: #F8F9FA;
-    --gray-100: #E9ECEF;
-    --gray-200: #DEE2E6;
-    --gray-300: #CED4DA;
-    --gray-400: #ADB5BD;
-    --gray-500: #6C757D;
-    --gray-600: #495057;
-    --gray-700: #343A40;
-    --gray-800: #212529;
-    --gray-900: #0D0F12;
+    /* ── Dark/Gray Palette - TDT Secondary ─────────────────── */
+    --gray-50: #FAFAFA;
+    --gray-100: #F5F5F5;
+    --gray-200: #E5E5E5;
+    --gray-300: #D4D4D4;
+    --gray-400: #A3A3A3;
+    --gray-500: #737373;
+    --gray-600: #525252;
+    --gray-700: #404040;
+    --gray-800: #262626;
+    --gray-900: #171717;
+    --gray-950: #0A0A0A;
 
-    /* Background Colors - Modern Dark Theme */
-    --bg-dark: #0D0F12;
-    --bg-card: #1A1D23;
-    --bg-card-hover: #22252C;
-    --bg-card-alt: #14171C;
-    --bg-input: #22252C;
-    --bg-overlay: rgba(13, 15, 18, 0.95);
+    /* ── Background System - Ultra Modern Dark Theme ───────── */
+    --bg-app: #08090B;
+    --bg-dark: #0D0F13;
+    --bg-elevated: #12141A;
+    --bg-card: #1A1D25;
+    --bg-card-hover: #202329;
+    --bg-card-alt: #161920;
+    --bg-input: #1F222A;
+    --bg-input-hover: #25282F;
+    --bg-overlay: rgba(8, 9, 11, 0.95);
+    --bg-overlay-light: rgba(8, 9, 11, 0.75);
 
-    /* Text Colors */
-    --text-primary: #FFFFFF;
-    --text-secondary: #ADB5BD;
+    /* ── Text System ───────────────────────────────────────── */
+    --text-primary: #FAFAFA;
+    --text-secondary: #B4B9C5;
+    --text-tertiary: #868B96;
     --text-accent: #FF8000;
-    --text-muted: #6C757D;
+    --text-muted: #6B7280;
+    --text-on-accent: #FFFFFF;
+    --text-on-dark: #000000;
 
-    /* Status Colors */
-    --success: #10B981;
-    --warning: #F59E0B;
-    --danger: #EF4444;
-    --info: #3B82F6;
+    /* ── Status Colors - Enhanced ──────────────────────────── */
+    --success-50: #ECFDF5;
+    --success-500: #10B981;
+    --success-600: #059669;
+    --success-700: #047857;
+    
+    --warning-50: #FFFBEB;
+    --warning-500: #F59E0B;
+    --warning-600: #D97706;
+    --warning-700: #B45309;
+    
+    --danger-50: #FEF2F2;
+    --danger-500: #EF4444;
+    --danger-600: #DC2626;
+    --danger-700: #B91C1C;
+    
+    --info-50: #EFF6FF;
+    --info-500: #3B82F6;
+    --info-600: #2563EB;
+    --info-700: #1D4ED8;
 
-    /* Gradients */
-    --gradient-primary: linear-gradient(135deg, #FF8000 0%, #FF9933 100%);
-    --gradient-dark: linear-gradient(135deg, #1A1D23 0%, #14171C 100%);
-    --gradient-overlay: linear-gradient(180deg, rgba(13, 15, 18, 0) 0%, rgba(13, 15, 18, 0.8) 100%);
+    /* ── Gradients - Ultra Modern ──────────────────────────── */
+    --gradient-primary: linear-gradient(135deg, #FF8000 0%, #FFA940 100%);
+    --gradient-primary-hover: linear-gradient(135deg, #FF9020 0%, #FFB850 100%);
+    --gradient-dark: linear-gradient(135deg, #1A1D25 0%, #14171F 100%);
+    --gradient-dark-alt: linear-gradient(135deg, #161920 0%, #0D0F13 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(8, 9, 11, 0) 0%, rgba(8, 9, 11, 0.9) 100%);
+    --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+    --gradient-accent: linear-gradient(135deg, #FF8000 0%, #EA6B00 50%, #FF8000 100%);
+    --gradient-glow: radial-gradient(circle at center, rgba(255, 128, 0, 0.25) 0%, transparent 70%);
 
-    /* Shadows - Modern Depth */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
-    --shadow-glow: 0 0 20px rgba(255, 128, 0, 0.3);
-    --shadow-glow-strong: 0 0 30px rgba(255, 128, 0, 0.5);
+    /* ── Shadows - Professional Depth System ───────────────── */
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+    --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 10px 20px -5px rgba(0, 0, 0, 0.5), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
+    --shadow-xl: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 10px 20px -5px rgba(0, 0, 0, 0.5);
+    --shadow-2xl: 0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 15px 30px -8px rgba(0, 0, 0, 0.6);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    
+    /* Glow Effects */
+    --shadow-glow-sm: 0 0 10px rgba(255, 128, 0, 0.2);
+    --shadow-glow-md: 0 0 20px rgba(255, 128, 0, 0.3);
+    --shadow-glow-lg: 0 0 30px rgba(255, 128, 0, 0.4);
+    --shadow-glow-xl: 0 0 40px rgba(255, 128, 0, 0.5);
 
-    /* Spacing */
-    --sp-1: 0.25rem;
-    --sp-2: 0.4rem;
-    --sp-3: 0.65rem;
-    --sp-4: 0.9rem;
-    --sp-5: 1.2rem;
-    --sp-6: 1.5rem;
-    --sp-8: 2rem;
+    /* ── Spacing Scale - Perfect Proportions ───────────────── */
+    --sp-px: 1px;
+    --sp-0: 0;
+    --sp-0-5: 0.125rem;  /* 2px */
+    --sp-1: 0.25rem;     /* 4px */
+    --sp-1-5: 0.375rem;  /* 6px */
+    --sp-2: 0.5rem;      /* 8px */
+    --sp-2-5: 0.625rem;  /* 10px */
+    --sp-3: 0.75rem;     /* 12px */
+    --sp-3-5: 0.875rem;  /* 14px */
+    --sp-4: 1rem;        /* 16px */
+    --sp-5: 1.25rem;     /* 20px */
+    --sp-6: 1.5rem;      /* 24px */
+    --sp-7: 1.75rem;     /* 28px */
+    --sp-8: 2rem;        /* 32px */
+    --sp-9: 2.25rem;     /* 36px */
+    --sp-10: 2.5rem;     /* 40px */
+    --sp-11: 2.75rem;    /* 44px */
+    --sp-12: 3rem;       /* 48px */
+    --sp-14: 3.5rem;     /* 56px */
+    --sp-16: 4rem;       /* 64px */
+    --sp-20: 5rem;       /* 80px */
+    --sp-24: 6rem;       /* 96px */
 
-    --font: 'Inter', 'Segoe UI', system-ui, sans-serif;
+    /* ── Typography System ─────────────────────────────────── */
+    --font: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 
     /* â”€â”€ Fluid type scale (clamp) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
        Scales smoothly from ~360px mobile to 3840px 4K.
@@ -114,14 +170,18 @@ html {
 body {
     width: 100%;
     min-height: 100vh;
-    background: var(--bg-dark);
+    background: var(--bg-app);
     font-family: var(--font);
     color: var(--text-primary);
     overflow-x: hidden;
     position: relative;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
-/* Modern Background Pattern */
+/* Ultra Modern Animated Background Pattern */
 body::before {
     content: '';
     position: fixed;
@@ -130,10 +190,34 @@ body::before {
     width: 100%;
     height: 100%;
     background: 
-        radial-gradient(circle at 20% 50%, rgba(255, 128, 0, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 128, 0, 0.03) 0%, transparent 50%);
+        radial-gradient(circle at 15% 25%, rgba(255, 128, 0, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 85% 75%, rgba(255, 128, 0, 0.04) 0%, transparent 50%),
+        radial-gradient(circle at 50% 50%, rgba(255, 128, 0, 0.02) 0%, transparent 60%);
     pointer-events: none;
     z-index: 0;
+    animation: backgroundPulse 20s ease-in-out infinite;
+}
+
+@keyframes backgroundPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+/* Subtle grid pattern overlay */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255, 128, 0, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 128, 0, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.3;
 }
 
 body > * {
@@ -267,4 +351,53 @@ svg {
     .user-info {
         display: none;
     }
+}
+
+
+    /* ── Border Radius Scale (Enhanced) ────────────────────────── */
+    --radius-none: 0;
+    --radius-xs: 0.25rem;    /* 4px */
+    --radius-sm: 0.375rem;   /* 6px */
+    --radius-base: 0.5rem;   /* 8px */
+    --radius-md: 0.75rem;    /* 12px */
+    --radius-lg: 1rem;       /* 16px */
+    --radius-xl: 1.25rem;    /* 20px */
+    --radius-2xl: 1.5rem;    /* 24px */
+    --radius-3xl: 2rem;      /* 32px */
+    --radius-full: 9999px;
+
+    /* ── Z-Index Scale ──────────────────────────────────────────── */
+    --z-base: 0;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-sidebar: 400;
+    --z-modal-backdrop: 500;
+    --z-modal: 600;
+    --z-popover: 700;
+    --z-tooltip: 800;
+    --z-notification: 900;
+    --z-maximum: 1000;
+
+    /* ── Smooth Transitions ─────────────────────────────────────── */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: 400ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-smooth: 300ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* ── Opacity Scale ──────────────────────────────────────────── */
+    --opacity-0: 0;
+    --opacity-5: 0.05;
+    --opacity-10: 0.1;
+    --opacity-20: 0.2;
+    --opacity-30: 0.3;
+    --opacity-40: 0.4;
+    --opacity-50: 0.5;
+    --opacity-60: 0.6;
+    --opacity-70: 0.7;
+    --opacity-80: 0.8;
+    --opacity-90: 0.9;
+    --opacity-95: 0.95;
+    --opacity-100: 1;
 }

@@ -1,166 +1,460 @@
 ﻿/* =============================================================
-   MODERN TABLES - TDT Powersteel
+   MODERN TABLE SYSTEM - TDT PowerSteel
+   Professional data tables with advanced interactions
    ============================================================= */
+
+/* ══════════════════════════════════════════════════════════
+   TABLE WRAPPER
+══════════════════════════════════════════════════════════ */
+
 .table-wrapper {
-    flex: 1;
-    overflow-y: auto;
+    width: 100%;
     overflow-x: auto;
-    min-height: 0;
-    padding-right: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--orange-500) transparent;
+    overflow-y: hidden;
+    border-radius: var(--radius-xl);
+    background: linear-gradient(135deg, rgba(26, 29, 37, 0.5) 0%, rgba(20, 23, 31, 0.7) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--sp-5);
 }
 
 .table-wrapper::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    height: 8px;
 }
 
 .table-wrapper::-webkit-scrollbar-track {
-    background: var(--bg-card-alt);
-    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: var(--radius-full);
 }
 
 .table-wrapper::-webkit-scrollbar-thumb {
     background: var(--gradient-primary);
-    border-radius: 10px;
+    border-radius: var(--radius-full);
 }
 
-.table-wrapper::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #FF9933 0%, #FFB366 100%);
-}
+/* ══════════════════════════════════════════════════════════
+   DATA TABLE
+══════════════════════════════════════════════════════════ */
 
 .data-table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
-    font-size: clamp(0.65rem, 0.75vw, 1rem);
+    font-size: var(--text-sm);
 }
 
+/* ══════════════════════════════════════════════════════════
+   TABLE HEADER
+══════════════════════════════════════════════════════════ */
+
 .data-table thead {
+    position: relative;
+}
+
+.data-table thead th {
+    background: linear-gradient(135deg, rgba(26, 29, 37, 0.9) 0%, rgba(20, 23, 31, 0.95) 100%);
+    backdrop-filter: blur(15px);
+    color: var(--text-secondary);
+    font-weight: 800;
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: var(--sp-4) var(--sp-4);
+    text-align: left;
+    border-bottom: 2px solid rgba(255, 128, 0, 0.25);
     position: sticky;
     top: 0;
     z-index: 10;
-}
-
-.data-table th {
-    background: var(--bg-card-alt);
-    color: var(--orange-400);
-    padding: clamp(0.4rem, 0.5vw, 0.7rem) clamp(0.5rem, 0.6vw, 0.9rem);
-    text-align: left;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    font-size: clamp(0.55rem, 0.65vw, 0.85rem);
-    border-bottom: 2px solid rgba(255, 128, 0, 0.3);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.data-table td {
-    padding: clamp(0.4rem, 0.5vw, 0.7rem) clamp(0.5rem, 0.6vw, 0.9rem);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    color: var(--text-secondary);
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-    transition: all 0.2s ease;
+    transition: all var(--transition-base);
 }
 
-.data-table td:last-child {
-    text-align: right;
-    padding-right: 16px;
-    min-width: 80px;
-    font-weight: 600;
+.data-table thead th:first-child {
+    border-top-left-radius: var(--radius-lg);
+    padding-left: var(--sp-5);
+}
+
+.data-table thead th:last-child {
+    border-top-right-radius: var(--radius-lg);
+    padding-right: var(--sp-5);
+}
+
+.data-table thead th:hover {
+    color: var(--text-primary);
+    background: linear-gradient(135deg, rgba(26, 29, 37, 1) 0%, rgba(20, 23, 31, 1) 100%);
+}
+
+/* Sortable headers */
+.data-table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: var(--sp-8);
+}
+
+.data-table thead th.sortable::after {
+    content: '⇅';
+    position: absolute;
+    right: var(--sp-4);
+    opacity: 0.3;
+    transition: all var(--transition-base);
+}
+
+.data-table thead th.sortable:hover::after {
+    opacity: 1;
+    color: var(--orange-500);
+}
+
+.data-table thead th.sort-asc::after {
+    content: '↑';
+    opacity: 1;
+    color: var(--orange-500);
+}
+
+.data-table thead th.sort-desc::after {
+    content: '↓';
+    opacity: 1;
+    color: var(--orange-500);
+}
+
+/* ══════════════════════════════════════════════════════════
+   TABLE BODY
+══════════════════════════════════════════════════════════ */
+
+.data-table tbody {
+    position: relative;
 }
 
 .data-table tbody tr {
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    transition: all var(--transition-fast);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+/* Hover effect with left accent */
+.data-table tbody tr::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background: var(--gradient-primary);
+    transition: width var(--transition-base);
 }
 
 .data-table tbody tr:hover {
-    background: rgba(255, 128, 0, 0.08);
-    transform: scale(1.01);
-    box-shadow: 0 2px 8px rgba(255, 128, 0, 0.1);
+    background: rgba(255, 128, 0, 0.06);
+    transform: scale(1.002);
+    box-shadow: 
+        0 2px 12px rgba(255, 128, 0, 0.12),
+        inset 0 0 0 1px rgba(255, 128, 0, 0.1);
 }
 
+.data-table tbody tr:hover::before {
+    width: 4px;
+}
+
+/* Alternating row colors */
 .data-table tbody tr:nth-child(even) {
     background: rgba(255, 255, 255, 0.02);
 }
 
 .data-table tbody tr:nth-child(even):hover {
-    background: rgba(255, 128, 0, 0.08);
+    background: rgba(255, 128, 0, 0.06);
 }
 
-/* RANKING SPECIFIC */
-.rank-num {
-    color: var(--orange-400);
-    font-weight: 800;
-    min-width: 30px;
-    text-align: center;
-    font-size: clamp(0.7rem, 0.85vw, 1.1rem);
+/* Selected row */
+.data-table tbody tr.selected {
+    background: rgba(255, 128, 0, 0.12);
+    box-shadow: inset 0 0 0 2px rgba(255, 128, 0, 0.3);
 }
 
-/* Top 3 rankings with special styling */
-.data-table tbody tr:nth-child(1) .rank-num {
-    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    font-size: clamp(0.85rem, 1vw, 1.3rem);
+.data-table tbody tr.selected::before {
+    width: 4px;
 }
 
-.data-table tbody tr:nth-child(2) .rank-num {
-    background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+/* Clickable rows */
+.data-table tbody tr.clickable-row {
+    cursor: pointer;
 }
 
-.data-table tbody tr:nth-child(3) .rank-num {
-    background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+/* ══════════════════════════════════════════════════════════
+   TABLE CELLS
+══════════════════════════════════════════════════════════ */
 
-/* KPI DETAIL TABLE (Category Breakdown) */
-.kpi-detail-table {
-    width: 98%;
-    max-width: 700px;
-    margin: 0 auto !important;
-}
-
-.kpi-detail-table th,
-.kpi-detail-table td {
-    text-align: center !important;
-    vertical-align: middle !important;
-    padding: clamp(0.4rem, 0.55vw, 0.8rem) !important;
-}
-
-.kpi-detail-table th {
-    color: var(--text-muted);
-    border-bottom: 2px solid rgba(255, 128, 0, 0.3) !important;
-}
-
-.pct-bar {
-    display: inline-block;
-    height: 4px;
-    border-radius: 2px;
-    background: var(--gradient-primary);
+.data-table tbody td {
+    padding: var(--sp-4) var(--sp-4);
+    color: var(--text-primary);
     vertical-align: middle;
-    margin-left: 6px;
-    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: var(--shadow-glow);
+    transition: all var(--transition-fast);
 }
 
-/* Loading state */
-.loading-text {
+.data-table tbody td:first-child {
+    padding-left: var(--sp-5);
+    font-weight: 600;
+}
+
+.data-table tbody td:last-child {
+    padding-right: var(--sp-5);
+}
+
+/* Cell types */
+.table-cell-number {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+.table-cell-currency {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    font-weight: 700;
+    color: var(--success-500);
+}
+
+.table-cell-date {
+    color: var(--text-secondary);
+    font-size: var(--text-xs);
+    white-space: nowrap;
+}
+
+.table-cell-nowrap {
+    white-space: nowrap;
+}
+
+.table-cell-truncate {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TABLE ACTIONS
+══════════════════════════════════════════════════════════ */
+
+.table-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    justify-content: flex-end;
+}
+
+.table-action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-size: var(--text-sm);
+}
+
+.table-action-btn:hover {
+    background: rgba(255, 128, 0, 0.1);
+    border-color: rgba(255, 128, 0, 0.3);
+    color: var(--orange-500);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.table-action-btn.danger:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger-500);
+}
+
+/* ══════════════════════════════════════════════════════════
+   PAGINATION
+══════════════════════════════════════════════════════════ */
+
+.pagination-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sp-4);
+    padding: var(--sp-4);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: var(--sp-4);
+}
+
+.pagination-info {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.pagination-info strong {
+    color: var(--text-primary);
+    font-weight: 800;
+}
+
+.pagination-buttons {
+    display: flex;
+    gap: var(--sp-2);
+}
+
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 var(--sp-3);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-size: var(--text-sm);
+    font-weight: 700;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: rgba(255, 128, 0, 0.1);
+    border-color: rgba(255, 128, 0, 0.3);
+    color: var(--orange-500);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.pagination-btn.active {
+    background: var(--gradient-primary);
+    border-color: transparent;
+    color: var(--text-on-dark);
+    box-shadow: var(--shadow-md);
+}
+
+.pagination-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+/* ══════════════════════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════════════════════ */
+
+.table-empty-state {
     text-align: center;
+    padding: var(--sp-12) var(--sp-6);
     color: var(--text-muted);
-    padding: var(--sp-6);
-    font-style: italic;
-    animation: pulse 2s ease-in-out infinite;
 }
 
+.table-empty-icon {
+    font-size: 4rem;
+    opacity: 0.3;
+    margin-bottom: var(--sp-4);
+}
+
+.table-empty-title {
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0 0 var(--sp-2) 0;
+}
+
+.table-empty-description {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    margin: 0 0 var(--sp-6) 0;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOADING STATE
+══════════════════════════════════════════════════════════ */
+
+.table-loading {
+    position: relative;
+    min-height: 200px;
+}
+
+.table-loading::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(13, 15, 18, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 21;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .table-wrapper {
+        border-radius: var(--radius-lg);
+    }
+
+    .data-table thead th,
+    .data-table tbody td {
+        padding: var(--sp-3);
+        font-size: var(--text-xs);
+    }
+
+    .data-table thead th:first-child,
+    .data-table tbody td:first-child {
+        padding-left: var(--sp-3);
+    }
+
+    .data-table thead th:last-child,
+    .data-table tbody td:last-child {
+        padding-right: var(--sp-3);
+    }
+
+    .table-cell-truncate {
+        max-width: 120px;
+    }
+
+    .pagination-controls {
+        flex-direction: column;
+        gap: var(--sp-3);
+    }
+
+    .pagination-buttons {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Compact table variant */
+.data-table.table-compact thead th,
+.data-table.table-compact tbody td {
+    padding: var(--sp-2) var(--sp-3);
+}
+
+/* Striped table variant */
+.data-table.table-striped tbody tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Bordered table variant */
+.data-table.table-bordered tbody td {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.data-table.table-bordered tbody td:last-child {
+    border-right: none;
+}
