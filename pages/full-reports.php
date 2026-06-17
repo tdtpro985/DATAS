@@ -573,7 +573,22 @@ function openExportModal() {
     const modal = document.getElementById('exportModal');
     modal.style.visibility = 'visible';
     modal.style.opacity = '1';
-    document.body.style.overflow = 'hidden'; 
+    document.body.style.overflow = 'hidden';
+    
+    // Auto-populate export dates from filter bar
+    const filterFrom = document.getElementById('dateFrom').value;
+    const filterTo = document.getElementById('dateTo').value;
+    if (filterFrom) document.getElementById('exportDateFrom').value = filterFrom;
+    if (filterTo) document.getElementById('exportDateTo').value = filterTo;
+    
+    // Sync the date mode toggle with current filter mode
+    if (typeof FullReports !== 'undefined' && FullReports._syncExportToggle) {
+        FullReports._syncExportToggle();
+    }
+    
+    // Clear any previous error
+    const errEl = document.getElementById('exportDateError');
+    if (errEl) errEl.style.display = 'none';
 }
 function closeExportModal() { 
     const modal = document.getElementById('exportModal');
