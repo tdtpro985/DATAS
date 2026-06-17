@@ -2230,3 +2230,58 @@ select.form-control {
 .sales-rep-card:active {
     transform: translateY(-2px);
 }
+
+/* Clickable dashboard cards */
+.clickable-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.clickable-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(249, 115, 22, 0) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.clickable-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(249, 115, 22, 0.3);
+    border-color: var(--orange-500);
+}
+
+.clickable-card:hover::before {
+    opacity: 1;
+}
+
+.clickable-card:active {
+    transform: translateY(-2px);
+}
+
+.clickable-card::after {
+    content: '→';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: var(--orange-500);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    font-weight: bold;
+}
+
+.clickable-card:hover::after {
+    opacity: 1;
+}
+
+.clickable-card .ap-stat-icon,
+.clickable-card .ap-stat-content {
+    position: relative;
+    z-index: 1;
+}
