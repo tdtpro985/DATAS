@@ -1,11 +1,10 @@
 /* ============================================================
-   full-reports.js — Comprehensive Statistical Reports (v2)
+   full-reports.js — Comprehensive Statistical Reports (v3)
    ============================================================ */
 
 const FullReports = {
     filters: {
-        dateFrom: '',
-        dateTo: '',
+        period: 'monthly', // 'daily', 'weekly', 'semi-monthly', 'monthly', 'quarterly', 'yearly'
         dateMode: 'published', // 'published' or 'encoded'
         region: '',
         status: '',
@@ -84,15 +83,91 @@ const FullReports = {
         console.log('[FULL REPORTS] Initialized');
     },
 
+    // ── Get the current date range based on the selected period ──
+    getPeriodDateRange(period) {
+        const now = new Date();
+        // Use Philippine timezone
+        const pht = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+        const y = pht.getFullYear();
+        const m = pht.getMonth(); // 0-indexed
+        const d = pht.getDate();
+        
+        const pad = (n) => String(n).padStart(2, '0');
+        const formatDate = (date) => {
+            return date.getFullYear() + '-' + pad(date.getMonth()+1) + '-' + pad(date.getDate());
+        };
+        
+        const ranges = {
+            'daily': () => {
+                const from = new Date(y, m, d);
+                const to = new Date(y, m, d);
+                return { from: formatDate(from), to: formatDate(to), label: formatDate(from) };
+            },
+            'weekly': () => {
+                // Get current week (Mon-Sun)
+                const dayOfWeek = pht.getDay(); // 0=Sun
+                const monOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+                const from = new Date(y, m, d + monOffset);
+                const to = new Date(y, m, d + monOffset + 6);
+                return {
+                    from: formatDate(from),
+                    to: formatDate(to),
+                    label: `${formatDate(from)} to ${formatDate(to)}`
+                };
+            },
+            'semi-monthly': () => {
+                if (d <= 15) {
+                    return {
+                        from: formatDate(new Date(y, m, 1)),
+                        to: formatDate(new Date(y, m, 15)),
+                        label: `${formatDate(new Date(y, m, 1))} to ${formatDate(new Date(y, m, 15))}`
+                    };
+                } else {
+                    const lastDay = new Date(y, m + 1, 0).getDate();
+                    return {
+                        from: formatDate(new Date(y, m, 16)),
+                        to: formatDate(new Date(y, m, lastDay)),
+                        label: `${formatDate(new Date(y, m, 16))} to ${formatDate(new Date(y, m, lastDay))}`
+                    };
+                }
+            },
+            'monthly': () => {
+                const lastDay = new Date(y, m + 1, 0).getDate();
+                return {
+                    from: formatDate(new Date(y, m, 1)),
+                    to: formatDate(new Date(y, m, lastDay)),
+                    label: `${y}-${pad(m+1)}`
+                };
+            },
+            'quarterly': () => {
+                const q = Math.floor(m / 3) * 3; // 0, 3, 6, 9
+                const qEnd = new Date(y, q + 3, 0).getDate();
+                return {
+                    from: formatDate(new Date(y, q, 1)),
+                    to: formatDate(new Date(y, q + 2, qEnd)),
+                    label: `Q${(q/3)+1} ${y}`
+                };
+            },
+            'yearly': () => {
+                return {
+                    from: formatDate(new Date(y, 0, 1)),
+                    to: formatDate(new Date(y, 11, 31)),
+                    label: `${y}`
+                };
+            }
+        };
+        
+        return (ranges[period] || ranges['monthly'])();
+    },
+
     setupFilters() {
-        document.getElementById('dateFrom').addEventListener('change', (e) => {
-            this.filters.dateFrom = e.target.value;
+        // Period selector
+        document.getElementById('periodSelect').addEventListener('change', (e) => {
+            this.filters.period = e.target.value;
+            this.updatePeriodLabel();
             this.renderAllSections();
         });
-        document.getElementById('dateTo').addEventListener('change', (e) => {
-            this.filters.dateTo = e.target.value;
-            this.renderAllSections();
-        });
+
         document.getElementById('regionFilter').addEventListener('change', (e) => {
             this.filters.region = e.target.value;
             this.renderAllSections();
@@ -137,7 +212,6 @@ const FullReports = {
         const expPub = document.getElementById('exportTogglePub');
         const expEnc = document.getElementById('exportToggleEnc');
         if (expPub && expEnc) {
-            // Sync export toggles with current filter date mode
             const syncExportToggle = () => {
                 const mode = this.filters.dateMode;
                 if (mode === 'published') {
@@ -154,19 +228,16 @@ const FullReports = {
             };
             
             const expActivate = (mode) => {
-                // Update the main filter's dateMode when export toggle is clicked
                 this.filters.dateMode = mode;
                 syncExportToggle();
             };
             
             expPub.addEventListener('click', () => expActivate('published'));
             expEnc.addEventListener('click', () => expActivate('encoded'));
-            
-            // Store sync function for use when opening modal
             this._syncExportToggle = syncExportToggle;
         }
 
-        // Export button opens modal
+        // Export button
         const exportBtn = document.getElementById('btnExportReport');
         if (exportBtn) {
             exportBtn.addEventListener('click', function(e) {
@@ -175,16 +246,47 @@ const FullReports = {
             });
         }
 
+        // Export period selector change
+        const expPeriod = document.getElementById('exportPeriodSelect');
+        if (expPeriod) {
+            expPeriod.addEventListener('change', () => {
+                if (typeof FullReports !== 'undefined') {
+                    FullReports.updateExportPeriodRange();
+                }
+            });
+        }
+
         // Escape key closes export modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const modal = document.getElementById('exportModal');
-                // Check via visibility since that's how the modal is shown/hidden
                 if (modal && modal.style.visibility === 'visible') {
                     closeExportModal();
                 }
             }
         });
+
+        // Initial period label
+        this.updatePeriodLabel();
+    },
+
+    updatePeriodLabel() {
+        const range = this.getPeriodDateRange(this.filters.period);
+        const el = document.getElementById('periodRangeLabel');
+        if (el) {
+            const periodNames = {
+                daily: 'Daily', weekly: 'Weekly', 'semi-monthly': 'Semi-Monthly',
+                monthly: 'Monthly', quarterly: 'Quarterly', yearly: 'Yearly'
+            };
+            el.innerHTML = `<span style="color:var(--primary);font-weight:700;">${periodNames[this.filters.period] || 'Monthly'}</span><br><span style="font-size:0.7rem;">${range.label}</span>`;
+        }
+    },
+
+    updateExportPeriodRange() {
+        const period = document.getElementById('exportPeriodSelect').value;
+        const range = this.getPeriodDateRange(period);
+        const el = document.getElementById('exportPeriodRangeText');
+        if (el) el.textContent = range.label;
     },
 
     async loadAllData() {
@@ -202,6 +304,7 @@ const FullReports = {
             this.data.users = Array.isArray(usersData) ? usersData : (usersData.users || []);
 
             this.populateFilters();
+            this.updatePeriodLabel();
         } catch (error) {
             console.error('[FULL REPORTS] Load error:', error);
             if (typeof Toast !== 'undefined' && Toast.error) {
@@ -223,14 +326,10 @@ const FullReports = {
     },
 
     // ── Parses a date string to midnight PHT (as epoch ms) ──
-    // Handles date-only "2026-06-17" and datetime "2024-01-15 14:30:00"
     phDateMs(dateStr) {
         if (!dateStr) return null;
-        // If it contains a space, it's a MySQL datetime like "2024-01-15 14:30:00"
-        // Extract just the date part
         const d = dateStr.includes(' ') ? dateStr.split(' ')[0] : dateStr;
         const parsed = Date.parse(d + 'T00:00:00+08:00');
-        // Return null for invalid dates instead of NaN
         return isNaN(parsed) ? null : parsed;
     },
 
@@ -240,21 +339,19 @@ const FullReports = {
         if (this.filters.status) filtered = filtered.filter(p => p.status === this.filters.status);
         if (this.filters.source) filtered = filtered.filter(p => p.source === this.filters.source);
 
-        // Date range filter using calendar inputs
-        const df = this.filters.dateFrom;
-        const dt = this.filters.dateTo;
-        if (df || dt) {
-            const fromMs = df ? this.phDateMs(df) : -Infinity;
-            const toMs   = dt ? this.phDateMs(dt) + 86400000 : Infinity; // end of day
-            const mode = this.filters.dateMode; // 'published' or 'encoded'
-            filtered = filtered.filter(p => {
-                const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
-                const pdMs = this.phDateMs(dStr);
-                // Skip if date is null (invalid)
-                if (pdMs === null) return false;
-                return pdMs >= fromMs && pdMs < toMs;
-            });
-        }
+        // Apply period-based date range filter
+        const range = this.getPeriodDateRange(this.filters.period);
+        const fromMs = this.phDateMs(range.from);
+        const toMs   = this.phDateMs(range.to) + 86400000; // end of day
+        const mode = this.filters.dateMode;
+        
+        filtered = filtered.filter(p => {
+            const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
+            const pdMs = this.phDateMs(dStr);
+            if (pdMs === null) return false;
+            return pdMs >= fromMs && pdMs < toMs;
+        });
+        
         return filtered;
     },
 
@@ -306,11 +403,9 @@ const FullReports = {
             }
         });
 
-        // Region table with sortable headers
         let regionData = Object.entries(byRegion).map(([region, d]) => ({ region, count: d.count, value: d.value, avg: d.count > 0 ? d.value/d.count : 0 }));
         regionData = this.sortData(regionData, this.sortState.regionTable.col, this.sortState.regionTable.dir);
 
-        // Status table with sortable headers
         let statusData = Object.entries(byStatus).map(([status, count]) => ({ status, count, pct: projects.length > 0 ? (count/projects.length*100) : 0 }));
         statusData = this.sortData(statusData, this.sortState.statusTable.col, this.sortState.statusTable.dir);
 
@@ -406,7 +501,7 @@ const FullReports = {
         const projects = this.getFilteredProjects();
         const trackingCounts = { 'Not Started':0, 'In Progress':0, 'Complete':0 };
         projects.forEach(p => { const s = p.sales_tracking_status||'Not Started'; trackingCounts[s] = (trackingCounts[s]||0)+1; });
-        const total = projects.length || 1; // Avoid division by zero
+        const total = projects.length || 1;
         document.getElementById('salesPerformance').innerHTML = `
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-label">Not Started</div><div class="stat-value">${trackingCounts['Not Started'].toLocaleString()}</div><div class="stat-sublabel">${(trackingCounts['Not Started']/total*100).toFixed(1)}%</div></div>
@@ -565,11 +660,10 @@ const FullReports = {
         });
     },
 
-    // ── Helper: convert array of arrays to worksheet with column widths ──
+    // ── Helper: convert array of arrays to worksheet ──
     _makeSheet(data, headers) {
         const wsData = [headers, ...data];
         const ws = XLSX.utils.aoa_to_sheet(wsData);
-        // Auto-fit column widths (approximate)
         const colWidths = headers.map((h, i) => {
             const maxLen = Math.max(
                 h ? h.toString().length : 10,
@@ -583,42 +677,16 @@ const FullReports = {
 
     // ── Export Report (Multiple Excel Sheets) ──
     exportReport() {
-        const df = document.getElementById('exportDateFrom').value;
-        const dt = document.getElementById('exportDateTo').value;
         const errEl = document.getElementById('exportDateError');
-
-        if (!df || !dt) {
-            errEl.textContent = 'Please select both Date From and Date To.';
-            errEl.style.display = 'block';
-            return;
-        }
-        if (df > dt) {
-            errEl.textContent = 'Date From cannot be after Date To.';
-            errEl.style.display = 'block';
-            return;
-        }
-
+        
+        const expPeriodSelect = document.getElementById('exportPeriodSelect');
+        const exportPeriod = expPeriodSelect ? expPeriodSelect.value : 'monthly';
+        const range = this.getPeriodDateRange(exportPeriod);
+        
         const expPub = document.getElementById('exportTogglePub');
         const mode = expPub && expPub.style.background === 'var(--primary)' ? 'published' : 'encoded';
-        
-        const fromMs = this.phDateMs(df);
-        const toMs   = this.phDateMs(dt) + 86400000;
-        
-        let foundProjects = false;
-        for (let d = fromMs; d < toMs; d += 86400000) {
-            const dayProjects = this.data.projects.filter(p => {
-                const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
-                const pMs = this.phDateMs(dStr);
-                return pMs !== null && pMs >= d && pMs < d + 86400000;
-            });
-            if (dayProjects.length > 0) { foundProjects = true; break; }
-        }
-        if (!foundProjects) {
-            errEl.textContent = `No data found for ${df}. Please select a date range with data.`;
-            errEl.style.display = 'block';
-            return;
-        }
 
+        // Get selected sections
         const checkboxes = document.querySelectorAll('.export-section:checked');
         if (checkboxes.length === 0) {
             errEl.textContent = 'Please select at least one section to export.';
@@ -627,20 +695,28 @@ const FullReports = {
         }
         errEl.style.display = 'none';
 
-        const origFilters = { dateFrom: this.filters.dateFrom, dateTo: this.filters.dateTo, dateMode: this.filters.dateMode, region: this.filters.region, status: this.filters.status, source: this.filters.source };
-        this.filters.dateFrom = df;
-        this.filters.dateTo = dt;
+        // Prepare filtered data
+        const origFilters = { period: this.filters.period, dateMode: this.filters.dateMode, region: this.filters.region, status: this.filters.status, source: this.filters.source };
+        this.filters.period = exportPeriod;
         this.filters.dateMode = mode;
         const projects = this.getFilteredProjects();
 
-        // ── Create new workbook ──
+        if (projects.length === 0) {
+            errEl.textContent = 'No data found for this period. Please select a period with data.';
+            errEl.style.display = 'block';
+            return;
+        }
+
+        // ── Create workbook ──
         const wb = XLSX.utils.book_new();
 
-        // ── SHEET 1: Summary / Cover ──
+        // ── SHEET 1: Summary ──
+        const periodNames = { daily: 'Daily', weekly: 'Weekly', 'semi-monthly': 'Semi-Monthly', monthly: 'Monthly', quarterly: 'Quarterly', yearly: 'Yearly' };
         const summaryData = [
             ['TDT POWERSTEEL CORPORATION'],
             ['Full Report Export'],
-            [`Date Range: ${df} to ${dt} (${mode === 'published' ? 'Published' : 'Encoded'})`],
+            [`Period: ${periodNames[exportPeriod] || 'Monthly'} (${range.label})`],
+            [`Date Basis: ${mode === 'published' ? 'Published Date' : 'Encoded Date'}`],
             [`Generated: ${new Date().toLocaleDateString('en-PH', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}`],
             [`Total Projects: ${projects.length}`],
             [],
@@ -654,7 +730,7 @@ const FullReports = {
         wsCover['!cols'] = [{ wch: 40 }, { wch: 20 }];
         XLSX.utils.book_append_sheet(wb, wsCover, 'Summary');
 
-        // ── Build sheets per selected section ──
+        // ── Build sheets per section ──
         checkboxes.forEach(cb => {
             const section = cb.value;
             switch (section) {
@@ -664,7 +740,6 @@ const FullReports = {
                     const uniqueContractors = new Set(projects.map(p => p.contractor_name).filter(Boolean));
                     const statusCounts = {};
                     projects.forEach(p => { const s = p.status || 'Unknown'; statusCounts[s] = (statusCounts[s]||0)+1; });
-
                     const data = [
                         ['Total Projects', projects.length],
                         ['Total Contractors', uniqueContractors.size],
@@ -686,22 +761,12 @@ const FullReports = {
                         const s = p.status || 'Unknown';
                         byStatus[s] = (byStatus[s]||0)+1;
                     });
-
-                    // Build combined Projects sheet: Region table + Status table stacked
-                    const regionRows = Object.entries(byRegion)
-                        .sort((a,b) => b[1].value - a[1].value)
-                        .map(([r,d], i) => [i+1, r, d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
-                    
-                    const statusRows = Object.entries(byStatus)
-                        .sort((a,b) => b[1] - a[1])
-                        .map(([s,c]) => [s, c, projects.length > 0 ? (c/projects.length*100).toFixed(2)+'%' : '0.00%']);
-
-                    // Stack: Region table header + rows + blank + Status header + Status rows
+                    const regionRows = Object.entries(byRegion).sort((a,b) => b[1].value - a[1].value).map(([r,d], i) => [i+1, r, d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
+                    const statusRows = Object.entries(byStatus).sort((a,b) => b[1] - a[1]).map(([s,c]) => [s, c, projects.length > 0 ? (c/projects.length*100).toFixed(2)+'%' : '0.00%']);
                     const allData = [
                         ['PROJECTS BY REGION', '', '', ''],
                         ['#', 'Region', 'Count', 'Total Value', 'Avg Value'],
-                        ...regionRows,
-                        [],
+                        ...regionRows, [],
                         ['PROJECTS BY STATUS', '', ''],
                         ['Status', 'Count', 'Percentage'],
                         ...statusRows
@@ -721,9 +786,7 @@ const FullReports = {
                         if (p.source) byCont[n].sources.add(p.source);
                         const r = p.project_region||p.region; if (r) byCont[n].regions.add(r);
                     });
-                    const data = Object.entries(byCont)
-                        .sort((a,b) => b[1].value - a[1].value)
-                        .map(([n,d], i) => [i+1, n, Array.from(d.sources).join(', '), Array.from(d.regions).join(', '), d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
+                    const data = Object.entries(byCont).sort((a,b) => b[1].value - a[1].value).map(([n,d], i) => [i+1, n, Array.from(d.sources).join(', '), Array.from(d.regions).join(', '), d.count, this.formatExportNumber(d.value), d.count > 0 ? this.formatExportNumber(d.value/d.count) : '0.00']);
                     const ws = this._makeSheet(data, ['#', 'Contractor', 'Sources', 'Regions', 'Projects', 'Total Value', 'Avg Value']);
                     XLSX.utils.book_append_sheet(wb, ws, 'Contractors');
                     break;
@@ -744,10 +807,7 @@ const FullReports = {
                         byProv[prov].count++;
                         byProv[prov].value += parseFloat(p.project_value)||0;
                     });
-                    const data = Object.entries(byProv)
-                        .sort((a,b) => b[1].count - a[1].count)
-                        .slice(0, 20)
-                        .map(([p,d], i) => [i+1, p, d.count, this.formatExportNumber(d.value)]);
+                    const data = Object.entries(byProv).sort((a,b) => b[1].count - a[1].count).slice(0, 20).map(([p,d], i) => [i+1, p, d.count, this.formatExportNumber(d.value)]);
                     const ws = this._makeSheet(data, ['#', 'Province', 'Count', 'Total Value']);
                     XLSX.utils.book_append_sheet(wb, ws, 'Geographic');
                     break;
@@ -779,9 +839,7 @@ const FullReports = {
                         if (p.is_illegitimate||p.illegitimate) byEnc[name].illegitimate++;
                         else byEnc[name].legitimate++;
                     });
-                    const data = Object.entries(byEnc)
-                        .sort((a,b) => b[1].total - a[1].total)
-                        .map(([n,s], i) => [i+1, n, s.total, s.legitimate, s.illegitimate, projects.length > 0 ? (s.total/projects.length*100).toFixed(2)+'%' : '0.00%']);
+                    const data = Object.entries(byEnc).sort((a,b) => b[1].total - a[1].total).map(([n,s], i) => [i+1, n, s.total, s.legitimate, s.illegitimate, projects.length > 0 ? (s.total/projects.length*100).toFixed(2)+'%' : '0.00%']);
                     const ws = this._makeSheet(data, ['#', 'Encoder', 'Total', 'Legitimate', 'Illegitimate', 'Share']);
                     XLSX.utils.book_append_sheet(wb, ws, 'Encoding');
                     break;
@@ -789,16 +847,15 @@ const FullReports = {
             }
         });
 
-        // ── Write XLSX file and download ──
+        // ── Write file and download ──
         const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array', bookSST: false });
         const blob = new Blob([wbout], { type: 'application/octet-stream' });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
-        link.download = `TDT_Report_${df}_to_${dt}.xlsx`;
+        link.download = `TDT_Report_${exportPeriod}_${range.from}_to_${range.to}.xlsx`;
         link.click();
         URL.revokeObjectURL(link.href);
 
-        // Restore original filters
         Object.assign(this.filters, origFilters);
         closeExportModal();
         
@@ -807,7 +864,6 @@ const FullReports = {
         }
     },
 
-    // ── Export-friendly number formatter (no K/M/B abbreviations, full number) ──
     formatExportNumber(num) {
         if (num === null || num === undefined || isNaN(num)) return '0.00';
         return Number(num).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });

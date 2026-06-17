@@ -89,7 +89,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             border-radius: 12px;
             border: 1px solid var(--border-color);
             flex-wrap: wrap;
-            align-items: center;
+            align-items: flex-end;
         }
 
         .filter-group {
@@ -114,7 +114,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             padding: 0.6rem 1rem;
             color: var(--text-primary);
             font-size: 0.9rem;
-            min-width: 180px;
+            min-width: 160px;
             cursor: pointer;
         }
 
@@ -123,6 +123,12 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+        }
+
+        .period-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            padding: 0.2rem 0.5rem;
         }
 
         .btn-export {
@@ -365,12 +371,19 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     <!-- Filter Bar -->
     <div class="filter-bar">
         <div class="filter-group">
-            <label>Date From</label>
-            <input type="date" id="dateFrom">
+            <label>Period</label>
+            <select id="periodSelect">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="semi-monthly">Semi-Monthly</option>
+                <option value="monthly" selected>Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+            </select>
         </div>
         <div class="filter-group">
-            <label>Date To</label>
-            <input type="date" id="dateTo">
+            <label>&nbsp;</label>
+            <div class="period-label" id="periodRangeLabel">Loading period...</div>
         </div>
         <div class="filter-group" style="min-width:auto;">
             <label>Date Basis</label>
@@ -519,21 +532,25 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             <button onclick="closeExportModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
         </div>
         <div style="margin-bottom:1.25rem;">
+            <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Period</label>
+            <select id="exportPeriodSelect" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="semi-monthly">Semi-Monthly</option>
+                <option value="monthly" selected>Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+            </select>
+        </div>
+        <div style="margin-bottom:1.25rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Date Basis</label>
             <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
                 <button id="exportTogglePub" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">Published</button>
                 <button id="exportToggleEnc" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;">Encoded</button>
             </div>
         </div>
-        <div style="display:flex;gap:1rem;margin-bottom:1.25rem;">
-            <div style="flex:1;display:flex;flex-direction:column;gap:0.4rem;">
-                <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">Date From</label>
-                <input type="date" id="exportDateFrom" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
-            </div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:0.4rem;">
-                <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);">Date To</label>
-                <input type="date" id="exportDateTo" style="background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
-            </div>
+        <div id="exportPeriodRange" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:6px;">
+            Period: <span id="exportPeriodRangeText" style="color:var(--text-primary);font-weight:600;">Loading...</span>
         </div>
         <div id="exportDateError" style="display:none;font-size:0.75rem;color:#f87171;margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:rgba(239,68,68,0.1);border-radius:6px;"></div>
         <div style="margin-bottom:1.5rem;">
@@ -575,15 +592,18 @@ function openExportModal() {
     modal.style.opacity = '1';
     document.body.style.overflow = 'hidden';
     
-    // Auto-populate export dates from filter bar
-    const filterFrom = document.getElementById('dateFrom').value;
-    const filterTo = document.getElementById('dateTo').value;
-    if (filterFrom) document.getElementById('exportDateFrom').value = filterFrom;
-    if (filterTo) document.getElementById('exportDateTo').value = filterTo;
+    // Sync export period with filter bar period
+    const filterPeriod = document.getElementById('periodSelect').value;
+    document.getElementById('exportPeriodSelect').value = filterPeriod;
     
     // Sync the date mode toggle with current filter mode
     if (typeof FullReports !== 'undefined' && FullReports._syncExportToggle) {
         FullReports._syncExportToggle();
+    }
+    
+    // Update period range display
+    if (typeof FullReports !== 'undefined') {
+        FullReports.updateExportPeriodRange();
     }
     
     // Clear any previous error
