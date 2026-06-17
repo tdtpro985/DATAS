@@ -364,6 +364,13 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             <label>Date To</label>
             <input type="date" id="dateTo">
         </div>
+        <div class="filter-group" style="min-width:auto;">
+            <label>Date Basis</label>
+            <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
+                <button id="dateTogglePublished" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.15s;">Published</button>
+                <button id="dateToggleEncoded" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;transition:background 0.15s,color 0.15s;">Encoded</button>
+            </div>
+        </div>
         <div class="filter-group">
             <label>Region</label>
             <select id="regionFilter">

@@ -6,6 +6,7 @@ const FullReports = {
     filters: {
         dateFrom: '',
         dateTo: '',
+        dateMode: 'published', // 'published' or 'encoded'
         region: '',
         status: '',
         source: ''
@@ -104,6 +105,33 @@ const FullReports = {
             this.filters.source = e.target.value;
             this.renderAllSections();
         });
+
+        // Date mode toggle (Published / Encoded)
+        const pubBtn = document.getElementById('dateTogglePublished');
+        const encBtn = document.getElementById('dateToggleEncoded');
+        if (pubBtn && encBtn) {
+            const activate = (mode) => {
+                if (mode === 'published') {
+                    pubBtn.style.background = 'var(--primary)';
+                    pubBtn.style.color = '#fff';
+                    pubBtn.style.fontWeight = '700';
+                    encBtn.style.background = 'transparent';
+                    encBtn.style.color = 'var(--text-secondary)';
+                    encBtn.style.fontWeight = '600';
+                } else {
+                    encBtn.style.background = 'var(--primary)';
+                    encBtn.style.color = '#fff';
+                    encBtn.style.fontWeight = '700';
+                    pubBtn.style.background = 'transparent';
+                    pubBtn.style.color = 'var(--text-secondary)';
+                    pubBtn.style.fontWeight = '600';
+                }
+                this.filters.dateMode = mode;
+                this.renderAllSections();
+            };
+            pubBtn.addEventListener('click', () => activate('published'));
+            encBtn.addEventListener('click', () => activate('encoded'));
+        }
     },
 
     async loadAllData() {
@@ -140,10 +168,13 @@ const FullReports = {
     },
 
     // ── Parses a date string to midnight PHT (as epoch ms) ──
-    // Dates like "2026-06-17" are treated as PHT midnight
+    // Handles date-only "2026-06-17" and datetime "2024-01-15 14:30:00"
     phDateMs(dateStr) {
         if (!dateStr) return null;
-        return Date.parse(dateStr + 'T00:00:00+08:00');
+        // If it contains a space, it's a MySQL datetime like "2024-01-15 14:30:00"
+        // Extract just the date part
+        const d = dateStr.includes(' ') ? dateStr.split(' ')[0] : dateStr;
+        return Date.parse(d + 'T00:00:00+08:00');
     },
 
     getFilteredProjects() {
@@ -158,8 +189,10 @@ const FullReports = {
         if (df || dt) {
             const fromMs = df ? this.phDateMs(df) : -Infinity;
             const toMs   = dt ? this.phDateMs(dt) + 86400000 : Infinity; // end of day
+            const mode = this.filters.dateMode; // 'published' or 'encoded'
             filtered = filtered.filter(p => {
-                const pdMs = this.phDateMs(p.publication_date);
+                const dStr = mode === 'published' ? p.publication_date : (p.created_at || p.publication_date);
+                const pdMs = this.phDateMs(dStr);
                 return pdMs !== null && pdMs >= fromMs && pdMs < toMs;
             });
         }
