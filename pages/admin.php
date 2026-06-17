@@ -80,42 +80,42 @@ if ($role !== 'admin' && $role !== 'superadmin') {
 
                 <!-- KPI Cards -->
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;">
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;" title="User Management">
                         <div class="ap-stat-icon">👑</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Superadmin</div>
                             <div class="ap-stat-value" id="dash-superadmin-count">—</div>
                         </div>
                     </div>
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;" title="User Management">
                         <div class="ap-stat-icon">👨‍💼</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Admin (RSM)</div>
                             <div class="ap-stat-value" id="dash-admin-count">—</div>
                         </div>
                     </div>
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('sales-reps')" style="cursor:pointer;" title="Sales Representatives">
                         <div class="ap-stat-icon">👤</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Sales Reps</div>
                             <div class="ap-stat-value" id="dash-salesrep-count">—</div>
                         </div>
                     </div>
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('users')" style="cursor:pointer;" title="User Management">
                         <div class="ap-stat-icon">⌨️</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Encoders</div>
                             <div class="ap-stat-value" id="dash-encoder-count">—</div>
                         </div>
                     </div>
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('projects')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('project-leads')" style="cursor:pointer;" title="Project Leads">
                         <div class="ap-stat-icon">📋</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Non-Priority Projects</div>
                             <div class="ap-stat-value" id="dash-total-projects">—</div>
                         </div>
                     </div>
-                    <div class="ap-stat-card clickable-card" onclick="navigateTo('priority-projects')" style="cursor:pointer;">
+                    <div class="ap-stat-card clickable-card" onclick="navigateTo('project-leads')" style="cursor:pointer;" title="Project Leads">
                         <div class="ap-stat-icon">🔴</div>
                         <div class="ap-stat-content">
                             <div class="ap-stat-label">Priority Projects</div>
