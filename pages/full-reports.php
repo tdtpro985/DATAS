@@ -368,6 +368,18 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         <p>Comprehensive statistical analysis and detailed reporting</p>
     </div>
 
+    <!-- Quick Navigation -->
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1.5rem;padding:1rem;background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;align-items:center;">
+        <span style="font-size:0.75rem;color:var(--text-secondary);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-right:0.5rem;">Jump to:</span>
+        <button onclick="FullReports.scrollToSection('executiveSummarySec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">📈 Executive</button>
+        <button onclick="FullReports.scrollToSection('projectAnalyticsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">📊 Projects</button>
+        <button onclick="FullReports.scrollToSection('contractorAnalyticsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🏢 Contractors</button>
+        <button onclick="FullReports.scrollToSection('salesPerformanceSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">💼 Sales</button>
+        <button onclick="FullReports.scrollToSection('geographicAnalysisSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🗺️ Geographic</button>
+        <button onclick="FullReports.scrollToSection('materialRequirementsSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">🔩 Materials</button>
+        <button onclick="FullReports.scrollToSection('encodingPerformanceSec')" style="padding:0.4rem 0.8rem;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2);border-radius:6px;color:var(--primary);font-size:0.75rem;font-weight:600;cursor:pointer;transition:all 0.2s;" onmouseover="this.style.background='rgba(249,115,22,0.2)'" onmouseout="this.style.background='rgba(249,115,22,0.1)'">⌨️ Encoding</button>
+    </div>
+
     <!-- Filter Bar -->
     <div class="filter-bar">
         <div class="filter-group">
@@ -421,8 +433,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Executive Summary -->
-    <div class="report-section">
-        <div class="section-header">
+    <div class="report-section" id="executiveSummarySec">
+        <div class="section-header" style="cursor:pointer;" onclick="FullReports.scrollToSection('projectAnalyticsSec')" title="Click to go to Project Analytics">
             <span class="section-icon">📈</span>
             <h2>Executive Summary</h2>
         </div>
@@ -435,8 +447,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Project Analytics -->
-    <div class="report-section">
-        <div class="section-header">
+    <div class="report-section" id="projectAnalyticsSec">
+        <div class="section-header" style="cursor:pointer;" onclick="FullReports.scrollToSection('contractorAnalyticsSec')" title="Click to go to Contractor Analytics">
             <span class="section-icon">📊</span>
             <h2>Project Analytics</h2>
         </div>
@@ -449,7 +461,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Contractor Analytics -->
-    <div class="report-section">
+    <div class="report-section" id="contractorAnalyticsSec">
         <div class="section-header">
             <span class="section-icon">🏢</span>
             <h2>Contractor Analytics</h2>
@@ -463,7 +475,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Sales Performance -->
-    <div class="report-section">
+    <div class="report-section" id="salesPerformanceSec">
         <div class="section-header">
             <span class="section-icon">💼</span>
             <h2>Sales Performance</h2>
@@ -477,7 +489,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Geographic Analysis -->
-    <div class="report-section">
+    <div class="report-section" id="geographicAnalysisSec">
         <div class="section-header">
             <span class="section-icon">🗺️</span>
             <h2>Geographic Distribution</h2>
@@ -491,7 +503,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Material Requirements -->
-    <div class="report-section">
+    <div class="report-section" id="materialRequirementsSec">
         <div class="section-header">
             <span class="section-icon">🔩</span>
             <h2>Material Requirements</h2>
@@ -505,7 +517,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 
     <!-- Encoding Performance -->
-    <div class="report-section">
+    <div class="report-section" id="encodingPerformanceSec">
         <div class="section-header">
             <span class="section-icon">⌨️</span>
             <h2>Encoding Performance</h2>

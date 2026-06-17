@@ -380,36 +380,94 @@ const FullReports = {
         const uniqueContractors = new Set(projects.map(p => p.contractor_name).filter(Boolean));
         const statusCounts = {};
         projects.forEach(p => { const s = p.status || 'Unknown'; statusCounts[s] = (statusCounts[s]||0)+1; });
+        
+        // Calculate data for each section
+        // Project Analytics - By Region
+        const byRegion = {};
+        projects.forEach(p => {
+            const region = p.project_region || p.region || 'Unknown';
+            if (!byRegion[region]) byRegion[region] = { count:0, value:0 };
+            byRegion[region].count++;
+            byRegion[region].value += parseFloat(p.project_value)||0;
+        });
+        const topRegion = Object.entries(byRegion).sort((a,b) => b[1].count - a[1].count)[0];
+        const topRegionName = topRegion ? topRegion[0] : 'N/A';
+        const topRegionCount = topRegion ? topRegion[1].count : 0;
+        
+        // Contractor Analytics - Top Contractor
+        const byContractor = {};
+        projects.forEach(p => {
+            const name = p.contractor_name || 'Unknown';
+            if (!byContractor[name]) byContractor[name] = { count:0, value:0 };
+            byContractor[name].count++;
+            byContractor[name].value += parseFloat(p.project_value)||0;
+        });
+        const topContractor = Object.entries(byContractor).sort((a,b) => b[1].value - a[1].value)[0];
+        const topContractorName = topContractor ? topContractor[0] : 'N/A';
+        const topContractorValue = topContractor ? topContractor[1].value : 0;
+        
+        // Sales Performance - By Sales Rep
+        const bySalesRep = {};
+        projects.forEach(p => {
+            const sr = p.sales_rep || 'Unassigned';
+            if (!bySalesRep[sr]) bySalesRep[sr] = { count:0, value:0 };
+            bySalesRep[sr].count++;
+            bySalesRep[sr].value += parseFloat(p.project_value)||0;
+        });
+        const topSalesRep = Object.entries(bySalesRep).filter(([name]) => name !== 'Unassigned').sort((a,b) => b[1].value - a[1].value)[0];
+        const topSalesRepName = topSalesRep ? topSalesRep[0] : 'N/A';
+        const topSalesRepValue = topSalesRep ? topSalesRep[1].value : 0;
+        
+        // Geographic Distribution - Total Regions
+        const uniqueRegions = Object.keys(byRegion).filter(r => r !== 'Unknown').length;
+        
+        // Material Requirements - Total Tonnage
+        let totalTonnage = 0;
+        projects.forEach(p => {
+            ['straight', 'deformed', 'purlins', 'decking', 'others'].forEach(mat => {
+                totalTonnage += parseFloat(p[mat + '_tons']) || 0;
+            });
+        });
+        
+        // Encoding Performance - Total encoders & avg projects per encoder
+        const byEncoder = {};
+        projects.forEach(p => {
+            const enc = p.encoded_by || 'Unknown';
+            byEncoder[enc] = (byEncoder[enc]||0)+1;
+        });
+        const totalEncoders = Object.keys(byEncoder).filter(e => e !== 'Unknown').length;
+        const avgProjectsPerEncoder = totalEncoders > 0 ? projects.length / totalEncoders : 0;
+        
         document.getElementById('executiveSummary').innerHTML = `
-            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">📋 Total Projects</div>
-                <div class="stat-value">${projects.length.toLocaleString()}</div>
-                <div class="stat-sublabel">Click to view Project Analytics →</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalyticsSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">📊 Project Analytics</div>
+                <div class="stat-value">${projects.length.toLocaleString()} Projects</div>
+                <div class="stat-sublabel">Top Region: ${this.escapeHtml(topRegionName)} (${topRegionCount}) →</div>
             </div>
-            <div class="stat-card" onclick="FullReports.scrollToSection('contractorAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">🏢 Total Contractors</div>
-                <div class="stat-value">${uniqueContractors.size.toLocaleString()}</div>
-                <div class="stat-sublabel">Click to view Contractor Analytics →</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('contractorAnalyticsSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🏢 Contractor Analytics</div>
+                <div class="stat-value">${uniqueContractors.size.toLocaleString()} Contractors</div>
+                <div class="stat-sublabel">Top: ${this.escapeHtml(topContractorName.substring(0,20))}${topContractorName.length > 20 ? '...' : ''} →</div>
             </div>
-            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">💰 Pipeline Value</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('salesPerformanceSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">💼 Sales Performance</div>
                 <div class="stat-value">₱${this.formatNumber(totalValue)}</div>
-                <div class="stat-sublabel">Click to view Project Analytics →</div>
+                <div class="stat-sublabel">Top SR: ${this.escapeHtml(topSalesRepName.substring(0,15))}${topSalesRepName.length > 15 ? '...' : ''} →</div>
             </div>
-            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">📊 Average Project Value</div>
-                <div class="stat-value">₱${this.formatNumber(avgValue)}</div>
-                <div class="stat-sublabel">Click to view Project Analytics →</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('geographicAnalysisSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🗺️ Geographic Distribution</div>
+                <div class="stat-value">${uniqueRegions} Regions</div>
+                <div class="stat-sublabel">Avg Value: ₱${this.formatNumber(avgValue)} →</div>
             </div>
-            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">🚨 Priority Projects</div>
-                <div class="stat-value">${(statusCounts.Priority||0).toLocaleString()}</div>
-                <div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Priority||0)/projects.length*100).toFixed(1) : '0.0'}% · Click for details →</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('materialRequirementsSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">🔩 Material Requirements</div>
+                <div class="stat-value">${this.formatNumber(totalTonnage)} Tons</div>
+                <div class="stat-sublabel">Across ${projects.length.toLocaleString()} projects →</div>
             </div>
-            <div class="stat-card" onclick="FullReports.scrollToSection('projectAnalytics')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
-                <div class="stat-label">🏆 Awarded Projects</div>
-                <div class="stat-value">${(statusCounts.Awarded||0).toLocaleString()}</div>
-                <div class="stat-sublabel">${projects.length > 0 ? ((statusCounts.Awarded||0)/projects.length*100).toFixed(1) : '0.0'}% · Click for details →</div>
+            <div class="stat-card" onclick="FullReports.scrollToSection('encodingPerformanceSec')" style="cursor:pointer;transition:transform 0.2s,box-shadow 0.2s,border-color 0.2s;" onmouseover="this.style.borderColor='var(--primary)';this.style.transform='translateY(-4px)'" onmouseout="this.style.borderColor='';this.style.transform=''">
+                <div class="stat-label">⌨️ Encoding Performance</div>
+                <div class="stat-value">${totalEncoders} Encoders</div>
+                <div class="stat-sublabel">Avg: ${avgProjectsPerEncoder.toFixed(1)} projects/encoder →</div>
             </div>`;
     },
 
