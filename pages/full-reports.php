@@ -393,7 +393,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
                 <option value="">All Sources</option>
             </select>
         </div>
-        <button class="btn-export" onclick="openExportModal()">
+        <button class="btn-export" id="btnExportReport" type="button" onclick="alert('EXPORT CLICKED!'); document.getElementById('exportModal').style.display='flex'; document.body.style.overflow='hidden';">
             <span>📥</span>
             <span>Export Report</span>
         </button>

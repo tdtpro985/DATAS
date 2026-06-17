@@ -154,6 +154,20 @@ const FullReports = {
             expEnc.addEventListener('click', () => expActivate('encoded'));
         }
 
+        // Export button opens modal - use capture phase
+        const exportBtn = document.getElementById('btnExportReport');
+        console.log('[EXPORT] Button found:', !!exportBtn);
+        if (exportBtn) {
+            exportBtn.addEventListener('click', function(e) {
+                console.log('[EXPORT] Button clicked via JS!');
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                openExportModal();
+                console.log('[EXPORT] openExportModal called');
+            }, true); // use capture phase
+        }
+
         // Escape key closes export modal
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
