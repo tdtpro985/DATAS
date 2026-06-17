@@ -669,3 +669,25 @@ function formatShortCurrency(value) {
         return '₱' + value.toFixed(2);
     }
 }
+
+// Navigation function for dashboard cards
+function navigateTo(page) {
+    // Hide all pages
+    document.querySelectorAll('.admin-page').forEach(p => p.classList.remove('active'));
+    
+    // Show selected page
+    const targetPage = document.getElementById('page-' + page);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+    
+    // Update sidebar active state
+    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+    const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+    if (navItem) {
+        navItem.classList.add('active');
+    }
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
