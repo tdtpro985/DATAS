@@ -498,9 +498,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     </div>
 </div>
 
-<script>
-const BASE = '<?= $base ?>';
-</script>
+<script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/full-reports.js?v=1"></script>
@@ -563,7 +561,6 @@ const BASE = '<?= $base ?>';
     </div>
 </div>
 <script>
-const BASE = '<?= $base ?>';
 function openExportModal() { document.getElementById('exportModal').style.display = 'flex'; document.body.style.overflow = 'hidden'; }
 function closeExportModal() { document.getElementById('exportModal').style.display = 'none'; document.body.style.overflow = ''; }
 </script>
