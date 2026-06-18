@@ -51,6 +51,24 @@ if (!$user || !verifyPassword($password, $user['password_hash'])) {
     jsonError('Invalid email or password', 401);
 }
 
+// ── Maintenance mode check ────────────────────────────────
+// Only superadmin can log in during maintenance
+$maintenanceFile = __DIR__ . '/../../maintenance.flag';
+if (file_exists($maintenanceFile)) {
+    $isSuper = ($user['role'] ?? '') === 'superadmin';
+    if (!$isSuper) {
+        // Check DB too
+        try {
+            $stmt = $db->query("SELECT setting_value FROM system_settings WHERE setting_key = 'maintenance_mode' LIMIT 1");
+            if ($stmt->fetchColumn() === '1') {
+                jsonError('System is currently under maintenance. Please check back later.', 503);
+            }
+        } catch (Exception $e) {
+            jsonError('System is currently under maintenance. Please check back later.', 503);
+        }
+    }
+}
+
 // ── 2FA check ─────────────────────────────────────────────
 // For now: 2FA is optional. If totp_secret is set, require TOTP.
 // We store a pending_user_id in session to complete after TOTP.

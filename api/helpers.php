@@ -26,6 +26,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+// ── Check maintenance mode on every request ──────────────
+checkMaintenanceMode();
+
 // ── Check session timeout ──────────────────────────────
 if (!defined('SESSION_IDLE_TIMEOUT')) {
     require_once __DIR__ . '/../config.php';
@@ -81,6 +84,59 @@ header('Access-Control-Allow-Headers: Content-Type, X-CSRF-Token');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit;
+}
+
+/**
+ * Check if maintenance mode is active.
+ * If active and user is NOT superadmin, destroy session and show maintenance message.
+ */
+function checkMaintenanceMode(): void {
+    // Skip check for login page
+    $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (strpos($scriptName, 'api/auth/login.php') !== false || 
+        strpos($scriptName, 'setup-settings.php') !== false) {
+        return;
+    }
+
+    // Check maintenance flag file (fastest check)
+    $maintenanceFile = __DIR__ . '/../maintenance.flag';
+    $maintenanceActive = file_exists($maintenanceFile);
+    
+    if (!$maintenanceActive) {
+        return; // Maintenance mode is off
+    }
+    
+    // Also check database for double verification
+    try {
+        require_once __DIR__ . '/db.php';
+        $pdo = getDB();
+        $stmt = $pdo->query("SELECT setting_value FROM system_settings WHERE setting_key = 'maintenance_mode' LIMIT 1");
+        $dbValue = $stmt->fetchColumn();
+        if ($dbValue !== '1') {
+            // DB says maintenance is off, remove stale flag file
+            @unlink($maintenanceFile);
+            return;
+        }
+    } catch (Exception $e) {
+        // If DB check fails, rely on flag file
+    }
+    
+    // Maintenance IS active — check user role
+    if (!empty($_SESSION['user']) && $_SESSION['user']['role'] !== 'superadmin') {
+        // Non-superadmin: destroy session completely
+        $_SESSION = [];
+        session_destroy();
+        
+        // For API requests, just stop
+        if (strpos($scriptName, '/api/') !== false) {
+            http_response_code(503);
+            echo json_encode([
+                'detail' => 'System is under maintenance. Please check back later.',
+                'maintenance' => true
+            ]);
+            exit;
+        }
+    }
 }
 
 /**
@@ -528,4 +584,3 @@ function validateFileMimeType(string $tmpPath, array $allowedMimes): bool {
 function validateAgainstWhitelist(string $value, array $whitelist): bool {
     return in_array($value, $whitelist, true);
 }
-

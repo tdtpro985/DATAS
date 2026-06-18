@@ -135,6 +135,7 @@ const Auth = {
    Intercepts all fetch() calls across the app.
    On 401: redirects to /login (unless already on a login page).
    On 403: logs a warning (access denied — no redirect).
+   On 503 with maintenance flag: auto-logout non-superadmins.
    ============================================================ */
 (function installFetchInterceptor() {
     const originalFetch = window.fetch;
@@ -162,6 +163,25 @@ const Auth = {
             }
         } else if (response.status === 403) {
             console.warn('[AUTH] 403 Forbidden — access denied to:', args[0]);
+        } else if (response.status === 503) {
+            // Check if it's maintenance mode
+            try {
+                const data = await response.clone().json();
+                if (data && data.maintenance) {
+                    const user = Auth.getUser();
+                    if (user && user.role !== 'superadmin') {
+                        console.warn('[AUTH] 503 Maintenance mode detected — logging out non-superadmin.');
+                        localStorage.removeItem('user');
+                        const b = (typeof BASE !== 'undefined') ? BASE : '';
+                        window.location.href = b + '/login';
+                        // Don't return the original response — throw to prevent further processing
+                        throw new Error('Maintenance mode');
+                    }
+                }
+            } catch (e) {
+                if (e.message === 'Maintenance mode') throw e;
+                // Not a maintenance response, allow normal flow
+            }
         }
 
         return response;
