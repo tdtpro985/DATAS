@@ -44,7 +44,7 @@ if (DEBUG_MODE) error_log("path (after /api/v1 strip): " . $path);
 $path   = trim($path, '/');
 if (DEBUG_MODE) {
     error_log("path (final): " . $path);
-    error_log("method: " . $_SERVER['REQUEST_METHOD'] ?? 'GET');
+    error_log("method: " . ($_SERVER['REQUEST_METHOD'] ?? 'GET'));
     error_log("===================");
 }
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';

@@ -87,10 +87,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             ]);
         } else {
             // Convert Yes/No strings to boolean for frontend, preserve null for unset fields
-            $tracking['contacted'] = $tracking['contacted'] === 'Yes' ? true : ($tracking['contacted'] === 'No' ? false : null);
-            $tracking['quoted'] = $tracking['quoted'] === 'Yes' ? true : ($tracking['quoted'] === 'No' ? false : null);
-            $tracking['sales_qualified'] = $tracking['sales_qualified'] === 'Yes' ? true : ($tracking['sales_qualified'] === 'No' ? false : null);
-            $tracking['to_win'] = $tracking['to_win'] === 'Yes' ? true : ($tracking['to_win'] === 'No' ? false : null);
+            // Case-insensitive comparison to handle any value formatting
+            $tracking['contacted'] = strcasecmp($tracking['contacted'] ?? '', 'Yes') === 0 ? true : (strcasecmp($tracking['contacted'] ?? '', 'No') === 0 ? false : null);
+            $tracking['quoted'] = strcasecmp($tracking['quoted'] ?? '', 'Yes') === 0 ? true : (strcasecmp($tracking['quoted'] ?? '', 'No') === 0 ? false : null);
+            $tracking['sales_qualified'] = strcasecmp($tracking['sales_qualified'] ?? '', 'Yes') === 0 ? true : (strcasecmp($tracking['sales_qualified'] ?? '', 'No') === 0 ? false : null);
+            $tracking['to_win'] = strcasecmp($tracking['to_win'] ?? '', 'Yes') === 0 ? true : (strcasecmp($tracking['to_win'] ?? '', 'No') === 0 ? false : null);
             
             if (defined('DEBUG_MODE') && DEBUG_MODE) {
                 error_log('[SALES_TRACKING] Returning data for project: ' . $projectId);

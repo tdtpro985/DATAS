@@ -1424,8 +1424,8 @@ const ProjectsPage = {
             errors.push('Please enter Remarks');
         }
         
-        // Only validate if may nagsimula na sa progressive fields
-        if (!contacted && !quoted && !sql && !toWin && !wlAmount && !remarks) {
+        // Check if at least one field has been filled (exclude remarks which is checked separately)
+        if (!contacted && !quoted && !sql && !toWin && (!wlAmount || wlAmount === '' || parseFloat(wlAmount) <= 0)) {
             this.showModernNotification('Please fill at least one field to save', 'warning');
             return;
         }
@@ -2066,7 +2066,3 @@ function showConfirmationModal(title, message, type = 'warning') {
     });
 }
 
-// Initialize Projects Page
-document.addEventListener('DOMContentLoaded', () => {
-    ProjectsPage.init();
-});

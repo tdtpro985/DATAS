@@ -77,14 +77,15 @@ try {
         'accomplishment_rate'
     ];
     
+    $allowedStatuses = ['Prospect', 'Qualified', 'Proposal', 'Negotiation', 'Won', 'Lost', 'Priority', 'Unqualified', 'For Execution', 'For Bidding', 'Awarded', 'Contacted', 'Sales Qualified', 'Not Sales Qualified', 'Quoted'];
+    
     $updates = [];
     $params = [];
     
     foreach ($input as $key => $value) {
         if ($key === 'id') continue;
         if ($key === 'status') {
-            $allowed = ['Awarded', 'For Bidding', 'For Execution'];
-            if (!in_array($value, $allowed, true)) continue;
+            if (!in_array($value, $allowedStatuses, true)) continue;
         }
         if (in_array($key, $allowedFields, true)) {
             $updates[] = "`$key` = ?";

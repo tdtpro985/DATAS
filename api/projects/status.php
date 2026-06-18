@@ -25,7 +25,7 @@ if ($projectId <= 0) {
 $body = getJsonBody();
 $newStatus = trim($body['status'] ?? '');
 
-$validStatuses = ['Prospect','Contacted','Sales Qualified','Not Sales Qualified','Quoted','Awarded','For Execution','Priority'];
+$validStatuses = ['Prospect', 'Qualified', 'Proposal', 'Negotiation', 'Won', 'Lost', 'Priority', 'Unqualified', 'For Execution', 'For Bidding', 'Awarded', 'Contacted', 'Sales Qualified', 'Not Sales Qualified', 'Quoted'];
 if (!in_array($newStatus, $validStatuses, true)) {
     jsonError('Invalid status value', 422);
 }

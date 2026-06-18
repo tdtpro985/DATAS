@@ -9,15 +9,6 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/helpers.php';
 require_once __DIR__ . '/activity-logger.php';
 
-// Allow CORS for export requests
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    exit(0);
-}
-
 $user = requireAuth();
 
 if (!in_array($_SERVER['REQUEST_METHOD'], ['GET', 'POST'])) {
@@ -139,7 +130,7 @@ function exportNonPriorityProjects($db) {
             city_province,
             created_at
         FROM projects 
-        WHERE status != 'PRIORITY'
+        WHERE LOWER(TRIM(status)) != 'priority'
         ORDER BY created_at DESC
         LIMIT 1000
     ");
@@ -163,7 +154,7 @@ function exportPriorityProjects($db) {
             accomplishment_rate,
             created_at
         FROM projects 
-        WHERE status = 'PRIORITY'
+        WHERE LOWER(TRIM(status)) = 'priority'
         ORDER BY created_at DESC
     ");
     $stmt->execute();
