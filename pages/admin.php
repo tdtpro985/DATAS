@@ -600,8 +600,22 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <textarea id="setting-maintenance_message" class="setting-input" rows="3" placeholder="System is currently under maintenance..."></textarea>
                             </div>
 
+                            <!-- Export Section -->
+                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
+                                <label class="setting-label">📤 Database Export</label>
+                                <p class="setting-desc">Download database backups as .SQL files</p>
+                                <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
+                                    <button class="btn-primary" onclick="exportDatabase()">
+                                        💾 Export Full Database
+                                    </button>
+                                    <button class="btn-secondary" onclick="exportData()">
+                                        📄 Export Data Only
+                                    </button>
+                                </div>
+                            </div>
+
                             <!-- Action Buttons -->
-                            <div class="setting-item" style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1);">
+                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
                                 <label class="setting-label">System Tools</label>
                                 <p class="setting-desc">Perform system maintenance and diagnostic operations</p>
                                 <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">

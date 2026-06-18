@@ -872,6 +872,9 @@ async function clearSystemCache() {
 
 // ── Check database health ───────────────────────────────────
 async function checkDatabaseHealth() {
+    const btn = event ? event.target : null;
+    if (btn) { btn.disabled = true; btn.textContent = 'Checking...'; }
+    
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
             method: 'POST',
@@ -884,15 +887,33 @@ async function checkDatabaseHealth() {
         
         const data = await res.json();
         
-        if (data.tables && data.tables.length > 0) {
-            let msg = data.tables.map(t => `${t.name}: ${t.rows} rows, ${(t.size / 1024 / 1024).toFixed(2)} MB`).join('\n');
-            Toast.info('Database OK - ' + data.tables.length + ' tables');
-            console.log('DB Tables:', data.tables);
+        // Show a modal with the results
+        let message = `Database Health Check Results:\n`;
+        message += `• Total Tables: ${data.total_tables}\n`;
+        message += `• Total Rows: ${data.total_rows.toLocaleString()}\n`;
+        message += `• Total Size: ${data.total_size_mb} MB\n\n`;
+        message += `Table Details:\n`;
+        data.tables.forEach(t => {
+            message += `  - ${t.name}: ${t.rows.toLocaleString()} rows, ${t.size_mb} MB (${t.engine})\n`;
+        });
+        
+        // Show in a modal instead of alert
+        if (window.Confirm && Confirm.show) {
+            await Confirm.show({
+                title: 'Database Health Check',
+                message: message,
+                confirmText: 'OK',
+                type: 'info'
+            });
         } else {
-            Toast.info('Database check complete');
+            alert(message);
         }
+        
+        Toast.success('Database check complete - ' + data.total_tables + ' tables found');
     } catch (err) {
         Toast.error('Error checking database: ' + err.message);
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '🔍 Check Database'; }
     }
 }
 
@@ -915,6 +936,72 @@ async function optimizeDatabaseTables() {
     } catch (err) {
         Toast.error('Error optimizing tables: ' + err.message);
     }
+}
+
+// ── Export full database as .sql ────────────────────────────
+async function exportDatabase() {
+    if (!confirm('Download full database backup (.sql)? This may take a moment for large databases.')) return;
+    
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'export-database' })
+        });
+        
+        if (!res.ok) throw new Error('Failed to export database');
+        
+        const data = await res.json();
+        downloadSqlFile(data.content, data.filename);
+        Toast.success('Database exported: ' + data.filename);
+    } catch (err) {
+        Toast.error('Error exporting database: ' + err.message);
+    }
+}
+
+// ── Export data only as .sql ────────────────────────────────
+async function exportData() {
+    if (!confirm('Download data export (.sql)? This exports main data tables only.')) return;
+    
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'export-data' })
+        });
+        
+        if (!res.ok) throw new Error('Failed to export data');
+        
+        const data = await res.json();
+        downloadSqlFile(data.content, data.filename);
+        Toast.success('Data exported: ' + data.filename);
+    } catch (err) {
+        Toast.error('Error exporting data: ' + err.message);
+    }
+}
+
+// ── Helper: Download base64 content as .sql file ───────────
+function downloadSqlFile(base64Content, filename) {
+    // Decode base64
+    const byteString = atob(base64Content);
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+        ia[i] = byteString.charCodeAt(i);
+    }
+    const blob = new Blob([ab], { type: 'application/sql' });
+    
+    // Create download link
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
 }
 
 // ── Refresh system info ─────────────────────────────────────
