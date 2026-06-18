@@ -49,151 +49,6 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
 
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            background: var(--bg-dark);
-            background-image:
-                radial-gradient(circle at 15% 25%, rgba(255,152,0,0.05) 0%, transparent 50%),
-                radial-gradient(circle at 85% 75%, rgba(139,92,246,0.05) 0%, transparent 50%);
-            min-height: 100vh;
-            font-family: var(--font);
-            color: var(--text-primary);
-            overflow-x: hidden;
-        }
-        
-        html { overflow-x: hidden; }
-
-        /* ── Page Layout ── */
-        .projects-container {
-            width: 100%;
-            max-width: 100%;
-            padding: 1.5rem;
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-
-        .projects-card {
-            background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 1rem;
-            overflow: hidden;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        /* ── Sales Tracking Form ── */
-        .sales-tracking-section {
-            background: rgba(255, 128, 0, 0.05);
-            border: 1px solid rgba(255, 128, 0, 0.2);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            margin-top: 1.5rem;
-        }
-        
-        .sales-tracking-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--orange-500);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .sales-form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(4, auto);
-            grid-auto-flow: column;
-            gap: 1rem;
-        }
-        
-        .sales-form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-        
-        .sales-form-group.full-width { grid-column: 1 / -1; }
-        
-        .sales-form-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .sales-form-input,
-        .sales-form-select,
-        .sales-form-textarea {
-            padding: 0.75rem;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.5rem;
-            color: var(--text-primary);
-            font-size: 0.9rem;
-            font-family: var(--font);
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        
-        .sales-form-input:focus,
-        .sales-form-select:focus,
-        .sales-form-textarea:focus {
-            border-color: var(--orange-500);
-            box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.15);
-        }
-        
-        .sales-form-select {
-            cursor: pointer;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B0BEC5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            padding-right: 2.5rem;
-        }
-        
-        .sales-form-textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-        
-        .btn-save {
-            background: var(--orange-500);
-            color: #000;
-        }
-        
-        .btn-save:hover {
-            background: var(--orange-600);
-            box-shadow: 0 4px 16px rgba(255, 128, 0, 0.4);
-        }
-        
-        .btn-delete {
-            border-color: rgba(239, 68, 68, 0.3);
-            background: rgba(239, 68, 68, 0.1);
-            color: #fca5a5;
-        }
-        
-        .btn-delete:hover {
-            background: rgba(239, 68, 68, 0.2);
-            border-color: rgba(239, 68, 68, 0.5);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-        
-        .btn-warning {
-            border-color: rgba(251, 191, 36, 0.3);
-            background: rgba(251, 191, 36, 0.1);
-            color: #fbbf24;
-        }
-        
-        .btn-warning:hover {
-            background: rgba(251, 191, 36, 0.2);
-            border-color: rgba(251, 191, 36, 0.5);
-            box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
-        }
-
         /* ── Role-based Visibility ── */
         [data-role-access]:not([data-role-access*="superadmin"]):not([data-role-access*="admin"]):not([data-role-access*="sales_rep"]) {
             display: none !important;
@@ -266,17 +121,9 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
             transform: translateX(4px);
             color: var(--orange-500);
         }
-
-        @media (max-width: 1200px) {
-            .projects-container { padding: 1.5rem 1rem; }
-        }
-
-        @media (max-width: 768px) {
-            .projects-container { padding: 1rem 0.75rem; }
-            .table-wrapper { max-height: calc(100vh - 400px); }
-        }
     </style>
     
+    <link rel="stylesheet" href="<?= $base ?>/static/css/projects.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
@@ -424,7 +271,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         <?php endif; ?>
         
         <div class="table-wrapper">
-            <table class="projects-table">
+            <table class="data-table">
                 <thead>
                     <tr>
                         <th>Contractor</th>
