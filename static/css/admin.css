@@ -2427,3 +2427,241 @@ select.form-control {
     position: relative;
     z-index: 1;
 }
+
+/* ══════════════════════════════════════════════════════════
+   SUPERADMIN SETTINGS
+══════════════════════════════════════════════════════════ */
+
+/* Settings Tab Content */
+.settings-tab-content {
+    display: none;
+}
+.settings-tab-content.active {
+    display: block;
+}
+
+/* Settings Section */
+.settings-section {
+    margin-bottom: 2rem;
+}
+
+.settings-section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Settings Grid */
+.settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.25rem;
+}
+
+/* Setting Item */
+.setting-item {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 0.85rem;
+    padding: 1.15rem 1.25rem;
+    transition: all 0.2s ease;
+}
+
+.setting-item:hover {
+    border-color: rgba(255,128,0,0.15);
+    background: rgba(255,255,255,0.03);
+}
+
+.setting-item.info-item {
+    cursor: default;
+}
+
+.setting-item.info-item:hover {
+    border-color: rgba(59,130,246,0.2);
+    background: rgba(59,130,246,0.03);
+}
+
+/* Setting Label */
+.setting-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+}
+
+.setting-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin: 0 0 0.75rem;
+    line-height: 1.4;
+}
+
+/* Setting Input */
+.setting-input {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0.55rem;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+    font-family: var(--font);
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.setting-input:focus {
+    border-color: var(--orange-500);
+    box-shadow: 0 0 0 3px rgba(255,128,0,0.1);
+}
+
+.setting-input:hover {
+    border-color: rgba(255,255,255,0.2);
+}
+
+select.setting-input {
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%2394a3b8' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 12px;
+    padding-right: 2.5rem;
+}
+
+select.setting-input option {
+    background: #1a1d23;
+    color: var(--text-primary);
+}
+
+textarea.setting-input {
+    resize: vertical;
+    min-height: 80px;
+    font-family: inherit;
+}
+
+/* Toggle Switch */
+.setting-toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.setting-toggle-row .setting-desc {
+    margin-bottom: 0;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 26px;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.3s ease;
+    border-radius: 34px;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    transition: all 0.3s ease;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: var(--orange-500);
+    border-color: var(--orange-500);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(22px);
+}
+
+/* Warning toggle (for maintenance mode) */
+.toggle-warning input:checked + .toggle-slider {
+    background: #ef4444;
+    border-color: #ef4444;
+}
+
+/* Info Values */
+.info-value {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--orange-500);
+    padding: 0.3rem 0;
+}
+
+/* Save feedback toast-like animation */
+.settings-saved {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: #10b981;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3);
+    animation: slideInUp 0.3s ease;
+    z-index: 99999;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive settings */
+@media (max-width: 768px) {
+    .settings-grid {
+        grid-template-columns: 1fr;
+    }
+    .setting-toggle-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .toggle-switch {
+        margin-top: 0.5rem;
+    }
+    .settings-saved {
+        left: 1rem;
+        right: 1rem;
+        text-align: center;
+    }
+}

@@ -696,3 +696,292 @@ function navigateTo(page) {
     // Navigate to the actual page
     window.location.href = targetUrl;
 }
+
+/* ============================================================
+   SUPERADMIN SETTINGS
+   ============================================================ */
+
+let settingsCache = null;
+let settingsOriginal = {};
+
+// ── Load settings from API ──────────────────────────────────
+async function loadSettings() {
+    const loadingEl = document.getElementById('settings-loading');
+    const errorEl = document.getElementById('settings-error');
+    
+    if (!loadingEl) return; // Not on settings page
+    
+    try {
+        loadingEl.style.display = 'block';
+        errorEl.style.display = 'none';
+        
+        const res = await fetch(_B + '/api/v1/users/settings', { credentials: 'include' });
+        if (!res.ok) {
+            throw new Error('Failed to load settings (HTTP ' + res.status + ')');
+        }
+        
+        const data = await res.json();
+        settingsCache = data;
+        
+        // Populate form fields
+        populateSettings(data.settings);
+        populateSystemInfo(data.system_info);
+        
+        // Store original values for reset
+        settingsOriginal = JSON.parse(JSON.stringify(data.settings));
+        
+        loadingEl.style.display = 'none';
+    } catch (err) {
+        console.error('Settings load error:', err);
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'block';
+        errorEl.textContent = 'Failed to load settings: ' + err.message;
+    }
+}
+
+// ── Populate settings form fields ───────────────────────────
+function populateSettings(settings) {
+    for (const [key, setting] of Object.entries(settings)) {
+        const inputId = 'setting-' + key;
+        const input = document.getElementById(inputId);
+        if (!input) continue;
+        
+        if (input.type === 'checkbox') {
+            input.checked = setting.value === true || setting.value === '1' || setting.value === 1;
+        } else {
+            input.value = setting.value;
+        }
+    }
+}
+
+// ── Populate system info ────────────────────────────────────
+function populateSystemInfo(info) {
+    if (!info) return;
+    
+    for (const [key, value] of Object.entries(info)) {
+        const elId = 'sysinfo-' + key;
+        const el = document.getElementById(elId);
+        if (!el) continue;
+        
+        if (Array.isArray(value)) {
+            el.textContent = value.join(', ');
+        } else if (typeof value === 'object' && value !== null) {
+            el.textContent = JSON.stringify(value);
+        } else {
+            el.textContent = String(value);
+        }
+    }
+}
+
+// ── Switch settings tabs ────────────────────────────────────
+function switchSettingsTab(tabName) {
+    // Update tab buttons
+    document.querySelectorAll('.admin-tab-btn[data-tab]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === tabName);
+    });
+    
+    // Show corresponding content
+    document.querySelectorAll('.settings-tab-content').forEach(content => {
+        content.classList.toggle('active', content.id === 'settings-tab-' + tabName);
+    });
+}
+
+// ── Save all settings ───────────────────────────────────────
+async function saveAllSettings(btnElement) {
+    const btn = btnElement || (typeof event !== 'undefined' ? event.target : document.querySelector('.btn-primary[onclick="saveAllSettings()"]'));
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
+    
+    try {
+        const settings = collectSettings();
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'PUT',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ settings })
+        });
+        
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || 'Failed to save settings');
+        }
+        
+        const data = await res.json();
+        
+        // Reload settings to get fresh values
+        await loadSettings();
+        
+        Toast.success(data.message || 'Settings saved successfully');
+    } catch (err) {
+        console.error('Save settings error:', err);
+        Toast.error('Failed to save settings: ' + err.message);
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '💾 Save All Settings'; }
+    }
+}
+
+// ── Collect all settings from form ──────────────────────────
+function collectSettings() {
+    const settings = {};
+    
+    document.querySelectorAll('.setting-input, .toggle-switch input[type="checkbox"]').forEach(input => {
+        // Find the setting key from the id
+        const id = input.id || '';
+        if (!id.startsWith('setting-')) return;
+        
+        const key = id.replace('setting-', '');
+        
+        if (input.type === 'checkbox') {
+            settings[key] = input.checked;
+        } else if (input.type === 'number') {
+            settings[key] = parseInt(input.value, 10) || 0;
+        } else {
+            settings[key] = input.value;
+        }
+    });
+    
+    return settings;
+}
+
+// ── Reset all settings to original values ───────────────────
+function resetAllSettings() {
+    if (Object.keys(settingsOriginal).length === 0) return;
+    populateSettings(settingsOriginal);
+    Toast.info('Settings reset to last saved values');
+}
+
+// ── Clear system cache ──────────────────────────────────────
+async function clearSystemCache() {
+    if (!confirm('Are you sure you want to clear the system cache?')) return;
+    
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'clear-cache' })
+        });
+        
+        if (!res.ok) throw new Error('Failed to clear cache');
+        
+        const data = await res.json();
+        Toast.success(data.message || 'Cache cleared successfully');
+    } catch (err) {
+        Toast.error('Error clearing cache: ' + err.message);
+    }
+}
+
+// ── Check database health ───────────────────────────────────
+async function checkDatabaseHealth() {
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'check-db' })
+        });
+        
+        if (!res.ok) throw new Error('Failed to check database');
+        
+        const data = await res.json();
+        
+        if (data.tables && data.tables.length > 0) {
+            let msg = data.tables.map(t => `${t.name}: ${t.rows} rows, ${(t.size / 1024 / 1024).toFixed(2)} MB`).join('\n');
+            Toast.info('Database OK - ' + data.tables.length + ' tables');
+            console.log('DB Tables:', data.tables);
+        } else {
+            Toast.info('Database check complete');
+        }
+    } catch (err) {
+        Toast.error('Error checking database: ' + err.message);
+    }
+}
+
+// ── Optimize database tables ────────────────────────────────
+async function optimizeDatabaseTables() {
+    if (!confirm('Are you sure you want to optimize all database tables? This may take a moment.')) return;
+    
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'optimize-tables' })
+        });
+        
+        if (!res.ok) throw new Error('Failed to optimize tables');
+        
+        const data = await res.json();
+        Toast.success(data.message || 'Tables optimized successfully');
+    } catch (err) {
+        Toast.error('Error optimizing tables: ' + err.message);
+    }
+}
+
+// ── Refresh system info ─────────────────────────────────────
+async function refreshSystemInfo() {
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', { credentials: 'include' });
+        if (!res.ok) throw new Error('Failed to refresh');
+        
+        const data = await res.json();
+        populateSystemInfo(data.system_info);
+        Toast.success('System info refreshed');
+    } catch (err) {
+        Toast.error('Error refreshing system info: ' + err.message);
+    }
+}
+
+// ── Navigate to admin page (switch pages within admin panel) ─
+function navigateToPage(pageName) {
+    // Hide all admin pages
+    document.querySelectorAll('.admin-page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Show the target page
+    const targetPage = document.getElementById('page-' + pageName);
+    if (targetPage) {
+        targetPage.classList.add('active');
+    }
+    
+    // Update page title
+    const pageTitle = document.getElementById('pageTitle');
+    if (pageTitle) {
+        const titles = {
+            'dashboard': 'Dashboard',
+            'users': 'User Management',
+            'projects': 'Non-Priority Projects',
+            'priority-projects': 'Priority Projects',
+            'settings': 'System Settings'
+        };
+        pageTitle.textContent = titles[pageName] || 'Dashboard';
+    }
+    
+    // Load settings data if navigating to settings
+    if (pageName === 'settings') {
+        loadSettings();
+    }
+}
+
+// ── Initialize settings when DOM is ready ───────────────────
+document.addEventListener('DOMContentLoaded', function() {
+    // Check URL hash for direct page navigation
+    const hash = window.location.hash.replace('#', '');
+    if (hash === 'settings') {
+        navigateToPage('settings');
+    }
+    
+    // Load settings if we're on the settings page already
+    const settingsPage = document.getElementById('page-settings');
+    if (settingsPage && settingsPage.classList.contains('active')) {
+        loadSettings();
+    }
+    
+    // Handle Settings nav link click (on admin page)
+    document.querySelectorAll('.settings-nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateToPage('settings');
+        });
+    });
+});

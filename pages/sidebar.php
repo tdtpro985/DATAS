@@ -140,6 +140,9 @@ try {
             <a href="<?= $base ?>/users" class="ap-nav-item">
                 <span class="ap-nav-label">User Management</span>
             </a>
+            <a href="<?= $base ?>/admin" class="ap-nav-item settings-nav-link" data-page="settings">
+                <span class="ap-nav-label">⚙️ Settings</span>
+            </a>
             <?php endif; ?>
             <a href="<?= $base ?>/activity-logs" class="ap-nav-item">
                 <span class="ap-nav-label">Activity Logs</span>
