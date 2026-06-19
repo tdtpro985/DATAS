@@ -4368,8 +4368,10 @@ if ($role === 'encoder') {
                             x: {
                                 ticks: {
                                     color: '#888',
-                                    font: { size: 10 },
-                                    maxRotation: 45
+                                    font: { size: 9 },
+                                    maxRotation: 90,
+                                    minRotation: 45,
+                                    autoSkip: false
                                 },
                                 grid: { color: '#333' }
                             }
@@ -4435,7 +4437,9 @@ if ($role === 'encoder') {
                                 ticks: {
                                     color: '#888',
                                     font: { size: 9 },
-                                    maxRotation: 45
+                                    maxRotation: 90,
+                                    minRotation: 45,
+                                    autoSkip: false
                                 },
                                 grid: { color: '#333' }
                             }
