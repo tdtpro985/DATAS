@@ -48,10 +48,26 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
     <style>
         /* ── Main Container ── */
-        .dashboard {
+        .ap-main {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
             padding: 2rem;
+        }
+
+        .dashboard {
+            width: 100%;
             max-width: 1400px;
             margin: 0 auto;
+        }
+
+        .dashboard > .card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1.25rem;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         /* ── Header Section ── */
@@ -66,10 +82,13 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
         .card-title {
             margin: 0;
-            font-size: 1.75rem;
+            font-size: 1.875rem;
             font-weight: 800;
             color: var(--text-primary);
             letter-spacing: -0.02em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .section-header p {
@@ -81,40 +100,38 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
         /* ── Search Bar ── */
         .toolbar {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
         .search-box {
             position: relative;
-            max-width: 500px;
+            max-width: 100%;
         }
 
         .search-box input {
             width: 100%;
-            padding: 0.875rem 1.125rem 0.875rem 3rem;
+            padding: 1rem 1.25rem 1rem 3.25rem;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 0.75rem;
+            border-radius: 0.875rem;
             color: var(--text-primary);
-            font-size: 0.9rem;
+            font-size: 0.9375rem;
             transition: all 0.3s ease;
         }
 
-        .search-box input:focus {
-            background: rgba(255, 255, 255, 0.06);
-            border-color: rgba(255, 128, 0, 0.4);
-            outline: none;
-            box-shadow: 0 0 0 4px rgba(255, 128, 0, 0.1);
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .search-box::before {
             content: '🔍';
             position: absolute;
-            left: 1.125rem;
+            left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1rem;
-            opacity: 0.5;
+            font-size: 1.125rem;
+            opacity: 0.6;
+            pointer-events: none;
         }
 
         /* ── Branch Card ── */
@@ -207,7 +224,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
         }
 
         .sr-branch-card .stat-value {
-            font-size: 1.375rem;
+            font-size: 1.75rem;
             font-weight: 800;
             color: var(--text-primary);
             line-height: 1;
