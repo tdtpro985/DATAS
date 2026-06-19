@@ -9,12 +9,31 @@ require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
 
 try {
-    $user = requireAuth();
+    $user = requireRole(['superadmin', 'admin', 'sales_rep']);
 } catch (Exception $e) {
     jsonError('Authentication failed: ' . $e->getMessage(), 401);
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
+
+function normalizePlatformTrackingBool($value): ?bool {
+    if ($value === null || $value === '') return null;
+    if ($value === true || $value === 1 || $value === '1') return true;
+    if ($value === false || $value === 0 || $value === '0') return false;
+    if (is_string($value)) {
+        $lower = strtolower(trim($value));
+        if ($lower === 'yes') return true;
+        if ($lower === 'no') return false;
+    }
+    return null;
+}
+
+function formatPlatformTrackingResponse(array $tracking): array {
+    foreach (['contacted', 'quoted', 'sales_qualified', 'to_win'] as $field) {
+        $tracking[$field] = normalizePlatformTrackingBool($tracking[$field] ?? null);
+    }
+    return $tracking;
+}
 
 // GET - Load tracking data
 if ($method === 'GET') {
@@ -37,7 +56,7 @@ if ($method === 'GET') {
         $tracking = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($tracking) {
-            jsonResponse($tracking);
+            jsonResponse(formatPlatformTrackingResponse($tracking));
         } else {
             // Return empty tracking data
             jsonResponse([
@@ -67,10 +86,14 @@ if ($method === 'POST') {
     // Save platform sales tracking
     $platformId = $body['platform_id'] ?? null;
     $salesRepId = isset($body['sales_rep_id']) && $body['sales_rep_id'] !== '' ? (int)$body['sales_rep_id'] : null;
-    $branch = $body['branch'] ?? null;
+    $branch = isset($body['branch']) ? trim((string)$body['branch']) : null;
 
     if (!$platformId) {
         jsonError('platform_id is required', 400);
+    }
+
+    if (!$salesRepId) {
+        $salesRepId = (int)$user['id'];
     }
 
     try {
