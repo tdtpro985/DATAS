@@ -74,12 +74,30 @@ try {
         ];
     }
 
+    // Source distribution
+    $stmt3 = $db->prepare("
+        SELECT source, COUNT(*) AS cnt
+        FROM projects
+        $where
+        GROUP BY source
+        ORDER BY cnt DESC
+    ");
+    $stmt3->execute($params);
+    $sources = $stmt3->fetchAll();
+
+    $sourceDistribution = [];
+    foreach ($sources as $src) {
+        $sourceName = $src['source'] ?: 'Unknown';
+        $sourceDistribution[$sourceName] = (int) $src['cnt'];
+    }
+
     jsonResponse([
         'data' => array_merge([
             'projects_encoded'       => (int)   $totals['projects_encoded'],
             'contractors_identified' => (int)   $totals['contractors_identified'],
             'total_pipeline_value'   => (float) $totals['total_pipeline_value'],
             'pipeline_value'         => (float) $totals['total_pipeline_value'],
+            'source_distribution'    => $sourceDistribution,
         ], $categoryMap),
     ]);
 

@@ -928,6 +928,101 @@ if ($role === 'encoder') {
             background: linear-gradient(90deg, #ff8000, #ffa500, #ff8000);
         }
         
+        /* Regional Combined Section with Toggle */
+        .regional-combined-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 0.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .regional-combined-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff8000, #ffa500, #ff8000);
+        }
+        
+        .section-header-with-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.7rem;
+        }
+        
+        .chart-toggle-buttons {
+            display: flex;
+            gap: 0.3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 0.2rem;
+        }
+        
+        .toggle-btn {
+            background: transparent;
+            border: none;
+            color: #888;
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .toggle-btn:hover {
+            background: rgba(255, 128, 0, 0.1);
+            color: #ff8000;
+        }
+        
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #ff8000, #ffa500);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+        }
+        
+        /* Sources Chart Section */
+        .sources-chart-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 0.8rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 100%;
+        }
+        
+        .sources-chart-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff8000, #ffa500, #ff8000);
+        }
+        
         /* Bar Graph Section */
         .bar-graph-section {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
@@ -3584,19 +3679,26 @@ if ($role === 'encoder') {
 
                 <!-- Right Column -->
                 <div class="right-column">
-                    <!-- Regional Values Bar Chart -->
-                    <div class="bar-graph-section">
-                        <div class="section-title">📊 Regional Project Values</div>
+                    <!-- Combined Regional Card with Toggle -->
+                    <div class="regional-combined-section">
+                        <div class="section-header-with-toggle">
+                            <div class="section-title">📊 Regional Analytics</div>
+                            <div class="chart-toggle-buttons">
+                                <button class="toggle-btn active" data-chart="values">Values</button>
+                                <button class="toggle-btn" data-chart="projects">Projects</button>
+                            </div>
+                        </div>
                         <div class="chart-container">
                             <canvas id="regional-values-chart" width="400" height="200"></canvas>
+                            <canvas id="regional-distribution-chart" width="400" height="200" style="display: none;"></canvas>
                         </div>
                     </div>
 
-                    <!-- Line Chart -->
-                    <div class="pie-graph-section">
-                        <div class="section-title">📈 Regional Projects</div>
+                    <!-- Sources Pie Chart -->
+                    <div class="sources-chart-section">
+                        <div class="section-title">📍 Project Sources</div>
                         <div class="chart-container">
-                            <canvas id="regional-distribution-chart" width="400" height="200"></canvas>
+                            <canvas id="sources-chart" width="400" height="200"></canvas>
                         </div>
                     </div>
                 </div>
@@ -3604,10 +3706,7 @@ if ($role === 'encoder') {
         </div>
     </div>
 
-    <!-- Export Modals -->
-    <!-- First Modal: Report Selection -->
-    <div class="export-modal-overlay" id="exportReportModal" style="display: none;">
-        <div class="export-modal">
+    <!-- Export Modals - REMOVED -->
             <div class="export-modal-header">
                 <h3>📊 Select Reports to Export</h3>
                 <button class="export-modal-close" onclick="ExportModal.closeReportSelection()">×</button>
@@ -4174,6 +4273,9 @@ if ($role === 'encoder') {
                 // Initialize both charts with empty data
                 this.initRegionalValuesChart([]);
                 this.initRegionalDistributionChart([]);
+                this.initSourcesChart({});
+                // Setup toggle functionality
+                this.setupToggle();
             },
 
             async loadRegionalData() {
@@ -4321,6 +4423,110 @@ if ($role === 'encoder') {
                             }
                         }
                     }
+                });
+            },
+
+            async loadSourcesData() {
+                const params = Filters.toUrlParams();
+                const url = `${BASE}/api/v1/kpi?${params.toString()}`;
+                
+                const result = await Utils.fetchWithFallback(url, {
+                    data: { source_distribution: {} }
+                });
+
+                if (result.success && result.data?.data) {
+                    this.initSourcesChart(result.data.data);
+                } else {
+                    this.initSourcesChart({});
+                }
+            },
+
+            initSourcesChart(data) {
+                const ctx = document.getElementById('sources-chart');
+                if (!ctx) return;
+
+                // Destroy existing chart
+                if (AppState.charts.sources) {
+                    AppState.charts.sources.destroy();
+                }
+
+                // Extract source distribution
+                const sourceData = data.source_distribution || {};
+                const sources = Object.keys(sourceData);
+                const values = Object.values(sourceData);
+
+                // If no data, show placeholder
+                if (sources.length === 0 || values.every(v => v === 0)) {
+                    sources.push('No Data');
+                    values.push(1);
+                }
+
+                AppState.charts.sources = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: sources,
+                        datasets: [{
+                            data: values,
+                            backgroundColor: [
+                                '#ff8000', '#ff6000', '#ffa500', '#34d399',
+                                '#60a5fa', '#a78bfa', '#f472b6', '#10b981'
+                            ],
+                            borderColor: '#1a1a1a',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    color: '#888',
+                                    font: { size: 11 },
+                                    padding: 12,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (context) => {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            },
+
+            setupToggle() {
+                const toggleButtons = document.querySelectorAll('.toggle-btn');
+                const valuesChart = document.getElementById('regional-values-chart');
+                const projectsChart = document.getElementById('regional-distribution-chart');
+
+                toggleButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const chartType = btn.getAttribute('data-chart');
+                        
+                        // Update active button
+                        toggleButtons.forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+
+                        // Toggle chart visibility
+                        if (chartType === 'values') {
+                            valuesChart.style.display = 'block';
+                            projectsChart.style.display = 'none';
+                        } else if (chartType === 'projects') {
+                            valuesChart.style.display = 'none';
+                            projectsChart.style.display = 'block';
+                        }
+                    });
                 });
             }
         };
@@ -5651,6 +5857,7 @@ if ($role === 'encoder') {
                         KPI.load(),
                         Contractors.load(),
                         Charts.loadRegionalData(),
+                        Charts.loadSourcesData(),
                         SalesFunnel.load(),
                         TargetProgress.load(),
                         ProjectStatus.load(),
@@ -5672,6 +5879,7 @@ if ($role === 'encoder') {
                         KPI.load(),
                         Contractors.load(),
                         Charts.loadRegionalData(),
+                        Charts.loadSourcesData(),
                         SalesFunnel.load(),
                         TargetProgress.load(),
                         ProjectStatus.load()
