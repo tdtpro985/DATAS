@@ -13,7 +13,7 @@ date_default_timezone_set('Asia/Manila');
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'datas_db');
 define('DB_USER', 'root');
-define('DB_PASS', 'password');// Replace with actual password
+define('DB_PASS', '');// Empty password for XAMPP default
 define('DB_CHARSET', 'utf8mb4');
 
 // Timezone Configuration

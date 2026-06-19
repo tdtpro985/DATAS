@@ -1381,7 +1381,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load platform leads data
     async function loadPlatforms() {
         try {
-            const response = await fetch('<?= $base ?>/api/platforms');
+            const response = await fetch(`${_B}/api/v1/platforms`);
             const data = await response.json();
             
             if (data.success) {

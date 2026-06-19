@@ -621,6 +621,27 @@ INSERT INTO `platform_leads` (`id`, `source`, `company_name`, `contact_person`, 
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `platform_tracking`
+--
+
+CREATE TABLE `platform_tracking` (
+  `id` int(11) NOT NULL,
+  `platform_id` int(11) NOT NULL,
+  `contacted` tinyint(1) DEFAULT NULL,
+  `quoted` tinyint(1) DEFAULT NULL,
+  `sales_qualified` tinyint(1) DEFAULT NULL,
+  `to_win` tinyint(1) DEFAULT NULL,
+  `wa_amount` decimal(18,2) DEFAULT NULL,
+  `remarks` text DEFAULT NULL,
+  `sales_rep_id` int(11) DEFAULT NULL,
+  `branch` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `priority_alerts`
 --
 
@@ -937,6 +958,14 @@ ALTER TABLE `platform_leads`
   ADD KEY `idx_archived_at` (`archived_at`);
 
 --
+-- Indexes for table `platform_tracking`
+--
+ALTER TABLE `platform_tracking`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `platform_id` (`platform_id`),
+  ADD KEY `sales_rep_id` (`sales_rep_id`);
+
+--
 -- Indexes for table `priority_alerts`
 --
 ALTER TABLE `priority_alerts`
@@ -1032,6 +1061,12 @@ ALTER TABLE `platform_leads`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `platform_tracking`
+--
+ALTER TABLE `platform_tracking`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `priority_alerts`
 --
 ALTER TABLE `priority_alerts`
@@ -1082,6 +1117,13 @@ ALTER TABLE `custom_forms`
 --
 ALTER TABLE `priority_alerts`
   ADD CONSTRAINT `priority_alerts_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `platform_tracking`
+--
+ALTER TABLE `platform_tracking`
+  ADD CONSTRAINT `fk_platform_tracking_platform` FOREIGN KEY (`platform_id`) REFERENCES `platform_leads` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_platform_tracking_sales_rep` FOREIGN KEY (`sales_rep_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `projects`
