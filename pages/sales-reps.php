@@ -57,15 +57,15 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             width: 100%;
             max-width: none;
             margin: 0;
-            padding: 2rem 2.5rem;
+            padding: 0;
         }
 
         .dashboard > .card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 1.25rem;
-            padding: 2.5rem;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 2rem 2.5rem;
+            box-shadow: none;
         }
 
         /* ── Header Section ── */
