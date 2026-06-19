@@ -140,8 +140,8 @@ try {
             <a href="<?= $base ?>/users" class="ap-nav-item">
                 <span class="ap-nav-label">User Management</span>
             </a>
-            <a href="<?= $base ?>/admin" class="ap-nav-item settings-nav-link" data-page="settings">
-                <span class="ap-nav-label">⚙️ Settings</span>
+            <a href="<?= $base ?>/admin?page=settings" class="ap-nav-item settings-nav-link">
+                <span class="ap-nav-label">Settings</span>
             </a>
             <?php endif; ?>
             <a href="<?= $base ?>/activity-logs" class="ap-nav-item">
@@ -385,8 +385,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Set active state for regular nav items
     document.querySelectorAll('.ap-nav-item:not(.ap-nav-dropdown-toggle)').forEach(item => {
         const href = item.getAttribute('href');
-        if (href && (href === currentPath || (href === '<?= $base ?>/' && currentPath === '<?= $base ?>/'))) {
-            item.classList.add('active');
+        if (href) {
+            // Special handling for Settings link - only active when page=settings is in URL
+            if (item.classList.contains('settings-nav-link')) {
+                if (currentPath.includes('?page=settings') || currentPath.includes('&page=settings')) {
+                    item.classList.add('active');
+                }
+            } 
+            // Dashboard should not be active when settings page is shown
+            else if (href.endsWith('/admin') || href.endsWith('/admin/')) {
+                if (currentPath === href || (currentPath.startsWith(href) && !currentPath.includes('page=settings'))) {
+                    item.classList.add('active');
+                }
+            }
+            // Regular matching for other links
+            else if (href === currentPath || (href === '<?= $base ?>/' && currentPath === '<?= $base ?>/')) {
+                item.classList.add('active');
+            }
         }
     });
     
@@ -452,10 +467,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Move modals to document.body to escape ap-shell stacking context
-    document.querySelectorAll('.modal-overlay[id], .detail-modal-overlay[id], .credits-modal-overlay[id]').forEach(function(el) {
-        if (el.parentNode !== document.body) document.body.appendChild(el);
-    });
+    // Modals are already properly positioned within ap-shell layout.
+    // The ap-main content area automatically handles margins.
+    // No need to move modals to body - doing so causes CSS cascade issues.
 
     // ── Hamburger / Sidebar toggle (mobile) ──────────────
     const hamburger = document.getElementById('ap-hamburger');
