@@ -565,8 +565,8 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 </div>
 
 <script>const BASE = '<?= $base ?>';</script>
-<script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sales-reps.js?v=3"></script>
+<script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
+<script src="<?= $base ?>/static/js/sales-reps.js?v=4"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.modal-overlay[id]').forEach(function(el) {
