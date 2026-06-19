@@ -194,7 +194,7 @@ function renderSalesRepCard(rep) {
             </div>
             <div class="sr-footer">
                 <button class="btn btn-primary btn-sm" onclick="handleEditClick(this); event.stopPropagation();">Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); promptDelete(${rep.id}, '${escapeHtml(rep.full_name)}')">Delete</button>
+                <button class="btn btn-danger btn-sm" onclick="handleDeleteClick(${rep.id}, this); event.stopPropagation();">Delete</button>
             </div>
         </div>
     `;
@@ -343,6 +343,20 @@ function handleEditClick(buttonElement) {
     const card = buttonElement.closest('.sr-card');
     if (card) {
         handleCardClick(card);
+    }
+}
+
+function handleDeleteClick(repId, buttonElement) {
+    const card = buttonElement.closest('.sr-card');
+    const repData = card?.dataset.repData;
+    if (repData) {
+        try {
+            const rep = JSON.parse(decodeURIComponent(repData));
+            promptDelete(rep.id, rep.full_name);
+        } catch (error) {
+            console.error('Error parsing rep data:', error);
+            promptDelete(repId, 'this sales representative');
+        }
     }
 }
 
