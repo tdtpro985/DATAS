@@ -520,6 +520,7 @@ function updatePageTitle() {
         '/encode/non-priority': { title: 'Encode Non-Priority Project' },
         '/encode/priority': { title: 'Encode Priority Project' },
         '/sales-reps': { title: 'Sales Representatives' },
+        '/users': { title: 'User Management' },
         '/sr-performance': { title: 'SR Performance Report' },
         '/projects-management': { title: 'Project Management' },
         '/my-projects': { title: 'My Projects' }

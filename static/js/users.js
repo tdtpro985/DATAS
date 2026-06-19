@@ -95,9 +95,9 @@ async function loadUsers() {
         console.error('loadUsers error', err);
         usersListEl.innerHTML = `
             <div class="um-empty">
-                <div style="font-size:4rem; margin-bottom:1rem; opacity:0.5;">👥</div>
-                <h3 style="margin:0 0 0.5rem; font-size:1.25rem; font-weight:700; color:var(--text-primary);">Failed to load users</h3>
-                <p style="margin:0; color:var(--text-secondary);">Please refresh the page and try again</p>
+                <div class="um-empty-icon">👥</div>
+                <h3>Failed to load users</h3>
+                <p>Please refresh the page and try again</p>
             </div>
         `;
         if (typeof Toast !== 'undefined') Toast.error('Failed to load users');
@@ -108,9 +108,9 @@ function renderUsers() {
     if (!filteredUsers.length) {
         usersListEl.innerHTML = `
             <div class="um-empty">
-                <div style="font-size:4rem; margin-bottom:1rem; opacity:0.5;">👥</div>
-                <h3 style="margin:0 0 0.5rem; font-size:1.25rem; font-weight:700; color:var(--text-primary);">No Users Found</h3>
-                <p style="margin:0; color:var(--text-secondary);">Try adjusting your search or create a new user</p>
+                <div class="um-empty-icon">👥</div>
+                <h3>No Users Found</h3>
+                <p>Try adjusting your search or create a new user</p>
             </div>
         `;
         return;
