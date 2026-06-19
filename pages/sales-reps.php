@@ -50,13 +50,15 @@ if ($role !== 'superadmin' && $role !== 'admin') {
         .ap-main .dashboard {
             padding: 0 !important;
             background: transparent !important;
+            margin: 0 !important;
         }
 
-        /* Full-width content container */
+        /* Full-width content container - zero padding */
         .sr-container {
             width: 100%;
             padding: 2rem 2.5rem;
             max-width: 100%;
+            margin: 0;
         }
 
         /* Header */
@@ -302,10 +304,9 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
 <div class="ap-shell">
     <div class="ap-main">
-        <div class="dashboard">
-            <div class="sr-container">
-                <!-- Header -->
-                <div class="sr-header">
+        <div class="sr-container">
+            <!-- Header -->
+            <div class="sr-header">
                     <div>
                         <h1 class="sr-title">👤 Sales Representatives</h1>
                         <p class="sr-subtitle">Manage sales representative accounts by branch</p>
@@ -332,7 +333,6 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
                 <!-- Expanded Section -->
                 <div id="expandedSection" style="display:none;"></div>
-            </div>
         </div>
     </div>
 </div>

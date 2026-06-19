@@ -40,6 +40,91 @@ if ($role !== 'superadmin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
 
     <style>
+        /* ── Full-width page layout ── */
+        .ap-main .dashboard {
+            padding: 0 !important;
+            background: transparent !important;
+            margin: 0 !important;
+            display: block !important;
+            height: auto !important;
+            min-height: calc(100vh - 2rem) !important;
+            overflow: visible !important;
+        }
+
+        .um-container {
+            width: 100%;
+            max-width: 100%;
+            padding: 2rem 2.5rem;
+            margin: 0;
+        }
+
+        .um-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .um-title {
+            margin: 0;
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+        }
+
+        .um-subtitle {
+            margin: 0.5rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+        }
+
+        .um-search {
+            position: relative;
+            width: 100%;
+            max-width: 640px;
+            margin-bottom: 2rem;
+        }
+
+        .um-search input {
+            width: 100%;
+            padding: 1rem 1.25rem 1rem 3.25rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.875rem;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            transition: all 0.3s ease;
+        }
+
+        .um-search input:focus {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 128, 0, 0.4);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(255, 128, 0, 0.1);
+        }
+
+        .um-search::before {
+            content: '🔍';
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.125rem;
+            opacity: 0.6;
+        }
+
+        /* Role cards — full-width grid */
+        .um-roles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
         /* ── User Card Styles ── */
         .user-card {
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%);
@@ -306,8 +391,28 @@ if ($role !== 'superadmin') {
 
         .users-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .um-loading,
+        .um-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .um-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--orange-500, #ff8000);
+            border-radius: 50%;
+            animation: umSpin 0.8s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes umSpin {
+            to { transform: rotate(360deg); }
         }
 
         /* ── Password Field ── */
@@ -344,7 +449,31 @@ if ($role !== 'superadmin') {
             margin-top: 0.25rem;
         }
 
+        @media (max-width: 1100px) {
+            .um-roles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
         @media (max-width: 768px) {
+            .um-container {
+                padding: 1.5rem;
+            }
+
+            .um-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .um-title {
+                font-size: 1.5rem;
+            }
+
+            .um-roles-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
             .users-grid {
                 grid-template-columns: 1fr;
             }
@@ -372,14 +501,12 @@ if ($role !== 'superadmin') {
 <div class="ap-shell">
     <div class="ap-main">
         <div class="dashboard">
-            <div class="card animate-fadeInUp">
+            <div class="um-container animate-fadeInUp">
                 <!-- Page Header -->
-                <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1.5rem; gap:1rem; flex-wrap:wrap;">
+                <div class="um-header">
                     <div>
-                        <h2 class="card-title" style="margin:0; font-size:1.375rem;">👥 User Management</h2>
-                        <p style="margin:0.35rem 0 0; color:var(--text-secondary); font-size:0.9rem;">
-                            Create, edit, and delete system users
-                        </p>
+                        <h1 class="um-title">👥 User Management</h1>
+                        <p class="um-subtitle">Create, edit, and delete system users</p>
                     </div>
                     <button class="btn btn-primary" id="addUserBtn">
                         <span>+</span> Create User
@@ -387,16 +514,14 @@ if ($role !== 'superadmin') {
                 </div>
 
                 <!-- Search -->
-                <div class="toolbar" style="margin-bottom:1.5rem;">
-                    <div class="search-box">
-                        <input type="text" id="userSearch" placeholder="Search by name or email...">
-                    </div>
+                <div class="um-search">
+                    <input type="text" id="userSearch" placeholder="Search by name or email...">
                 </div>
 
                 <!-- User Groups Grid -->
                 <div id="usersList">
-                    <div class="loading-state">
-                        <div class="loading-spinner"></div>
+                    <div class="um-loading">
+                        <div class="um-spinner"></div>
                         <p>Loading users...</p>
                     </div>
                 </div>
@@ -484,7 +609,7 @@ if ($role !== 'superadmin') {
 
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/users.js?v=2"></script>
+<script src="<?= $base ?>/static/js/users.js?v=3"></script>
 </body>
 </html>
 </write_to_file>

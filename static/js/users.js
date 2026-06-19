@@ -68,7 +68,12 @@ function setupListeners() {
 }
 
 async function loadUsers() {
-    usersListEl.innerHTML = '<div style="text-align:center; padding:2rem;">Loading...</div>';
+    usersListEl.innerHTML = `
+        <div class="um-loading">
+            <div class="um-spinner"></div>
+            <p>Loading users...</p>
+        </div>
+    `;
     try {
         const res = await fetch(USERS_API, { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to load users');
@@ -88,7 +93,13 @@ async function loadUsers() {
         renderUsers();
     } catch (err) {
         console.error('loadUsers error', err);
-        usersListEl.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--text-secondary);">Failed to load users</div>';
+        usersListEl.innerHTML = `
+            <div class="um-empty">
+                <div style="font-size:4rem; margin-bottom:1rem; opacity:0.5;">👥</div>
+                <h3 style="margin:0 0 0.5rem; font-size:1.25rem; font-weight:700; color:var(--text-primary);">Failed to load users</h3>
+                <p style="margin:0; color:var(--text-secondary);">Please refresh the page and try again</p>
+            </div>
+        `;
         if (typeof Toast !== 'undefined') Toast.error('Failed to load users');
     }
 }
@@ -96,10 +107,10 @@ async function loadUsers() {
 function renderUsers() {
     if (!filteredUsers.length) {
         usersListEl.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">👥</div>
-                <h3>No Users Found</h3>
-                <p>Try adjusting your search or create a new user</p>
+            <div class="um-empty">
+                <div style="font-size:4rem; margin-bottom:1rem; opacity:0.5;">👥</div>
+                <h3 style="margin:0 0 0.5rem; font-size:1.25rem; font-weight:700; color:var(--text-primary);">No Users Found</h3>
+                <p style="margin:0; color:var(--text-secondary);">Try adjusting your search or create a new user</p>
             </div>
         `;
         return;
@@ -119,7 +130,7 @@ function renderUsers() {
     const sortedRoles = Object.keys(usersByRole)
         .sort((a, b) => ROLE_ORDER.indexOf(a) - ROLE_ORDER.indexOf(b));
 
-    let html = '<div class="users-grid">';
+    let html = '<div class="um-roles-grid">';
 
     sortedRoles.forEach(role => {
         const group = usersByRole[role];
