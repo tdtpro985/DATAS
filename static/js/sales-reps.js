@@ -76,8 +76,8 @@ function renderSalesReps() {
     
     if (filteredReps.length === 0) {
         branchesContainer.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-state-icon">👤</div>
+            <div class="sr-empty">
+                <div class="sr-empty-icon">👤</div>
                 <h3>No Sales Representatives Found</h3>
                 <p>Try adjusting your search or add a new sales rep</p>
             </div>
@@ -93,7 +93,7 @@ function renderSalesReps() {
     });
     
     const sortedBranches = Object.keys(repsByBranch).sort();
-    let html = '<div class="sr-branches-grid">';
+    let html = '<div class="sr-grid">';
     
     sortedBranches.forEach(branch => {
         const reps = repsByBranch[branch];
@@ -101,28 +101,28 @@ function renderSalesReps() {
         const safeBranch = escapeHtml(branch).replace(/'/g, "\\'");
         
         html += `
-            <div class="sr-branch-card" onclick="toggleBranchExpand('${safeBranch}')">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-                    <h3>${escapeHtml(branch)}</h3>
-                    <span class="branch-badge">${repCount} ${repCount === 1 ? 'REP' : 'REPS'}</span>
+            <div class="sr-branch" onclick="toggleBranchExpand('${safeBranch}')">
+                <div class="sr-branch-name">
+                    <span>${escapeHtml(branch)}</span>
+                    <span class="sr-badge">${repCount} ${repCount === 1 ? 'REP' : 'REPS'}</span>
                 </div>
-                <div class="stats-row">
-                    <div class="stat-item">
-                        <div class="stat-label">Sales Reps</div>
-                        <div class="stat-value">${repCount}</div>
+                <div class="sr-stats">
+                    <div class="sr-stat">
+                        <div class="sr-stat-label">Sales Reps</div>
+                        <div class="sr-stat-value">${repCount}</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Assigned</div>
-                        <div class="stat-value">0</div>
+                    <div class="sr-stat">
+                        <div class="sr-stat-label">Assigned</div>
+                        <div class="sr-stat-value">0</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-label">Processed</div>
-                        <div class="stat-value">0</div>
+                    <div class="sr-stat">
+                        <div class="sr-stat-label">Processed</div>
+                        <div class="sr-stat-value">0</div>
                     </div>
                 </div>
-                <div class="expand-hint">
+                <div class="sr-hint">
                     <span>Click to view sales reps</span>
-                    <span class="arrow">▼</span>
+                    <span class="sr-arrow">▼</span>
                 </div>
             </div>
         `;
