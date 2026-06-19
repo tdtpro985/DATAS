@@ -29,7 +29,7 @@ if ($method === 'GET') {
         
         // Get tracking data
         $stmt = $db->prepare('
-            SELECT contacted, quoted, sales_qualified, to_win, wa_amount, notes
+            SELECT contacted, quoted, sales_qualified, to_win, wa_amount, remarks, sales_rep_id, branch
             FROM platform_tracking 
             WHERE platform_id = :platform_id
         ');
@@ -46,7 +46,9 @@ if ($method === 'GET') {
                 'sales_qualified' => null,
                 'to_win' => null,
                 'wa_amount' => '0.00',
-                'notes' => null
+                'remarks' => null,
+                'sales_rep_id' => null,
+                'branch' => null
             ]);
         }
         
@@ -62,7 +64,10 @@ if ($method === 'POST') {
         jsonError('Request body is required', 400);
     }
 
+    // Save platform sales tracking
     $platformId = $body['platform_id'] ?? null;
+    $salesRepId = isset($body['sales_rep_id']) && $body['sales_rep_id'] !== '' ? (int)$body['sales_rep_id'] : null;
+    $branch = $body['branch'] ?? null;
 
     if (!$platformId) {
         jsonError('platform_id is required', 400);
@@ -84,7 +89,7 @@ if ($method === 'POST') {
         $salesQualified = $body['sales_qualified'] ?? null;
         $toWin = $body['to_win'] ?? null;
         $waAmount = isset($body['wa_amount']) && $body['wa_amount'] !== '' ? (float)$body['wa_amount'] : null;
-        $notes = $body['notes'] ?? null;
+        $remarks = $body['remarks'] ?? $body['notes'] ?? null;
         
         // Check if tracking record exists
         $stmt = $db->prepare('SELECT id FROM platform_tracking WHERE platform_id = :platform_id');
@@ -100,7 +105,9 @@ if ($method === 'POST') {
                     sales_qualified = :sales_qualified,
                     to_win = :to_win,
                     wa_amount = :wa_amount,
-                    notes = :notes,
+                    remarks = :remarks,
+                    sales_rep_id = :sales_rep_id,
+                    branch = :branch,
                     updated_at = NOW()
                 WHERE platform_id = :platform_id
             ");
@@ -108,9 +115,9 @@ if ($method === 'POST') {
             // Insert new record
             $stmt = $db->prepare("
                 INSERT INTO platform_tracking 
-                (platform_id, contacted, quoted, sales_qualified, to_win, wa_amount, notes, created_at, updated_at)
+                (platform_id, contacted, quoted, sales_qualified, to_win, wa_amount, remarks, sales_rep_id, branch, created_at, updated_at)
                 VALUES 
-                (:platform_id, :contacted, :quoted, :sales_qualified, :to_win, :wa_amount, :notes, NOW(), NOW())
+                (:platform_id, :contacted, :quoted, :sales_qualified, :to_win, :wa_amount, :remarks, :sales_rep_id, :branch, NOW(), NOW())
             ");
         }
         
@@ -121,7 +128,9 @@ if ($method === 'POST') {
             ':sales_qualified' => $salesQualified,
             ':to_win' => $toWin,
             ':wa_amount' => $waAmount,
-            ':notes' => $notes
+            ':remarks' => $remarks,
+            ':sales_rep_id' => $salesRepId,
+            ':branch' => $branch
         ]);
         
         jsonResponse([

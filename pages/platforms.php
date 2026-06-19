@@ -885,71 +885,72 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
                     </div>
                 </div>
             </div>
-            
             <!-- Sales Tracking Section -->
-            <div class="detail-section" style="background: rgba(255, 128, 0, 0.05); border: 1px solid rgba(255, 128, 0, 0.2); border-radius: 0.75rem; padding: 1.5rem; margin-top: 1.5rem;">
-                <div class="detail-section-title" style="color: var(--orange-500); margin-bottom: 1rem;">📊 SALES TRACKING</div>
-                
-                <!-- Sales Representative Section -->
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Sales Representative *</label>
-                    <select id="salesRepSelect" required style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem;">
-                        <option value="">Select SR...</option>
-                    </select>
-                </div>
-                
-                <div style="margin-bottom: 1.5rem;">
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Branch *</label>
-                    <input type="text" id="branchField" readonly placeholder="Auto-filled from SR" style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem; cursor: not-allowed;">
-                </div>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Contacted</div>
+            <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
+                <div class="sales-tracking-title">📊 Sales Tracking</div>
+                <div class="sales-form-grid">
+                    <!-- Sales Representative dropdown for admin/superadmin -->
+                    <div class="sales-form-group" data-role-access="superadmin,admin">
+                        <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
+                        <select class="sales-form-select" id="platform-sales-rep-select">
+                            <option value="">Select SR...</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Branch input (auto-filled) for admin/superadmin -->
+                    <div class="sales-form-group" data-role-access="superadmin,admin">
+                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
+                        <input type="text" class="sales-form-input" id="platform-branch-input" readonly placeholder="Auto-filled from SR">
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Contacted</label>
                         <div class="yes-no-buttons">
-                            <button class="yes-no-btn" data-field="contacted" data-value="Yes">Yes</button>
-                            <button class="yes-no-btn" data-field="contacted" data-value="No">No</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Quoted</div>
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Quoted</label>
                         <div class="yes-no-buttons">
-                            <button class="yes-no-btn" data-field="quoted" data-value="Yes">Yes</button>
-                            <button class="yes-no-btn" data-field="quoted" data-value="No">No</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Sales Qualified Leads</div>
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Sales Qualified Leads</label>
                         <div class="yes-no-buttons">
-                            <button class="yes-no-btn" data-field="sales_qualified" data-value="Yes">Yes</button>
-                            <button class="yes-no-btn" data-field="sales_qualified" data-value="No">No</button>
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="sales_qualified" data-value="no">No</button>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">To Win</div>
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">To Win</label>
                         <div class="yes-no-buttons">
-                            <button class="yes-no-btn" data-field="to_win" data-value="Yes">Yes</button>
-                            <button class="yes-no-btn" data-field="to_win" data-value="No">No</button>
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="to_win" data-value="no">No</button>
                         </div>
                     </div>
                     
-                    <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 0.5rem; padding: 1rem;">
-                        <div style="font-size: 0.75rem; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">W/L AMOUNT (₱)</div>
-                        <input type="number" id="waAmount" placeholder="0.00" step="0.01" style="width: 100%; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem;">
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">W/L Amount (₱) <span id="platform-wl-amount-required" style="color: #ff7070; display: none;">*</span></label>
+                        <input type="number" class="sales-form-input" id="platform-wl-amount-input" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                    
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Remarks <span style="color: #ff7070;">*</span></label>
+                        <textarea class="sales-form-textarea" id="platform-remarks-textarea" placeholder="Enter remarks..."></textarea>
                     </div>
                 </div>
                 
-                <div style="margin-bottom: 1rem;">
-                    <label style="display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.5rem;">Remarks *</label>
-                    <textarea id="trackingNotes" placeholder="Enter remarks..." style="width: 100%; min-height: 80px; padding: 0.75rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.5rem; color: var(--text-primary); font-size: 0.9rem; resize: vertical; font-family: var(--font);"></textarea>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    <button type="button" class="btn-action btn-primary" id="savePlatformTrackingBtn" onclick="savePlatformTracking()" style="flex: 1;">
+                        💾 Save Sales Tracking
+                    </button>
                 </div>
-                
-                <button type="button" class="btn-action btn-primary" onclick="savePlatformTracking()" style="width: 100%;">
-                    💾 Save Sales Tracking
-                </button>
             </div>
         </div>
         <div class="modal-actions">
@@ -1172,22 +1173,28 @@ document.addEventListener('DOMContentLoaded', function() {
         // Load sales reps for dropdown
         try {
             const response = await fetch('<?= $base ?>/api/v1/users/sales-reps');
-            const salesReps = await response.json();
-            const select = document.getElementById('salesRepSelect');
-            select.innerHTML = '<option value="">Select SR...</option>';
-            salesReps.forEach(sr => {
-                const option = document.createElement('option');
-                option.value = sr.id;
-                option.textContent = `${sr.full_name} - ${sr.branch || 'N/A'}`;
-                option.dataset.branch = sr.branch || '';
-                select.appendChild(option);
-            });
-            
-            // Auto-fill branch on SR selection
-            select.addEventListener('change', function() {
-                const selectedOption = this.options[this.selectedIndex];
-                document.getElementById('branchField').value = selectedOption.dataset.branch || '';
-            });
+            const data = await response.json();
+            const salesRepsData = data.data || data.users || data || [];
+            const select = document.getElementById('platform-sales-rep-select');
+            if (select) {
+                select.innerHTML = '<option value="">Select SR...</option>';
+                salesRepsData.forEach(sr => {
+                    const option = document.createElement('option');
+                    option.value = sr.id;
+                    option.textContent = `${sr.full_name} - ${sr.branch || 'N/A'}`;
+                    option.dataset.branch = sr.branch || '';
+                    select.appendChild(option);
+                });
+                
+                // Auto-fill branch on SR selection
+                select.addEventListener('change', function() {
+                    const selectedOption = this.options[this.selectedIndex];
+                    const branchInput = document.getElementById('platform-branch-input');
+                    if (branchInput) {
+                        branchInput.value = selectedOption.dataset.branch || '';
+                    }
+                });
+            }
         } catch (error) {
             console.error('Error loading sales reps:', error);
         }
@@ -1202,27 +1209,40 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Set Sales Rep and Branch
             if (tracking.sales_rep_id) {
-                document.getElementById('salesRepSelect').value = tracking.sales_rep_id;
-                document.getElementById('branchField').value = tracking.branch || '';
+                const select = document.getElementById('platform-sales-rep-select');
+                if (select) {
+                    select.value = tracking.sales_rep_id;
+                    const selectedOption = select.options[select.selectedIndex];
+                    const branchInput = document.getElementById('platform-branch-input');
+                    if (branchInput) {
+                        branchInput.value = selectedOption.dataset.branch || tracking.branch || '';
+                    }
+                }
             }
             
-            // Set tracked values
+            // Set tracked values (convert to lowercase yes/no)
             if (tracking.contacted) {
-                document.querySelector(`.yes-no-btn[data-field="contacted"][data-value="${tracking.contacted}"]`)?.classList.add('active');
+                const value = tracking.contacted === true || tracking.contacted === 'Yes' || tracking.contacted === 'yes' ? 'yes' : 'no';
+                document.querySelector(`.yes-no-btn[data-field="contacted"][data-value="${value}"]`)?.classList.add('active');
             }
             if (tracking.quoted) {
-                document.querySelector(`.yes-no-btn[data-field="quoted"][data-value="${tracking.quoted}"]`)?.classList.add('active');
+                const value = tracking.quoted === true || tracking.quoted === 'Yes' || tracking.quoted === 'yes' ? 'yes' : 'no';
+                document.querySelector(`.yes-no-btn[data-field="quoted"][data-value="${value}"]`)?.classList.add('active');
             }
             if (tracking.sales_qualified) {
-                document.querySelector(`.yes-no-btn[data-field="sales_qualified"][data-value="${tracking.sales_qualified}"]`)?.classList.add('active');
+                const value = tracking.sales_qualified === true || tracking.sales_qualified === 'Yes' || tracking.sales_qualified === 'yes' ? 'yes' : 'no';
+                document.querySelector(`.yes-no-btn[data-field="sales_qualified"][data-value="${value}"]`)?.classList.add('active');
             }
             if (tracking.to_win) {
-                document.querySelector(`.yes-no-btn[data-field="to_win"][data-value="${tracking.to_win}"]`)?.classList.add('active');
+                const value = tracking.to_win === true || tracking.to_win === 'Yes' || tracking.to_win === 'yes' ? 'yes' : 'no';
+                document.querySelector(`.yes-no-btn[data-field="to_win"][data-value="${value}"]`)?.classList.add('active');
             }
             
-            // Set WA Amount and Notes
-            document.getElementById('waAmount').value = tracking.wa_amount || '0.00';
-            document.getElementById('trackingNotes').value = tracking.notes || '';
+            // Set WA Amount and Remarks
+            const waInput = document.getElementById('platform-wl-amount-input');
+            const remarksInput = document.getElementById('platform-remarks-textarea');
+            if (waInput) waInput.value = tracking.wa_amount || '0.00';
+            if (remarksInput) remarksInput.value = tracking.remarks || tracking.notes || '';
             
         } catch (error) {
             console.error('Error loading tracking data:', error);
@@ -1332,15 +1352,41 @@ document.addEventListener('DOMContentLoaded', function() {
     window.savePlatformTracking = async function() {
         if (!window.currentPlatformId) return;
         
+        // Get yes/no button values
+        const getYesNoValue = (fieldName) => {
+            const yesBtn = document.querySelector(`.yes-no-btn[data-field="${fieldName}"][data-value="yes"]`);
+            const noBtn = document.querySelector(`.yes-no-btn[data-field="${fieldName}"][data-value="no"]`);
+            
+            if (yesBtn?.classList.contains('active')) return true;
+            if (noBtn?.classList.contains('active')) return false;
+            return null;
+        };
+        
         const trackingData = {
             platform_id: window.currentPlatformId,
-            contacted: document.querySelector('.yes-no-btn[data-field="contacted"].active')?.dataset.value || null,
-            quoted: document.querySelector('.yes-no-btn[data-field="quoted"].active')?.dataset.value || null,
-            sales_qualified: document.querySelector('.yes-no-btn[data-field="sales_qualified"].active')?.dataset.value || null,
-            to_win: document.querySelector('.yes-no-btn[data-field="to_win"].active')?.dataset.value || null,
-            wa_amount: document.getElementById('waAmount').value || null,
-            notes: document.getElementById('trackingNotes').value || null
+            contacted: getYesNoValue('contacted'),
+            quoted: getYesNoValue('quoted'),
+            sales_qualified: getYesNoValue('sales_qualified'),
+            to_win: getYesNoValue('to_win'),
+            wa_amount: document.getElementById('platform-wl-amount-input')?.value || null,
+            remarks: document.getElementById('platform-remarks-textarea')?.value || null,
+            sales_rep_id: document.getElementById('platform-sales-rep-select')?.value || null,
+            branch: document.getElementById('platform-branch-input')?.value || null
         };
+        
+        if (trackingData.wa_amount) {
+            trackingData.wa_amount = parseFloat(trackingData.wa_amount);
+        }
+        if (trackingData.sales_rep_id) {
+            trackingData.sales_rep_id = parseInt(trackingData.sales_rep_id);
+        }
+        
+        const saveBtn = document.getElementById('savePlatformTrackingBtn');
+        const originalText = saveBtn?.textContent;
+        if (saveBtn) {
+            saveBtn.textContent = '💾 Saving...';
+            saveBtn.disabled = true;
+        }
         
         try {
             const response = await fetch('<?= $base ?>/api/v1/platforms/tracking', {
@@ -1354,13 +1400,27 @@ document.addEventListener('DOMContentLoaded', function() {
             const result = await response.json();
             
             if (result.success) {
-                showSuccessModal('Sales tracking saved successfully!');
+                if (typeof ModalSystem !== 'undefined') {
+                    ModalSystem.success('Sales tracking saved successfully!');
+                } else {
+                    showSuccessModal('Sales tracking saved successfully!');
+                }
+                loadPlatforms();
             } else {
                 throw new Error(result.message || 'Failed to save tracking');
             }
         } catch (error) {
             console.error('Error:', error);
-            showErrorModal('Error saving sales tracking: ' + error.message);
+            if (typeof ModalSystem !== 'undefined') {
+                ModalSystem.error('Error saving sales tracking: ' + error.message);
+            } else {
+                showErrorModal('Error saving sales tracking: ' + error.message);
+            }
+        } finally {
+            if (saveBtn) {
+                saveBtn.textContent = originalText || '💾 Save Sales Tracking';
+                saveBtn.disabled = false;
+            }
         }
     };
     
@@ -1373,11 +1433,11 @@ document.addEventListener('DOMContentLoaded', function() {
             // Remove active from siblings
             const siblings = e.target.parentElement.querySelectorAll('.yes-no-btn');
             siblings.forEach(btn => {
-                btn.classList.remove('active', 'yes', 'no');
+                btn.classList.remove('active');
             });
             
             // Add active to clicked button
-            e.target.classList.add('active', value.toLowerCase());
+            e.target.classList.add('active');
         }
     });
     
