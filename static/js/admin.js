@@ -1044,10 +1044,40 @@ function navigateToPage(pageName) {
         pageTitle.textContent = titles[pageName] || 'Dashboard';
     }
     
+    // Update sidebar active states
+    updateSidebarActiveState();
+    
     // Load settings data if navigating to settings
     if (pageName === 'settings') {
         loadSettings();
     }
+}
+
+// Helper to update sidebar active states
+function updateSidebarActiveState() {
+    const activePage = document.querySelector('.admin-page.active');
+    const activePageId = activePage ? activePage.id : null;
+    
+    document.querySelectorAll('.ap-nav-item:not(.ap-nav-dropdown-toggle)').forEach(item => {
+        item.classList.remove('active');
+        
+        // Check if this is the settings link
+        if (item.classList.contains('settings-nav-link')) {
+            if (activePageId === 'page-settings') {
+                item.classList.add('active');
+            }
+        }
+        // Check if this is the dashboard link
+        else {
+            const href = item.getAttribute('href');
+            if (href && (href.endsWith('/admin') || href.endsWith('/admin/'))) {
+                if (activePageId === 'page-dashboard') {
+                    item.classList.add('active');
+                }
+            }
+        }
+    });
+}
 }
 
 // ── Initialize settings when DOM is ready ───────────────────

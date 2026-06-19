@@ -382,21 +382,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Set active state for regular nav items
+    // Set active state based on current page content, not just URL
+    const activePage = document.querySelector('.admin-page.active');
+    const activePageId = activePage ? activePage.id : null;
+    
     document.querySelectorAll('.ap-nav-item:not(.ap-nav-dropdown-toggle)').forEach(item => {
         const href = item.getAttribute('href');
         if (href) {
-            // Special handling for Settings link - only active when page=settings is in URL
+            // Special handling for Settings link - only active when settings page is visible
             if (item.classList.contains('settings-nav-link')) {
-                if (currentPath.includes('page=settings')) {
+                if (activePageId === 'page-settings') {
                     item.classList.add('active');
                 }
             } 
-            // Dashboard should not be active when settings page is shown
-            else if (href.includes('/admin')) {
-                const basePath = href.split('?')[0];
-                const currentBasePath = currentPath.split('?')[0];
-                if (basePath === currentBasePath && !currentPath.includes('page=settings')) {
+            // Dashboard link
+            else if (href.endsWith('/admin') || href.endsWith('/admin/')) {
+                // Only active if we're on admin page AND settings page is not active
+                if ((currentPath === href || currentPath.startsWith(href)) && activePageId !== 'page-settings') {
                     item.classList.add('active');
                 }
             }
