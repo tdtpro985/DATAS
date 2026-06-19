@@ -1078,7 +1078,6 @@ function updateSidebarActiveState() {
         }
     });
 }
-}
 
 // ── Initialize settings when DOM is ready ───────────────────
 document.addEventListener('DOMContentLoaded', function() {
