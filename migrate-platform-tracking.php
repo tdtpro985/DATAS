@@ -52,13 +52,26 @@ try {
         flush();
         ob_flush();
         
-        // Read SQL file
-        $sqlFile = __DIR__ . '/database/create-platform-tracking-table.sql';
-        if (!file_exists($sqlFile)) {
-            throw new Exception("SQL file not found: $sqlFile");
-        }
-        
-        $sql = file_get_contents($sqlFile);
+        // Embedded SQL (no file dependency)
+        $sql = "CREATE TABLE IF NOT EXISTS `platform_tracking` (
+            `id` INT(11) NOT NULL AUTO_INCREMENT,
+            `platform_id` INT(11) NOT NULL,
+            `contacted` TINYINT(1) DEFAULT NULL,
+            `quoted` TINYINT(1) DEFAULT NULL,
+            `sales_qualified` TINYINT(1) DEFAULT NULL,
+            `to_win` TINYINT(1) DEFAULT NULL,
+            `wa_amount` DECIMAL(18,2) DEFAULT NULL,
+            `remarks` TEXT DEFAULT NULL,
+            `sales_rep_id` INT(11) DEFAULT NULL,
+            `branch` VARCHAR(255) DEFAULT NULL,
+            `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            PRIMARY KEY (`id`),
+            UNIQUE KEY `platform_id` (`platform_id`),
+            KEY `sales_rep_id` (`sales_rep_id`),
+            CONSTRAINT `fk_platform_tracking_platform` FOREIGN KEY (`platform_id`) REFERENCES `platform_leads` (`id`) ON DELETE CASCADE,
+            CONSTRAINT `fk_platform_tracking_sales_rep` FOREIGN KEY (`sales_rep_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         
         // Execute with error handling
         try {
