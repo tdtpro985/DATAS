@@ -46,27 +46,30 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
 
     <style>
-        /* Override default dashboard padding */
-        .ap-main .dashboard {
-            padding: 0 !important;
-            background: transparent !important;
-            margin: 0 !important;
+        /* Full-width page — sits inside sidebar's .ap-main (no nested ap-shell) */
+        .ap-main .dashboard.sr-page {
+            display: block;
+            width: 100%;
+            max-width: none;
+            padding: 0;
+            margin: 0;
+            min-height: auto;
+            background: transparent;
         }
 
-        /* Full-width content container - zero padding */
         .sr-container {
             width: 100%;
-            padding: 2rem 2.5rem;
-            max-width: 100%;
-            margin: 0;
+            max-width: none;
+            padding: 1.75rem 2rem 2.5rem;
+            box-sizing: border-box;
         }
 
-        /* Header */
+        /* Header + toolbar */
         .sr-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 2rem;
+            align-items: flex-end;
+            margin-bottom: 1.5rem;
             gap: 1.5rem;
             flex-wrap: wrap;
         }
@@ -87,23 +90,30 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             font-size: 0.9375rem;
         }
 
-        /* Search */
+        .sr-toolbar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.75rem;
+            flex-wrap: wrap;
+        }
+
         .sr-search {
             position: relative;
-            width: 100%;
-            max-width: 600px;
-            margin-bottom: 2rem;
+            flex: 1;
+            min-width: 220px;
         }
 
         .sr-search input {
             width: 100%;
-            padding: 1rem 1.25rem 1rem 3.25rem;
+            padding: 0.875rem 1.25rem 0.875rem 3rem;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.875rem;
             color: var(--text-primary);
             font-size: 0.9375rem;
             transition: all 0.3s ease;
+            box-sizing: border-box;
         }
 
         .sr-search input:focus {
@@ -116,18 +126,20 @@ if ($role !== 'superadmin' && $role !== 'admin') {
         .sr-search::before {
             content: '🔍';
             position: absolute;
-            left: 1.25rem;
+            left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 1.125rem;
+            font-size: 1rem;
             opacity: 0.6;
+            pointer-events: none;
         }
 
-        /* Branch Grid */
+        /* Branch Grid — fills available width */
         .sr-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+            gap: 1.25rem;
+            width: 100%;
         }
 
         /* Branch Card */
@@ -234,6 +246,144 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             transform: translateX(6px);
         }
 
+        /* Expanded branch section */
+        .sr-expanded {
+            background: linear-gradient(135deg, rgba(26, 29, 35, 0.95), rgba(17, 20, 26, 0.98));
+            border: 1px solid rgba(255, 128, 0, 0.2);
+            border-radius: 1rem;
+            padding: 1.75rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .sr-expanded-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sr-expanded-header h2 {
+            margin: 0;
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        .sr-expanded-header p {
+            margin: 0.35rem 0 0;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .sr-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            gap: 1rem;
+            width: 100%;
+        }
+
+        .sr-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.875rem;
+            padding: 1.25rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .sr-card:hover {
+            border-color: rgba(255, 128, 0, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+        }
+
+        .sr-card .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff8000, #ffa500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 800;
+            color: #000;
+            flex-shrink: 0;
+        }
+
+        .sr-card h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sr-card .email-label {
+            margin: 0.25rem 0 0;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sr-card .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8125rem;
+        }
+
+        .sr-card .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+        .sr-card .info-label {
+            color: var(--text-muted);
+            font-weight: 500;
+            flex-shrink: 0;
+        }
+
+        .sr-card .info-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: right;
+            min-width: 0;
+        }
+
+        .sr-card .branch-pill {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            background: rgba(255, 128, 0, 0.12);
+            color: #ff8000;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .sr-card .sr-footer {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .sr-card .sr-footer .btn {
+            flex: 1;
+        }
+
         /* Loading/Empty States */
         .sr-loading, .sr-empty {
             text-align: center;
@@ -275,15 +425,15 @@ if ($role !== 'superadmin' && $role !== 'admin') {
         /* Responsive */
         @media (max-width: 768px) {
             .sr-container {
-                padding: 1.5rem;
-            }
-
-            .sr-grid {
-                grid-template-columns: 1fr;
-                gap: 1rem;
+                padding: 1.25rem 1rem 2rem;
             }
 
             .sr-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .sr-toolbar {
                 flex-direction: column;
                 align-items: stretch;
             }
@@ -295,6 +445,10 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             .sr-stats {
                 grid-template-columns: 1fr;
             }
+
+            .sr-expanded-header {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -302,40 +456,39 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
 <?php include __DIR__ . '/sidebar.php'; ?>
 
-<div class="ap-shell">
-    <div class="ap-main">
-        <div class="sr-container">
-            <!-- Header -->
-            <div class="sr-header">
-                    <div>
-                        <h1 class="sr-title">👤 Sales Representatives</h1>
-                        <p class="sr-subtitle">Manage sales representative accounts by branch</p>
-                    </div>
-                    <?php if ($role === 'superadmin'): ?>
-                    <button class="btn btn-primary" id="addSalesRepBtn">
-                        <span>+</span> Add Sales Rep
-                    </button>
-                    <?php endif; ?>
-                </div>
-
-                <!-- Search -->
-                <div class="sr-search">
-                    <input type="text" id="searchInput" placeholder="Search by name or email...">
-                </div>
-
-                <!-- Branch Cards -->
-                <div id="branchesContainer">
-                    <div class="sr-loading">
-                        <div class="sr-spinner"></div>
-                        <p>Loading sales representatives...</p>
-                    </div>
-                </div>
-
-                <!-- Expanded Section -->
-                <div id="expandedSection" style="display:none;"></div>
+<div class="dashboard sr-page">
+    <div class="sr-container">
+        <div class="sr-header">
+            <div>
+                <h1 class="sr-title">👤 Sales Representatives</h1>
+                <p class="sr-subtitle">Manage sales representative accounts by branch</p>
+            </div>
+            <?php if ($role === 'superadmin'): ?>
+            <button class="btn btn-primary" id="addSalesRepBtn">
+                <span>+</span> Add Sales Rep
+            </button>
+            <?php endif; ?>
         </div>
+
+        <div class="sr-toolbar">
+            <div class="sr-search">
+                <input type="text" id="searchInput" placeholder="Search by name or email...">
+            </div>
+        </div>
+
+        <div id="branchesContainer">
+            <div class="sr-loading">
+                <div class="sr-spinner"></div>
+                <p>Loading sales representatives...</p>
+            </div>
+        </div>
+
+        <div id="expandedSection" style="display:none;"></div>
     </div>
 </div>
+
+    </div><!-- .ap-main -->
+</div><!-- .ap-shell -->
 
 <!-- Add/Edit Modal -->
 <div class="modal-overlay" id="salesRepModal">
@@ -413,6 +566,13 @@ if ($role !== 'superadmin' && $role !== 'admin') {
 
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/sales-reps.js?v=2"></script>
+<script src="<?= $base ?>/static/js/sales-reps.js?v=3"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.modal-overlay[id]').forEach(function(el) {
+        if (el.parentNode !== document.body) document.body.appendChild(el);
+    });
+});
+</script>
 </body>
 </html>
