@@ -502,8 +502,8 @@ if ($role === 'encoder') {
         }
         
         .kpi-icon {
-            font-size: 1rem;
-            margin-bottom: 0.3rem;
+            font-size: 1.2rem;
+            margin-bottom: 0.4rem;
         }
         
         .kpi-info {
@@ -513,45 +513,45 @@ if ($role === 'encoder') {
         }
         
         .kpi-value {
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             font-weight: 800;
             color: #fff;
             line-height: 1;
-            margin-bottom: 0.2rem;
+            margin-bottom: 0.3rem;
             text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
         }
         
         .kpi-label {
-            font-size: 0.5rem;
+            font-size: 0.65rem;
             color: #888;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-align: center;
-            line-height: 1.1;
+            line-height: 1.2;
         }
         
         @media (max-width: 1280px) {
             .kpi-icon {
-                font-size: 0.9rem;
+                font-size: 1.1rem;
             }
             .kpi-value {
-                font-size: 0.85rem;
+                font-size: 1rem;
             }
             .kpi-label {
-                font-size: 0.48rem;
+                font-size: 0.6rem;
             }
         }
         
         @media (max-width: 768px) {
             .kpi-icon {
-                font-size: 0.85rem;
-                margin-bottom: 0.25rem;
+                font-size: 1rem;
+                margin-bottom: 0.3rem;
             }
             .kpi-value {
-                font-size: 0.8rem;
+                font-size: 0.95rem;
             }
             .kpi-label {
-                font-size: 0.45rem;
+                font-size: 0.58rem;
             }
             .kpi-card {
                 padding: 0.4rem;
@@ -560,17 +560,17 @@ if ($role === 'encoder') {
         
         @media (max-width: 480px) {
             .kpi-icon {
-                font-size: 0.75rem;
-                margin-bottom: 0.2rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.25rem;
             }
             .kpi-value {
-                font-size: 0.7rem;
+                font-size: 0.85rem;
             }
             .kpi-label {
-                font-size: 0.4rem;
+                font-size: 0.52rem;
             }
             .kpi-card {
-                padding: 0.3rem;
+                padding: 0.35rem;
             }
         }
         
@@ -638,7 +638,7 @@ if ($role === 'encoder') {
         }
         
         .target-number {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             color: #fff;
             font-weight: 700;
             line-height: 1;
@@ -781,7 +781,7 @@ if ($role === 'encoder') {
         }
         
         .live-contractor-name {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: #ff8000;
             margin-bottom: 1rem;
@@ -794,7 +794,7 @@ if ($role === 'encoder') {
             grid-template-columns: 1fr 1fr;
             gap: 0.8rem;
             text-align: left;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             margin-bottom: 1rem;
         }
         
@@ -804,14 +804,14 @@ if ($role === 'encoder') {
         }
         
         .live-detail-label {
-            font-size: 0.7rem;
+            font-size: 0.8rem;
             color: #888;
             text-transform: uppercase;
             margin-bottom: 0.3rem;
         }
         
         .live-detail-value {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #fff;
             font-weight: 500;
         }
@@ -989,14 +989,14 @@ if ($role === 'encoder') {
         }
         
         .target-percentage {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 800;
             color: #ff8000;
             line-height: 1;
         }
         
         .target-status {
-            font-size: 0.6rem;
+            font-size: 0.75rem;
             color: #ef4444;
             margin-top: 0.3rem;
             display: flex;
@@ -1007,25 +1007,25 @@ if ($role === 'encoder') {
         
         @media (max-width: 1280px) {
             .target-percentage {
-                font-size: 1.6rem;
+                font-size: 2rem;
             }
             .target-status {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
             .target-number {
-                font-size: 1rem;
+                font-size: 1.2rem;
             }
         }
         
         @media (max-width: 768px) {
             .target-percentage {
-                font-size: 1.4rem;
+                font-size: 1.8rem;
             }
             .target-status {
-                font-size: 0.5rem;
+                font-size: 0.65rem;
             }
             .target-number {
-                font-size: 0.9rem;
+                font-size: 1.1rem;
             }
             .target-section {
                 padding: 0.8rem;
@@ -1035,13 +1035,13 @@ if ($role === 'encoder') {
         
         @media (max-width: 480px) {
             .target-percentage {
-                font-size: 1.2rem;
+                font-size: 1.5rem;
             }
             .target-status {
-                font-size: 0.45rem;
+                font-size: 0.6rem;
             }
             .target-number {
-                font-size: 0.8rem;
+                font-size: 1rem;
             }
             .target-section {
                 padding: 0.6rem;
@@ -1109,12 +1109,12 @@ if ($role === 'encoder') {
         }
         
         .section-title {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             color: #888;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.7rem;
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -1122,14 +1122,14 @@ if ($role === 'encoder') {
         
         @media (max-width: 1280px) {
             .section-title {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
             }
         }
         
         @media (max-width: 768px) {
             .section-title {
-                font-size: 0.6rem;
-                margin-bottom: 0.5rem;
+                font-size: 0.75rem;
+                margin-bottom: 0.6rem;
             }
         }
         
@@ -1200,7 +1200,7 @@ if ($role === 'encoder') {
         }
         
         .contractor-value {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             color: #ff8000;
             font-weight: 600;
             text-align: right;
@@ -1209,19 +1209,19 @@ if ($role === 'encoder') {
         
         @media (max-width: 1280px) {
             .contractor-value {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
             }
         }
         
         @media (max-width: 768px) {
             .contractor-value {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
             }
         }
         
         @media (max-width: 480px) {
             .contractor-value {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
         }
         
@@ -1286,7 +1286,7 @@ if ($role === 'encoder') {
         }
         
         .funnel-name {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             color: #fff;
             font-weight: 600;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
@@ -1299,36 +1299,53 @@ if ($role === 'encoder') {
         }
         
         .funnel-count {
-            font-size: 0.7rem;
+            font-size: 0.85rem;
             color: #fff;
             font-weight: 700;
-            min-width: 25px;
+            min-width: 30px;
             text-shadow: 0 1px 2px rgba(255, 255, 255, 0.1);
         }
         
         .funnel-percentage {
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             color: #888;
-            min-width: 40px;
+            min-width: 45px;
         }
         
         @media (max-width: 1280px) {
             .funnel-name,
             .funnel-count {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
             }
             .funnel-percentage {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
             }
         }
         
         @media (max-width: 768px) {
             .funnel-name,
             .funnel-count {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
             }
             .funnel-percentage {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
+                min-width: 40px;
+            }
+            .funnel-stats {
+                gap: 0.5rem;
+            }
+            .funnel-item {
+                padding: 0.4rem 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .funnel-name,
+            .funnel-count {
+                font-size: 0.7rem;
+            }
+            .funnel-percentage {
+                font-size: 0.65rem;
                 min-width: 35px;
             }
             .funnel-stats {
@@ -1336,23 +1353,6 @@ if ($role === 'encoder') {
             }
             .funnel-item {
                 padding: 0.35rem 0;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .funnel-name,
-            .funnel-count {
-                font-size: 0.55rem;
-            }
-            .funnel-percentage {
-                font-size: 0.5rem;
-                min-width: 30px;
-            }
-            .funnel-stats {
-                gap: 0.3rem;
-            }
-            .funnel-item {
-                padding: 0.3rem 0;
             }
         }
         
@@ -2579,55 +2579,85 @@ if ($role === 'encoder') {
         }
         
         /* ══════════════════════════════════════════════════════════
+           GLOBAL BASE FONT SIZE INCREASE FOR BETTER READABILITY
+        ══════════════════════════════════════════════════════════ */
+        .contractor-rank,
+        .contractor-name,
+        .category-name,
+        .category-count,
+        .category-value {
+            font-size: 0.85rem !important;
+        }
+        
+        .category-percentage,
+        .funnel-percentage {
+            font-size: 0.8rem !important;
+        }
+        
+        /* ══════════════════════════════════════════════════════════
            GLOBAL RESPONSIVE TEXT STYLES FOR ALL CARDS
         ══════════════════════════════════════════════════════════ */
         @media (max-width: 1280px) {
             .category-count,
             .category-value {
-                font-size: 0.65rem;
+                font-size: 0.8rem;
             }
             .category-percentage {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
+            }
+            .contractor-rank,
+            .contractor-name {
+                font-size: 0.8rem;
             }
         }
         
         @media (max-width: 768px) {
             .category-count,
             .category-value {
-                font-size: 0.6rem;
+                font-size: 0.75rem;
             }
             .category-percentage {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
             .category-stats {
-                gap: 0.4rem;
+                gap: 0.5rem;
+            }
+            .contractor-rank,
+            .contractor-name {
+                font-size: 0.75rem;
             }
             
             .project-status-section,
             .contractors-section,
             .bar-graph-section,
-            .pie-graph-section {
-                padding: 0.6rem;
+            .pie-graph-section,
+            .funnel-section {
+                padding: 0.7rem;
             }
         }
         
         @media (max-width: 480px) {
             .category-count,
             .category-value {
-                font-size: 0.55rem;
+                font-size: 0.7rem;
             }
             .category-percentage {
-                font-size: 0.5rem;
+                font-size: 0.65rem;
             }
             .category-stats {
-                gap: 0.3rem;
+                gap: 0.4rem;
+            }
+            .contractor-rank,
+            .contractor-name {
+                font-size: 0.7rem;
             }
             
             .project-status-section,
             .contractors-section,
             .bar-graph-section,
-            .pie-graph-section {
-                padding: 0.5rem;
+            .pie-graph-section,
+            .funnel-section {
+                padding: 0.6rem;
             }
         }
         
