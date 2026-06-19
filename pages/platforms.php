@@ -281,8 +281,6 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
         .sales-form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: repeat(4, auto);
-            grid-auto-flow: column;
             gap: 1rem;
         }
         
@@ -962,34 +960,12 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             <div class="sales-tracking-section" data-role-access="superadmin,admin,sales_rep">
                 <div class="sales-tracking-title">📊 Sales Tracking</div>
                 <div class="sales-form-grid">
-                    <!-- Sales Representative dropdown for admin/superadmin -->
+                    <!-- Row 1 -->
                     <div class="sales-form-group" data-role-access="superadmin,admin">
                         <label class="sales-form-label">Sales Representative <span style="color: #ff7070;">*</span></label>
                         <select class="sales-form-select" id="platform-sales-rep-select">
                             <option value="">Select SR...</option>
                         </select>
-                    </div>
-                    
-                    <!-- Branch input (auto-filled) for admin/superadmin -->
-                    <div class="sales-form-group" data-role-access="superadmin,admin">
-                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
-                        <input type="text" class="sales-form-input" id="platform-branch-input" readonly placeholder="Auto-filled from SR">
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Contacted</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
-                        </div>
-                    </div>
-                    
-                    <div class="sales-form-group">
-                        <label class="sales-form-label">Quoted</label>
-                        <div class="yes-no-buttons">
-                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
-                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
-                        </div>
                     </div>
                     
                     <div class="sales-form-group">
@@ -1000,6 +976,12 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
                         </div>
                     </div>
                     
+                    <!-- Row 2 -->
+                    <div class="sales-form-group" data-role-access="superadmin,admin">
+                        <label class="sales-form-label">Branch <span style="color: #ff7070;">*</span></label>
+                        <input type="text" class="sales-form-input" id="platform-branch-input" readonly placeholder="Auto-filled from SR">
+                    </div>
+                    
                     <div class="sales-form-group">
                         <label class="sales-form-label">To Win</label>
                         <div class="yes-no-buttons">
@@ -1008,9 +990,27 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
                         </div>
                     </div>
                     
+                    <!-- Row 3 -->
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Contacted</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="contacted" data-value="no">No</button>
+                        </div>
+                    </div>
+                    
                     <div class="sales-form-group">
                         <label class="sales-form-label">W/L Amount (₱) <span id="platform-wl-amount-required" style="color: #ff7070; display: none;">*</span></label>
                         <input type="number" class="sales-form-input" id="platform-wl-amount-input" placeholder="0.00" step="0.01" min="0">
+                    </div>
+                    
+                    <!-- Row 4 -->
+                    <div class="sales-form-group">
+                        <label class="sales-form-label">Quoted</label>
+                        <div class="yes-no-buttons">
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="yes">Yes</button>
+                            <button type="button" class="yes-no-btn" data-field="quoted" data-value="no">No</button>
+                        </div>
                     </div>
                     
                     <div class="sales-form-group">
