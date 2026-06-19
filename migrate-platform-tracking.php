@@ -68,19 +68,51 @@ try {
             `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             PRIMARY KEY (`id`),
             UNIQUE KEY `platform_id` (`platform_id`),
-            KEY `sales_rep_id` (`sales_rep_id`),
-            CONSTRAINT `fk_platform_tracking_platform` FOREIGN KEY (`platform_id`) REFERENCES `platform_leads` (`id`) ON DELETE CASCADE,
-            CONSTRAINT `fk_platform_tracking_sales_rep` FOREIGN KEY (`sales_rep_id`) REFERENCES `users` (`id`) ON DELETE SET NULL
+            KEY `sales_rep_id` (`sales_rep_id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
         
-        // Execute with error handling
+        // Execute table creation
         try {
             $db->exec($sql);
             echo "<span class='success'>✓ Table created successfully!</span>\n";
+            flush();
+            ob_flush();
+            
+            // Add foreign keys separately to handle conflicts
+            echo "<span class='info'>Adding foreign key constraints...</span>\n";
+            flush();
+            ob_flush();
+            
+            try {
+                $db->exec("ALTER TABLE `platform_tracking` 
+                    ADD CONSTRAINT `fk_plat_track_platform` 
+                    FOREIGN KEY (`platform_id`) REFERENCES `platform_leads` (`id`) ON DELETE CASCADE");
+                echo "<span class='success'>✓ Platform foreign key added</span>\n";
+            } catch (PDOException $e) {
+                if (strpos($e->getMessage(), 'Duplicate') !== false || strpos($e->getMessage(), 'already exists') !== false) {
+                    echo "<span class='info'>- Platform foreign key already exists</span>\n";
+                } else {
+                    throw $e;
+                }
+            }
+            
+            try {
+                $db->exec("ALTER TABLE `platform_tracking` 
+                    ADD CONSTRAINT `fk_plat_track_sales_rep` 
+                    FOREIGN KEY (`sales_rep_id`) REFERENCES `users` (`id`) ON DELETE SET NULL");
+                echo "<span class='success'>✓ Sales rep foreign key added</span>\n";
+            } catch (PDOException $e) {
+                if (strpos($e->getMessage(), 'Duplicate') !== false || strpos($e->getMessage(), 'already exists') !== false) {
+                    echo "<span class='info'>- Sales rep foreign key already exists</span>\n";
+                } else {
+                    throw $e;
+                }
+            }
+            
         } catch (PDOException $e) {
-            // Check if error is due to existing foreign key constraint
+            // Check if error is due to existing table
             if (strpos($e->getMessage(), 'already exists') !== false) {
-                echo "<span class='success'>✓ Table already exists (constraint check)</span>\n";
+                echo "<span class='success'>✓ Table already exists</span>\n";
             } else {
                 throw $e;
             }
