@@ -4316,10 +4316,13 @@ if ($role === 'encoder') {
                     AppState.charts.regionalValues.destroy();
                 }
 
-                // Extract text inside parentheses from region names
+                // Extract text inside parentheses and remove "Region" word
                 const shortLabels = (data.regions || []).map(region => {
                     const match = region.match(/\(([^)]+)\)/);
-                    return match ? match[1] : region;
+                    if (match) {
+                        return match[1].replace(/\s*Region\s*/gi, '').trim();
+                    }
+                    return region;
                 });
                 
                 AppState.charts.regionalValues = new Chart(ctx, {
@@ -4384,10 +4387,13 @@ if ($role === 'encoder') {
                     AppState.charts.regionalDistribution.destroy();
                 }
 
-                // Extract text inside parentheses from region names
+                // Extract text inside parentheses and remove "Region" word
                 const shortLabels = (data.regions || []).map(region => {
                     const match = region.match(/\(([^)]+)\)/);
-                    return match ? match[1] : region;
+                    if (match) {
+                        return match[1].replace(/\s*Region\s*/gi, '').trim();
+                    }
+                    return region;
                 });
                 
                 AppState.charts.regionalDistribution = new Chart(ctx, {
