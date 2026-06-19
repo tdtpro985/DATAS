@@ -156,6 +156,21 @@ if ($method === 'POST') {
             ':branch' => $branch
         ]);
         
+        // Update sales_tracking_status in platform_leads
+        $status = null;
+        if ($toWin) {
+            $status = 'To Win';
+        } elseif ($salesQualified) {
+            $status = 'Sales Qualified';
+        } elseif ($quoted) {
+            $status = 'Quoted';
+        } elseif ($contacted) {
+            $status = 'Contacted';
+        }
+        
+        $stmt = $db->prepare("UPDATE platform_leads SET sales_tracking_status = :status WHERE id = :platform_id");
+        $stmt->execute([':status' => $status, ':platform_id' => $platformId]);
+        
         jsonResponse([
             'success' => true,
             'message' => 'Sales tracking saved successfully'
