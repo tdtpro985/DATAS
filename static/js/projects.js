@@ -1958,7 +1958,7 @@ function showConfirmationModal(title, message, type = 'warning') {
             bottom: 0;
             background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(4px);
-            z-index: 10001;
+            z-index: 100001;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1976,6 +1976,8 @@ function showConfirmationModal(title, message, type = 'warning') {
             padding: 2rem;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             animation: slideInUp 0.3s ease;
+            position: relative;
+            z-index: 100002;
         `;
         
         const iconColor = type === 'danger' ? '#ef4444' : type === 'warning' ? '#f59e0b' : '#3b82f6';
