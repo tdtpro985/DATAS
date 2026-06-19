@@ -1,12 +1,14 @@
 <?php
 /**
  * Migration: Create platform_tracking table
- * Run this file via browser: https://yourdomain.com/migrate-platform-tracking.php
- * Or via command line: php migrate-platform-tracking.php
+ * Run this file via browser: http://datas.lan/migrate-platform-tracking.php
  */
 
+// Enable error display for debugging
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/api/db.php';
 
 // Set content type to HTML for browser viewing
 header('Content-Type: text/html; charset=utf-8');
@@ -30,8 +32,17 @@ header('Content-Type: text/html; charset=utf-8');
 echo "=== Platform Tracking Table Migration ===\n";
 echo "Starting migration...\n\n";
 
+echo "<span class='info'>Database Configuration:</span>\n";
+echo "Host: " . DB_HOST . "\n";
+echo "Database: " . DB_NAME . "\n";
+echo "User: " . DB_USER . "\n";
+echo "Password: " . (DB_PASS ? str_repeat('*', strlen(DB_PASS)) : '(empty)') . "\n\n";
+
 try {
+    require_once __DIR__ . '/api/db.php';
     $db = getDB();
+    
+    echo "<span class='success'>✓ Database connection successful!</span>\n\n";
     
     // Check if table already exists
     echo "<span class='info'>Checking if table exists...</span>\n";
@@ -43,7 +54,12 @@ try {
     } else {
         echo "<span class='info'>Creating 'platform_tracking' table...</span>\n";
         
-        $sql = file_get_contents(__DIR__ . '/database/create-platform-tracking-table.sql');
+        $sqlFile = __DIR__ . '/database/create-platform-tracking-table.sql';
+        if (!file_exists($sqlFile)) {
+            throw new Exception("SQL file not found: $sqlFile");
+        }
+        
+        $sql = file_get_contents($sqlFile);
         $db->exec($sql);
         
         echo "<span class='success'>✓ Table 'platform_tracking' created successfully!</span>\n";
@@ -63,8 +79,10 @@ try {
     echo "\n<span class='info'>You can now close this page.</span>\n";
     
 } catch (Exception $e) {
-    echo "\n<span class='error'>❌ Migration failed: " . htmlspecialchars($e->getMessage()) . "</span>\n";
-    exit(1);
+    echo "\n<span class='error'>❌ Migration failed:</span>\n";
+    echo "<span class='error'>" . htmlspecialchars($e->getMessage()) . "</span>\n";
+    echo "\n<span class='error'>Stack trace:</span>\n";
+    echo "<span class='error'>" . htmlspecialchars($e->getTraceAsString()) . "</span>\n";
 }
 ?>
 </pre>
