@@ -133,9 +133,6 @@ try {
             <a href="<?= $base ?>/sales-reps" class="ap-nav-item">
                 <span class="ap-nav-label">Sales Representatives</span>
             </a>
-            <a href="<?= $base ?>/sr-performance" class="ap-nav-item">
-                <span class="ap-nav-label">SR Performance Report</span>
-            </a>
             <?php if ($role === 'superadmin'): ?>
             <a href="<?= $base ?>/users" class="ap-nav-item">
                 <span class="ap-nav-label">User Management</span>
