@@ -53,11 +53,11 @@ if ($role !== 'superadmin' && $role !== 'admin') {
             padding: 0;
         }
 
-        .dashboard {
+        .ap-main .dashboard {
             width: 100%;
             max-width: none;
             margin: 0;
-            padding: 0;
+            padding: 0 !important;
         }
 
         .dashboard > .card {
