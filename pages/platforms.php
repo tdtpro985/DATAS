@@ -1276,7 +1276,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`${_B}/api/v1/platforms/tracking?platform_id=${platformId}`, {
                 credentials: 'include'
             });
-            if (!response.ok) return;
+            if (!response.ok) {
+                console.error('Failed to load tracking data:', response.status);
+                return;
+            }
 
             const tracking = await response.json();
             const modal = getPlatformModal();
