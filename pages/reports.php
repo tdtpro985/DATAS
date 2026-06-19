@@ -4315,11 +4315,17 @@ if ($role === 'encoder') {
                 if (AppState.charts.regionalValues) {
                     AppState.charts.regionalValues.destroy();
                 }
+
+                // Extract text inside parentheses from region names
+                const shortLabels = (data.regions || []).map(region => {
+                    const match = region.match(/\(([^)]+)\)/);
+                    return match ? match[1] : region;
+                });
                 
                 AppState.charts.regionalValues = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: data.regions || [],
+                        labels: shortLabels,
                         datasets: [{
                             label: 'Project Value (₱)',
                             data: data.values || [],
@@ -4377,11 +4383,17 @@ if ($role === 'encoder') {
                 if (AppState.charts.regionalDistribution) {
                     AppState.charts.regionalDistribution.destroy();
                 }
+
+                // Extract text inside parentheses from region names
+                const shortLabels = (data.regions || []).map(region => {
+                    const match = region.match(/\(([^)]+)\)/);
+                    return match ? match[1] : region;
+                });
                 
                 AppState.charts.regionalDistribution = new Chart(ctx, {
                     type: 'line',
                     data: {
-                        labels: data.regions || [],
+                        labels: shortLabels,
                         datasets: [{
                             label: 'Projects',
                             data: data.projectCounts || [],
