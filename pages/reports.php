@@ -4236,7 +4236,7 @@ if ($role === 'encoder') {
                     return;
                 }
 
-                const rowsHtml = contractors.slice(0, 20).map((item, index) => `
+                const rowsHtml = contractors.map((item, index) => `
                     <div class="contractor-row">
                         <div class="contractor-rank">${index + 1}</div>
                         <div class="contractor-name">${item.contractor_name || 'Unknown'}</div>
@@ -4245,7 +4245,7 @@ if ($role === 'encoder') {
                 `).join('');
 
                 // Duplicate rows for seamless infinite loop
-                const duration = Math.max(10, contractors.slice(0, 20).length * 1.2);
+                const duration = Math.max(10, contractors.length * 1.2);
                 container.innerHTML = `
                     <div class="contractors-scroll-track" style="animation-duration: ${duration}s;">
                         ${rowsHtml}
