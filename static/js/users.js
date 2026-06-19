@@ -100,7 +100,7 @@ async function loadUsers() {
                 <p>Please refresh the page and try again</p>
             </div>
         `;
-        if (typeof Toast !== 'undefined') Toast.error('Failed to load users');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error('Failed to load users');
     }
 }
 
@@ -319,13 +319,13 @@ async function onSaveUser() {
     
     // Password validation for new users
     if (!id && !pwd) {
-        if (typeof Toast !== 'undefined') Toast.error('Password is required for new users');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error('Password is required for new users');
         return;
     }
     
     // Password confirmation validation
     if (pwd && pwd !== confirmPwd) {
-        if (typeof Toast !== 'undefined') Toast.error('Passwords do not match');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error('Passwords do not match');
         return;
     }
     
@@ -333,7 +333,7 @@ async function onSaveUser() {
     if (pwd) payload.password = pwd;
 
     if (!payload.email || !payload.full_name) {
-        if (typeof Toast !== 'undefined') Toast.error('Email and full name are required');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error('Email and full name are required');
         return;
     }
 
@@ -361,11 +361,11 @@ async function onSaveUser() {
             throw new Error(data.detail || data.message || 'Operation failed');
         }
         closeUserModalHandler();
-        if (typeof Toast !== 'undefined') Toast.success(data.message || (id ? 'User updated' : 'User created'));
+        if (typeof ModalSystem !== 'undefined') ModalSystem.success(data.message || (id ? 'User updated' : 'User created'));
         await loadUsers();
     } catch (err) {
         console.error('saveUser error', err);
-        if (typeof Toast !== 'undefined') Toast.error(err.message || 'Failed to save user');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error(err.message || 'Failed to save user');
     }
 }
 
@@ -388,11 +388,11 @@ async function deleteUser(id) {
         const res = await fetch(`${USERS_API}?id=${id}`, { method: 'DELETE', credentials: 'include' });
         const data = await res.json();
         if (!res.ok) throw new Error(data.detail || data.message || 'Delete failed');
-        if (typeof Toast !== 'undefined') Toast.success(data.message || 'User deleted');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.success(data.message || 'User deleted');
         await loadUsers();
     } catch (err) {
         console.error('deleteUser error', err);
-        if (typeof Toast !== 'undefined') Toast.error(err.message || 'Failed to delete user');
+        if (typeof ModalSystem !== 'undefined') ModalSystem.error(err.message || 'Failed to delete user');
     }
 }
 

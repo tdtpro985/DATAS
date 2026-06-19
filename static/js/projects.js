@@ -1769,8 +1769,8 @@ function editProject() {
     } else if (window.currentProjectsData && window.currentProjectsData.projects) {
         project = window.currentProjectsData.projects.find(p => p.id == projectId);
     }
-    if (!project) { if (typeof Toast !== 'undefined') Toast.error('Project not found'); return; }
-    if (project.archived_at) { if (typeof Toast !== 'undefined') Toast.warning('Cannot edit archived projects.'); return; }
+    if (!project) { ModalSystem.error('Project not found'); return; }
+    if (project.archived_at) { ModalSystem.warning('Cannot edit archived projects.'); return; }
 
     const isPriority = String(project.status || '').trim().toLowerCase() === 'priority';
 

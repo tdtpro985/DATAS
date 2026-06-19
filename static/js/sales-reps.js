@@ -289,19 +289,17 @@ async function handleSubmit() {
 }
 
 // Delete
-function promptDelete(id, name) {
-    if (typeof ModalSystem !== 'undefined') {
-        ModalSystem.confirm({
-            title: 'Delete Sales Representative',
-            message: `Delete ${name}? This action cannot be undone.`,
-            confirmText: 'Delete',
-            cancelText: 'Cancel',
-            type: 'danger'
-        }).then(confirmed => {
-            if (confirmed) deleteSalesRep(id);
-        });
-    } else {
-        if (confirm(`Delete ${name}? This action cannot be undone.`)) deleteSalesRep(id);
+async function promptDelete(id, name) {
+    const confirmed = await ModalSystem.confirm({
+        title: 'Delete Sales Representative',
+        message: `Delete ${name}? This action cannot be undone.`,
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        type: 'danger'
+    });
+    
+    if (confirmed) {
+        deleteSalesRep(id);
     }
 }
 
@@ -348,7 +346,21 @@ function handleEditClick(buttonElement) {
     }
 }
 
-function showError(message) { if (typeof Toast !== 'undefined') Toast.error(message); }
-function showSuccess(message) { if (typeof Toast !== 'undefined') Toast.success(message); }
+function showError(message) { 
+    if (typeof ModalSystem !== 'undefined') {
+        ModalSystem.error(message);
+    } else {
+        console.error(message);
+    }
+}
+
+function showSuccess(message) { 
+    if (typeof ModalSystem !== 'undefined') {
+        ModalSystem.success(message);
+    } else {
+        console.log(message);
+    }
+}
+
 function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 function formatDate(s) { if (!s) return '—'; return new Date(s).toLocaleDateString(); }

@@ -8,9 +8,7 @@ async function saveSalesTracking() {
     const projectId = modal?.dataset?.projectId;
     
     if (!projectId) {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Project ID not found');
-        }
+        ModalSystem.error('Project ID not found');
         return;
     }
     
@@ -87,9 +85,7 @@ async function saveSalesTracking() {
         const result = await response.json();
         console.log('[SALES TRACKING] Saved:', result);
         
-        if (typeof Toast !== 'undefined') {
-            Toast.success('Sales tracking saved successfully');
-        }
+        ModalSystem.success('Sales tracking saved successfully');
         
         // Show Actual Project modal before reloading
         if (typeof ProjectsPage !== 'undefined' && ProjectsPage.showActualProjectModal) {
@@ -114,11 +110,7 @@ async function saveSalesTracking() {
     } catch (error) {
         console.error('[SALES TRACKING] Save error:', error);
         console.error('[SALES TRACKING] Error stack:', error.stack);
-        if (typeof Toast !== 'undefined') {
-            Toast.error(error.message || 'Failed to save sales tracking');
-        } else {
-            ModalSystem.error(error.message || 'Failed to save sales tracking');
-        }
+        ModalSystem.error(error.message || 'Failed to save sales tracking');
     } finally {
         if (saveBtn) {
             saveBtn.textContent = originalText || '💾 Save Sales Tracking';
@@ -157,9 +149,7 @@ async function clearSalesTracking(event) {
             throw new Error(result.detail || 'Failed to clear');
         }
         
-        if (typeof Toast !== 'undefined') {
-            Toast.success('Sales tracking cleared');
-        }
+        ModalSystem.success('Sales tracking cleared');
         
         if (typeof ProjectsPage !== 'undefined' && ProjectsPage.loadProjects) {
             await ProjectsPage.loadProjects();
@@ -299,17 +289,13 @@ function editProject() {
     
     if (!project) {
         console.error('[PROJECTS] Project not found');
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Project not found');
-        }
+        ModalSystem.error('Project not found');
         return;
     }
     
     // Check if project is archived
     if (project.archived_at) {
-        if (typeof Toast !== 'undefined') {
-            Toast.warning('Cannot edit archived projects. Please restore first.');
-        }
+        ModalSystem.warning('Cannot edit archived projects. Please restore first.');
         return;
     }
     
@@ -358,9 +344,7 @@ function editSection(section) {
     }
     
     if (!project) {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Project not found');
-        }
+        ModalSystem.error('Project not found');
         return;
     }
     
@@ -692,9 +676,7 @@ async function saveEditSection() {
     const projectId = modal?.dataset?.projectId;
     
     if (!section || !projectId) {
-        if (typeof Toast !== 'undefined') {
-            Toast.error('Invalid data');
-        }
+        ModalSystem.error('Invalid data');
         return;
     }
     
@@ -746,9 +728,7 @@ async function saveEditSection() {
             break;
         case 'pictures':
             // Pictures functionality to be implemented
-            if (typeof Toast !== 'undefined') {
-                Toast.info('Pictures feature coming soon');
-            }
+            ModalSystem.info('Pictures feature coming soon');
             return;
     }
     
@@ -770,9 +750,7 @@ async function saveEditSection() {
         const result = await response.json();
         
         if (result.success) {
-            if (typeof Toast !== 'undefined') {
-                Toast.success('Project updated successfully');
-            }
+            ModalSystem.success('Project updated successfully');
             
             // Close modal
             closeEditSectionModal();
@@ -794,9 +772,7 @@ async function saveEditSection() {
         
     } catch (error) {
         console.error('Update error:', error);
-        if (typeof Toast !== 'undefined') {
-            Toast.error(`Failed to update: ${error.message}`);
-        }
+        ModalSystem.error(`Failed to update: ${error.message}`);
     }
 }
 
