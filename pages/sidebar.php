@@ -388,13 +388,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (href) {
             // Special handling for Settings link - only active when page=settings is in URL
             if (item.classList.contains('settings-nav-link')) {
-                if (currentPath.includes('?page=settings') || currentPath.includes('&page=settings')) {
+                if (currentPath.includes('page=settings')) {
                     item.classList.add('active');
                 }
             } 
             // Dashboard should not be active when settings page is shown
-            else if (href.endsWith('/admin') || href.endsWith('/admin/')) {
-                if (currentPath === href || (currentPath.startsWith(href) && !currentPath.includes('page=settings'))) {
+            else if (href.includes('/admin')) {
+                const basePath = href.split('?')[0];
+                const currentBasePath = currentPath.split('?')[0];
+                if (basePath === currentBasePath && !currentPath.includes('page=settings')) {
                     item.classList.add('active');
                 }
             }
