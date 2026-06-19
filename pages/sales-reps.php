@@ -49,17 +49,15 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <style>
         /* ── Main Container ── */
         .ap-main {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-            padding: 2rem;
+            width: 100%;
+            padding: 0;
         }
 
         .dashboard {
             width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0;
+            padding: 2rem 2.5rem;
         }
 
         .dashboard > .card {
