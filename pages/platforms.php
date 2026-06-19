@@ -252,18 +252,91 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
             border-color: rgba(255, 255, 255, 0.2);
         }
         
-        .yes-no-btn.active.yes {
+        .yes-no-btn.active {
             background: rgba(16, 185, 129, 0.2) !important;
             border-color: rgba(16, 185, 129, 0.6) !important;
             color: #10b981 !important;
             font-weight: 700;
         }
         
-        .yes-no-btn.active.no {
-            background: rgba(239, 68, 68, 0.2) !important;
-            border-color: rgba(239, 68, 68, 0.6) !important;
-            color: #ef4444 !important;
+        /* ── Sales Tracking Form ── */
+        .sales-tracking-section {
+            background: rgba(255, 128, 0, 0.05);
+            border: 1px solid rgba(255, 128, 0, 0.2);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .sales-tracking-title {
+            font-size: 1rem;
             font-weight: 700;
+            color: var(--orange-500);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sales-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, auto);
+            grid-auto-flow: column;
+            gap: 1rem;
+        }
+        
+        .sales-form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .sales-form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .sales-form-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .sales-form-input,
+        .sales-form-select,
+        .sales-form-textarea {
+            padding: 0.75rem;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: var(--font);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .sales-form-input:focus,
+        .sales-form-select:focus,
+        .sales-form-textarea:focus {
+            border-color: var(--orange-500);
+            box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.15);
+        }
+        
+        .sales-form-select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B0BEC5' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            padding-right: 2.5rem;
+        }
+        
+        .sales-form-textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         /* Platform Leads Table Card */
