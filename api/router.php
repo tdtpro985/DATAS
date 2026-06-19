@@ -107,6 +107,7 @@ elseif ($path === 'platforms' && $method === 'GET')                      { requi
 elseif ($path === 'platforms/create' && $method === 'POST')              { require __DIR__ . '/platforms/create.php'; }
 elseif ($path === 'platforms/update' && $method === 'POST')              { require __DIR__ . '/platforms/update.php'; }
 elseif ($path === 'platforms/archive' && $method === 'POST')             { require __DIR__ . '/platforms/archive.php'; }
+elseif ($path === 'platforms/tracking' && in_array($method, ['GET', 'POST'], true)) { require __DIR__ . '/platforms/tracking.php'; }
 
 else {
     if (DEBUG_MODE) error_log("ROUTER: No route matched for path: " . $path);
