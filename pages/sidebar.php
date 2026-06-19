@@ -176,7 +176,7 @@ try {
     </aside>
 
     <!-- Logout Confirmation Modal -->
-    <div class="modal-overlay" id="logoutModal">
+    <div class="modal-overlay" id="logoutModal" style="display: none;">
         <div class="modal-content modal-small">
             <div class="modal-header">
                 <h2>Confirm Logout</h2>
@@ -198,7 +198,7 @@ try {
     </div>
 
     <!-- Credits Modal -->
-    <div class="credits-modal-overlay" id="creditsModal">
+    <div class="credits-modal-overlay" id="creditsModal" style="display: none;">
         <div class="credits-modal-container">
             <button type="button" class="credits-close-btn" onclick="closeCreditsModal()">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
