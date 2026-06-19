@@ -260,41 +260,7 @@ if ($role === 'encoder') {
             white-space: nowrap;
         }
         
-        /* Export Button */
-        .export-button {
-            background: linear-gradient(135deg, #ff8000, #ffa500);
-            color: #000;
-            border: none;
-            padding: 0.35rem 0.8rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        
-        .export-button:hover {
-            background: linear-gradient(135deg, #ffa500, #ffb300);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 128, 0, 0.4);
-        }
-        
-        .export-button:active {
-            transform: translateY(0);
-            box-shadow: 0 2px 6px rgba(255, 128, 0, 0.3);
-        }
-        
-        .export-icon {
-            font-size: 0.85rem;
-        }
+        /* Export Button - REMOVED */
         
         /* Responsive Header Adjustments */
         @media (max-width: 1400px) {
@@ -364,12 +330,6 @@ if ($role === 'encoder') {
                 min-width: 65px;
                 padding: 0.25rem 1.5rem 0.25rem 0.45rem;
             }
-            
-            .export-button {
-                padding: 0.25rem 0.6rem;
-                font-size: 0.6rem;
-                gap: 0.25rem;
-            }
         }
         
         @media (max-width: 768px) {
@@ -405,426 +365,9 @@ if ($role === 'encoder') {
                 min-width: 60px;
                 font-size: 0.65rem;
             }
-            
-            .export-button {
-                width: 100%;
-                justify-content: center;
-                margin-top: 0.3rem;
-            }
         }
         
-        /* Export Modal Styles */
-        .export-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 15000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .export-modal {
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            border: 2px solid #ff8000;
-            border-radius: 12px;
-            width: 90vw;
-            max-width: 600px;
-            max-height: 80vh;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(255, 128, 0, 0.3);
-            animation: slideInUp 0.4s ease;
-        }
-        
-        .export-modal-header {
-            background: linear-gradient(135deg, #ff8000, #ffa500);
-            color: #000;
-            padding: 1.2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 2px solid #000;
-        }
-        
-        .export-modal-header h3 {
-            margin: 0;
-            font-size: 1.2rem;
-            font-weight: 700;
-        }
-        
-        .export-modal-close {
-            background: none;
-            border: none;
-            color: #000;
-            font-size: 1.5rem;
-            font-weight: bold;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: background 0.2s ease;
-        }
-        
-        .export-modal-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-        
-        .export-modal-content {
-            padding: 1.5rem;
-            max-height: 60vh;
-            overflow-y: auto;
-        }
-        
-        .export-select-all {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #444;
-        }
-        
-        .export-checkbox-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            padding: 0.8rem;
-            margin-bottom: 0.8rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: rgba(255, 128, 0, 0.05);
-            border: 1px solid rgba(255, 128, 0, 0.1);
-        }
-        
-        .export-checkbox-container:hover {
-            background: rgba(255, 128, 0, 0.1);
-            border-color: rgba(255, 128, 0, 0.2);
-        }
-        
-        .export-checkbox-container input[type="checkbox"] {
-            display: none;
-        }
-        
-        .export-checkmark {
-            width: 20px;
-            height: 20px;
-            border: 2px solid #ff8000;
-            border-radius: 4px;
-            position: relative;
-            transition: all 0.2s ease;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        
-        .export-checkbox-container input[type="checkbox"]:checked + .export-checkmark {
-            background: #ff8000;
-            border-color: #ff8000;
-        }
-        
-        .export-checkbox-container input[type="checkbox"]:checked + .export-checkmark::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: #000;
-            font-weight: bold;
-            font-size: 12px;
-        }
-        
-        .export-label {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 0.2rem;
-        }
-        
-        .export-description {
-            color: #888;
-            font-size: 0.75rem;
-            line-height: 1.3;
-        }
-        
-        .export-reports-list .export-checkbox-container {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        
-        .export-reports-list .export-checkbox-container > div:first-child {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
-            width: 100%;
-        }
-        
-        .export-modal-footer {
-            background: #1a1a1a;
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            border-top: 1px solid #444;
-        }
-        
-        .export-btn-cancel, .export-btn-back {
-            background: #444;
-            color: #fff;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .export-btn-cancel:hover, .export-btn-back:hover {
-            background: #555;
-        }
-        
-        .export-btn-next, .export-btn-export {
-            background: linear-gradient(135deg, #ff8000, #ffa500);
-            color: #000;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-        
-        .export-btn-next:hover, .export-btn-export:hover {
-            background: linear-gradient(135deg, #ffa500, #ffb300);
-        }
-        
-        .export-btn-export:disabled {
-            background: #666;
-            color: #999;
-            cursor: not-allowed;
-        }
-        
-        /* Format Selection Styles */
-        .export-selected-reports {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #444;
-        }
-        
-        .export-selected-reports h4 {
-            color: #ff8000;
-            margin-bottom: 0.8rem;
-            font-size: 0.9rem;
-        }
-        
-        .selected-reports-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-        
-        .selected-report-tag {
-            background: rgba(255, 128, 0, 0.2);
-            color: #ff8000;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(255, 128, 0, 0.3);
-        }
-        
-        .export-format-options {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        
-        .export-format-option {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            border: 2px solid #444;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            background: rgba(255, 128, 0, 0.02);
-        }
-        
-        .export-format-option:hover {
-            border-color: #ff8000;
-            background: rgba(255, 128, 0, 0.08);
-        }
-        
-        .export-format-option.selected {
-            border-color: #ff8000;
-            background: rgba(255, 128, 0, 0.15);
-        }
-        
-        .format-icon {
-            font-size: 2rem;
-            flex-shrink: 0;
-        }
-        
-        .format-details {
-            flex: 1;
-        }
-        
-        .format-name {
-            color: #fff;
-            font-weight: 600;
-            margin-bottom: 0.3rem;
-        }
-        
-        .format-description {
-            color: #888;
-            font-size: 0.8rem;
-            line-height: 1.3;
-        }
-        
-        .format-radio input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #ff8000;
-        }
-        
-        /* Export Status Modal Styles */
-        .export-status-content {
-            text-align: center;
-            padding: 2rem 1rem;
-        }
-        
-        .export-loading-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .export-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #333;
-            border-top: 4px solid #ff8000;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .export-loading-text {
-            text-align: center;
-        }
-        
-        .loading-message {
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-        
-        .loading-details {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .export-progress-bar {
-            width: 100%;
-            max-width: 300px;
-            height: 8px;
-            background: #333;
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 1rem;
-        }
-        
-        .export-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ff8000, #ffa500);
-            border-radius: 4px;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .export-success-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .success-icon {
-            font-size: 4rem;
-        }
-        
-        .success-message {
-            color: #10b981;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-        
-        .export-summary {
-            background: rgba(255, 128, 0, 0.1);
-            border: 1px solid rgba(255, 128, 0, 0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            width: 100%;
-            max-width: 300px;
-        }
-        
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-        }
-        
-        .summary-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .summary-label {
-            color: #888;
-            font-size: 0.9rem;
-        }
-        
-        .summary-value {
-            color: #fff;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-        
-        .download-actions {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-        
-        .download-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: #fff;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .download-btn:hover {
-            background: linear-gradient(135deg, #059669, #047857);
-            transform: translateY(-1px);
-        }
+        /* Export Modal Styles - REMOVED */
         
         /* Main Content */
         .dashboard-content {
@@ -843,24 +386,37 @@ if ($role === 'encoder') {
         .main-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: minmax(280px, 0.28fr) minmax(350px, 0.4fr) minmax(300px, 0.32fr);
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 0.8rem;
             min-height: 0;
-            overflow: hidden; /* NO SCROLL */
+            overflow: hidden;
             width: 100%;
         }
         
-        /* Scale down for smaller desktops */
-        @media (max-width: 1400px) {
+        /* Scale down for smaller screens */
+        @media (min-width: 1400px) {
             .main-grid {
-                grid-template-columns: minmax(250px, 0.28fr) minmax(320px, 0.4fr) minmax(280px, 0.32fr);
+                grid-template-columns: minmax(280px, 0.28fr) minmax(350px, 0.4fr) minmax(300px, 0.32fr);
+            }
+        }
+        
+        @media (max-width: 1399px) and (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: repeat(3, 1fr);
                 gap: 0.6rem;
             }
         }
         
-        @media (max-width: 1280px) {
+        @media (max-width: 1023px) and (min-width: 768px) {
             .main-grid {
-                grid-template-columns: minmax(220px, 0.28fr) minmax(300px, 0.4fr) minmax(260px, 0.32fr);
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 767px) {
+            .main-grid {
+                grid-template-columns: 1fr;
                 gap: 0.5rem;
             }
         }
@@ -882,15 +438,28 @@ if ($role === 'encoder') {
             flex-shrink: 1;
         }
         
-        /* KPI Summary Left */
+        /* KPI Summary Left - Responsive Grid */
         .kpi-summary-left {
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
             gap: 0.4rem;
-            height: 70px;
+            min-height: 70px;
             margin-bottom: 0.3rem;
         }
         
+        @media (max-width: 768px) {
+            .kpi-summary-left {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .kpi-summary-left {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* KPI Card - Fully Responsive */
         .kpi-card {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
@@ -901,10 +470,25 @@ if ($role === 'encoder') {
             align-items: center;
             justify-content: center;
             text-align: center;
-            height: 100%;
+            min-height: 70px;
+            height: auto;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-card {
+                padding: 0.4rem;
+                min-height: 60px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .kpi-card {
+                padding: 0.3rem;
+                min-height: 55px;
+            }
         }
         
         .kpi-card::before {
@@ -3583,13 +3167,6 @@ if ($role === 'encoder') {
                     <div class="control-group">
                         <div class="control-label">Time</div>
                         <div class="time-display" id="current-time">08:00:47 AM</div>
-                    </div>
-                    
-                    <div class="control-group">
-                        <button class="export-button" onclick="ExportModal.show()">
-                            <span class="export-icon">📊</span>
-                            Export
-                        </button>
                     </div>
                 </div>
             </div>
