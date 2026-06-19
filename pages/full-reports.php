@@ -631,8 +631,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- SR Detail Modal -->
-<div class="detail-modal-overlay" id="srDetailModal">
-    <div class="detail-modal" id="srDetailModalInner">
+<div class="detail-modal-overlay" id="srDetailModal" style="position: fixed; inset: 0; z-index: 999999; background: rgba(0, 0, 0, 0.90); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center;">
+    <div class="detail-modal" id="srDetailModalInner" style="position: relative; z-index: 1000000;">
         <button class="modal-close-btn" id="closeSRDetailModal" title="Close">✕</button>
 
         <div class="modal-sr-header">
@@ -757,8 +757,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </div>
 
 <!-- Export Modal -->
-<div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;">
-    <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;width:540px;max-width:90vw;max-height:85vh;overflow-y:auto;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,0.6);">
+<div id="exportModal" style="visibility:hidden;opacity:0;position:fixed;inset:0;background:rgba(0,0,0,0.90);z-index:999999;display:flex;align-items:center;justify-content:center;transition:opacity 0.3s;backdrop-filter:blur(8px);">
+    <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;width:540px;max-width:90vw;max-height:85vh;overflow-y:auto;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,0.6);position:relative;z-index:1000000;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
             <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text-primary);">📥 Export Report</h3>
             <button onclick="closeExportModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>

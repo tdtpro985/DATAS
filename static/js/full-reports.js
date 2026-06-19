@@ -809,9 +809,9 @@ const FullReports = {
                     .badge-danger { background:rgba(239,68,68,0.15); color:#f87171; }
                     
                     /* Detail Modal - Exact match with SR Performance */
-                    .detail-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:100000; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+                    .detail-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.90); z-index:999999; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
                     .detail-modal-overlay.active { display:flex; }
-                    .detail-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:1100px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:100001; }
+                    .detail-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:1100px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:1000000; }
                     @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:none; } }
                     
                     .modal-close-btn { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s, color 0.15s; }
