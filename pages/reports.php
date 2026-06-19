@@ -530,6 +530,50 @@ if ($role === 'encoder') {
             line-height: 1.1;
         }
         
+        @media (max-width: 1280px) {
+            .kpi-icon {
+                font-size: 0.9rem;
+            }
+            .kpi-value {
+                font-size: 0.85rem;
+            }
+            .kpi-label {
+                font-size: 0.48rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .kpi-icon {
+                font-size: 0.85rem;
+                margin-bottom: 0.25rem;
+            }
+            .kpi-value {
+                font-size: 0.8rem;
+            }
+            .kpi-label {
+                font-size: 0.45rem;
+            }
+            .kpi-card {
+                padding: 0.4rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .kpi-icon {
+                font-size: 0.75rem;
+                margin-bottom: 0.2rem;
+            }
+            .kpi-value {
+                font-size: 0.7rem;
+            }
+            .kpi-label {
+                font-size: 0.4rem;
+            }
+            .kpi-card {
+                padding: 0.3rem;
+            }
+        }
+        
         /* Center Column */
         .center-column {
             display: flex;
@@ -961,6 +1005,50 @@ if ($role === 'encoder') {
             gap: 0.3rem;
         }
         
+        @media (max-width: 1280px) {
+            .target-percentage {
+                font-size: 1.6rem;
+            }
+            .target-status {
+                font-size: 0.55rem;
+            }
+            .target-number {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .target-percentage {
+                font-size: 1.4rem;
+            }
+            .target-status {
+                font-size: 0.5rem;
+            }
+            .target-number {
+                font-size: 0.9rem;
+            }
+            .target-section {
+                padding: 0.8rem;
+                height: 80px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .target-percentage {
+                font-size: 1.2rem;
+            }
+            .target-status {
+                font-size: 0.45rem;
+            }
+            .target-number {
+                font-size: 0.8rem;
+            }
+            .target-section {
+                padding: 0.6rem;
+                height: 70px;
+            }
+        }
+        
         .target-progress-bar {
             background: #333;
             height: 4px;
@@ -1030,6 +1118,19 @@ if ($role === 'encoder') {
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+        }
+        
+        @media (max-width: 1280px) {
+            .section-title {
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .section-title {
+                font-size: 0.6rem;
+                margin-bottom: 0.5rem;
+            }
         }
         
         .contractors-table {
@@ -1104,6 +1205,24 @@ if ($role === 'encoder') {
             font-weight: 600;
             text-align: right;
             text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
+        }
+        
+        @media (max-width: 1280px) {
+            .contractor-value {
+                font-size: 0.65rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .contractor-value {
+                font-size: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .contractor-value {
+                font-size: 0.55rem;
+            }
         }
         
         /* Contractors List */
@@ -1191,6 +1310,50 @@ if ($role === 'encoder') {
             font-size: 0.65rem;
             color: #888;
             min-width: 40px;
+        }
+        
+        @media (max-width: 1280px) {
+            .funnel-name,
+            .funnel-count {
+                font-size: 0.65rem;
+            }
+            .funnel-percentage {
+                font-size: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .funnel-name,
+            .funnel-count {
+                font-size: 0.6rem;
+            }
+            .funnel-percentage {
+                font-size: 0.55rem;
+                min-width: 35px;
+            }
+            .funnel-stats {
+                gap: 0.4rem;
+            }
+            .funnel-item {
+                padding: 0.35rem 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .funnel-name,
+            .funnel-count {
+                font-size: 0.55rem;
+            }
+            .funnel-percentage {
+                font-size: 0.5rem;
+                min-width: 30px;
+            }
+            .funnel-stats {
+                gap: 0.3rem;
+            }
+            .funnel-item {
+                padding: 0.3rem 0;
+            }
         }
         
         .funnel-bar {
@@ -2412,6 +2575,59 @@ if ($role === 'encoder') {
             .funnel-bar {
                 width: 35px;
                 height: 2px;
+            }
+        }
+        
+        /* ══════════════════════════════════════════════════════════
+           GLOBAL RESPONSIVE TEXT STYLES FOR ALL CARDS
+        ══════════════════════════════════════════════════════════ */
+        @media (max-width: 1280px) {
+            .category-count,
+            .category-value {
+                font-size: 0.65rem;
+            }
+            .category-percentage {
+                font-size: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .category-count,
+            .category-value {
+                font-size: 0.6rem;
+            }
+            .category-percentage {
+                font-size: 0.55rem;
+            }
+            .category-stats {
+                gap: 0.4rem;
+            }
+            
+            .project-status-section,
+            .contractors-section,
+            .bar-graph-section,
+            .pie-graph-section {
+                padding: 0.6rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .category-count,
+            .category-value {
+                font-size: 0.55rem;
+            }
+            .category-percentage {
+                font-size: 0.5rem;
+            }
+            .category-stats {
+                gap: 0.3rem;
+            }
+            
+            .project-status-section,
+            .contractors-section,
+            .bar-graph-section,
+            .pie-graph-section {
+                padding: 0.5rem;
             }
         }
         
