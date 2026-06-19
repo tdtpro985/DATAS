@@ -309,10 +309,21 @@
     );
 }
 
+.filter-select optgroup {
+    font-weight: 700;
+    color: #ff8000;
+    background: #0a0f1a;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    padding: 0.5rem 0.5rem 0.25rem;
+}
+
 .filter-select option {
     background: #0f172a;
     color: var(--text-primary);
-    padding: 0.5rem;
+    padding: 0.6rem 0.5rem;
+    font-weight: 500;
+    font-size: 0.85rem;
 }
 
 /* ── Status Legend (Modern) ── */

@@ -115,13 +115,30 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         <select id="region-filter" class="filter-select"><option value="">All Regions</option></select>
         <select id="source-filter" class="filter-select"><option value="">All Sources</option></select>
         <select id="sort-filter" class="filter-select">
-            <optgroup label="📅 By Published Date"><option value="publication_date_desc">Newest First</option><option value="publication_date_asc">Oldest First</option></optgroup>
-            <optgroup label="📝 By Encoded Date"><option value="created_at_desc">Newest First</option><option value="created_at_asc">Oldest First</option></optgroup>
-            <optgroup label="🏢 By Contractor"><option value="contractor_name_asc">A to Z</option><option value="contractor_name_desc">Z to A</option></optgroup>
-            <optgroup label="📋 By Project Name"><option value="project_name_asc">A to Z</option><option value="project_name_desc">Z to A</option></optgroup>
-            <optgroup label="💰 By Value"><option value="project_value_desc">Highest First</option><option value="project_value_asc">Lowest First</option></optgroup>
-            <optgroup label="📍 By Region"><option value="region_asc">A to Z</option><option value="region_desc">Z to A</option></optgroup>
-            <optgroup label="📊 By Status"><option value="status_asc">A to Z</option><option value="tracking_status_desc">By Tracking</option></optgroup>
+            <optgroup label="📅 BY PUBLISHED DATE">
+                <option value="publication_date_desc">NEWEST FIRST</option>
+                <option value="publication_date_asc">OLDEST FIRST</option>
+            </optgroup>
+            <optgroup label="📝 BY ENCODED DATE">
+                <option value="created_at_desc">NEWEST FIRST</option>
+                <option value="created_at_asc">OLDEST FIRST</option>
+            </optgroup>
+            <optgroup label="🏢 BY CONTRACTOR">
+                <option value="contractor_name_asc">A TO Z</option>
+                <option value="contractor_name_desc">Z TO A</option>
+            </optgroup>
+            <optgroup label="📋 BY PROJECT NAME">
+                <option value="project_name_asc">A TO Z</option>
+                <option value="project_name_desc">Z TO A</option>
+            </optgroup>
+            <optgroup label="💰 BY VALUE">
+                <option value="project_value_desc">HIGHEST FIRST</option>
+                <option value="project_value_asc">LOWEST FIRST</option>
+            </optgroup>
+            <optgroup label="📍 BY REGION">
+                <option value="region_asc">A TO Z</option>
+                <option value="region_desc">Z TO A</option>
+            </optgroup>
         </select>
     </div>
     <!-- Projects Table -->

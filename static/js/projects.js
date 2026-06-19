@@ -240,9 +240,10 @@ const ProjectsPage = {
             switch (field) {
                 case 'publication_date':
                 case 'publication':
-                    valueA = new Date(a.publication_date || 0);
-                    valueB = new Date(b.publication_date || 0);
+                    valueA = new Date(a.publication_date || a.published_date || a.published_at || 0);
+                    valueB = new Date(b.publication_date || b.published_date || b.published_at || 0);
                     break;
+                case 'created_at':
                 case 'created':
                     valueA = new Date(a.created_at || 0);
                     valueB = new Date(b.created_at || 0);
@@ -258,6 +259,7 @@ const ProjectsPage = {
                     valueB = (b.project_name || '').toLowerCase();
                     break;
                 case 'project_value':
+                case 'value':
                     valueA = parseFloat(a.project_value || 0);
                     valueB = parseFloat(b.project_value || 0);
                     break;
@@ -271,8 +273,8 @@ const ProjectsPage = {
                     break;
                 case 'tracking_status':
                 case 'tracking':
-                    valueA = (a.sales_tracking_status || 'Not Started').toLowerCase();
-                    valueB = (b.sales_tracking_status || 'Not Started').toLowerCase();
+                    valueA = (a.sales_tracking_status || a.tracking_status || 'Not Started').toLowerCase();
+                    valueB = (b.sales_tracking_status || b.tracking_status || 'Not Started').toLowerCase();
                     // Custom order for tracking status
                     const statusOrder = { 'not started': 0, 'in progress': 1, 'complete': 2 };
                     valueA = statusOrder[valueA] ?? 0;
