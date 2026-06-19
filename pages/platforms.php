@@ -915,13 +915,14 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
                         <th>Contact Number</th>
                         <th>Email Address</th>
                         <th>Location</th>
+                        <th>Sales Status</th>
                         <th>Date Added</th>
                     </tr>
                 </thead>
                 <tbody id="platformsTableBody">
                     <!-- Loading state -->
                     <tr>
-                        <td colspan="7">
+                        <td colspan="8">
                             <div class="loading-state">
                                 <div class="loading-spinner"></div>
                                 <p>Loading platform leads...</p>
@@ -1418,7 +1419,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (filteredPlatforms.length === 0) {
             tableBody.innerHTML = `
                 <tr>
-                    <td colspan="7">
+                    <td colspan="8">
                         <div class="empty-state">
                             <div class="empty-state-icon">📋</div>
                             <h3>No platform leads found</h3>
@@ -1430,7 +1431,12 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        tableBody.innerHTML = filteredPlatforms.map(platform => `
+        tableBody.innerHTML = filteredPlatforms.map(platform => {
+            const statusBadge = platform.sales_tracking_status 
+                ? `<span class="status-badge status-${platform.sales_tracking_status.toLowerCase().replace(/ /g, '-')}">${escapeHtml(platform.sales_tracking_status)}</span>`
+                : '<span style="color: var(--text-muted);">-</span>';
+            
+            return `
             <tr onclick="viewPlatformDetails(${platform.id})" style="cursor: pointer;">
                 <td title="${escapeHtml(platform.source || '')}">${escapeHtml(platform.source || 'N/A')}</td>
                 <td title="${escapeHtml(platform.company_name || '')}">${escapeHtml(platform.company_name || 'N/A')}</td>
@@ -1438,9 +1444,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 <td title="${escapeHtml(platform.contact_number || '')}">${escapeHtml(platform.contact_number || 'N/A')}</td>
                 <td title="${escapeHtml(platform.email_address || '')}">${escapeHtml(platform.email_address || 'N/A')}</td>
                 <td title="${escapeHtml(platform.company_location || '')}">${escapeHtml(platform.company_location || 'N/A')}</td>
+                <td>${statusBadge}</td>
                 <td class="col-date">${formatDate(platform.created_at)}</td>
             </tr>
-        `).join('');
+            `;
+        }).join('');
     }
     // Search functionality
     searchInput.addEventListener('input', function() {
