@@ -170,8 +170,9 @@ window.toggleBranchExpand = function(branchName) {
 // Render individual Sales Rep card
 function renderSalesRepCard(rep) {
     const initials = rep.full_name ? rep.full_name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() : '?';
+    const repData = encodeURIComponent(JSON.stringify(rep));
     return `
-        <div class="sr-card" onclick="openModal(${JSON.stringify(rep).replace(/"/g, '"')}); event.stopPropagation();">
+        <div class="sr-card" data-rep-id="${rep.id}" data-rep-data="${repData}" onclick="handleCardClick(this); event.stopPropagation();">
             <div style="display:flex; align-items:flex-start; gap:1rem; margin-bottom:1rem;">
                 <div class="avatar">${escapeHtml(initials)}</div>
                 <div style="flex:1; min-width:0;">
@@ -192,7 +193,7 @@ function renderSalesRepCard(rep) {
                 <span class="info-value" style="color:var(--text-muted);font-weight:400;font-size:0.78rem;">${formatDate(rep.created_at)}</span>
             </div>
             <div class="sr-footer">
-                <button class="btn btn-primary btn-sm" onclick="event.stopPropagation(); openModal(${JSON.stringify(rep).replace(/"/g, '"')})">Edit</button>
+                <button class="btn btn-primary btn-sm" onclick="handleEditClick(this); event.stopPropagation();">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="event.stopPropagation(); promptDelete(${rep.id}, '${escapeHtml(rep.full_name)}')">Delete</button>
             </div>
         </div>
@@ -320,11 +321,31 @@ async function deleteSalesRep(id) {
     }
 }
 
-// Utility
 function showFormError(message) {
     formError.textContent = message;
     formError.style.display = 'block';
     setTimeout(() => formError.style.display = 'none', 5000);
+}
+
+// Helper functions for card and button clicks
+function handleCardClick(cardElement) {
+    const repData = cardElement.dataset.repData;
+    if (repData) {
+        try {
+            const rep = JSON.parse(decodeURIComponent(repData));
+            openModal(rep);
+        } catch (error) {
+            console.error('Error parsing rep data:', error);
+            showError('Error loading sales rep data');
+        }
+    }
+}
+
+function handleEditClick(buttonElement) {
+    const card = buttonElement.closest('.sr-card');
+    if (card) {
+        handleCardClick(card);
+    }
 }
 
 function showError(message) { if (typeof Toast !== 'undefined') Toast.error(message); }
