@@ -1,11 +1,31 @@
 <?php
 /**
  * Migration: Create platform_tracking table
- * Run this file once via: php migrate-platform-tracking.php
+ * Run this file via browser: https://yourdomain.com/migrate-platform-tracking.php
+ * Or via command line: php migrate-platform-tracking.php
  */
 
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/api/db.php';
+
+// Set content type to HTML for browser viewing
+header('Content-Type: text/html; charset=utf-8');
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Platform Tracking Migration</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #0f0; }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #ff0; }
+        pre { background: #000; padding: 10px; border: 1px solid #333; }
+    </style>
+</head>
+<body>
+<pre>
+<?php
 
 echo "=== Platform Tracking Table Migration ===\n";
 echo "Starting migration...\n\n";
@@ -14,33 +34,39 @@ try {
     $db = getDB();
     
     // Check if table already exists
+    echo "<span class='info'>Checking if table exists...</span>\n";
     $stmt = $db->query("SHOW TABLES LIKE 'platform_tracking'");
     $exists = $stmt->fetch();
     
     if ($exists) {
-        echo "✓ Table 'platform_tracking' already exists. Skipping creation.\n";
+        echo "<span class='success'>✓ Table 'platform_tracking' already exists. Skipping creation.</span>\n";
     } else {
-        echo "Creating 'platform_tracking' table...\n";
+        echo "<span class='info'>Creating 'platform_tracking' table...</span>\n";
         
         $sql = file_get_contents(__DIR__ . '/database/create-platform-tracking-table.sql');
         $db->exec($sql);
         
-        echo "✓ Table 'platform_tracking' created successfully!\n";
+        echo "<span class='success'>✓ Table 'platform_tracking' created successfully!</span>\n";
     }
     
     // Verify table structure
-    echo "\nVerifying table structure...\n";
+    echo "\n<span class='info'>Verifying table structure...</span>\n";
     $stmt = $db->query("DESCRIBE platform_tracking");
     $columns = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
-    echo "Columns in platform_tracking:\n";
+    echo "<span class='success'>Columns in platform_tracking:</span>\n";
     foreach ($columns as $col) {
         echo "  - {$col['Field']} ({$col['Type']})\n";
     }
     
-    echo "\n=== Migration completed successfully! ===\n";
+    echo "\n<span class='success'>=== Migration completed successfully! ===</span>\n";
+    echo "\n<span class='info'>You can now close this page.</span>\n";
     
 } catch (Exception $e) {
-    echo "\n❌ Migration failed: " . $e->getMessage() . "\n";
+    echo "\n<span class='error'>❌ Migration failed: " . htmlspecialchars($e->getMessage()) . "</span>\n";
     exit(1);
 }
+?>
+</pre>
+</body>
+</html>
