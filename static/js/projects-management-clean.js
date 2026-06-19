@@ -154,6 +154,9 @@ async function loadProjects() {
             } else if (sortField === 'created_at') {
                 dateA = new Date(a.created_at || 0);
                 dateB = new Date(b.created_at || 0);
+            } else if (sortField === 'archived_at') {
+                dateA = new Date(a.archived_at || 0);
+                dateB = new Date(b.archived_at || 0);
             }
             
             return sortOrder === 'desc' ? dateB - dateA : dateA - dateB;

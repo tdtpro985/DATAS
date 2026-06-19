@@ -1082,6 +1082,10 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
                     <option value="created_at_desc">Newest First</option>
                     <option value="created_at_asc">Oldest First</option>
                 </optgroup>
+                <optgroup label="🗄️ By Archived Date">
+                    <option value="archived_at_desc">Newest First</option>
+                    <option value="archived_at_asc">Oldest First</option>
+                </optgroup>
             </select>
         </div>
 
