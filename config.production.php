@@ -15,7 +15,7 @@ define('DB_CHARSET', 'utf8mb4');
 
 // Security Configuration - PRODUCTION SETTINGS
 define('SESSION_TIMEOUT', 28800); // 8 hours in seconds
-define('SESSION_IDLE_TIMEOUT', 3600); // 1 hour
+define('SESSION_IDLE_TIMEOUT', 0); // idle logout disabled
 define('CSRF_TOKEN_LIFETIME', 3600); // 1 hour
 define('DEBUG_MODE', false);  // NEVER set to true in production
 define('APP_ENV', 'production');

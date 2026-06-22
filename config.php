@@ -22,7 +22,7 @@ define('DB_TIMEZONE', '+08:00');
 
 // Security Configuration
 define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
-define('SESSION_IDLE_TIMEOUT', 1800); // 30 minutes
+define('SESSION_IDLE_TIMEOUT', 0); // idle logout disabled
 define('CSRF_TOKEN_LIFETIME', 3600); // 1 hour
 define('DEBUG_MODE', false);  // Set to true only in development
 define('APP_ENV', 'production');

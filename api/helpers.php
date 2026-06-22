@@ -37,15 +37,15 @@ if (!defined('SESSION_IDLE_TIMEOUT')) {
 if (isset($_SESSION['user'])) {
     $lastActivity = $_SESSION['last_activity'] ?? 0;
     $currentTime = time();
-    
-    if ($lastActivity > 0 && ($currentTime - $lastActivity) > SESSION_IDLE_TIMEOUT) {
+
+    if (defined('SESSION_IDLE_TIMEOUT') && SESSION_IDLE_TIMEOUT > 0 && $lastActivity > 0 && ($currentTime - $lastActivity) > SESSION_IDLE_TIMEOUT) {
         // Session has been idle too long, destroy it
         session_destroy();
         session_start();
         // Clear the user from session
         unset($_SESSION['user']);
     }
-    
+
     $_SESSION['last_activity'] = $currentTime;
 }
 
