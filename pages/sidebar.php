@@ -415,15 +415,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeLogoutModal = document.getElementById('closeLogoutModal');
     const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
     const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-    
+
+    if (logoutModal) {
+        logoutModal.style.display = 'none';
+    }
+
     function openLogoutModal() {
+        if (!logoutModal) return;
         logoutModal.classList.add('active');
+        logoutModal.style.display = 'flex';
     }
-    
+
     function closeLogoutModalHandler() {
+        if (!logoutModal) return;
         logoutModal.classList.remove('active');
+        logoutModal.style.display = 'none';
     }
-    
+
     function confirmLogout() {
         // Use the centralized JS logout helper when available.
         if (typeof Auth !== 'undefined' && typeof Auth.logout === 'function') {
@@ -497,6 +505,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.ap-nav-item, .ap-nav-dropdown-item').forEach(el => {
         el.addEventListener('click', () => {
             if (window.innerWidth <= 768) closeSidebar();
+            closeLogoutModalHandler();
         });
     });
 });
