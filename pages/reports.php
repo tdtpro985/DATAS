@@ -62,7 +62,9 @@ if ($role === 'encoder') {
         
         .dashboard-container {
             width: 100%;
-            height: 100vh;
+            max-width: 100vw;
+            height: 100dvh;
+            max-height: 100dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -108,16 +110,17 @@ if ($role === 'encoder') {
         /* Header */
         .dashboard-header {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            padding: 0.4rem 0.8rem;
+            padding: clamp(0.3rem, 0.8vh, 0.4rem) clamp(0.5rem, 1.2vw, 0.8rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            min-height: 45px;
+            min-height: clamp(38px, 5vh, 45px);
             border-bottom: 2px solid #ff8000;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            flex-wrap: wrap;
-            gap: 0.5rem;
+            flex-wrap: nowrap;
+            gap: 0.4rem;
+            overflow: hidden;
         }
         
         .header-left {
@@ -152,17 +155,20 @@ if ($role === 'encoder') {
         .header-right {
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.5rem;
             flex: 1;
             justify-content: flex-end;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            min-width: 0;
+            overflow: hidden;
         }
         
         .header-controls {
             display: flex;
-            gap: 0.6rem;
+            gap: clamp(0.3rem, 0.8vw, 0.6rem);
             align-items: center;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
+            min-width: 0;
         }
         
         .control-group {
@@ -374,50 +380,38 @@ if ($role === 'encoder') {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 0.6rem;
+            padding: clamp(0.25rem, 0.8vw, 0.6rem);
             overflow: hidden;
             min-height: 0;
-            max-height: calc(100vh - 45px);
             position: relative;
             z-index: 1;
         }
         
-        /* Main Grid Layout - 3 Columns - FULLY RESPONSIVE */
+        /* Main Grid Layout - 3 Columns - viewport-contained */
         .main-grid {
             flex: 1;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 0.8rem;
+            grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.42fr) minmax(0, 0.30fr);
+            grid-template-rows: minmax(0, 1fr);
+            gap: clamp(0.35rem, 0.8vw, 0.8rem);
             min-height: 0;
             overflow: hidden;
             width: 100%;
-        }
-        
-        /* Scale down for smaller screens */
-        @media (min-width: 1400px) {
-            .main-grid {
-                grid-template-columns: minmax(280px, 0.28fr) minmax(350px, 0.4fr) minmax(300px, 0.32fr);
-            }
-        }
-        
-        @media (max-width: 1399px) and (min-width: 1024px) {
-            .main-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.6rem;
-            }
+            max-width: 100%;
         }
         
         @media (max-width: 1023px) and (min-width: 768px) {
             .main-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.5rem;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                grid-template-rows: minmax(0, 1fr);
             }
         }
         
         @media (max-width: 767px) {
             .main-grid {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: minmax(0, 1fr);
+                gap: 0.4rem;
             }
         }
         
@@ -425,26 +419,29 @@ if ($role === 'encoder') {
         .left-column {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: clamp(0.3rem, 0.6vh, 0.6rem);
             min-height: 0;
-            overflow: hidden; /* NO SCROLL */
+            height: 100%;
+            overflow: hidden;
             width: 100%;
             max-width: 100%;
         }
         
         .left-column > * {
             max-width: 100%;
-            overflow: hidden; /* NO SCROLL on children */
-            flex-shrink: 1;
+            overflow: hidden;
+            min-height: 0;
         }
         
         /* KPI Summary Left - Responsive Grid */
         .kpi-summary-left {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-            gap: 0.4rem;
-            min-height: 70px;
-            margin-bottom: 0.3rem;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: clamp(0.25rem, 0.5vw, 0.4rem);
+            flex-shrink: 0;
+            height: clamp(52px, 8vh, 70px);
+            min-height: 0;
+            margin-bottom: 0;
         }
         
         @media (max-width: 768px) {
@@ -464,14 +461,14 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.5rem;
+            padding: clamp(0.25rem, 0.5vh, 0.5rem);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             text-align: center;
-            min-height: 70px;
-            height: auto;
+            min-height: 0;
+            height: 100%;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
@@ -578,17 +575,18 @@ if ($role === 'encoder') {
         .center-column {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: clamp(0.3rem, 0.6vh, 0.6rem);
             min-height: 0;
-            overflow: hidden; /* NO SCROLL */
+            height: 100%;
+            overflow: hidden;
             width: 100%;
             max-width: 100%;
         }
         
         .center-column > * {
             max-width: 100%;
-            overflow: hidden; /* NO SCROLL on children */
-            flex-shrink: 1;
+            overflow: hidden;
+            min-height: 0;
         }
         
         /* Target Section */
@@ -596,8 +594,10 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 1rem;
-            height: 90px;
+            padding: clamp(0.4rem, 1vh, 1rem);
+            flex-shrink: 0;
+            height: clamp(58px, 9vh, 90px);
+            min-height: 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -654,11 +654,11 @@ if ($role === 'encoder') {
         }
         
         .target-percentage {
-            font-size: 2rem;
+            font-size: clamp(1.3rem, 2.8vw, 2rem);
             font-weight: 900;
             color: #ff8000;
             line-height: 1;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2rem;
             text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
         }
         
@@ -733,18 +733,18 @@ if ($role === 'encoder') {
         .right-column {
             display: flex;
             flex-direction: column;
-            gap: 0.6rem;
+            gap: clamp(0.3rem, 0.6vh, 0.6rem);
             min-height: 0;
-            overflow: hidden; /* NO SCROLL */
+            height: 100%;
+            overflow: hidden;
             width: 100%;
             max-width: 100%;
         }
         
-        /* Ensure all child elements don't overflow */
         .right-column > * {
             max-width: 100%;
-            overflow: hidden; /* NO SCROLL on children */
-            flex-shrink: 1;
+            overflow: hidden;
+            min-height: 0;
         }
         
         /* Live Slideshow */
@@ -752,8 +752,8 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 1.2rem;
-            flex: 1;
+            padding: clamp(0.4rem, 1vh, 1.2rem);
+            flex: 1.2;
             display: flex;
             flex-direction: column;
             min-height: 0;
@@ -778,15 +778,22 @@ if ($role === 'encoder') {
             flex-direction: column;
             justify-content: center;
             text-align: center;
+            min-height: 0;
+            overflow: hidden;
         }
         
         .live-contractor-name {
-            font-size: 1.6rem;
+            font-size: clamp(0.85rem, 1.4vw, 1.6rem);
             font-weight: 800;
             color: #ff8000;
-            margin-bottom: 1rem;
-            line-height: 1.2;
+            margin-bottom: clamp(0.3rem, 0.8vh, 1rem);
+            line-height: 1.15;
             text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
         }
         
         .live-details {
@@ -910,12 +917,14 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.8rem;
-            height: auto;
+            padding: clamp(0.35rem, 0.8vh, 0.8rem);
+            flex: 0.85;
             min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
-            overflow: hidden;
         }
         
         .project-status-section::before {
@@ -1183,7 +1192,7 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.8rem;
+            padding: clamp(0.35rem, 0.8vh, 0.8rem);
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -1271,11 +1280,13 @@ if ($role === 'encoder') {
         .contractor-row {
             display: grid;
             grid-template-columns: 30px 1fr 60px;
-            gap: 0.5rem;
-            padding: 0.4rem 0;
+            gap: 0.4rem;
+            padding: clamp(0.15rem, 0.3vh, 0.4rem) 0;
             border-bottom: 1px solid #333;
             align-items: center;
             transition: background-color 0.2s ease;
+            flex-shrink: 1;
+            min-height: 0;
         }
         
         .contractor-row:hover {
@@ -1337,10 +1348,11 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.8rem;
+            padding: clamp(0.35rem, 0.8vh, 0.8rem);
             flex: 1;
             display: flex;
             flex-direction: column;
+            min-height: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
@@ -1360,16 +1372,20 @@ if ($role === 'encoder') {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.2rem;
+            gap: 0.1rem;
+            min-height: 0;
+            overflow: hidden;
         }
         
         .funnel-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
             border-bottom: 1px solid #333;
             transition: background-color 0.2s ease;
+            flex-shrink: 1;
+            min-height: 0;
         }
         
         .funnel-item:hover {
@@ -1555,15 +1571,18 @@ if ($role === 'encoder') {
             justify-content: center;
             position: relative;
             min-height: 0;
-            padding: 0.5rem;
+            padding: 0.25rem;
             width: 100%;
             max-width: 100%;
-            overflow: hidden; /* Prevent chart overflow */
+            overflow: hidden;
         }
         
         .chart-container canvas {
+            display: block;
             max-width: 100% !important;
-            height: auto !important;
+            max-height: 100% !important;
+            width: 100% !important;
+            height: 100% !important;
         }
         
         /* Category Items */
@@ -1571,8 +1590,10 @@ if ($role === 'encoder') {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
             border-bottom: 1px solid #333;
+            flex-shrink: 1;
+            min-height: 0;
         }
         
         .category-item:last-child {
@@ -1768,8 +1789,10 @@ if ($role === 'encoder') {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0;
+            padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
             border-bottom: 1px solid #333;
+            flex-shrink: 1;
+            min-height: 0;
         }
         
         .category-item:last-child {
@@ -1822,124 +1845,74 @@ if ($role === 'encoder') {
             transition: width 0.5s ease;
         }
         
-        /* Responsive Design */
+        /* Responsive Design - viewport height adjustments */
         
-        /* Large Desktop (1600px+) */
-        @media (min-width: 1600px) {
-            .main-grid {
-                grid-template-columns: 420px 550px 500px;
-                gap: 1rem;
+        @media (max-height: 900px) {
+            .dashboard-header {
+                padding: 0.3rem 0.6rem;
+                min-height: 38px;
             }
             
             .kpi-summary-left {
-                height: 80px;
-            }
-            
-            .kpi-value {
-                font-size: 1.1rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.6rem;
+                height: clamp(48px, 7vh, 62px);
             }
             
             .target-section {
-                height: 90px;
-            }
-            
-            .target-percentage {
-                font-size: 1.8rem;
-            }
-        }
-        
-        /* Standard Desktop (1200px - 1599px) */
-        @media (max-width: 1599px) and (min-width: 1200px) {
-            .main-grid {
-                grid-template-columns: 380px 500px 450px;
-                gap: 0.8rem;
-            }
-        }
-        
-        /* Medium Desktop (1024px - 1199px) */
-        @media (max-width: 1199px) and (min-width: 1024px) {
-            .main-grid {
-                grid-template-columns: 320px 420px 380px;
-                gap: 0.6rem;
-            }
-            
-            .dashboard-content {
-                padding: 0.5rem;
-            }
-            
-            .kpi-summary-left {
-                height: 65px;
-                gap: 0.3rem;
-            }
-            
-            .kpi-card {
-                padding: 0.4rem;
-            }
-            
-            .kpi-value {
-                font-size: 0.85rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.5rem;
-            }
-            
-            .target-section {
-                height: 85px;
-                padding: 0.8rem;
-            }
-            
-            .target-percentage {
-                font-size: 1.8rem;
-            }
-            
-            .target-status {
-                font-size: 0.6rem;
-            }
-            
-            .target-progress-bar {
-                width: 160px;
-                height: 7px;
-            }
-            
-            .target-label {
-                font-size: 0.55rem;
-            }
-            
-            .target-number {
-                font-size: 1rem;
-            }
-            
-            .live-slideshow {
-                padding: 0.8rem;
-            }
-            
-            .live-contractor-name {
-                font-size: 1rem;
-            }
-            
-            .live-details {
-                font-size: 0.65rem;
+                height: clamp(52px, 8vh, 75px);
             }
             
             .section-title {
-                font-size: 0.65rem;
+                margin-bottom: 0.35rem;
+                font-size: 0.72rem;
             }
             
+            .funnel-item,
+            .category-item,
             .contractor-row {
-                grid-template-columns: 25px 1fr 55px;
-                gap: 0.4rem;
-                padding: 0.35rem 0;
+                padding-top: 0.2rem;
+                padding-bottom: 0.2rem;
+            }
+        }
+        
+        @media (max-height: 768px) {
+            .dashboard-content {
+                padding: 0.25rem;
             }
             
-            .contractor-rank,
-            .contractor-name,
-            .contractor-value {
-                font-size: 0.65rem;
+            .main-grid {
+                gap: 0.3rem;
+            }
+            
+            .left-column,
+            .center-column,
+            .right-column {
+                gap: 0.3rem;
+            }
+            
+            .kpi-icon {
+                display: none;
+            }
+            
+            .kpi-value {
+                font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+            }
+            
+            .kpi-label {
+                font-size: clamp(0.45rem, 0.8vw, 0.58rem);
+            }
+            
+            .target-percentage {
+                font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+            }
+            
+            .live-details {
+                gap: 0.35rem;
+                font-size: 0.62rem;
+            }
+            
+            .live-footer,
+            .slideshow-timer-text {
+                font-size: 0.55rem;
             }
         }
         
@@ -1967,10 +1940,10 @@ if ($role === 'encoder') {
             }
             
             .main-grid {
-                grid-template-columns: 1fr 1fr;
-                grid-template-rows: auto auto;
-                gap: 0.6rem;
-                overflow-x: hidden;
+                grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+                grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+                gap: 0.5rem;
+                overflow: hidden;
             }
             
             .left-column {
@@ -1986,128 +1959,36 @@ if ($role === 'encoder') {
             .right-column {
                 grid-column: 2;
                 grid-row: 2;
-                display: flex;
                 flex-direction: column;
-                gap: 0.6rem;
+                gap: 0.5rem;
             }
             
             .dashboard-content {
-                padding: 0.5rem;
-            }
-            
-            .kpi-summary-left {
-                height: 60px;
-                gap: 0.3rem;
-            }
-            
-            .kpi-card {
-                padding: 0.35rem;
-            }
-            
-            .kpi-value {
-                font-size: 0.8rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.45rem;
-            }
-            
-            .target-section {
-                height: 80px;
-                padding: 0.7rem;
-            }
-            
-            .target-percentage {
-                font-size: 1.6rem;
-            }
-            
-            .target-status {
-                font-size: 0.55rem;
-            }
-            
-            .target-progress-bar {
-                width: 140px;
-                height: 6px;
-            }
-            
-            .target-label {
-                font-size: 0.5rem;
-            }
-            
-            .target-number {
-                font-size: 0.9rem;
-            }
-            
-            .live-slideshow {
-                padding: 0.7rem;
-            }
-            
-            .live-contractor-name {
-                font-size: 0.9rem;
-            }
-            
-            .live-details {
-                font-size: 0.6rem;
-                gap: 0.5rem;
-            }
-            
-            .section-title {
-                font-size: 0.6rem;
-            }
-            
-            .contractor-row {
-                grid-template-columns: 25px 1fr 50px;
-                gap: 0.4rem;
-                padding: 0.3rem 0;
-            }
-            
-            .contractor-rank,
-            .contractor-name,
-            .contractor-value {
-                font-size: 0.6rem;
-            }
-            
-            .category-name,
-            .category-count,
-            .category-value,
-            .category-percentage {
-                font-size: 0.6rem;
-            }
-            
-            .funnel-name,
-            .funnel-count,
-            .funnel-percentage {
-                font-size: 0.6rem;
-            }
-            
-            .funnel-stats {
-                gap: 0.5rem;
-            }
-            
-            .funnel-bar {
-                width: 45px;
-                height: 3px;
+                padding: 0.4rem;
             }
         }
         
         /* Tablet Portrait & Mobile (max 767px) */
         @media (max-width: 767px) {
             html, body {
-                overflow: hidden; /* NO WINDOW SCROLL */
-                height: 100vh;
+                overflow: hidden;
+                height: 100dvh;
             }
             
             .dashboard-container {
-                overflow: hidden; /* NO WINDOW SCROLL */
-                height: 100vh;
+                overflow: hidden;
+                height: 100dvh;
+                max-height: 100dvh;
             }
             
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 0.5rem;
+                gap: 0.4rem;
                 height: auto;
-                padding: 0.6rem;
+                min-height: auto;
+                padding: 0.45rem;
+                flex-shrink: 0;
             }
             
             .header-left {
@@ -2118,46 +1999,66 @@ if ($role === 'encoder') {
                 width: 100%;
                 flex-direction: column;
                 align-items: stretch;
-                gap: 0.5rem;
+                gap: 0.4rem;
             }
             
             .header-controls {
                 width: 100%;
                 flex-wrap: wrap;
-                gap: 0.4rem;
+                gap: 0.35rem;
             }
             
             .control-group {
                 flex: 1;
-                min-width: 100px;
+                min-width: 90px;
             }
             
             .control-select {
                 width: 100%;
-                font-size: 0.7rem;
+                font-size: 0.65rem;
             }
             
             .export-button {
                 width: 100%;
                 justify-content: center;
-                font-size: 0.75rem;
+                font-size: 0.7rem;
             }
             
             .dashboard-content {
-                padding: 0.5rem;
-                max-height: calc(100vh - 100px); /* Account for header */
-                overflow: hidden; /* NO SCROLL */
+                padding: 0.35rem;
+                overflow: hidden;
+                flex: 1;
+                min-height: 0;
+            }
+            
+            .main-grid {
+                grid-template-columns: minmax(0, 1fr);
+                grid-template-rows: minmax(0, 0.34fr) minmax(0, 0.38fr) minmax(0, 0.28fr);
+                gap: 0.35rem;
+                overflow: hidden;
+                flex: 1;
+                min-height: 0;
+            }
+            
+            .left-column {
+                grid-row: 1;
                 display: flex;
                 flex-direction: column;
             }
             
-            .main-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto;
-                gap: 0.5rem;
-                overflow: hidden; /* NO SCROLL */
+            .center-column {
+                grid-row: 2;
+            }
+            
+            .right-column {
+                grid-row: 3;
+                flex-direction: row;
+                gap: 0.35rem;
+            }
+            
+            .right-column > * {
                 flex: 1;
-                min-height: 0;
+                min-width: 0;
             }
             
             .left-column,
@@ -2165,528 +2066,44 @@ if ($role === 'encoder') {
             .right-column {
                 grid-column: 1;
                 width: 100%;
-                overflow: hidden; /* NO SCROLL */
+                overflow: hidden;
                 min-height: 0;
+                height: 100%;
             }
-            
-            .left-column {
-                grid-row: 1;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem;
-            }
-            
+        }
+        
+        /* Small mobile - extra compact sizing (inherits viewport grid from 767px) */
+        @media (max-width: 599px) {
             .kpi-summary-left {
-                grid-column: 1 / 3;
-                height: 55px;
-                gap: 0.3rem;
-            }
-            
-            .contractors-section {
-                grid-column: 1;
-            }
-            
-            .funnel-section {
-                grid-column: 2;
-            }
-            
-            .center-column {
-                grid-row: 2;
-            }
-            
-            .right-column {
-                grid-row: 3;
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 0.5rem;
-            }
-            
-            .dashboard-header {
-                padding: 0.4rem 0.6rem;
-                height: 40px;
-            }
-            
-            .header-controls {
-                gap: 0.4rem;
-            }
-            
-            .control-select {
-                padding: 0.25rem 0.5rem;
-                font-size: 0.7rem;
-                min-width: 60px;
-            }
-            
-            .control-label {
-                font-size: 0.6rem;
-            }
-            
-            .dashboard-content {
-                padding: 0.4rem;
-                max-height: calc(100vh - 40px);
-            }
-            
-            .kpi-card {
-                padding: 0.3rem;
-            }
-            
-            .kpi-value {
-                font-size: 0.75rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.4rem;
+                height: clamp(44px, 6vh, 52px);
             }
             
             .target-section {
-                height: 75px;
-                padding: 0.6rem;
+                height: clamp(52px, 7vh, 65px);
             }
             
-            .target-percentage {
-                font-size: 1.4rem;
+            .right-column {
+                flex-direction: column;
             }
             
-            .target-status {
-                font-size: 0.5rem;
+            .control-select {
+                min-width: 0;
+                font-size: 0.6rem;
             }
             
-            .target-progress-bar {
-                width: 120px;
-                height: 5px;
+            .kpi-icon {
+                display: none;
             }
-            
-            .target-label {
-                font-size: 0.45rem;
-            }
-            
-            .target-number {
-                font-size: 0.8rem;
-            }
-            
-            .live-slideshow {
-                padding: 0.6rem;
-            }
-            
-            .live-contractor-name {
+        }
+        
+        @media (max-width: 479px) {
+            .title {
                 font-size: 0.85rem;
             }
             
             .live-details {
-                font-size: 0.55rem;
-                gap: 0.4rem;
-            }
-            
-            .section-title {
-                font-size: 0.55rem;
-            }
-            
-            .contractor-row {
-                grid-template-columns: 20px 1fr 45px;
-                gap: 0.3rem;
-                padding: 0.25rem 0;
-            }
-            
-            .contractor-rank,
-            .contractor-name,
-            .contractor-value {
-                font-size: 0.55rem;
-            }
-            
-            .category-name,
-            .category-count,
-            .category-value,
-            .category-percentage {
-                font-size: 0.55rem;
-            }
-            
-            .funnel-name,
-            .funnel-count,
-            .funnel-percentage {
-                font-size: 0.55rem;
-            }
-            
-            .funnel-stats {
-                gap: 0.5rem;
-            }
-            
-            .funnel-bar {
-                width: 45px;
-                height: 3px;
-            }
-        }
-        
-        /* Mobile Landscape (480px - 599px) */
-        @media (max-width: 599px) and (min-width: 480px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto auto;
-                gap: 0.4rem;
-            }
-            
-            .left-column {
-                grid-row: 1;
-            }
-            
-            .kpi-summary-left {
-                height: 50px;
-                gap: 0.25rem;
-            }
-            
-            .contractors-section {
-                margin-bottom: 0.4rem;
-            }
-            
-            .funnel-section {
-                grid-row: 2;
-            }
-            
-            .center-column {
-                grid-row: 3;
-            }
-            
-            .right-column {
-                grid-row: 4;
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 0.4rem;
-            }
-            
-            .dashboard-header {
-                padding: 0.3rem 0.5rem;
-                height: 38px;
-                flex-wrap: wrap;
-            }
-            
-            .header-controls {
-                gap: 0.3rem;
-                flex-wrap: wrap;
-            }
-            
-            .control-group {
-                gap: 0.1rem;
-            }
-            
-            .control-select {
-                padding: 0.2rem 0.4rem;
-                font-size: 0.65rem;
-                min-width: 55px;
-            }
-            
-            .control-label {
-                font-size: 0.55rem;
-            }
-            
-            .dashboard-content {
-                padding: 0.3rem;
-                max-height: calc(100vh - 38px);
-            }
-            
-            .kpi-card {
-                padding: 0.25rem;
-            }
-            
-            .kpi-value {
-                font-size: 0.7rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.35rem;
-            }
-            
-            .target-section {
-                height: 70px;
-                padding: 0.5rem;
-                flex-direction: row;
-            }
-            
-            .target-label {
-                font-size: 0.4rem;
-            }
-            
-            .target-number {
-                font-size: 0.7rem;
-            }
-            
-            .target-center {
-                margin: 0 0.8rem;
-            }
-            
-            .target-percentage {
-                font-size: 1.2rem;
-            }
-            
-            .target-status {
-                font-size: 0.4rem;
-            }
-            
-            .target-progress-bar {
-                width: 100px;
-                height: 4px;
-            }
-            
-            .live-slideshow {
-                padding: 0.5rem;
-            }
-            
-            .live-contractor-name {
-                font-size: 0.8rem;
-            }
-            
-            .live-details {
-                font-size: 0.5rem;
-                gap: 0.3rem;
-            }
-            
-            .section-title {
-                font-size: 0.5rem;
-                margin-bottom: 0.4rem;
-            }
-            
-            .contractor-row {
-                grid-template-columns: 18px 1fr 40px;
-                gap: 0.25rem;
-                padding: 0.2rem 0;
-            }
-            
-            .contractor-rank,
-            .contractor-name,
-            .contractor-value {
-                font-size: 0.5rem;
-            }
-            
-            .category-name,
-            .category-count,
-            .category-value,
-            .category-percentage {
-                font-size: 0.5rem;
-            }
-            
-            .category-stats {
-                gap: 0.4rem;
-            }
-            
-            .category-bar {
-                width: 40px;
-                height: 2px;
-            }
-            
-            .funnel-name,
-            .funnel-count,
-            .funnel-percentage {
-                font-size: 0.5rem;
-            }
-            
-            .funnel-stats {
-                gap: 0.4rem;
-            }
-            
-            .funnel-bar {
-                width: 40px;
-                height: 2px;
-            }
-            
-            .category-bar {
-                width: 40px;
-                height: 2px;
-            }
-        }
-        
-        /* Mobile Portrait (320px - 479px) */
-        @media (max-width: 479px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-                grid-template-rows: auto auto auto auto auto;
-                gap: 0.3rem;
-            }
-            
-            .left-column {
-                grid-row: 1;
-            }
-            
-            .kpi-summary-left {
-                height: 45px;
-                gap: 0.2rem;
-            }
-            
-            .contractors-section {
-                margin-bottom: 0.3rem;
-            }
-            
-            .funnel-section {
-                grid-row: 2;
-            }
-            
-            .center-column {
-                grid-row: 3;
-            }
-            
-            .right-column {
-                grid-row: 4 / 6;
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 0.3rem;
-            }
-            
-            .dashboard-header {
-                padding: 0.25rem 0.4rem;
-                height: 36px;
-                flex-direction: column;
-                gap: 0.2rem;
-            }
-            
-            .header-left {
-                gap: 0.5rem;
-            }
-            
-            .title {
-                font-size: 0.9rem;
-            }
-            
-            .header-controls {
-                gap: 0.25rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            
-            .control-group {
-                gap: 0.1rem;
-            }
-            
-            .control-select {
-                padding: 0.15rem 0.3rem;
-                font-size: 0.6rem;
-                min-width: 50px;
-            }
-            
-            .control-label {
-                font-size: 0.5rem;
-            }
-            
-            .dashboard-content {
-                padding: 0.25rem;
-                max-height: calc(100vh - 36px);
-            }
-            
-            .kpi-card {
-                padding: 0.2rem;
-            }
-            
-            .kpi-value {
-                font-size: 0.65rem;
-            }
-            
-            .kpi-label {
-                font-size: 0.3rem;
-            }
-            
-            .target-section {
-                height: 65px;
-                padding: 0.4rem;
-                flex-direction: row;
-            }
-            
-            .target-label {
-                font-size: 0.35rem;
-            }
-            
-            .target-number {
-                font-size: 0.6rem;
-            }
-            
-            .target-center {
-                margin: 0 0.6rem;
-            }
-            
-            .target-percentage {
-                font-size: 1rem;
-            }
-            
-            .target-status {
-                font-size: 0.35rem;
-            }
-            
-            .target-progress-bar {
-                width: 90px;
-                height: 3px;
-            }
-            
-            .live-slideshow {
-                padding: 0.4rem;
-            }
-            
-            .live-contractor-name {
-                font-size: 0.75rem;
-            }
-            
-            .live-details {
-                font-size: 0.45rem;
-                gap: 0.25rem;
                 grid-template-columns: 1fr;
             }
-            
-            .section-title {
-                font-size: 0.45rem;
-                margin-bottom: 0.3rem;
-            }
-            
-            .contractor-row {
-                grid-template-columns: 15px 1fr 35px;
-                gap: 0.2rem;
-                padding: 0.15rem 0;
-            }
-            
-            .contractor-rank,
-            .contractor-name,
-            .contractor-value {
-                font-size: 0.45rem;
-            }
-            
-            .category-name,
-            .category-count,
-            .category-value,
-            .category-percentage {
-                font-size: 0.45rem;
-            }
-            
-            .category-stats {
-                gap: 0.3rem;
-            }
-            
-            .category-bar {
-                width: 35px;
-                height: 2px;
-            }
-            
-            .funnel-name,
-            .funnel-count,
-            .funnel-percentage {
-                font-size: 0.45rem;
-            }
-            
-            .funnel-stats {
-                gap: 0.3rem;
-            }
-            
-            .funnel-bar {
-                width: 35px;
-                height: 2px;
-            }
-        }
-        
-        /* ══════════════════════════════════════════════════════════
-           GLOBAL BASE FONT SIZE INCREASE FOR BETTER READABILITY
-        ══════════════════════════════════════════════════════════ */
-        .contractor-rank,
-        .contractor-name,
-        .category-name,
-        .category-count,
-        .category-value {
-            font-size: 0.85rem !important;
-        }
-        
-        .category-percentage,
-        .funnel-percentage {
-            font-size: 0.8rem !important;
         }
         
         /* ══════════════════════════════════════════════════════════
@@ -3689,8 +3106,8 @@ if ($role === 'encoder') {
                             </div>
                         </div>
                         <div class="chart-container">
-                            <canvas id="regional-values-chart" width="400" height="200"></canvas>
-                            <canvas id="regional-distribution-chart" width="400" height="200" style="display: none;"></canvas>
+                            <canvas id="regional-values-chart"></canvas>
+                            <canvas id="regional-distribution-chart" style="display: none;"></canvas>
                         </div>
                     </div>
 
@@ -3698,7 +3115,7 @@ if ($role === 'encoder') {
                     <div class="sources-chart-section">
                         <div class="section-title">📍 Project Sources</div>
                         <div class="chart-container">
-                            <canvas id="sources-chart" width="400" height="200"></canvas>
+                            <canvas id="sources-chart"></canvas>
                         </div>
                     </div>
                 </div>
@@ -4276,6 +3693,21 @@ if ($role === 'encoder') {
                 this.initSourcesChart({});
                 // Setup toggle functionality
                 this.setupToggle();
+                this.setupResize();
+            },
+
+            setupResize() {
+                let resizeTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeTimer);
+                    resizeTimer = setTimeout(() => {
+                        Object.values(AppState.charts || {}).forEach(chart => {
+                            if (chart && typeof chart.resize === 'function') {
+                                chart.resize();
+                            }
+                        });
+                    }, 120);
+                });
             },
 
             async loadRegionalData() {
