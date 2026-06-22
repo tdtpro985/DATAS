@@ -240,7 +240,6 @@ function renderUserCard(u) {
                 <span class="meta-value" style="color:var(--text-muted);font-weight:400;font-size:0.78rem;">${formatDate(u.created_at)}</span>
             </div>
             <div class="card-actions">
-                <button class="btn btn-secondary btn-sm" onclick="viewUser(${u.id}); event.stopPropagation();">View</button>
                 <button class="btn btn-primary btn-sm" onclick="editUser(${u.id}); event.stopPropagation();">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteUserConfirm(${u.id}); event.stopPropagation();">Delete</button>
             </div>
@@ -293,13 +292,13 @@ function closeUserModalHandler() {
     userModal.classList.remove('active');
 }
 
-function viewUser(id) {
+function editUser(id) {
     const u = users.find(x => x.id === id);
     if (!u) return;
     openUserModal(u);
 }
 
-function editUser(id) {
+function onSearch(e) {
     const u = users.find(x => x.id === id);
     if (!u) return;
     openUserModal(u);
