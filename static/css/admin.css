@@ -982,10 +982,24 @@
     border-bottom: 1px solid rgba(255, 128, 0, 0.15);
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 10000;
     box-shadow: 
         0 4px 20px rgba(0, 0, 0, 0.3),
         0 0 0 1px rgba(255, 128, 0, 0.08);
+    pointer-events: auto;
+}
+.ap-topbar-actions {
+    position: relative;
+    z-index: 10001;
+    pointer-events: auto;
+}
+.topbar-credits-btn {
+    z-index: 10002;
+    position: relative;
+    pointer-events: auto;
+}
+.credits-btn {
+    pointer-events: auto;
 }
 
 .ap-topbar::before {

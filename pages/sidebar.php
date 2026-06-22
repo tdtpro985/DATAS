@@ -335,7 +335,7 @@ try {
                         <?= $role === 'superadmin' ? 'Superadmin' : ($role === 'admin' ? 'Admin' : ($role === 'encoder' ? 'Encoder' : 'Sales Rep')) ?>
                     </span>
                     <?php if ($role === 'superadmin'): ?>
-                    <button type="button" class="credits-btn topbar-credits-btn" onclick="showCreditsModal()" title="Development Team Credits">
+                    <button type="button" class="credits-btn topbar-credits-btn" onclick="event.stopPropagation(); showCreditsModal()" title="Development Team Credits">
                         <span>ℹ️</span>
                     </button>
                     <?php endif; ?>
