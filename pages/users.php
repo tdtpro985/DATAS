@@ -131,7 +131,7 @@ if ($role !== 'superadmin') {
                         <input type="password" id="userPassword" name="password" class="form-control">
                         <button type="button" id="togglePassword" class="password-toggle" aria-label="Toggle Password Visibility">👁️</button>
                     </div>
-                    <small class="form-hint">Minimum 8 characters for new accounts or when changing password</small>
+                    <small class="form-hint">Leave blank to keep current password. Minimum 8 characters if changing.</small>
                 </div>
 
                 <div class="form-group" id="passwordGroupConfirm">
