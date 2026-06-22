@@ -597,15 +597,19 @@ function updatePageTitle() {
 }
 
 // Credits modal functions
-function showCreditsModal() {
+window.showCreditsModal = function() {
+    const modal = document.getElementById('creditsModal');
+    if (!modal) return;
     document.body.classList.add('modal-open');
-    document.getElementById('creditsModal').classList.add('active');
-}
+    modal.classList.add('active');
+};
 
-function closeCreditsModal() {
+window.closeCreditsModal = function() {
+    const modal = document.getElementById('creditsModal');
+    if (!modal) return;
     document.body.classList.remove('modal-open');
-    document.getElementById('creditsModal').classList.remove('active');
-}
+    modal.classList.remove('active');
+};
 
 // Add event listeners for credits modal when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -613,7 +617,22 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Credits modal functionality
     const creditsModal = document.getElementById('creditsModal');
+    const creditsOpenButtons = document.querySelectorAll('.credits-btn');
+    const creditsCloseButtons = document.querySelectorAll('.credits-close-btn');
+
+    creditsOpenButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showCreditsModal();
+        });
+    });
     
+    creditsCloseButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+            closeCreditsModal();
+        });
+    });
+
     // Close modal on overlay click
     if (creditsModal) {
         creditsModal.addEventListener('click', function(e) {
