@@ -334,11 +334,9 @@ try {
                     <span class="role-badge-<?= $role ?>" style="padding: 0.25rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
                         <?= $role === 'superadmin' ? 'Superadmin' : ($role === 'admin' ? 'Admin' : ($role === 'encoder' ? 'Encoder' : 'Sales Rep')) ?>
                     </span>
-                    <?php if ($role === 'superadmin'): ?>
-                    <button id="creditsOpenBtn" type="button" class="credits-btn topbar-credits-btn" title="Development Team Credits">
+                    <button id="creditsOpenBtn" type="button" class="credits-btn topbar-credits-btn" title="Credits & About">
                         <span>ℹ️</span>
                     </button>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
