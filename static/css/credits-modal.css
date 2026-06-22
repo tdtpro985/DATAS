@@ -2,21 +2,23 @@
 
 /* Credits Button */
 .credits-btn {
-    background: linear-gradient(135deg, rgba(255, 190, 120, 0.16) 0%, rgba(255, 150, 60, 0.12) 100%);
+    background: radial-gradient(circle at top left, rgba(255, 200, 120, 0.28), transparent 34%),
+                linear-gradient(135deg, rgba(255, 190, 120, 0.16) 0%, rgba(255, 150, 60, 0.12) 100%);
     border: 1px solid rgba(255, 172, 85, 0.28);
-    border-radius: 12px;
+    border-radius: 14px;
     color: #fff;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.95rem;
-    height: 36px;
-    width: 36px;
+    height: 40px;
+    width: 40px;
     padding: 0;
-    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 0 rgba(255, 156, 52, 0);
 }
 
 .credits-btn::before {
@@ -24,7 +26,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 55%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.22), transparent 55%);
     opacity: 0;
     transform: scale(0.8);
     transition: opacity 0.3s ease, transform 0.3s ease;
@@ -36,18 +38,27 @@
 }
 
 .credits-btn:hover {
-    transform: translateY(-1px) scale(1.05);
-    box-shadow: 0 14px 30px rgba(255, 173, 85, 0.24);
+    transform: translateY(-1px) scale(1.08);
+    box-shadow: 0 18px 44px rgba(255, 156, 52, 0.28);
+    border-color: rgba(255, 186, 110, 0.5);
 }
 
 .topbar-credits-btn {
-    height: 38px;
-    width: 38px;
+    height: 40px;
+    width: 40px;
     font-size: 1rem;
     z-index: 1002;
     position: relative;
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(14px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+.topbar-credits-btn:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 186, 110, 0.32);
+    color: #ffe6c4;
 }
 
 /* Modal Overlay */
@@ -57,15 +68,26 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(4, 8, 20, 0.92);
-    backdrop-filter: blur(22px) saturate(180%);
+    background: rgba(4, 8, 20, 0.94);
+    background-image:
+        radial-gradient(circle at top left, rgba(255, 186, 87, 0.08), transparent 24%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.05), transparent 28%);
+    backdrop-filter: blur(26px) saturate(190%);
     display: none;
     align-items: center;
     justify-content: center;
     z-index: 99999;
     opacity: 0;
     transition: opacity 0.35s ease;
-    padding: 20px;
+    padding: 22px;
+}
+
+.credits-modal-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 45%);
+    pointer-events: none;
 }
 
 .credits-modal-overlay.active {
@@ -79,9 +101,9 @@ body.modal-open {
 
 /* Modal Container */
 .credits-modal-container {
-    background: rgba(11, 14, 26, 0.96);
+    background: linear-gradient(180deg, rgba(10, 13, 25, 0.98), rgba(16, 20, 39, 0.98));
     border: 1px solid rgba(218, 139, 85, 0.18);
-    border-radius: 30px;
+    border-radius: 32px;
     width: 100%;
     max-width: 980px;
     max-height: 93vh;
@@ -89,7 +111,7 @@ body.modal-open {
     overflow-y: auto;
     position: relative;
     animation: modalSlideIn 0.42s cubic-bezier(0.22, 1, 0.36, 1);
-    box-shadow: 0 40px 110px rgba(0, 0, 0, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    box-shadow: 0 44px 120px rgba(0, 0, 0, 0.64), inset 0 0 0 1px rgba(255, 255, 255, 0.02);
     display: flex;
     flex-direction: column;
 }
@@ -97,22 +119,24 @@ body.modal-open {
 .credits-modal-container::before {
     content: '';
     position: absolute;
-    top: -140px;
-    right: -140px;
-    width: 280px;
-    height: 280px;
-    background: radial-gradient(circle, rgba(255, 178, 110, 0.18), transparent 60%);
+    top: -150px;
+    right: -150px;
+    width: 320px;
+    height: 320px;
+    background: radial-gradient(circle, rgba(255, 178, 110, 0.22), transparent 55%);
+    filter: blur(24px);
     pointer-events: none;
 }
 
 .credits-modal-container::after {
     content: '';
     position: absolute;
-    bottom: -110px;
-    left: -110px;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 58%);
+    bottom: -130px;
+    left: -120px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1), transparent 58%);
+    filter: blur(16px);
     pointer-events: none;
 }
 
@@ -187,8 +211,9 @@ body.modal-open {
 
 /* Header Section */
 .credits-header {
-    background: linear-gradient(135deg, rgba(223, 126, 70, 0.96) 0%, rgba(182, 103, 61, 0.98) 35%, rgba(43, 25, 36, 0.98) 100%);
-    padding: 56px 44px 36px;
+    background: radial-gradient(circle at top left, rgba(255, 186, 90, 0.22), transparent 24%),
+                linear-gradient(135deg, rgba(223, 126, 70, 0.96) 0%, rgba(182, 103, 61, 0.98) 35%, rgba(43, 25, 36, 0.98) 100%);
+    padding: 62px 48px 38px;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -203,8 +228,21 @@ body.modal-open {
     width: 420px;
     height: 420px;
     transform: translateX(-50%);
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 68%);
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent 68%);
     filter: blur(38px);
+    pointer-events: none;
+}
+
+.credits-header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.09);
+    filter: blur(22px);
     pointer-events: none;
 }
 
@@ -218,21 +256,24 @@ body.modal-open {
     font-weight: 900;
     letter-spacing: 0.22em;
     margin-bottom: 20px;
-    color: #fff;
+    color: transparent;
     text-transform: uppercase;
-    text-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
+    background: linear-gradient(135deg, #ffdfbf 0%, #ffd185 35%, #ffffff 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 0 18px 30px rgba(0, 0, 0, 0.28);
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
 .logo-tdt {
-    color: #f7eadf;
+    color: inherit;
     font-size: 1.05em;
 }
 
 .logo-powersteel {
-    color: #fff;
+    color: inherit;
     margin-left: 0.4rem;
 }
 
@@ -243,23 +284,23 @@ body.modal-open {
     background: rgba(0, 0, 0, 0.22);
     border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 999px;
-    padding: 12px 32px;
-    font-size: 1.4rem;
+    padding: 14px 34px;
+    font-size: 1.45rem;
     font-weight: 800;
     color: rgba(255, 255, 255, 0.96);
     letter-spacing: 0.32em;
     margin-bottom: 18px;
-    backdrop-filter: blur(14px);
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 .credits-tagline {
-    font-size: 1rem;
-    color: rgba(245, 229, 205, 0.95);
+    font-size: 1.05rem;
+    color: rgba(248, 234, 210, 0.96);
     font-weight: 600;
     letter-spacing: 0.18em;
     text-transform: uppercase;
-    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 4px 14px rgba(0, 0, 0, 0.24);
     position: relative;
     z-index: 1;
 }
@@ -335,37 +376,37 @@ body.modal-open {
 }
 
 .member-card {
-    background: rgba(17, 20, 31, 0.94);
-    border: 1px solid rgba(218, 139, 85, 0.14);
-    border-radius: 22px;
-    padding: 24px;
+    background: rgba(18, 22, 36, 0.96);
+    border: 1px solid rgba(218, 139, 85, 0.16);
+    border-radius: 24px;
+    padding: 26px;
     display: flex;
     align-items: center;
     gap: 18px;
     transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
     position: relative;
     overflow: hidden;
-    backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
 }
 
 .member-card::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 40%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 42%);
     pointer-events: none;
 }
 
 .member-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 24px 54px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    border-color: rgba(218, 139, 85, 0.35);
-    background: rgba(27, 29, 43, 0.96);
+    transform: translateY(-8px);
+    box-shadow: 0 28px 70px rgba(255, 152, 65, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 184, 109, 0.28);
+    background: rgba(24, 28, 44, 0.98);
 }
 
 .member-card.featured {
-    border-color: rgba(255, 184, 109, 0.36);
-    background: rgba(37, 28, 35, 0.96);
+    border-color: rgba(255, 184, 109, 0.42);
+    background: rgba(40, 30, 41, 0.96);
 }
 
 .member-card.featured::after {
@@ -373,39 +414,41 @@ body.modal-open {
     position: absolute;
     top: -44px;
     right: -44px;
-    width: 140px;
-    height: 140px;
-    background: radial-gradient(circle, rgba(255, 184, 109, 0.16), transparent 58%);
+    width: 160px;
+    height: 160px;
+    background: radial-gradient(circle, rgba(255, 184, 109, 0.18), transparent 58%);
+    filter: blur(8px);
     pointer-events: none;
 }
 
 .featured-badge {
     position: absolute;
-    top: 12px;
-    right: 12px;
-    width: 32px;
-    height: 32px;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
     background: linear-gradient(135deg, #da8b55 0%, #b86e3f 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(218, 139, 85, 0.4);
-    animation: badgePulse 2s ease-in-out infinite;
+    box-shadow: 0 5px 16px rgba(218, 139, 85, 0.38);
+    animation: badgePulse 2.4s ease-in-out infinite;
 }
 
 @keyframes badgePulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 4px 12px rgba(218, 139, 85, 0.4); }
-    50% { transform: scale(1.1); box-shadow: 0 6px 16px rgba(218, 139, 85, 0.6); }
+    0%, 100% { transform: scale(1); box-shadow: 0 5px 16px rgba(218, 139, 85, 0.38); }
+    50% { transform: scale(1.08); box-shadow: 0 7px 20px rgba(218, 139, 85, 0.55); }
 }
 
 .member-icon {
-    background: linear-gradient(135deg, rgba(218, 139, 85, 0.22) 0%, rgba(255, 255, 255, 0.05) 100%);
-    border: 2px solid rgba(218, 139, 85, 0.3);
-    border-radius: 18px;
-    height: 68px;
-    width: 68px;
+    background: radial-gradient(circle at 30% 25%, rgba(255, 255, 255, 0.18), transparent 28%),
+                linear-gradient(135deg, rgba(218, 139, 85, 0.24) 0%, rgba(255, 255, 255, 0.06) 100%);
+    border: 2px solid rgba(218, 139, 85, 0.28);
+    border-radius: 20px;
+    height: 72px;
+    width: 72px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -413,7 +456,7 @@ body.modal-open {
     transition: all 0.35s ease;
     position: relative;
     overflow: hidden;
-    color: #f8e8cf;
+    color: #f9e8d2;
 }
 
 .member-icon::before {
@@ -421,17 +464,17 @@ body.modal-open {
     position: absolute;
     top: -50%;
     left: -50%;
-    width: 200%;
-    height: 200%;
+    width: 220%;
+    height: 220%;
     background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
     opacity: 0;
     transition: opacity 0.3s ease;
 }
 
 .member-card:hover .member-icon {
-    transform: translateY(-3px) rotate(-3deg);
-    border-color: rgba(218, 139, 85, 0.42);
-    box-shadow: 0 18px 40px rgba(218, 139, 85, 0.14);
+    transform: translateY(-3px) rotate(-2deg);
+    border-color: rgba(255, 204, 134, 0.45);
+    box-shadow: 0 20px 44px rgba(218, 139, 85, 0.16);
 }
 
 .member-card:hover .member-icon::before {
@@ -451,10 +494,10 @@ body.modal-open {
 
 .member-name {
     color: #f8fafc;
-    font-size: 1.15rem;
+    font-size: 1.16rem;
     font-weight: 700;
     margin-bottom: 8px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -462,7 +505,7 @@ body.modal-open {
 
 .member-role {
     color: #e8b67a;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     margin-bottom: 10px;
@@ -472,7 +515,7 @@ body.modal-open {
 
 .member-contact {
     color: #94a3b8;
-    font-size: 0.95rem;
+    font-size: 0.96rem;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -486,9 +529,9 @@ body.modal-open {
 }
 
 .credits-footer {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+    background: linear-gradient(135deg, #0a0a0a 0%, #141418 40%, #0f0f0f 100%);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 30px 44px;
+    padding: 34px 48px;
     position: relative;
     flex-shrink: 0;
 }
@@ -526,28 +569,28 @@ body.modal-open {
 
 .footer-rights {
     color: #94a3b8;
-    font-size: 0.84rem;
+    font-size: 0.85rem;
     font-weight: 500;
 }
 
 .footer-version {
-    background: rgba(255, 255, 255, 0.06);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 20px;
+    padding: 14px 22px;
     font-weight: 700;
     color: #f9f2e8;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+    backdrop-filter: blur(16px);
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .footer-version:hover {
     transform: translateY(-2px);
-    box-shadow: 0 16px 38px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.28);
 }
 
 .version-label {
@@ -559,7 +602,7 @@ body.modal-open {
 
 .version-number {
     color: #ffdfb8;
-    font-size: 1.1rem;
+    font-size: 1.12rem;
     letter-spacing: 0.05em;
     text-shadow: 0 2px 4px rgba(218, 139, 85, 0.3);
 }
