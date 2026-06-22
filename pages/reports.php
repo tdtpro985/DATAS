@@ -385,18 +385,6 @@ if ($role === 'encoder') {
             min-height: 0;
             position: relative;
             z-index: 1;
-            /* Fluid scale — shrinks when content hits page edge */
-            --fit-scale: 1;
-            --fs-xs:  calc(clamp(0.42rem, 0.85vmin, 0.62rem) * var(--fit-scale));
-            --fs-sm:  calc(clamp(0.52rem, 1.05vmin, 0.72rem) * var(--fit-scale));
-            --fs-md:  calc(clamp(0.62rem, 1.25vmin, 0.82rem) * var(--fit-scale));
-            --fs-lg:  calc(clamp(0.78rem, 1.55vmin, 1rem)  * var(--fit-scale));
-            --fs-xl:  calc(clamp(0.95rem, 1.9vmin, 1.35rem) * var(--fit-scale));
-            --fs-kpi: calc(clamp(0.75rem, 1.5vmin, 1.1rem)  * var(--fit-scale));
-            --fs-target: calc(clamp(1.1rem, 2.6vmin, 2rem) * var(--fit-scale));
-            --card-gap: calc(clamp(0.25rem, 0.55vmin, 0.6rem) * var(--fit-scale));
-            --card-pad: calc(clamp(0.3rem, 0.75vmin, 0.75rem) * var(--fit-scale));
-            --row-pad:  calc(clamp(0.08rem, 0.28vmin, 0.35rem) * var(--fit-scale));
         }
         
         /* Main Grid Layout - 3 Columns - viewport-contained */
@@ -449,10 +437,9 @@ if ($role === 'encoder') {
         .kpi-summary-left {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: var(--card-gap);
+            gap: clamp(0.25rem, 0.5vw, 0.4rem);
             flex-shrink: 0;
-            height: auto;
-            max-height: clamp(48px, 8vh, 72px);
+            height: clamp(52px, 8vh, 70px);
             min-height: 0;
             margin-bottom: 0;
         }
@@ -607,10 +594,9 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: var(--card-pad);
+            padding: clamp(0.4rem, 1vh, 1rem);
             flex-shrink: 0;
-            height: auto;
-            max-height: clamp(52px, 9vh, 90px);
+            height: clamp(58px, 9vh, 90px);
             min-height: 0;
             display: flex;
             align-items: center;
@@ -2876,156 +2862,6 @@ if ($role === 'encoder') {
                 transform: scale(1.02);
             }
         }
-
-        /* ══════════════════════════════════════════════════════════
-           FLUID CARD SYSTEM — content-based sizing, auto-shrink at edge
-        ══════════════════════════════════════════════════════════ */
-
-        /* All dashboard cards share fluid padding */
-        .dashboard-content .contractors-section,
-        .dashboard-content .funnel-section,
-        .dashboard-content .live-slideshow,
-        .dashboard-content .project-status-section,
-        .dashboard-content .regional-combined-section,
-        .dashboard-content .sources-chart-section {
-            padding: var(--card-pad);
-        }
-
-        .dashboard-content .left-column,
-        .dashboard-content .center-column,
-        .dashboard-content .right-column {
-            gap: var(--card-gap);
-        }
-
-        /* Cards grow/shrink by data — equal share of column space */
-        .dashboard-content .contractors-section,
-        .dashboard-content .funnel-section {
-            flex: 1 1 0;
-        }
-
-        .dashboard-content .live-slideshow {
-            flex: 1.3 1 0;
-        }
-
-        .dashboard-content .project-status-section {
-            flex: 1 1 0;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .dashboard-content .regional-combined-section,
-        .dashboard-content .sources-chart-section {
-            flex: 1 1 0;
-        }
-
-        /* Section titles — compact, never push content out */
-        .dashboard-content .section-title {
-            font-size: var(--fs-md);
-            margin-bottom: var(--row-pad);
-            flex-shrink: 0;
-            line-height: 1.2;
-        }
-
-        /* KPI cards */
-        .dashboard-content .kpi-value  { font-size: var(--fs-kpi); line-height: 1; margin-bottom: calc(var(--row-pad) * 0.5); }
-        .dashboard-content .kpi-label  { font-size: var(--fs-xs); line-height: 1.15; }
-        .dashboard-content .kpi-icon   { font-size: var(--fs-lg); margin-bottom: var(--row-pad); }
-
-        /* Target bar */
-        .dashboard-content .target-percentage { font-size: var(--fs-target); line-height: 1; margin-bottom: calc(var(--row-pad) * 0.5); }
-        .dashboard-content .target-number     { font-size: var(--fs-lg); line-height: 1; }
-        .dashboard-content .target-label,
-        .dashboard-content .target-status     { font-size: var(--fs-xs); line-height: 1.1; }
-        .dashboard-content .target-progress-bar { width: clamp(80px, 14vw, 200px); height: clamp(3px, 0.5vh, 8px); }
-
-        /* List rows — distribute evenly based on data count */
-        .dashboard-content .funnel-list {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            min-height: 0;
-            overflow: hidden;
-            gap: 0;
-        }
-
-        .dashboard-content .funnel-item,
-        .dashboard-content .category-item {
-            flex: 1 1 0;
-            min-height: 0;
-            padding: var(--row-pad) 0;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .dashboard-content .funnel-name,
-        .dashboard-content .funnel-count,
-        .dashboard-content .contractor-rank,
-        .dashboard-content .contractor-name,
-        .dashboard-content .category-name,
-        .dashboard-content .category-count,
-        .dashboard-content .category-value {
-            font-size: var(--fs-sm);
-            line-height: 1.15;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .dashboard-content .contractor-value,
-        .dashboard-content .funnel-percentage,
-        .dashboard-content .category-percentage {
-            font-size: var(--fs-xs);
-            line-height: 1.15;
-        }
-
-        .dashboard-content .contractor-value {
-            font-size: var(--fs-md);
-        }
-
-        .dashboard-content .contractor-row {
-            padding: var(--row-pad) 0;
-            grid-template-columns: clamp(18px, 2.5vw, 30px) minmax(0, 1fr) clamp(42px, 6vw, 68px);
-            gap: calc(var(--row-pad) * 1.5);
-        }
-
-        .dashboard-content .contractor-name {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .dashboard-content .funnel-stats,
-        .dashboard-content .category-stats {
-            gap: calc(var(--row-pad) * 2);
-            flex-shrink: 0;
-        }
-
-        .dashboard-content .funnel-bar,
-        .dashboard-content .category-bar {
-            width: clamp(28px, 4vw, 50px);
-            height: clamp(2px, 0.35vh, 4px);
-        }
-
-        /* Live slideshow */
-        .dashboard-content .live-contractor-name {
-            font-size: var(--fs-xl);
-            margin-bottom: var(--row-pad);
-            line-height: 1.15;
-        }
-
-        .dashboard-content .live-detail-label { font-size: var(--fs-xs); margin-bottom: calc(var(--row-pad) * 0.4); }
-        .dashboard-content .live-detail-value  { font-size: var(--fs-sm); line-height: 1.15; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .dashboard-content .live-details       { gap: var(--row-pad); font-size: var(--fs-sm); margin-bottom: var(--row-pad); }
-        .dashboard-content .live-footer,
-        .dashboard-content .slideshow-timer-text { font-size: var(--fs-xs); }
-
-        /* Chart toggle buttons */
-        .dashboard-content .toggle-btn { font-size: var(--fs-xs); padding: calc(var(--row-pad) * 1.2) calc(var(--row-pad) * 2); }
-
-        /* Hide KPI icons on tight viewports to save vertical space */
-        @media (max-height: 820px) {
-            .dashboard-content .kpi-icon { display: none; margin-bottom: 0; }
-        }
     </style>
     
     <!-- Modern Select Dropdowns Styling -->
@@ -3870,7 +3706,6 @@ if ($role === 'encoder') {
                                 chart.resize();
                             }
                         });
-                        LayoutFit.schedule();
                     }, 120);
                 });
             },
@@ -5439,83 +5274,6 @@ if ($role === 'encoder') {
             }
         };
         
-        // Layout Fit — auto-shrink data when content hits page edge
-        const LayoutFit = {
-            raf: null,
-            minScale: 0.62,
-
-            schedule() {
-                cancelAnimationFrame(this.raf);
-                this.raf = requestAnimationFrame(() => this.apply());
-            },
-
-            distributeListRows() {
-                document.querySelectorAll('.funnel-list').forEach(list => {
-                    const items = list.querySelectorAll('.funnel-item');
-                    items.forEach(item => { item.style.flex = '1 1 0'; });
-                });
-
-                document.querySelectorAll('.project-status-section').forEach(section => {
-                    const items = section.querySelectorAll('.category-item');
-                    items.forEach(item => { item.style.flex = '1 1 0'; });
-                });
-            },
-
-            hasOverflow(container) {
-                const content = document.querySelector('.dashboard-content');
-                if (!container || !content) return false;
-
-                const bounds = content.getBoundingClientRect();
-                const cardSelectors = [
-                    '.kpi-summary-left', '.target-section',
-                    '.contractors-section', '.funnel-section',
-                    '.live-slideshow', '.project-status-section',
-                    '.regional-combined-section', '.sources-chart-section'
-                ];
-
-                for (const sel of cardSelectors) {
-                    for (const el of content.querySelectorAll(sel)) {
-                        const r = el.getBoundingClientRect();
-                        if (r.bottom > bounds.bottom + 1 || r.right > bounds.right + 1) {
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
-            },
-
-            apply() {
-                const container = document.querySelector('.dashboard-container');
-                const content = document.querySelector('.dashboard-content');
-                if (!container || !content) return;
-
-                content.style.setProperty('--fit-scale', '1');
-                this.distributeListRows();
-
-                let scale = 1;
-                let guard = 0;
-                while (scale > this.minScale && this.hasOverflow(container) && guard < 40) {
-                    scale -= 0.015;
-                    content.style.setProperty('--fit-scale', scale.toFixed(3));
-                    guard++;
-                }
-
-                Object.values(AppState.charts || {}).forEach(chart => {
-                    if (chart && typeof chart.resize === 'function') chart.resize();
-                });
-            },
-
-            init() {
-                window.addEventListener('resize', () => this.schedule());
-                if (document.fonts?.ready) {
-                    document.fonts.ready.then(() => this.schedule());
-                } else {
-                    this.schedule();
-                }
-            }
-        };
-
         // Main Application Controller
         const App = {
             async init() {
@@ -5524,7 +5282,6 @@ if ($role === 'encoder') {
                     Clock.init();
                     Charts.init();
                     PriorityAlert.init();
-                    LayoutFit.init();
                     
                     // Setup event listeners
                     this.setupEventListeners();
@@ -5565,7 +5322,6 @@ if ($role === 'encoder') {
                     AppState.hasErrors = true;
                 } finally {
                     AppState.isLoading = false;
-                    LayoutFit.schedule();
                 }
             },
 
@@ -5584,8 +5340,6 @@ if ($role === 'encoder') {
                     ]);
                 } catch (error) {
                     console.error('Error refreshing data:', error);
-                } finally {
-                    LayoutFit.schedule();
                 }
             },
 
