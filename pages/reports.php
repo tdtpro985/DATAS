@@ -385,18 +385,20 @@ if ($role === 'encoder') {
             min-height: 0;
             position: relative;
             z-index: 1;
-            /* Fluid scale — shrinks when content hits page edge */
+            /* Fluid scale — grows to fill page; only shrinks if overflow */
             --fit-scale: 1;
-            --fs-xs:  calc(clamp(0.42rem, 0.85vmin, 0.62rem) * var(--fit-scale));
-            --fs-sm:  calc(clamp(0.52rem, 1.05vmin, 0.72rem) * var(--fit-scale));
-            --fs-md:  calc(clamp(0.62rem, 1.25vmin, 0.82rem) * var(--fit-scale));
-            --fs-lg:  calc(clamp(0.78rem, 1.55vmin, 1rem)  * var(--fit-scale));
-            --fs-xl:  calc(clamp(0.95rem, 1.9vmin, 1.35rem) * var(--fit-scale));
-            --fs-kpi: calc(clamp(0.75rem, 1.5vmin, 1.1rem)  * var(--fit-scale));
-            --fs-target: calc(clamp(1.1rem, 2.6vmin, 2rem) * var(--fit-scale));
-            --card-gap: calc(clamp(0.25rem, 0.55vmin, 0.6rem) * var(--fit-scale));
-            --card-pad: calc(clamp(0.3rem, 0.75vmin, 0.75rem) * var(--fit-scale));
-            --row-pad:  calc(clamp(0.08rem, 0.28vmin, 0.35rem) * var(--fit-scale));
+            --fs-xs:  calc(clamp(0.55rem, 1.1vmin, 0.85rem)  * var(--fit-scale));
+            --fs-sm:  calc(clamp(0.68rem, 1.4vmin, 1.05rem) * var(--fit-scale));
+            --fs-md:  calc(clamp(0.78rem, 1.65vmin, 1.2rem) * var(--fit-scale));
+            --fs-lg:  calc(clamp(0.95rem, 2vmin, 1.45rem)   * var(--fit-scale));
+            --fs-xl:  calc(clamp(1.1rem, 2.4vmin, 1.85rem)  * var(--fit-scale));
+            --fs-kpi: calc(clamp(0.95rem, 2.1vmin, 1.6rem)  * var(--fit-scale));
+            --fs-target: calc(clamp(1.5rem, 3.5vmin, 3rem)   * var(--fit-scale));
+            --card-gap: calc(clamp(0.45rem, 1.1vmin, 1.1rem) * var(--fit-scale));
+            --card-pad: calc(clamp(0.55rem, 1.3vmin, 1.3rem) * var(--fit-scale));
+            --row-pad:  calc(clamp(0.18rem, 0.55vmin, 0.65rem) * var(--fit-scale));
+            --kpi-h:    clamp(58px, calc(9vh * var(--fit-scale)), 130px);
+            --target-h: clamp(62px, calc(10vh * var(--fit-scale)), 120px);
         }
         
         /* Main Grid Layout - 3 Columns - viewport-contained */
@@ -405,8 +407,9 @@ if ($role === 'encoder') {
             display: grid;
             grid-template-columns: minmax(0, 0.28fr) minmax(0, 0.42fr) minmax(0, 0.30fr);
             grid-template-rows: minmax(0, 1fr);
-            gap: clamp(0.35rem, 0.8vw, 0.8rem);
+            gap: var(--card-gap);
             min-height: 0;
+            height: 100%;
             overflow: hidden;
             width: 100%;
             max-width: 100%;
@@ -431,7 +434,7 @@ if ($role === 'encoder') {
         .left-column {
             display: flex;
             flex-direction: column;
-            gap: clamp(0.3rem, 0.6vh, 0.6rem);
+            gap: var(--card-gap);
             min-height: 0;
             height: 100%;
             overflow: hidden;
@@ -450,10 +453,9 @@ if ($role === 'encoder') {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: var(--card-gap);
-            flex-shrink: 0;
-            height: auto;
-            max-height: clamp(48px, 8vh, 72px);
-            min-height: 0;
+            flex: 0 0 var(--kpi-h);
+            height: var(--kpi-h);
+            min-height: var(--kpi-h);
             margin-bottom: 0;
         }
         
@@ -588,7 +590,7 @@ if ($role === 'encoder') {
         .center-column {
             display: flex;
             flex-direction: column;
-            gap: clamp(0.3rem, 0.6vh, 0.6rem);
+            gap: var(--card-gap);
             min-height: 0;
             height: 100%;
             overflow: hidden;
@@ -608,10 +610,9 @@ if ($role === 'encoder') {
             border: 1px solid #444;
             border-radius: 8px;
             padding: var(--card-pad);
-            flex-shrink: 0;
-            height: auto;
-            max-height: clamp(52px, 9vh, 90px);
-            min-height: 0;
+            flex: 0 0 var(--target-h);
+            height: var(--target-h);
+            min-height: var(--target-h);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -747,7 +748,7 @@ if ($role === 'encoder') {
         .right-column {
             display: flex;
             flex-direction: column;
-            gap: clamp(0.3rem, 0.6vh, 0.6rem);
+            gap: var(--card-gap);
             min-height: 0;
             height: 100%;
             overflow: hidden;
@@ -1859,74 +1860,11 @@ if ($role === 'encoder') {
             transition: width 0.5s ease;
         }
         
-        /* Responsive Design - viewport height adjustments */
-        
-        @media (max-height: 900px) {
-            .dashboard-header {
-                padding: 0.3rem 0.6rem;
-                min-height: 38px;
-            }
-            
-            .kpi-summary-left {
-                height: clamp(48px, 7vh, 62px);
-            }
-            
-            .target-section {
-                height: clamp(52px, 8vh, 75px);
-            }
-            
-            .section-title {
-                margin-bottom: 0.35rem;
-                font-size: 0.72rem;
-            }
-            
-            .funnel-item,
-            .category-item,
-            .contractor-row {
-                padding-top: 0.2rem;
-                padding-bottom: 0.2rem;
-            }
-        }
+        /* Responsive Design - only adjust on very small heights (overflow fallback) */
         
         @media (max-height: 768px) {
             .dashboard-content {
                 padding: 0.25rem;
-            }
-            
-            .main-grid {
-                gap: 0.3rem;
-            }
-            
-            .left-column,
-            .center-column,
-            .right-column {
-                gap: 0.3rem;
-            }
-            
-            .kpi-icon {
-                display: none;
-            }
-            
-            .kpi-value {
-                font-size: clamp(0.7rem, 1.2vw, 0.95rem);
-            }
-            
-            .kpi-label {
-                font-size: clamp(0.45rem, 0.8vw, 0.58rem);
-            }
-            
-            .target-percentage {
-                font-size: clamp(1.2rem, 2.5vw, 1.6rem);
-            }
-            
-            .live-details {
-                gap: 0.35rem;
-                font-size: 0.62rem;
-            }
-            
-            .live-footer,
-            .slideshow-timer-text {
-                font-size: 0.55rem;
             }
         }
         
@@ -2878,7 +2816,7 @@ if ($role === 'encoder') {
         }
 
         /* ══════════════════════════════════════════════════════════
-           FLUID CARD SYSTEM — content-based sizing, auto-shrink at edge
+           FLUID CARD SYSTEM — fill page, scale up to use all space
         ══════════════════════════════════════════════════════════ */
 
         /* All dashboard cards share fluid padding */
@@ -2904,7 +2842,7 @@ if ($role === 'encoder') {
         }
 
         .dashboard-content .live-slideshow {
-            flex: 1.3 1 0;
+            flex: 1.5 1 0;
         }
 
         .dashboard-content .project-status-section {
@@ -2936,7 +2874,10 @@ if ($role === 'encoder') {
         .dashboard-content .target-number     { font-size: var(--fs-lg); line-height: 1; }
         .dashboard-content .target-label,
         .dashboard-content .target-status     { font-size: var(--fs-xs); line-height: 1.1; }
-        .dashboard-content .target-progress-bar { width: clamp(80px, 14vw, 200px); height: clamp(3px, 0.5vh, 8px); }
+        .dashboard-content .target-progress-bar {
+            width: clamp(100px, 18vw, 280px);
+            height: clamp(5px, 0.7vh, 12px);
+        }
 
         /* List rows — distribute evenly based on data count */
         .dashboard-content .funnel-list {
@@ -2983,9 +2924,10 @@ if ($role === 'encoder') {
         }
 
         .dashboard-content .contractor-row {
-            padding: var(--row-pad) 0;
-            grid-template-columns: clamp(18px, 2.5vw, 30px) minmax(0, 1fr) clamp(42px, 6vw, 68px);
-            gap: calc(var(--row-pad) * 1.5);
+            padding: calc(var(--row-pad) * 1.5) 0;
+            min-height: calc(var(--fs-sm) * 2.2);
+            grid-template-columns: clamp(22px, 3vw, 36px) minmax(0, 1fr) clamp(50px, 7vw, 80px);
+            gap: calc(var(--row-pad) * 2);
         }
 
         .dashboard-content .contractor-name {
@@ -3002,8 +2944,8 @@ if ($role === 'encoder') {
 
         .dashboard-content .funnel-bar,
         .dashboard-content .category-bar {
-            width: clamp(28px, 4vw, 50px);
-            height: clamp(2px, 0.35vh, 4px);
+            width: clamp(36px, 5.5vw, 70px);
+            height: clamp(3px, 0.5vh, 7px);
         }
 
         /* Live slideshow */
@@ -3020,11 +2962,17 @@ if ($role === 'encoder') {
         .dashboard-content .slideshow-timer-text { font-size: var(--fs-xs); }
 
         /* Chart toggle buttons */
-        .dashboard-content .toggle-btn { font-size: var(--fs-xs); padding: calc(var(--row-pad) * 1.2) calc(var(--row-pad) * 2); }
+        .dashboard-content .toggle-btn { font-size: var(--fs-xs); padding: calc(var(--row-pad) * 1.5) calc(var(--row-pad) * 2.5); }
 
-        /* Hide KPI icons on tight viewports to save vertical space */
-        @media (max-height: 820px) {
-            .dashboard-content .kpi-icon { display: none; margin-bottom: 0; }
+        /* Slideshow fills vertical space in its card */
+        .dashboard-content .slideshow-content {
+            flex: 1;
+            justify-content: space-evenly;
+        }
+
+        .dashboard-content .live-details {
+            flex: 1;
+            align-content: center;
         }
     </style>
     
@@ -5439,10 +5387,11 @@ if ($role === 'encoder') {
             }
         };
         
-        // Layout Fit — auto-shrink data when content hits page edge
+        // Layout Fit — scale UP to fill page; shrink only if overflow
         const LayoutFit = {
             raf: null,
-            minScale: 0.62,
+            minScale: 0.88,
+            maxScale: 2.0,
 
             schedule() {
                 cancelAnimationFrame(this.raf);
@@ -5451,19 +5400,21 @@ if ($role === 'encoder') {
 
             distributeListRows() {
                 document.querySelectorAll('.funnel-list').forEach(list => {
-                    const items = list.querySelectorAll('.funnel-item');
-                    items.forEach(item => { item.style.flex = '1 1 0'; });
+                    list.querySelectorAll('.funnel-item').forEach(item => {
+                        item.style.flex = '1 1 0';
+                    });
                 });
 
                 document.querySelectorAll('.project-status-section').forEach(section => {
-                    const items = section.querySelectorAll('.category-item');
-                    items.forEach(item => { item.style.flex = '1 1 0'; });
+                    section.querySelectorAll('.category-item').forEach(item => {
+                        item.style.flex = '1 1 0';
+                    });
                 });
             },
 
-            hasOverflow(container) {
+            hasOverflow() {
                 const content = document.querySelector('.dashboard-content');
-                if (!container || !content) return false;
+                if (!content) return false;
 
                 const bounds = content.getBoundingClientRect();
                 const cardSelectors = [
@@ -5476,28 +5427,69 @@ if ($role === 'encoder') {
                 for (const sel of cardSelectors) {
                     for (const el of content.querySelectorAll(sel)) {
                         const r = el.getBoundingClientRect();
-                        if (r.bottom > bounds.bottom + 1 || r.right > bounds.right + 1) {
+                        if (r.bottom > bounds.bottom + 2 || r.right > bounds.right + 2) {
                             return true;
                         }
                     }
                 }
-
                 return false;
             },
 
-            apply() {
-                const container = document.querySelector('.dashboard-container');
+            getUsedHeight() {
                 const content = document.querySelector('.dashboard-content');
-                if (!container || !content) return;
+                if (!content) return 0;
 
-                content.style.setProperty('--fit-scale', '1');
+                const bounds = content.getBoundingClientRect();
+                let maxBottom = bounds.top;
+
+                content.querySelectorAll('.left-column, .center-column, .right-column').forEach(col => {
+                    maxBottom = Math.max(maxBottom, col.getBoundingClientRect().bottom);
+                });
+
+                return maxBottom - bounds.top;
+            },
+
+            apply() {
+                const content = document.querySelector('.dashboard-content');
+                if (!content) return;
+
                 this.distributeListRows();
 
-                let scale = 1;
+                const vh = window.innerHeight;
+                const vw = window.innerWidth;
+
+                // Start larger on bigger screens — fill the whole page
+                let scale = Math.min(vh / 880, vw / 1500, this.maxScale);
+                scale = Math.max(scale, 1);
+                content.style.setProperty('--fit-scale', scale.toFixed(3));
+
+                // Shrink only as last resort when overflowing
                 let guard = 0;
-                while (scale > this.minScale && this.hasOverflow(container) && guard < 40) {
-                    scale -= 0.015;
+                while (scale > this.minScale && this.hasOverflow() && guard < 25) {
+                    scale -= 0.02;
                     content.style.setProperty('--fit-scale', scale.toFixed(3));
+                    guard++;
+                }
+
+                // Keep scaling up while rows are still compact and nothing overflows
+                guard = 0;
+                while (scale < this.maxScale && guard < 50) {
+                    const funnelItem = document.querySelector('.funnel-item');
+                    const rowH = funnelItem ? funnelItem.getBoundingClientRect().height : 0;
+                    const used = this.getUsedHeight();
+                    const slack = content.clientHeight - used;
+
+                    if (rowH >= 52 && slack <= 8) break;
+
+                    const next = Math.min(scale + 0.035, this.maxScale);
+                    content.style.setProperty('--fit-scale', next.toFixed(3));
+
+                    if (this.hasOverflow()) {
+                        content.style.setProperty('--fit-scale', scale.toFixed(3));
+                        break;
+                    }
+
+                    scale = next;
                     guard++;
                 }
 
