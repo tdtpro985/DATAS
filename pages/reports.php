@@ -437,9 +437,9 @@ if ($role === 'encoder') {
         .kpi-summary-left {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: clamp(0.25rem, 0.5vw, 0.4rem);
+            gap: clamp(0.2rem, 0.4vw, 0.35rem);
             flex-shrink: 0;
-            height: clamp(52px, 8vh, 70px);
+            height: clamp(48px, 7vh, 64px);
             min-height: 0;
             margin-bottom: 0;
         }
@@ -499,8 +499,8 @@ if ($role === 'encoder') {
         }
         
         .kpi-icon {
-            font-size: 1.2rem;
-            margin-bottom: 0.4rem;
+            font-size: 1rem;
+            margin-bottom: 0.15rem;
         }
         
         .kpi-info {
@@ -510,11 +510,11 @@ if ($role === 'encoder') {
         }
         
         .kpi-value {
-            font-size: 1.1rem;
+            font-size: 1.05rem;
             font-weight: 800;
             color: #fff;
             line-height: 1;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.15rem;
             text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
         }
         
@@ -594,9 +594,9 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: clamp(0.4rem, 1vh, 1rem);
+            padding: clamp(0.3rem, 0.7vh, 0.65rem);
             flex-shrink: 0;
-            height: clamp(58px, 9vh, 90px);
+            height: clamp(52px, 7.5vh, 78px);
             min-height: 0;
             display: flex;
             align-items: center;
@@ -776,7 +776,7 @@ if ($role === 'encoder') {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             text-align: center;
             min-height: 0;
             overflow: hidden;
@@ -799,10 +799,10 @@ if ($role === 'encoder') {
         .live-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.8rem;
+            gap: 0.4rem;
             text-align: left;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.85rem;
+            margin-bottom: 0.45rem;
         }
         
         .live-detail {
@@ -942,7 +942,7 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.8rem;
+            padding: clamp(0.3rem, 0.6vh, 0.55rem);
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -968,7 +968,7 @@ if ($role === 'encoder') {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.4rem;
         }
         
         .chart-toggle-buttons {
@@ -1010,7 +1010,7 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: 0.8rem;
+            padding: clamp(0.3rem, 0.6vh, 0.55rem);
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -1215,7 +1215,7 @@ if ($role === 'encoder') {
         .section-title {
             font-size: 0.85rem;
             color: #888;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -1494,7 +1494,7 @@ if ($role === 'encoder') {
         .section-title {
             font-size: 0.8rem;
             color: #888;
-            margin-bottom: 0.6rem;
+            margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
             gap: 0.4rem;
@@ -1567,11 +1567,11 @@ if ($role === 'encoder') {
         .chart-container {
             flex: 1;
             display: flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
             position: relative;
             min-height: 0;
-            padding: 0.25rem;
+            padding: 0.1rem;
             width: 100%;
             max-width: 100%;
             overflow: hidden;
@@ -2170,6 +2170,102 @@ if ($role === 'encoder') {
             .pie-graph-section,
             .funnel-section {
                 padding: 0.6rem;
+            }
+        }
+
+        /* Compact layout — cards hug their data, charts absorb leftover space */
+        @media (min-width: 768px) {
+            .dashboard-content {
+                padding: clamp(0.15rem, 0.4vw, 0.35rem);
+            }
+
+            .main-grid {
+                gap: clamp(0.2rem, 0.45vw, 0.45rem);
+            }
+
+            .left-column {
+                display: grid;
+                grid-template-rows: auto minmax(0, 1fr) auto;
+                gap: clamp(0.2rem, 0.45vh, 0.4rem);
+            }
+
+            .center-column {
+                display: grid;
+                grid-template-rows: auto minmax(0, 1fr) auto;
+                gap: clamp(0.2rem, 0.45vh, 0.4rem);
+            }
+
+            .right-column {
+                display: grid;
+                grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+                gap: clamp(0.2rem, 0.45vh, 0.4rem);
+            }
+
+            .contractors-section,
+            .live-slideshow,
+            .regional-combined-section,
+            .sources-chart-section {
+                flex: unset;
+                min-height: 0;
+                overflow: hidden;
+            }
+
+            .funnel-section,
+            .project-status-section {
+                flex: unset;
+                height: auto;
+                min-height: unset;
+            }
+
+            .contractors-section,
+            .funnel-section,
+            .project-status-section,
+            .live-slideshow,
+            .regional-combined-section,
+            .sources-chart-section {
+                padding: clamp(0.3rem, 0.6vh, 0.55rem);
+            }
+
+            .section-title,
+            .section-header-with-toggle {
+                margin-bottom: 0.35rem;
+            }
+
+            .funnel-list {
+                flex: unset;
+                overflow: visible;
+            }
+
+            .funnel-item,
+            .category-item {
+                flex-shrink: 0;
+            }
+
+            .slideshow-content {
+                justify-content: flex-start;
+            }
+
+            .live-contractor-name {
+                margin-bottom: 0.35rem;
+            }
+
+            .live-details {
+                gap: 0.35rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .live-footer {
+                margin-top: 0.25rem;
+                padding-top: 0.35rem;
+            }
+
+            .target-left,
+            .target-right {
+                padding: 0.3rem 0.4rem;
+            }
+
+            .target-center {
+                margin: 0 0.6rem;
             }
         }
         
