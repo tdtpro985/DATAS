@@ -1081,9 +1081,12 @@ function updateSidebarActiveState() {
 
 // ── Initialize settings when DOM is ready ───────────────────
 document.addEventListener('DOMContentLoaded', function() {
-    // Check URL hash for direct page navigation
+    // Check URL for direct page navigation via hash or query parameter
     const hash = window.location.hash.replace('#', '');
-    if (hash === 'settings') {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page');
+
+    if (hash === 'settings' || pageParam === 'settings') {
         navigateToPage('settings');
     }
     
