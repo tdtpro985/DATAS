@@ -773,6 +773,7 @@ if ($role === 'encoder') {
         }
         
         .slideshow-content {
+            --slide-scale: 1;
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -781,55 +782,77 @@ if ($role === 'encoder') {
             min-height: 0;
             overflow: hidden;
         }
+
+        .slideshow-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+            min-height: 0;
+            font-size: calc(0.82rem * var(--slide-scale, 1));
+            gap: 0.45em;
+        }
+
+        .slideshow-body.slideshow-body--spread {
+            justify-content: space-evenly;
+        }
+
+        .slideshow-controls {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
         
         .live-contractor-name {
-            font-size: clamp(0.85rem, 1.4vw, 1.6rem);
+            font-size: 2em;
             font-weight: 800;
             color: #ff8000;
-            margin-bottom: clamp(0.3rem, 0.8vh, 1rem);
+            margin-bottom: 0.15em;
             line-height: 1.15;
             text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2;
+            -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
         
         .live-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 0.4rem;
+            gap: 0.45em;
             text-align: left;
-            font-size: 0.85rem;
-            margin-bottom: 0.45rem;
+            margin-bottom: 0.1em;
         }
         
         .live-detail {
             display: flex;
             flex-direction: column;
+            min-width: 0;
         }
         
         .live-detail-label {
-            font-size: 0.8rem;
+            font-size: 0.78em;
             color: #888;
             text-transform: uppercase;
-            margin-bottom: 0.3rem;
+            margin-bottom: 0.2em;
         }
         
         .live-detail-value {
-            font-size: 0.9rem;
+            font-size: 0.95em;
             color: #fff;
             font-weight: 500;
+            line-height: 1.25;
+            word-break: break-word;
         }
         
         .live-footer {
-            font-size: 0.8rem;
+            font-size: 0.85em;
             color: rgba(255,255,255,0.6);
             text-align: center;
-            margin-top: 0.5rem;
+            margin-top: 0.15em;
             border-top: 1px solid #333;
-            padding-top: 0.5rem;
+            padding-top: 0.35em;
         }
         
         /* Loading Progress Bar for Live Slideshow */
@@ -866,7 +889,7 @@ if ($role === 'encoder') {
         /* Slideshow Countdown Timer */
         .slideshow-countdown-bar {
             width: 100%;
-            height: 4px;
+            height: calc(4px * max(1, var(--slide-scale, 1) * 0.85));
             background: #333;
             border-radius: 2px;
             margin-top: 0.5rem;
@@ -900,7 +923,7 @@ if ($role === 'encoder') {
         }
         
         .slideshow-timer-text {
-            font-size: 0.6rem;
+            font-size: calc(0.6rem * max(1, var(--slide-scale, 1) * 0.9));
             color: #888;
             text-align: center;
             margin-top: 0.3rem;
@@ -1729,7 +1752,7 @@ if ($role === 'encoder') {
             gap: 0.4rem;
         }
         
-        .live-contractor-name {
+        .live-contractor .live-contractor-name {
             font-size: 1.1rem;
             font-weight: 800;
             color: #ff8000;
@@ -1737,7 +1760,7 @@ if ($role === 'encoder') {
             line-height: 1.2;
         }
         
-        .live-details {
+        .live-contractor .live-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0.6rem;
@@ -1745,19 +1768,19 @@ if ($role === 'encoder') {
             font-size: 0.7rem;
         }
         
-        .live-detail {
+        .live-contractor .live-detail {
             display: flex;
             flex-direction: column;
         }
         
-        .live-detail-label {
+        .live-contractor .live-detail-label {
             font-size: 0.65rem;
             color: #888;
             text-transform: uppercase;
             margin-bottom: 0.2rem;
         }
         
-        .live-detail-value {
+        .live-contractor .live-detail-value {
             font-size: 0.7rem;
             color: #fff;
             font-weight: 500;
@@ -1905,12 +1928,12 @@ if ($role === 'encoder') {
                 font-size: clamp(1.2rem, 2.5vw, 1.6rem);
             }
             
-            .live-details {
+            .live-contractor .live-details {
                 gap: 0.35rem;
                 font-size: 0.62rem;
             }
             
-            .live-footer,
+            .live-contractor .live-footer,
             .slideshow-timer-text {
                 font-size: 0.55rem;
             }
@@ -2101,7 +2124,7 @@ if ($role === 'encoder') {
                 font-size: 0.85rem;
             }
             
-            .live-details {
+            .slideshow-body .live-details {
                 grid-template-columns: 1fr;
             }
         }
@@ -2245,18 +2268,8 @@ if ($role === 'encoder') {
                 justify-content: flex-start;
             }
 
-            .live-contractor-name {
-                margin-bottom: 0.35rem;
-            }
-
-            .live-details {
-                gap: 0.35rem;
-                margin-bottom: 0.4rem;
-            }
-
-            .live-footer {
-                margin-top: 0.25rem;
-                padding-top: 0.35rem;
+            .slideshow-body {
+                gap: 0.4em;
             }
 
             .target-left,
@@ -3101,42 +3114,46 @@ if ($role === 'encoder') {
                     <div class="live-slideshow">
                         <div class="section-title">🔴 Live Slideshow</div>
                         <div class="slideshow-content">
-                            <div class="live-contractor-name">Loading...</div>
-                            <div class="live-details">
-                                <div class="live-detail">
-                                    <div class="live-detail-label">Contact:</div>
-                                    <div class="live-detail-value">Loading...</div>
+                            <div class="slideshow-body">
+                                <div class="live-contractor-name">Loading...</div>
+                                <div class="live-details">
+                                    <div class="live-detail">
+                                        <div class="live-detail-label">Contact:</div>
+                                        <div class="live-detail-value">Loading...</div>
+                                    </div>
+                                    <div class="live-detail">
+                                        <div class="live-detail-label">Phone:</div>
+                                        <div class="live-detail-value">Loading...</div>
+                                    </div>
+                                    <div class="live-detail">
+                                        <div class="live-detail-label">Project:</div>
+                                        <div class="live-detail-value">Loading...</div>
+                                    </div>
+                                    <div class="live-detail">
+                                        <div class="live-detail-label">Value:</div>
+                                        <div class="live-detail-value">₱0</div>
+                                    </div>
+                                    <div class="live-detail">
+                                        <div class="live-detail-label">Status:</div>
+                                        <div class="live-detail-value">Loading...</div>
+                                    </div>
                                 </div>
-                                <div class="live-detail">
-                                    <div class="live-detail-label">Phone:</div>
-                                    <div class="live-detail-value">Loading...</div>
-                                </div>
-                                <div class="live-detail">
-                                    <div class="live-detail-label">Project:</div>
-                                    <div class="live-detail-value">Loading...</div>
-                                </div>
-                                <div class="live-detail">
-                                    <div class="live-detail-label">Value:</div>
-                                    <div class="live-detail-value">₱0</div>
-                                </div>
-                                <div class="live-detail">
-                                    <div class="live-detail-label">Status:</div>
-                                    <div class="live-detail-value">Loading...</div>
+                                <div class="live-footer">
+                                    DRBs: <span style="color: #ff8000;">₱0</span> | 
+                                    Sheet Pile: <span style="color: #ff8000;">₱0</span>
                                 </div>
                             </div>
-                            <div class="live-footer">
-                                DRBs: <span style="color: #ff8000;">₱0</span> | 
-                                Sheet Pile: <span style="color: #ff8000;">₱0</span>
+                            <div class="slideshow-controls">
+                                <!-- Loading Progress Bar -->
+                                <div class="slideshow-loading-bar" id="slideshowLoadingBar" style="display: none;">
+                                    <div class="loading-progress" id="loadingProgress"></div>
+                                </div>
+                                <!-- Slideshow Countdown Timer -->
+                                <div class="slideshow-countdown-bar" id="slideshowCountdownBar">
+                                    <div class="countdown-progress" id="countdownProgress"></div>
+                                </div>
+                                <div class="slideshow-timer-text" id="slideshowTimerText">Next slide in 10s</div>
                             </div>
-                            <!-- Loading Progress Bar -->
-                            <div class="slideshow-loading-bar" id="slideshowLoadingBar" style="display: none;">
-                                <div class="loading-progress" id="loadingProgress"></div>
-                            </div>
-                            <!-- Slideshow Countdown Timer -->
-                            <div class="slideshow-countdown-bar" id="slideshowCountdownBar">
-                                <div class="countdown-progress" id="countdownProgress"></div>
-                            </div>
-                            <div class="slideshow-timer-text" id="slideshowTimerText">Next slide in 10s</div>
                         </div>
                     </div>
 
@@ -4210,6 +4227,90 @@ if ($role === 'encoder') {
             currentTimeout: null,
             countdownInterval: null,
             timeRemaining: 10,
+            _fitObserver: null,
+            _fitTimer: null,
+
+            initAutoFit() {
+                if (this._fitObserver) return;
+
+                const slideshow = document.querySelector('.live-slideshow');
+                if (!slideshow) return;
+
+                if (typeof ResizeObserver !== 'undefined') {
+                    this._fitObserver = new ResizeObserver(() => {
+                        clearTimeout(this._fitTimer);
+                        this._fitTimer = setTimeout(() => this.fitFonts(), 60);
+                    });
+                    this._fitObserver.observe(slideshow);
+                }
+
+                window.addEventListener('resize', () => {
+                    clearTimeout(this._fitTimer);
+                    this._fitTimer = setTimeout(() => this.fitFonts(), 120);
+                });
+            },
+
+            fitFonts() {
+                const content = document.querySelector('.slideshow-content');
+                const body = document.querySelector('.slideshow-body');
+                const controls = document.querySelector('.slideshow-controls');
+                if (!content || !body) return;
+
+                const applyScale = (scale) => {
+                    content.style.setProperty('--slide-scale', scale.toFixed(3));
+                    void body.offsetHeight;
+                    return body.scrollHeight;
+                };
+
+                requestAnimationFrame(() => {
+                    const maxHeight = content.clientHeight - (controls?.offsetHeight || 0) - 2;
+                    if (maxHeight <= 0) return;
+
+                    applyScale(1);
+                    const baseHeight = body.scrollHeight;
+                    if (baseHeight <= 0) return;
+
+                    let bestScale = 1;
+
+                    if (baseHeight <= maxHeight) {
+                        let lo = 1;
+                        let hi = 3.2;
+
+                        for (let i = 0; i < 14; i++) {
+                            const mid = (lo + hi) / 2;
+                            const height = applyScale(mid);
+
+                            if (height <= maxHeight) {
+                                bestScale = mid;
+                                lo = mid;
+                            } else {
+                                hi = mid;
+                            }
+                        }
+                    } else {
+                        let lo = 0.55;
+                        let hi = 1;
+
+                        for (let i = 0; i < 14; i++) {
+                            const mid = (lo + hi) / 2;
+                            const height = applyScale(mid);
+
+                            if (height <= maxHeight) {
+                                bestScale = mid;
+                                lo = mid;
+                            } else {
+                                hi = mid;
+                            }
+                        }
+                    }
+
+                    applyScale(bestScale);
+                    body.classList.toggle(
+                        'slideshow-body--spread',
+                        body.offsetHeight < maxHeight * 0.82
+                    );
+                });
+            },
 
             async load() {
                 this.showLoadingProgress();
@@ -4255,6 +4356,8 @@ if ($role === 'encoder') {
                         Sheet Pile: <span style="color: #ff8000;">₱${Utils.formatNumber(data.sheet_pile_amount || 0)}</span>
                     `;
                 }
+
+                this.fitFonts();
             },
 
             renderFallback() {
@@ -5377,6 +5480,7 @@ if ($role === 'encoder') {
                     // Initialize base components
                     Clock.init();
                     Charts.init();
+                    LiveSlideshow.initAutoFit();
                     PriorityAlert.init();
                     
                     // Setup event listeners
