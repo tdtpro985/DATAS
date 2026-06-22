@@ -176,7 +176,7 @@ try {
     </aside>
 
     <!-- Logout Confirmation Modal -->
-    <div class="modal-overlay" id="logoutModal" style="display: none;">
+    <div class="modal-overlay" id="logoutModal">
         <div class="modal-content modal-small">
             <div class="modal-header">
                 <h2>Confirm Logout</h2>
@@ -198,7 +198,7 @@ try {
     </div>
 
     <!-- Credits Modal -->
-    <div class="credits-modal-overlay" id="creditsModal" style="display: none;">
+    <div class="credits-modal-overlay" id="creditsModal">
         <div class="credits-modal-container">
             <button type="button" class="credits-close-btn" onclick="closeCreditsModal()">
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -335,7 +335,7 @@ try {
                         <?= $role === 'superadmin' ? 'Superadmin' : ($role === 'admin' ? 'Admin' : ($role === 'encoder' ? 'Encoder' : 'Sales Rep')) ?>
                     </span>
                     <?php if ($role === 'superadmin'): ?>
-                    <button type="button" class="credits-btn topbar-credits-btn" onclick="event.stopPropagation(); showCreditsModal()" title="Development Team Credits">
+                    <button id="creditsOpenBtn" type="button" class="credits-btn topbar-credits-btn" title="Development Team Credits">
                         <span>ℹ️</span>
                     </button>
                     <?php endif; ?>
@@ -600,6 +600,7 @@ function updatePageTitle() {
 window.showCreditsModal = function() {
     const modal = document.getElementById('creditsModal');
     if (!modal) return;
+    modal.style.display = 'flex';
     document.body.classList.add('modal-open');
     modal.classList.add('active');
 };
@@ -607,8 +608,9 @@ window.showCreditsModal = function() {
 window.closeCreditsModal = function() {
     const modal = document.getElementById('creditsModal');
     if (!modal) return;
-    document.body.classList.remove('modal-open');
     modal.classList.remove('active');
+    document.body.classList.remove('modal-open');
+    modal.style.display = 'none';
 };
 
 // Add event listeners for credits modal when DOM is loaded
@@ -617,12 +619,13 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Credits modal functionality
     const creditsModal = document.getElementById('creditsModal');
-    const creditsOpenButtons = document.querySelectorAll('.credits-btn');
+    const creditsOpenButtons = document.querySelectorAll('.credits-btn, #creditsOpenBtn');
     const creditsCloseButtons = document.querySelectorAll('.credits-close-btn');
 
     creditsOpenButtons.forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             showCreditsModal();
         });
     });
