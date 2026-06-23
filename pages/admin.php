@@ -713,21 +713,20 @@ if ($role !== 'admin' && $role !== 'superadmin') {
     </div>
 </div>
 
-<!-- Settings Save Confirmation Modal -->
+<!-- Settings Save Result Modal -->
 <div class="modal-overlay" id="settingsSaveModal">
     <div class="modal-content modal-large">
         <div class="modal-header">
-            <h2>Confirm Settings Save</h2>
+            <h2>Settings Saved</h2>
             <button class="modal-close" onclick="hideSettingsSaveModal()">&times;</button>
         </div>
         <div class="modal-body">
-            <p style="margin:0 0 1rem;color:var(--text-secondary);">Review the changes below and confirm to save them.</p>
+            <p style="margin:0 0 1rem;color:var(--text-secondary);">Your changes were saved successfully. Review the updated settings below.</p>
             <div id="settingsSaveSummary" style="margin-bottom:1rem;font-size:0.95rem;color:var(--text-muted);"></div>
             <div id="settingsSaveChangesList" style="display:grid;gap:0.75rem;"></div>
         </div>
         <div class="modal-footer">
-            <button class="btn-secondary" type="button" onclick="hideSettingsSaveModal()">Cancel</button>
-            <button class="btn-primary" type="button" id="settingsSaveConfirmButton">Confirm Save</button>
+            <button class="btn-primary" type="button" id="settingsSaveConfirmButton">Close</button>
         </div>
     </div>
 </div>
