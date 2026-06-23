@@ -623,12 +623,14 @@ if ($role === 'encoder') {
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-width: 80px;
-            padding: 0.5rem;
+            min-width: 90px;
+            max-width: 13rem;
+            padding: 0.45rem 0.5rem;
             background: rgba(255, 128, 0, 0.1);
             border-radius: 6px;
             border: 1px solid rgba(255, 128, 0, 0.2);
             width: auto;
+            flex: 0 0 auto;
         }
         
         .target-label {
@@ -638,6 +640,7 @@ if ($role === 'encoder') {
             letter-spacing: 0.5px;
             margin-bottom: 0.2rem;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         .target-number {
@@ -645,6 +648,7 @@ if ($role === 'encoder') {
             color: #fff;
             font-weight: 700;
             line-height: 1;
+            word-break: normal;
         }
         
         .target-center {
@@ -652,7 +656,8 @@ if ($role === 'encoder') {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            flex: 1 1 100%;
+            flex: 1 1 min(240px, 100%);
+            min-width: 160px;
             margin: 0;
         }
         
@@ -663,6 +668,7 @@ if ($role === 'encoder') {
             line-height: 1;
             margin-bottom: 0.2rem;
             text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            word-break: break-word;
         }
         
         .target-status {
@@ -677,6 +683,7 @@ if ($role === 'encoder') {
         
         .target-progress-container {
             width: 100%;
+            max-width: 260px;
             display: flex;
             justify-content: center;
         }
@@ -686,7 +693,8 @@ if ($role === 'encoder') {
             height: 8px;
             border-radius: 4px;
             overflow: hidden;
-            width: 200px;
+            width: min(220px, 100%);
+            max-width: 100%;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
             position: relative;
         }
@@ -1158,8 +1166,9 @@ if ($role === 'encoder') {
                 font-size: 1.1rem;
             }
             .target-section {
-                padding: 0.8rem;
-                height: 80px;
+                padding: 0.7rem;
+                min-height: 80px;
+                height: auto;
             }
         }
         
@@ -1175,7 +1184,8 @@ if ($role === 'encoder') {
             }
             .target-section {
                 padding: 0.6rem;
-                height: 70px;
+                min-height: 70px;
+                height: auto;
             }
         }
         
@@ -2105,7 +2115,8 @@ if ($role === 'encoder') {
             }
             
             .target-section {
-                height: clamp(52px, 7vh, 65px);
+                min-height: clamp(52px, 7vh, 65px);
+                height: auto;
             }
             
             .right-column {
