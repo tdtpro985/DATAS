@@ -158,6 +158,10 @@ function handlePostSettings(PDO $pdo): void {
             handleToggleMaintenance($pdo, $input);
             break;
 
+        case 'restore-defaults':
+            handleRestoreDefaults($pdo);
+            break;
+
         case 'export-database':
             handleExportDatabase($pdo);
             break;
@@ -248,6 +252,52 @@ function handleToggleMaintenance(PDO $pdo, array $input): void {
     }
     
     echo json_encode(['success' => true, 'maintenance_enabled' => $enabled]);
+}
+
+// ── Restore system default settings ───────────────────────
+function handleRestoreDefaults(PDO $pdo): void {
+    $defaults = [
+        'app_name' => 'TDT Powersteel SILEP - DATAS',
+        'app_version' => '3.6',
+        'maintenance_mode' => '0',
+        'maintenance_message' => 'System is currently under maintenance. Please check back later.',
+        'max_login_attempts' => '5',
+        'session_timeout_minutes' => '60',
+        'password_min_length' => '8',
+        'require_2fa' => '0',
+        'enable_email_notifications' => '1',
+        'enable_sms_notifications' => '0',
+        'items_per_page' => '50',
+        'enable_animations' => '1',
+        'date_format' => 'Y-m-d H:i:s',
+        'default_project_status' => 'New',
+        'priority_project_threshold_days' => '7',
+        'auto_archive_days' => '90',
+        'enable_activity_logging' => '1',
+        'log_retention_days' => '365',
+        'timezone' => 'Asia/Manila',
+        'currency_symbol' => '₱',
+        'currency_code' => 'PHP',
+    ];
+
+    $stmt = $pdo->prepare("UPDATE system_settings SET setting_value = :value, updated_at = NOW() WHERE setting_key = :key");
+    $updated = 0;
+
+    foreach ($defaults as $key => $value) {
+        $stmt->execute([':key' => $key, ':value' => $value]);
+        if ($stmt->rowCount() > 0) {
+            $updated++;
+        }
+    }
+
+    // Ensure maintenance flag file matches the restored maintenance_mode state
+    $maintenanceFile = __DIR__ . '/../../maintenance.flag';
+    if (file_exists($maintenanceFile)) {
+        unlink($maintenanceFile);
+    }
+
+    logAdminActivity($pdo, 'Restored system settings to defaults');
+    echo json_encode(['success' => true, 'updated' => $updated, 'message' => 'Settings restored to system defaults']);
 }
 
 // ── Export entire database as .sql ────────────────────────

@@ -639,7 +639,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
 
                 <!-- Bottom Save Button -->
                 <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1);">
-                    <button class="btn-secondary" onclick="resetAllSettings()">↩️ Reset Changes</button>
+                    <button class="btn-secondary" onclick="restoreDefaultSettings()">↩️ Restore Defaults</button>
                     <button class="btn-primary" onclick="saveAllSettings()">💾 Save All Settings</button>
                 </div>
             </div>
@@ -727,6 +727,23 @@ if ($role !== 'admin' && $role !== 'superadmin') {
         </div>
         <div class="modal-footer">
             <button class="btn-primary" type="button" id="settingsSaveConfirmButton">Close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Restore Defaults Confirmation Modal -->
+<div class="modal-overlay" id="restoreDefaultsModal">
+    <div class="modal-content modal-small">
+        <div class="modal-header">
+            <h2>Restore Defaults</h2>
+            <button class="modal-close" onclick="hideRestoreDefaultsModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p style="margin:0 0 1rem;color:var(--text-secondary);">Restore all settings back to the system defaults? This cannot be undone.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" type="button" onclick="hideRestoreDefaultsModal()">Cancel</button>
+            <button class="btn-primary" type="button" id="confirmRestoreDefaultsButton">Restore Defaults</button>
         </div>
     </div>
 </div>

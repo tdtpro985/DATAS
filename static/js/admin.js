@@ -913,11 +913,61 @@ function collectSettings() {
     return settings;
 }
 
-// ── Reset all settings to original values ───────────────────
-function resetAllSettings() {
-    if (Object.keys(settingsOriginal).length === 0) return;
-    populateSettings(settingsOriginal);
-    Toast.info('Settings reset to last saved values');
+// ── Show restore defaults confirmation modal ─────────────
+function restoreDefaultSettings() {
+    const overlay = document.getElementById('restoreDefaultsModal');
+    const button = document.getElementById('confirmRestoreDefaultsButton');
+
+    if (overlay) {
+        overlay.classList.add('active');
+    }
+
+    if (button) {
+        button.disabled = false;
+        button.textContent = 'Restore Defaults';
+        button.onclick = performRestoreDefaultSettings;
+    }
+}
+
+function hideRestoreDefaultsModal() {
+    const overlay = document.getElementById('restoreDefaultsModal');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+}
+
+async function performRestoreDefaultSettings() {
+    const button = document.getElementById('confirmRestoreDefaultsButton');
+    if (button) {
+        button.disabled = true;
+        button.textContent = 'Restoring...';
+    }
+
+    try {
+        const res = await fetch(_B + '/api/v1/users/settings', {
+            method: 'POST',
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'restore-defaults' })
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || 'Failed to restore defaults');
+        }
+
+        const data = await res.json();
+        await loadSettings();
+        hideRestoreDefaultsModal();
+        Toast.success(data.message || 'Settings restored to system defaults');
+    } catch (err) {
+        console.error('Restore defaults error:', err);
+        Toast.error('Failed to restore defaults: ' + err.message);
+        if (button) {
+            button.disabled = false;
+            button.textContent = 'Restore Defaults';
+        }
+    }
 }
 
 // ── Clear system cache ──────────────────────────────────────
