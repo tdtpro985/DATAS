@@ -763,15 +763,15 @@ if ($role === 'encoder') {
             background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
             border: 1px solid #444;
             border-radius: 8px;
-            padding: clamp(0.4rem, 1vh, 1.2rem);
+            padding: clamp(0.35rem, 0.85vh, 0.95rem);
             flex: 1.2;
             display: flex;
             flex-direction: column;
-            min-height: 0;
+            min-height: 320px;
+            max-height: 100%;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
-            padding: clamp(0.35rem, 0.85vh, 0.95rem);
         }
         
         .live-slideshow::before {
@@ -790,9 +790,12 @@ if ($role === 'encoder') {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
+            align-items: stretch;
             text-align: center;
             min-height: 0;
+            max-height: 100%;
             overflow: hidden;
+            padding: 0 0.15rem;
         }
 
         .slideshow-body {
@@ -803,7 +806,7 @@ if ($role === 'encoder') {
             align-items: stretch;
             min-height: 0;
             font-size: calc(0.82rem * var(--slide-scale, 1));
-            gap: 0.4em;
+            gap: 0.35rem;
             padding: 0.2rem 0;
         }
 
@@ -817,7 +820,7 @@ if ($role === 'encoder') {
         }
         
         .live-contractor-name {
-            font-size: 2em;
+            font-size: clamp(1.3rem, 2.6vw, 1.85rem);
             font-weight: 800;
             color: #ff8000;
             margin-bottom: 0.15em;
@@ -826,14 +829,15 @@ if ($role === 'encoder') {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
+            line-clamp: 3;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
         }
         
         .live-details {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.45rem;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.35rem;
             text-align: left;
             margin-bottom: 0.35rem;
         }
@@ -842,15 +846,18 @@ if ($role === 'encoder') {
             display: flex;
             flex-direction: column;
             min-width: 0;
-            padding: 0.35rem 0.45rem;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
+            padding: 0.3rem 0.4rem;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 6px;
+        }
+
         .live-detail-label {
             font-size: 0.78em;
-            color: #888;
+            color: #aaa;
             text-transform: uppercase;
-            margin-bottom: 0.2em;
+            letter-spacing: 0.4px;
+            margin-bottom: 0.18em;
         }
         
         .live-detail-value {
@@ -872,8 +879,9 @@ if ($role === 'encoder') {
 
         .materials-list {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 0.35rem;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-auto-rows: minmax(2.3rem, auto);
+            gap: 0.3rem;
             margin-top: 0.3rem;
         }
 
@@ -882,8 +890,8 @@ if ($role === 'encoder') {
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            padding: 0.45rem;
-            min-height: 2.4rem;
+            padding: 0.38rem 0.45rem;
+            min-height: 2.3rem;
             border-radius: 6px;
             border: 1px solid rgba(255, 128, 0, 0.12);
             background: rgba(255, 128, 0, 0.05);
@@ -902,9 +910,9 @@ if ($role === 'encoder') {
             color: #fff;
             font-weight: 700;
             line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            white-space: normal;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
         
         /* Loading Progress Bar for Live Slideshow */
@@ -2174,13 +2182,33 @@ if ($role === 'encoder') {
             }
         }
         
+        @media (max-width: 768px) {
+            .title {
+                font-size: 0.85rem;
+            }
+
+            .slideshow-body .live-details,
+            .slideshow-body .materials-list {
+                grid-template-columns: 1fr;
+            }
+
+            .live-contractor-name {
+                font-size: 1.4rem;
+            }
+        }
+
         @media (max-width: 479px) {
             .title {
                 font-size: 0.85rem;
             }
-            
-            .slideshow-body .live-details {
+
+            .slideshow-body .live-details,
+            .slideshow-body .materials-list {
                 grid-template-columns: 1fr;
+            }
+
+            .live-contractor-name {
+                font-size: 1.2rem;
             }
         }
         
@@ -2849,9 +2877,8 @@ if ($role === 'encoder') {
         
         .materials-list {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.3rem;
-            font-size: 0.75rem !important;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-auto-rows: minmax(2.3rem, auto);
         }
         
         .materials-list > div {
@@ -3208,6 +3235,26 @@ if ($role === 'encoder') {
                                     </div>
                                     <div>
                                         <div class="material-label">Sheet Pile Amount</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">MS Plate</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">Angle Bars</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">Channel Bars</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">Wide Flange</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">GI/BI</div>
                                         <div class="material-value">₱0</div>
                                     </div>
                                 </div>
@@ -4453,8 +4500,15 @@ if ($role === 'encoder') {
                     project_title: '-',
                     project_value: 0,
                     status: '-',
+                    drbs: null,
                     drbs_value: 0,
-                    sheet_pile_amount: 0
+                    sheet_pile_type: null,
+                    sheet_pile_amount: 0,
+                    ms_plate: 0,
+                    angle_bars: 0,
+                    channel_bars: 0,
+                    wide_flange: 0,
+                    gi_bi: 0
                 });
 
                 if (result.success && result.data) {
@@ -4515,8 +4569,15 @@ if ($role === 'encoder') {
                     project_title: '-',
                     project_value: 0,
                     status: 'Error',
+                    drbs: null,
                     drbs_value: 0,
-                    sheet_pile_amount: 0
+                    sheet_pile_type: null,
+                    sheet_pile_amount: 0,
+                    ms_plate: 0,
+                    angle_bars: 0,
+                    channel_bars: 0,
+                    wide_flange: 0,
+                    gi_bi: 0
                 });
             },
 
