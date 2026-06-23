@@ -3133,29 +3133,44 @@ if ($role === 'encoder') {
                                 <div class="live-details">
                                     <div class="live-detail">
                                         <div class="live-detail-label">Contact:</div>
-                                        <div class="live-detail-value">Loading...</div>
+                                        <div class="live-detail-value" id="liveContact">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Phone:</div>
-                                        <div class="live-detail-value">Loading...</div>
+                                        <div class="live-detail-value" id="livePhone">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Project:</div>
-                                        <div class="live-detail-value">Loading...</div>
+                                        <div class="live-detail-value" id="liveProject">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Value:</div>
-                                        <div class="live-detail-value">₱0</div>
+                                        <div class="live-detail-value" id="liveProjectValue">₱0</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Status:</div>
-                                        <div class="live-detail-value">Loading...</div>
+                                        <div class="live-detail-value" id="liveStatus">Loading...</div>
                                     </div>
                                 </div>
-                                <div class="live-footer">
-                                    DRBs: <span style="color: #ff8000;">₱0</span> | 
-                                    Sheet Pile: <span style="color: #ff8000;">₱0</span>
+                                <div class="materials-list" id="liveMaterialsList">
+                                    <div>
+                                        <div class="material-label">DRBs Type</div>
+                                        <div class="material-value">—</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">DRBs Amount</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">Sheet Pile Type</div>
+                                        <div class="material-value">—</div>
+                                    </div>
+                                    <div>
+                                        <div class="material-label">Sheet Pile Amount</div>
+                                        <div class="material-value">₱0</div>
+                                    </div>
                                 </div>
+                                <div class="live-footer" style="display:none;"></div>
                             </div>
                             <div class="slideshow-controls">
                                 <!-- Loading Progress Bar -->
@@ -4414,21 +4429,38 @@ if ($role === 'encoder') {
             render(data) {
                 document.querySelector('.live-contractor-name').textContent = data.contractor_name;
                 
-                const details = document.querySelectorAll('.live-detail-value');
-                if (details.length >= 5) {
-                    details[0].textContent = data.contact || 'N/A';
-                    details[1].textContent = data.phone || 'N/A';
-                    details[2].textContent = data.project_title || 'N/A';
-                    details[3].textContent = '₱' + Utils.formatNumber(data.project_value || 0);
-                    details[4].textContent = data.status || 'UNKNOWN';
-                }
+                const contactEl = document.getElementById('liveContact');
+                const phoneEl = document.getElementById('livePhone');
+                const projectEl = document.getElementById('liveProject');
+                const projectValueEl = document.getElementById('liveProjectValue');
+                const statusEl = document.getElementById('liveStatus');
                 
-                const footer = document.querySelector('.live-footer');
-                if (footer) {
-                    footer.innerHTML = `
-                        DRBs: <span style="color: #ff8000;">₱${Utils.formatNumber(data.drbs_value || 0)}</span> | 
-                        Sheet Pile: <span style="color: #ff8000;">₱${Utils.formatNumber(data.sheet_pile_amount || 0)}</span>
-                    `;
+                if (contactEl) contactEl.textContent = data.contact || 'N/A';
+                if (phoneEl) phoneEl.textContent = data.phone || 'N/A';
+                if (projectEl) projectEl.textContent = data.project_title || 'N/A';
+                if (projectValueEl) projectValueEl.textContent = '₱' + Utils.formatNumber(data.project_value || 0);
+                if (statusEl) statusEl.textContent = data.status || 'UNKNOWN';
+                
+                const materialRows = [
+                    { label: 'DRBs Type', value: data.drbs || '—' },
+                    { label: 'DRBs Amount', value: '₱' + Utils.formatNumber(data.drbs_value || 0) },
+                    { label: 'Sheet Pile Type', value: data.sheet_pile_type || '—' },
+                    { label: 'Sheet Pile Amount', value: '₱' + Utils.formatNumber(data.sheet_pile_amount || 0) },
+                    { label: 'MS Plate', value: data.ms_plate ? '₱' + Utils.formatNumber(data.ms_plate) : '₱0' },
+                    { label: 'Angle Bars', value: data.angle_bars ? '₱' + Utils.formatNumber(data.angle_bars) : '₱0' },
+                    { label: 'Channel Bars', value: data.channel_bars ? '₱' + Utils.formatNumber(data.channel_bars) : '₱0' },
+                    { label: 'Wide Flange', value: data.wide_flange ? '₱' + Utils.formatNumber(data.wide_flange) : '₱0' },
+                    { label: 'GI/BI', value: data.gi_bi ? '₱' + Utils.formatNumber(data.gi_bi) : '₱0' }
+                ];
+                
+                const materialsList = document.getElementById('liveMaterialsList');
+                if (materialsList) {
+                    materialsList.innerHTML = materialRows.map(item => `
+                        <div>
+                            <div class="material-label">${item.label}</div>
+                            <div class="material-value">${item.value}</div>
+                        </div>
+                    `).join('');
                 }
 
                 this.fitFonts();

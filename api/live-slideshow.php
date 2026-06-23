@@ -24,8 +24,15 @@ try {
             project_name,
             project_value,
             status,
+            drbs,
             drbs_value,
-            sheet_pile_amount
+            sheet_pile_type,
+            sheet_pile_amount,
+            ms_plate,
+            angle_bars,
+            channel_bars,
+            wide_flange,
+            gi_bi
         FROM projects
         WHERE archived_at IS NULL
           AND contractor_name IS NOT NULL
@@ -56,8 +63,15 @@ try {
         'project_title'      => $project['project_name']      ?: 'N/A',
         'project_value'      => (float) $project['project_value'],
         'status'             => $project['status']             ?: 'UNKNOWN',
+        'drbs'               => $project['drbs']              ?: null,
         'drbs_value'         => (float) $project['drbs_value'],
+        'sheet_pile_type'    => $project['sheet_pile_type']   ?: null,
         'sheet_pile_amount'  => (float) $project['sheet_pile_amount'],
+        'ms_plate'           => (float) $project['ms_plate'],
+        'angle_bars'         => (float) $project['angle_bars'],
+        'channel_bars'       => (float) $project['channel_bars'],
+        'wide_flange'        => (float) $project['wide_flange'],
+        'gi_bi'              => (float) $project['gi_bi'],
     ]);
 
 } catch (Exception $e) {
