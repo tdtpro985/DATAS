@@ -316,9 +316,6 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                     <button class="admin-tab-btn" data-tab="security" onclick="switchSettingsTab('security')">
                         <span>🔒</span> Security
                     </button>
-                    <button class="admin-tab-btn" data-tab="projects" onclick="switchSettingsTab('projects')">
-                        <span>📋</span> Projects
-                    </button>
                     <button class="admin-tab-btn" data-tab="notifications" onclick="switchSettingsTab('notifications')">
                         <span>🔔</span> Notifications
                     </button>
@@ -388,29 +385,6 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <label class="setting-label">Min Password Length</label>
                                 <p class="setting-desc">Minimum password length requirement</p>
                                 <input type="number" id="setting-password_min_length" class="setting-input" min="6" max="32">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Projects Settings -->
-                <div id="settings-tab-projects" class="settings-tab-content">
-                    <div class="settings-section">
-                        <div class="settings-grid">
-                            <div class="setting-item">
-                                <label class="setting-label">Default Project Status</label>
-                                <p class="setting-desc">Default status assigned to newly created projects</p>
-                                <input type="text" id="setting-default_project_status" class="setting-input" placeholder="New">
-                            </div>
-                            <div class="setting-item">
-                                <label class="setting-label">Priority Threshold (Days)</label>
-                                <p class="setting-desc">Days without update before project is flagged as priority</p>
-                                <input type="number" id="setting-priority_project_threshold_days" class="setting-input" min="1" max="90">
-                            </div>
-                            <div class="setting-item">
-                                <label class="setting-label">Auto-Archive (Days)</label>
-                                <p class="setting-desc">Days after completion before auto-archiving projects</p>
-                                <input type="number" id="setting-auto_archive_days" class="setting-input" min="30" max="730">
                             </div>
                         </div>
                     </div>
