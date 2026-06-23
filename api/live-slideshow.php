@@ -51,8 +51,15 @@ try {
             'project_name'        => 'CONSTRUCTION OF REVETMENT AT BARANGAY LONGOS, PULILAN, BULACAN',
             'project_value'       => 28200000,
             'status'              => 'UNKNOWN',
+            'drbs'                => 'Standard DRB',
             'drbs_value'          => 4000210,
+            'sheet_pile_type'     => 'Steel Sheet Pile',
             'sheet_pile_amount'   => 16551236.26,
+            'ms_plate'            => 1200000,
+            'angle_bars'          => 850000,
+            'channel_bars'        => 640000,
+            'wide_flange'         => 910000,
+            'gi_bi'               => 430000,
         ];
     }
 
@@ -83,7 +90,14 @@ try {
         'project_title'     => 'N/A',
         'project_value'     => 0,
         'status'            => 'UNKNOWN',
+        'drbs'              => null,
         'drbs_value'        => 0,
+        'sheet_pile_type'   => null,
         'sheet_pile_amount' => 0,
+        'ms_plate'          => 0,
+        'angle_bars'        => 0,
+        'channel_bars'      => 0,
+        'wide_flange'       => 0,
+        'gi_bi'             => 0,
     ]);
 }
