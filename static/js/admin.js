@@ -789,34 +789,115 @@ function switchSettingsTab(tabName) {
 // ── Save all settings ───────────────────────────────────────
 async function saveAllSettings(btnElement) {
     const btn = btnElement || (typeof event !== 'undefined' ? event.target : document.querySelector('.btn-primary[onclick="saveAllSettings()"]'));
-    if (btn) { btn.disabled = true; btn.textContent = 'Saving...'; }
-    
+    if (btn) { btn.disabled = true; btn.textContent = 'Preparing...'; }
+
     try {
         const settings = collectSettings();
-        const res = await fetch(_B + '/api/v1/users/settings', {
-            method: 'PUT',
-            credentials: 'include',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ settings })
-        });
-        
-        if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.detail || 'Failed to save settings');
+        const diff = getSettingsDiff(settings, settingsOriginal);
+
+        if (Object.keys(diff).length === 0) {
+            Toast.info('No changes detected. Nothing to save.');
+            return;
         }
-        
-        const data = await res.json();
-        
-        // Reload settings to get fresh values
-        await loadSettings();
-        
-        Toast.success(data.message || 'Settings saved successfully');
+
+        showSettingsSaveModal(diff);
     } catch (err) {
-        console.error('Save settings error:', err);
-        Toast.error('Failed to save settings: ' + err.message);
+        console.error('Prepare save settings error:', err);
+        Toast.error('Failed preparing save: ' + err.message);
     } finally {
         if (btn) { btn.disabled = false; btn.textContent = '💾 Save All Settings'; }
     }
+}
+
+function showSettingsSaveModal(changes) {
+    const overlay = document.getElementById('settingsSaveModal');
+    const summaryEl = document.getElementById('settingsSaveSummary');
+    const changesList = document.getElementById('settingsSaveChangesList');
+    const confirmButton = document.getElementById('settingsSaveConfirmButton');
+
+    const changesCount = Object.keys(changes).length;
+    summaryEl.textContent = `You are about to save ${changesCount} change${changesCount === 1 ? '' : 's'}.`;
+
+    changesList.innerHTML = Object.entries(changes).map(([key, { oldValue, newValue }]) => {
+        return `
+            <div style="padding:1rem;border:1px solid rgba(255,255,255,0.08);border-radius:0.75rem;background:rgba(255,255,255,0.02);">
+                <div style="font-weight:700;margin-bottom:0.35rem;color:var(--text-primary);">${formatSettingLabel(key)}</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.95rem;line-height:1.4;">
+                    <div style="color:var(--text-muted);"><strong>Current:</strong> <span>${formatSettingValue(oldValue)}</span></div>
+                    <div style="color:var(--text-muted);"><strong>New:</strong> <span>${formatSettingValue(newValue)}</span></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    confirmButton.onclick = async () => {
+        confirmButton.disabled = true;
+        confirmButton.textContent = 'Saving...';
+
+        try {
+            const res = await fetch(_B + '/api/v1/users/settings', {
+                method: 'PUT',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ settings: changes })
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                throw new Error(err.detail || 'Failed to save settings');
+            }
+
+            const data = await res.json();
+            await loadSettings();
+            hideSettingsSaveModal();
+            Toast.success(data.message || 'Settings saved successfully');
+        } catch (err) {
+            console.error('Save settings error:', err);
+            Toast.error('Failed to save settings: ' + err.message);
+        } finally {
+            confirmButton.disabled = false;
+            confirmButton.textContent = 'Confirm Save';
+        }
+    };
+
+    overlay.classList.add('active');
+}
+
+function hideSettingsSaveModal() {
+    const overlay = document.getElementById('settingsSaveModal');
+    overlay.classList.remove('active');
+}
+
+function getSettingsDiff(current, original) {
+    const diff = {};
+    for (const [key, newValue] of Object.entries(current)) {
+        const oldValue = original[key];
+        if (!isSettingValueEqual(oldValue, newValue)) {
+            diff[key] = { oldValue, newValue };
+        }
+    }
+    return diff;
+}
+
+function isSettingValueEqual(a, b) {
+    if (typeof a === 'boolean' || typeof b === 'boolean') {
+        return Boolean(a) === Boolean(b);
+    }
+    if (a === null || a === undefined) {
+        return (b === null || b === undefined || b === '');
+    }
+    return String(a) === String(b);
+}
+
+function formatSettingLabel(key) {
+    return key.replace(/_/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function formatSettingValue(value) {
+    if (value === true) return 'Enabled';
+    if (value === false) return 'Disabled';
+    if (value === null || value === undefined || value === '') return '—';
+    return String(value);
 }
 
 // ── Collect all settings from form ──────────────────────────
