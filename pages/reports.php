@@ -796,6 +796,7 @@ if ($role === 'encoder') {
             max-height: 100%;
             overflow: hidden;
             padding: 0 0.15rem;
+            box-sizing: border-box;
         }
 
         .slideshow-body {
@@ -805,9 +806,12 @@ if ($role === 'encoder') {
             justify-content: flex-start;
             align-items: stretch;
             min-height: 0;
+            max-height: 100%;
+            overflow: hidden;
             font-size: calc(0.82rem * var(--slide-scale, 1));
-            gap: 0.35rem;
-            padding: 0.2rem 0;
+            gap: 0.3rem;
+            padding: 0.15rem 0;
+            box-sizing: border-box;
         }
 
         .slideshow-body.slideshow-body--spread {
@@ -821,11 +825,11 @@ if ($role === 'encoder') {
         
         .live-contractor-name {
             font-size: clamp(1.3rem, 2.6vw, 1.85rem);
-            font-weight: 800;
-            color: #ff8000;
+            font-weight: 900;
+            color: #ffb347;
             margin-bottom: 0.15em;
-            line-height: 1.15;
-            text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            line-height: 1.12;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -846,10 +850,11 @@ if ($role === 'encoder') {
             display: flex;
             flex-direction: column;
             min-width: 0;
-            padding: 0.3rem 0.4rem;
+            padding: 0.28rem 0.32rem;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 6px;
+            overflow: hidden;
         }
 
         .live-detail-label {
@@ -862,15 +867,20 @@ if ($role === 'encoder') {
         
         .live-detail-value {
             font-size: 0.95em;
-            color: #eee;
+            color: #ddd;
             font-weight: 500;
             line-height: 1.25;
             word-break: break-word;
         }
 
-        .highlight-value {
+        .highlight-main {
             color: #ffb347;
-            font-weight: 700;
+            font-weight: 800;
+        }
+
+        .highlight-secondary {
+            color: #f5a623;
+            font-weight: 600;
         }
         
         .live-footer {
@@ -895,11 +905,11 @@ if ($role === 'encoder') {
             flex-direction: column;
             align-items: flex-start;
             justify-content: center;
-            padding: 0.38rem 0.45rem;
-            min-height: 2.3rem;
+            padding: 0.3rem 0.35rem;
+            min-height: 2.2rem;
             border-radius: 6px;
-            border: 1px solid rgba(255, 128, 0, 0.12);
-            background: rgba(255, 128, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
         }
 
         .material-label {
@@ -2883,19 +2893,19 @@ if ($role === 'encoder') {
         .materials-list {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-            grid-auto-rows: minmax(2.3rem, auto);
+            grid-auto-rows: minmax(2.1rem, auto);
         }
         
         .materials-list > div {
-            padding: 0.3rem;
-            background: rgba(255, 128, 0, 0.05);
-            border-radius: 3px;
-            border: 1px solid rgba(255, 128, 0, 0.1);
+            padding: 0.28rem 0.32rem;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
         
         .material-value {
-            color: #ff8000;
-            font-weight: 600;
+            color: #ccc;
+            font-weight: 500;
         }
         
         /* Responsive for mobile */
@@ -3202,27 +3212,27 @@ if ($role === 'encoder') {
                         <div class="section-title">🔴 Live Slideshow</div>
                         <div class="slideshow-content">
                             <div class="slideshow-body">
-                                <div class="live-contractor-name">Loading...</div>
+                                <div class="live-contractor-name highlight-main">Loading...</div>
                                 <div class="live-details">
                                     <div class="live-detail">
                                         <div class="live-detail-label">Contact:</div>
-                                        <div class="live-detail-value" id="liveContact">Loading...</div>
+                                        <div class="live-detail-value highlight-secondary" id="liveContact">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Phone:</div>
-                                        <div class="live-detail-value" id="livePhone">Loading...</div>
+                                        <div class="live-detail-value highlight-secondary" id="livePhone">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Project:</div>
-                                        <div class="live-detail-value highlight-value" id="liveProject">Loading...</div>
+                                        <div class="live-detail-value highlight-main" id="liveProject">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Value:</div>
-                                        <div class="live-detail-value highlight-value" id="liveProjectValue">₱0</div>
+                                        <div class="live-detail-value highlight-main" id="liveProjectValue">₱0</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Status:</div>
-                                        <div class="live-detail-value highlight-value" id="liveStatus">Loading...</div>
+                                        <div class="live-detail-value highlight-secondary" id="liveStatus">Loading...</div>
                                     </div>
                                 </div>
                                 <div class="materials-list" id="liveMaterialsList">
