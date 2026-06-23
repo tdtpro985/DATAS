@@ -686,6 +686,22 @@ if ($role !== 'admin' && $role !== 'superadmin') {
     </div>
 </div>
 
+<!-- Database Check Result Modal -->
+<div class="modal-overlay" id="databaseCheckModal">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h2>Database Health Check</h2>
+            <button class="modal-close" onclick="hideDatabaseCheckModal()">&times;</button>
+        </div>
+        <div class="modal-body" style="max-height:450px;overflow:auto;">
+            <pre id="databaseCheckModalContent" style="white-space:pre-wrap;word-break:break-word;margin:0;color:var(--text-secondary);"></pre>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-primary" type="button" onclick="hideDatabaseCheckModal()">Close</button>
+        </div>
+    </div>
+</div>
+
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>

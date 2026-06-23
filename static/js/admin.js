@@ -1026,14 +1026,10 @@ async function checkDatabaseHealth(btn) {
             message += `  - ${t.name}: ${t.rows.toLocaleString()} rows, ${t.size_mb} MB (${t.engine})\n`;
         });
         
-        // Show in a modal instead of alert
-        if (window.Confirm && Confirm.show) {
-            await Confirm.show({
-                title: 'Database Health Check',
-                message: message,
-                confirmText: 'OK',
-                type: 'info'
-            });
+        const resultEl = document.getElementById('databaseCheckModalContent');
+        if (resultEl) {
+            resultEl.textContent = message;
+            showDatabaseCheckModal();
         } else {
             alert(message);
         }
@@ -1043,6 +1039,20 @@ async function checkDatabaseHealth(btn) {
         Toast.error('Error checking database: ' + err.message);
     } finally {
         if (button) { button.disabled = false; button.textContent = '🔍 Check Database'; }
+    }
+}
+
+function showDatabaseCheckModal() {
+    const overlay = document.getElementById('databaseCheckModal');
+    if (overlay) {
+        overlay.classList.add('active');
+    }
+}
+
+function hideDatabaseCheckModal() {
+    const overlay = document.getElementById('databaseCheckModal');
+    if (overlay) {
+        overlay.classList.remove('active');
     }
 }
 
