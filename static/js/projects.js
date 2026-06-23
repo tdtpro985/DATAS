@@ -19,6 +19,9 @@ const ProjectsPage = {
         const user = await Auth.checkAuth();
         if (!user) return;
 
+        // Apply superadmin settings if available
+        await this.loadSettingsPageSize();
+
         // Load projects
         await this.loadProjects();
 
@@ -26,6 +29,26 @@ const ProjectsPage = {
         this.setupEventListeners();
 
         console.log('[PROJECTS] Page initialized');
+    },
+
+    async loadSettingsPageSize() {
+        try {
+            const res = await fetch(`${BASE}/api/v1/users/settings`, {
+                credentials: 'include'
+            });
+
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const pageSizeSetting = data.settings?.items_per_page?.value;
+            const pageSize = parseInt(pageSizeSetting, 10);
+
+            if (!Number.isNaN(pageSize) && pageSize > 0) {
+                this.pageSize = Math.min(Math.max(pageSize, 1), 500);
+            }
+        } catch (err) {
+            console.warn('[PROJECTS] Could not load settings page size:', err);
+        }
     },
 
     setupEventListeners() {
