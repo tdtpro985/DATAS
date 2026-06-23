@@ -975,8 +975,10 @@ async function performRestoreDefaultSettings() {
 }
 
 // ── Clear system cache ──────────────────────────────────────
-async function clearSystemCache() {
+async function clearSystemCache(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
     if (!confirm('Are you sure you want to clear the system cache?')) return;
+    if (button) { button.disabled = true; button.textContent = 'Clearing...'; }
     
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
@@ -992,13 +994,15 @@ async function clearSystemCache() {
         Toast.success(data.message || 'Cache cleared successfully');
     } catch (err) {
         Toast.error('Error clearing cache: ' + err.message);
+    } finally {
+        if (button) { button.disabled = false; button.textContent = '🗑️ Clear Cache'; }
     }
 }
 
 // ── Check database health ───────────────────────────────────
-async function checkDatabaseHealth() {
-    const btn = event ? event.target : null;
-    if (btn) { btn.disabled = true; btn.textContent = 'Checking...'; }
+async function checkDatabaseHealth(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
+    if (button) { button.disabled = true; button.textContent = 'Checking...'; }
     
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
@@ -1038,13 +1042,15 @@ async function checkDatabaseHealth() {
     } catch (err) {
         Toast.error('Error checking database: ' + err.message);
     } finally {
-        if (btn) { btn.disabled = false; btn.textContent = '🔍 Check Database'; }
+        if (button) { button.disabled = false; button.textContent = '🔍 Check Database'; }
     }
 }
 
 // ── Optimize database tables ────────────────────────────────
-async function optimizeDatabaseTables() {
+async function optimizeDatabaseTables(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
     if (!confirm('Are you sure you want to optimize all database tables? This may take a moment.')) return;
+    if (button) { button.disabled = true; button.textContent = 'Optimizing...'; }
     
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
@@ -1060,12 +1066,16 @@ async function optimizeDatabaseTables() {
         Toast.success(data.message || 'Tables optimized successfully');
     } catch (err) {
         Toast.error('Error optimizing tables: ' + err.message);
+    } finally {
+        if (button) { button.disabled = false; button.textContent = '⚡ Optimize Tables'; }
     }
 }
 
 // ── Export full database as .sql ────────────────────────────
-async function exportDatabase() {
+async function exportDatabase(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
     if (!confirm('Download full database backup (.sql)? This may take a moment for large databases.')) return;
+    if (button) { button.disabled = true; button.textContent = 'Exporting...'; }
     
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
@@ -1082,12 +1092,16 @@ async function exportDatabase() {
         Toast.success('Database exported: ' + data.filename);
     } catch (err) {
         Toast.error('Error exporting database: ' + err.message);
+    } finally {
+        if (button) { button.disabled = false; button.textContent = '💾 Export Full Database'; }
     }
 }
 
 // ── Export data only as .sql ────────────────────────────────
-async function exportData() {
+async function exportData(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
     if (!confirm('Download data export (.sql)? This exports main data tables only.')) return;
+    if (button) { button.disabled = true; button.textContent = 'Exporting...'; }
     
     try {
         const res = await fetch(_B + '/api/v1/users/settings', {
@@ -1104,6 +1118,8 @@ async function exportData() {
         Toast.success('Data exported: ' + data.filename);
     } catch (err) {
         Toast.error('Error exporting data: ' + err.message);
+    } finally {
+        if (button) { button.disabled = false; button.textContent = '📄 Export Data Only'; }
     }
 }
 
@@ -1130,7 +1146,10 @@ function downloadSqlFile(base64Content, filename) {
 }
 
 // ── Refresh system info ─────────────────────────────────────
-async function refreshSystemInfo() {
+async function refreshSystemInfo(btn) {
+    const button = btn || (typeof event !== 'undefined' ? event.target : null);
+    if (button) { button.disabled = true; button.textContent = 'Refreshing...'; }
+    
     try {
         const res = await fetch(_B + '/api/v1/users/settings', { credentials: 'include' });
         if (!res.ok) throw new Error('Failed to refresh');
@@ -1140,6 +1159,8 @@ async function refreshSystemInfo() {
         Toast.success('System info refreshed');
     } catch (err) {
         Toast.error('Error refreshing system info: ' + err.message);
+    } finally {
+        if (button) { button.disabled = false; button.textContent = '🔄 Refresh System Info'; }
     }
 }
 

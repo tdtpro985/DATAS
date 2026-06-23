@@ -543,10 +543,10 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <label class="setting-label">📤 Database Export</label>
                                 <p class="setting-desc">Download database backups as .SQL files</p>
                                 <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-                                    <button class="btn-primary" onclick="exportDatabase()">
+                                    <button class="btn-primary" onclick="exportDatabase(this)">
                                         💾 Export Full Database
                                     </button>
-                                    <button class="btn-secondary" onclick="exportData()">
+                                    <button class="btn-secondary" onclick="exportData(this)">
                                         📄 Export Data Only
                                     </button>
                                 </div>
@@ -557,16 +557,16 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <label class="setting-label">System Tools</label>
                                 <p class="setting-desc">Perform system maintenance and diagnostic operations</p>
                                 <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
-                                    <button class="btn-secondary" onclick="clearSystemCache()">
+                                    <button class="btn-secondary" onclick="clearSystemCache(this)">
                                         🗑️ Clear Cache
                                     </button>
-                                    <button class="btn-secondary" onclick="checkDatabaseHealth()">
+                                    <button class="btn-secondary" onclick="checkDatabaseHealth(this)">
                                         🔍 Check Database
                                     </button>
-                                    <button class="btn-secondary" onclick="optimizeDatabaseTables()">
+                                    <button class="btn-secondary" onclick="optimizeDatabaseTables(this)">
                                         ⚡ Optimize Tables
                                     </button>
-                                    <button class="btn-secondary" onclick="refreshSystemInfo()">
+                                    <button class="btn-secondary" onclick="refreshSystemInfo(this)">
                                         🔄 Refresh System Info
                                     </button>
                                 </div>
