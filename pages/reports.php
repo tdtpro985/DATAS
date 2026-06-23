@@ -862,10 +862,15 @@ if ($role === 'encoder') {
         
         .live-detail-value {
             font-size: 0.95em;
-            color: #fff;
+            color: #eee;
             font-weight: 500;
             line-height: 1.25;
             word-break: break-word;
+        }
+
+        .highlight-value {
+            color: #ffb347;
+            font-weight: 700;
         }
         
         .live-footer {
@@ -907,8 +912,8 @@ if ($role === 'encoder') {
 
         .material-value {
             font-size: 0.9rem;
-            color: #fff;
-            font-weight: 700;
+            color: #ccc;
+            font-weight: 500;
             line-height: 1.2;
             white-space: normal;
             overflow-wrap: anywhere;
@@ -3209,15 +3214,15 @@ if ($role === 'encoder') {
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Project:</div>
-                                        <div class="live-detail-value" id="liveProject">Loading...</div>
+                                        <div class="live-detail-value highlight-value" id="liveProject">Loading...</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Value:</div>
-                                        <div class="live-detail-value" id="liveProjectValue">₱0</div>
+                                        <div class="live-detail-value highlight-value" id="liveProjectValue">₱0</div>
                                     </div>
                                     <div class="live-detail">
                                         <div class="live-detail-label">Status:</div>
-                                        <div class="live-detail-value" id="liveStatus">Loading...</div>
+                                        <div class="live-detail-value highlight-value" id="liveStatus">Loading...</div>
                                     </div>
                                 </div>
                                 <div class="materials-list" id="liveMaterialsList">
