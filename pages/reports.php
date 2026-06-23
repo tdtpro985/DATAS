@@ -771,6 +771,7 @@ if ($role === 'encoder') {
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
+            padding: clamp(0.35rem, 0.85vh, 0.95rem);
         }
         
         .live-slideshow::before {
@@ -798,15 +799,16 @@ if ($role === 'encoder') {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: stretch;
             min-height: 0;
             font-size: calc(0.82rem * var(--slide-scale, 1));
-            gap: 0.45em;
+            gap: 0.4em;
+            padding: 0.2rem 0;
         }
 
         .slideshow-body.slideshow-body--spread {
-            justify-content: space-evenly;
+            justify-content: flex-start;
         }
 
         .slideshow-controls {
@@ -830,18 +832,20 @@ if ($role === 'encoder') {
         
         .live-details {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.45em;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.45rem;
             text-align: left;
-            margin-bottom: 0.1em;
+            margin-bottom: 0.35rem;
         }
-        
+
         .live-detail {
             display: flex;
             flex-direction: column;
             min-width: 0;
-        }
-        
+            padding: 0.35rem 0.45rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 6px;
         .live-detail-label {
             font-size: 0.78em;
             color: #888;
@@ -858,12 +862,49 @@ if ($role === 'encoder') {
         }
         
         .live-footer {
-            font-size: 0.85em;
-            color: rgba(255,255,255,0.6);
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.78);
             text-align: center;
-            margin-top: 0.15em;
-            border-top: 1px solid #333;
-            padding-top: 0.35em;
+            margin-top: 0.25rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 0.4rem;
+        }
+
+        .materials-list {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.35rem;
+            margin-top: 0.3rem;
+        }
+
+        .materials-list > div {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 0.45rem;
+            min-height: 2.4rem;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 128, 0, 0.12);
+            background: rgba(255, 128, 0, 0.05);
+        }
+
+        .material-label {
+            font-size: 0.68rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 0.18rem;
+        }
+
+        .material-value {
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 700;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         /* Loading Progress Bar for Live Slideshow */
