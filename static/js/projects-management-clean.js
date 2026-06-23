@@ -14,6 +14,7 @@ let currentFilters = {
     source: '',
     sort: 'publication_date_desc' // Default to newest published first
 };
+let currentPageSize = 50; // Default fallback should match system default
 let selectedProjectId = null;
 let salesReps = [];
 
@@ -49,8 +50,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadSalesReps();
         loadCounts();
     }
-    
-    // Load initial project data
+
+    // Load settings and initial project data
+    await loadSettingsPageSize();
     loadProjects();
     
     // Filter handlers
@@ -119,7 +121,7 @@ async function loadProjects() {
         }
         const params = new URLSearchParams({
             page: currentPage,
-            size: 20,
+            size: currentPageSize,
             ...currentFilters
         });
         
@@ -194,6 +196,27 @@ async function loadProjects() {
     } catch (err) {
         console.error('Error loading projects:', err);
         tbody.innerHTML = `<tr><td colspan="${maxCols}" style="text-align:center;padding:2rem;color:var(--text-danger);">Error loading projects</td></tr>`;
+    }
+}
+
+// Load settings page size from user settings
+async function loadSettingsPageSize() {
+    try {
+        const res = await fetch(`${_B}/api/v1/users/settings`, {
+            credentials: 'include'
+        });
+        if (!res.ok) {
+            throw new Error('Failed to load settings');
+        }
+
+        const data = await res.json();
+        const pageSizeSetting = data.settings?.items_per_page?.value;
+        const pageSize = parseInt(pageSizeSetting, 10);
+        if (!isNaN(pageSize) && pageSize > 0) {
+            currentPageSize = pageSize;
+        }
+    } catch (err) {
+        console.warn('[PM] Could not load settings page size, using default', err);
     }
 }
 
