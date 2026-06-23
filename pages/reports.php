@@ -137,6 +137,7 @@ if ($role === 'encoder') {
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
             flex-shrink: 0;
+            cursor: pointer;
         }
         
         .title {
@@ -596,11 +597,12 @@ if ($role === 'encoder') {
             border-radius: 8px;
             padding: clamp(0.3rem, 0.7vh, 0.65rem);
             flex-shrink: 0;
-            height: clamp(52px, 7.5vh, 78px);
-            min-height: 0;
+            min-height: 72px;
             display: flex;
+            flex-wrap: wrap;
             align-items: center;
             justify-content: space-between;
+            gap: 0.75rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
@@ -626,6 +628,7 @@ if ($role === 'encoder') {
             background: rgba(255, 128, 0, 0.1);
             border-radius: 6px;
             border: 1px solid rgba(255, 128, 0, 0.2);
+            width: auto;
         }
         
         .target-label {
@@ -649,8 +652,8 @@ if ($role === 'encoder') {
             flex-direction: column;
             align-items: center;
             text-align: center;
-            flex: 1;
-            margin: 0 1.5rem;
+            flex: 1 1 100%;
+            margin: 0;
         }
         
         .target-percentage {
@@ -2982,7 +2985,7 @@ if ($role === 'encoder') {
         <!-- Header -->
         <div class="dashboard-header">
             <div class="header-left">
-                <div class="logo"></div>
+                <div class="logo" onclick="window.history.back()" title="Back"></div>
                 <div class="title"><span class="brand">TDT POWERSTEEL</span> Dashboard</div>
             </div>
             <div class="header-right">
@@ -4076,25 +4079,62 @@ if ($role === 'encoder') {
                 const toggleButtons = document.querySelectorAll('.toggle-btn');
                 const valuesChart = document.getElementById('regional-values-chart');
                 const projectsChart = document.getElementById('regional-distribution-chart');
+                const chartSection = document.querySelector('.regional-combined-section');
+                let isHoverPaused = false;
+
+                const setActiveChart = (chartType, resetTimer = true) => {
+                    toggleButtons.forEach(b => b.classList.toggle('active', b.getAttribute('data-chart') === chartType));
+                    if (chartType === 'values') {
+                        valuesChart.style.display = 'block';
+                        projectsChart.style.display = 'none';
+                    } else {
+                        valuesChart.style.display = 'none';
+                        projectsChart.style.display = 'block';
+                    }
+                    if (resetTimer) {
+                        startAutoRotate();
+                    }
+                };
+
+                const toggleNextChart = () => {
+                    const activeButton = document.querySelector('.toggle-btn.active');
+                    const nextChart = activeButton?.getAttribute('data-chart') === 'values' ? 'projects' : 'values';
+                    setActiveChart(nextChart, false);
+                };
+
+                const startAutoRotate = () => {
+                    clearInterval(AppState.intervals.regionalAnalytics);
+                    AppState.intervals.regionalAnalytics = setInterval(() => {
+                        if (!isHoverPaused && document.visibilityState === 'visible') {
+                            toggleNextChart();
+                        }
+                    }, 5000);
+                };
+
+                const stopAutoRotate = () => {
+                    clearInterval(AppState.intervals.regionalAnalytics);
+                };
 
                 toggleButtons.forEach(btn => {
                     btn.addEventListener('click', () => {
                         const chartType = btn.getAttribute('data-chart');
-                        
-                        // Update active button
-                        toggleButtons.forEach(b => b.classList.remove('active'));
-                        btn.classList.add('active');
-
-                        // Toggle chart visibility
-                        if (chartType === 'values') {
-                            valuesChart.style.display = 'block';
-                            projectsChart.style.display = 'none';
-                        } else if (chartType === 'projects') {
-                            valuesChart.style.display = 'none';
-                            projectsChart.style.display = 'block';
-                        }
+                        setActiveChart(chartType);
                     });
                 });
+
+                if (chartSection) {
+                    chartSection.addEventListener('mouseenter', () => {
+                        isHoverPaused = true;
+                        stopAutoRotate();
+                    });
+                    chartSection.addEventListener('mouseleave', () => {
+                        isHoverPaused = false;
+                        startAutoRotate();
+                    });
+                }
+
+                setActiveChart('values', false);
+                startAutoRotate();
             }
         };
         
@@ -4180,7 +4220,13 @@ if ($role === 'encoder') {
 
             render(data) {
                 const encoded = data.projects_encoded || 0;
-                const target = 600; // This could come from config
+                const currentPeriod = document.getElementById('period-select')?.value || 'monthly';
+                const predefinedTargets = {
+                    daily: 30,
+                    weekly: 150,
+                    monthly: 600
+                };
+                const target = predefinedTargets[currentPeriod] || 600;
                 const percentage = target > 0 ? Math.round((encoded / target) * 100) : 0;
                 
                 // Update numbers
@@ -4188,6 +4234,23 @@ if ($role === 'encoder') {
                 if (targetNumbers.length >= 2) {
                     targetNumbers[0].textContent = encoded;
                     targetNumbers[1].textContent = target;
+                }
+
+                const targetLabel = document.querySelector('.target-right .target-label');
+                if (targetLabel) {
+                    targetLabel.textContent = currentPeriod === 'daily' ? 'Daily Target' :
+                                                currentPeriod === 'weekly' ? 'Weekly Target' :
+                                                'Monthly Target';
+                }
+
+                const targetRight = document.querySelector('.target-right');
+                const monthValue = document.getElementById('month-select')?.value || 'all';
+                if (targetRight) {
+                    if (monthValue === 'all') {
+                        targetRight.style.display = 'none';
+                    } else {
+                        targetRight.style.display = 'flex';
+                    }
                 }
                 
                 // Update percentage and progress bar
