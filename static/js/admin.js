@@ -802,11 +802,15 @@ async function saveAllSettings(btnElement) {
             return;
         }
 
+        const changedSettings = Object.fromEntries(
+            Object.entries(diff).map(([key, valuePair]) => [key, valuePair.newValue])
+        );
+
         const res = await fetch(_B + '/api/v1/users/settings', {
             method: 'PUT',
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ settings: diff })
+            body: JSON.stringify({ settings: changedSettings })
         });
 
         if (!res.ok) {
