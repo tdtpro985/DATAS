@@ -389,18 +389,6 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <p class="setting-desc">Minimum password length requirement</p>
                                 <input type="number" id="setting-password_min_length" class="setting-input" min="6" max="32">
                             </div>
-                            <div class="setting-item">
-                                <div class="setting-toggle-row">
-                                    <div>
-                                        <label class="setting-label">Require 2FA</label>
-                                        <p class="setting-desc">Require two-factor authentication for all admin users</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="setting-require_2fa">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
