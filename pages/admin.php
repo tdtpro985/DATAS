@@ -362,30 +362,6 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                                 <input type="text" id="setting-date_format" class="setting-input" placeholder="Y-m-d H:i:s">
                             </div>
                             <div class="setting-item">
-                                <div class="setting-toggle-row">
-                                    <div>
-                                        <label class="setting-label">UI Animations</label>
-                                        <p class="setting-desc">Enable UI animations and transitions</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="setting-enable_animations">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="setting-item">
-                                <div class="setting-toggle-row">
-                                    <div>
-                                        <label class="setting-label">Activity Logging</label>
-                                        <p class="setting-desc">Enable detailed activity logging for all users</p>
-                                    </div>
-                                    <label class="toggle-switch">
-                                        <input type="checkbox" id="setting-enable_activity_logging">
-                                        <span class="toggle-slider"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="setting-item">
                                 <label class="setting-label">Log Retention (Days)</label>
                                 <p class="setting-desc">Number of days to retain activity logs</p>
                                 <input type="number" id="setting-log_retention_days" class="setting-input" min="30" max="3650">
