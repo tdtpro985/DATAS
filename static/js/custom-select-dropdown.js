@@ -163,9 +163,9 @@ class CustomSelect {
             });
         }
         
-        // Close on outside click
+        // Close on outside click (consider dropdown moved to body)
         document.addEventListener('click', (e) => {
-            if (!this.wrapper.contains(e.target)) {
+            if (!this.wrapper.contains(e.target) && !this.dropdown.contains(e.target)) {
                 this.close();
             }
         });
@@ -195,7 +195,36 @@ class CustomSelect {
         this.isOpen = true;
         this.trigger.classList.add('open');
         this.dropdown.classList.add('open');
-        
+
+        // Move dropdown to body to avoid being clipped by overflow:hidden ancestors
+        try {
+            // compute trigger position
+            const rect = this.trigger.getBoundingClientRect();
+            // set fixed positioning and width to match trigger
+            this.dropdown.style.position = 'fixed';
+            this.dropdown.style.left = rect.left + 'px';
+            this.dropdown.style.top = (rect.bottom + 8) + 'px';
+            this.dropdown.style.width = rect.width + 'px';
+
+            // append to body if not already
+            if (!document.body.contains(this.dropdown)) {
+                document.body.appendChild(this.dropdown);
+            }
+
+            // reposition on scroll/resize while open
+            this._boundReposition = () => {
+                const r = this.trigger.getBoundingClientRect();
+                this.dropdown.style.left = r.left + 'px';
+                this.dropdown.style.top = (r.bottom + 8) + 'px';
+                this.dropdown.style.width = r.width + 'px';
+            };
+            window.addEventListener('scroll', this._boundReposition, true);
+            window.addEventListener('resize', this._boundReposition);
+        } catch (e) {
+            // fallback: leave dropdown in place
+            console.warn('CustomSelect: positioning fallback', e);
+        }
+
         // Focus search if available
         if (this.searchInput) {
             setTimeout(() => this.searchInput.focus(), 100);
@@ -211,6 +240,22 @@ class CustomSelect {
         if (this.searchInput) {
             this.searchInput.value = '';
             this.populateOptions();
+        }
+
+        // remove event listeners related to repositioning
+        if (this._boundReposition) {
+            window.removeEventListener('scroll', this._boundReposition, true);
+            window.removeEventListener('resize', this._boundReposition);
+            this._boundReposition = null;
+        }
+
+        // move dropdown back into wrapper if it was appended to body
+        if (!this.wrapper.contains(this.dropdown) && this.dropdown.parentNode === document.body) {
+            this.wrapper.appendChild(this.dropdown);
+            this.dropdown.style.position = '';
+            this.dropdown.style.left = '';
+            this.dropdown.style.top = '';
+            this.dropdown.style.width = '';
         }
     }
     
