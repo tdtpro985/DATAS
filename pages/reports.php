@@ -3238,7 +3238,7 @@ if ($role === 'encoder') {
                                 <div class="materials-list" id="liveMaterialsList">
                                     <div>
                                         <div class="material-label">DRBs Type</div>
-                                        <div class="material-value">—</div>
+                                        <div class="material-value">__</div>
                                     </div>
                                     <div>
                                         <div class="material-label">DRBs Amount</div>
