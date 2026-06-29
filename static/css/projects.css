@@ -1114,6 +1114,18 @@
     100% { background-position: -200% 0; }
 }
 
+/* ── Modal Full Width Override ── */
+#detailsModal .modal-content {
+    max-width: calc(100vw - 4rem) !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    #detailsModal .modal-content {
+        max-width: calc(100vw - 2rem) !important;
+    }
+}
+
 /* ── Extracted from projects.php ── */
 /* ── Role-based Visibility ── */
         [data-role-access]:not([data-role-access*="superadmin"]):not([data-role-access*="admin"]):not([data-role-access*="sales_rep"]) {
