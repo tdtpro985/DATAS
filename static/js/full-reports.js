@@ -1465,6 +1465,17 @@ const FullReports = {
             const esc  = v => this.escapeHtml(v || '—');
             const bool = v => v === true ? '<span style="color:#34d399;font-weight:700;">Yes</span>' : v === false ? '<span style="color:#f87171;font-weight:700;">No</span>' : '<span style="color:var(--text-muted);">—</span>';
 
+            // Per-project speed metrics from timestamps
+            const parseTs  = s => s ? new Date(s.includes('+') ? s : s.replace(' ', 'T') + '+08:00') : null;
+            const diffDays = (a, b) => { const d = parseTs(b) - parseTs(a); return (a && b && d > 0) ? d / 1000 / 86400 : null; };
+            const spd = st ? {
+                toContact : diffDays(st.assigned_at,        st.contacted_at),
+                toSql     : diffDays(st.contacted_at,       st.sales_qualified_at),
+                toQuote   : diffDays(st.sales_qualified_at, st.quoted_at),
+                toWin     : diffDays(st.quoted_at,          st.to_win_at),
+                full      : diffDays(st.assigned_at,        st.to_win_at),
+            } : null;
+
             document.getElementById('projDetailContent').innerHTML = `
                 <div class="pd-header">
                     <div style="flex:1;">
@@ -1499,6 +1510,15 @@ const FullReports = {
                     <div class="pd-item"><div class="pd-label">W/A Amount</div><div class="pd-val">${fmt(st.wa_amount)}</div></div>
                     <div class="pd-item"><div class="pd-label">Tracking Status</div><div class="pd-val">${esc(st.tracking_status)}</div></div>
                     ${st.notes ? `<div class="pd-item" style="grid-column:1/-1;"><div class="pd-label">Notes</div><div class="pd-val" style="white-space:pre-wrap;font-size:0.82rem;">${esc(st.notes)}</div></div>` : ''}
+                </div>
+
+                <div class="pd-section-title">Speed Metrics</div>
+                <div class="pd-grid">
+                    <div class="pd-item"><div class="pd-label">Assigned → Contacted</div><div class="pd-val">${this.formatDetailedTime(spd?.toContact)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Contacted → SQL</div><div class="pd-val">${this.formatDetailedTime(spd?.toSql)}</div></div>
+                    <div class="pd-item"><div class="pd-label">SQL → Quoted</div><div class="pd-val">${this.formatDetailedTime(spd?.toQuote)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Quoted → Win</div><div class="pd-val">${this.formatDetailedTime(spd?.toWin)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Full Cycle</div><div class="pd-val" style="font-weight:700;color:var(--orange-400);">${this.formatDetailedTime(spd?.full)}</div></div>
                 </div>` : '<div style="color:var(--text-muted);font-size:0.8rem;padding:0.5rem 0;">No sales tracking record for this project.</div>'}
             `;
         } catch (e) {

@@ -618,7 +618,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/full-reports.js?v=11"></script>
+<script src="<?= $base ?>/static/js/full-reports.js?v=12"></script>
 
 <script>
 // Move modals to body to escape stacking context issues
