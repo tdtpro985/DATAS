@@ -56,41 +56,44 @@ try {
     }
 
     // ── Timing columns (only when migration has been run) ─
+    // Flow: Assigned → Contacted → Sales Qualified → Quoted → Win
     $timingSelect = $hasTs ? "
-        /* Average days per stage (only completed transitions) */
+        /* Average days per stage — SECOND precision so sub-hour gaps display correctly.
+           > 0 guard ensures identical timestamps (data never properly stamped) return NULL. */
         AVG(CASE WHEN st.contacted_at IS NOT NULL AND st.assigned_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.contacted_at) / 24.0
+                      AND TIMESTAMPDIFF(SECOND, st.assigned_at, st.contacted_at) > 0
+                 THEN TIMESTAMPDIFF(SECOND, st.assigned_at, st.contacted_at) / 86400.0
             END) AS avg_days_to_contact,
 
-        AVG(CASE WHEN st.quoted_at IS NOT NULL AND st.contacted_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.contacted_at, st.quoted_at) / 24.0
-            END) AS avg_days_contact_to_quote,
+        AVG(CASE WHEN st.sales_qualified_at IS NOT NULL AND st.contacted_at IS NOT NULL
+                      AND TIMESTAMPDIFF(SECOND, st.contacted_at, st.sales_qualified_at) > 0
+                 THEN TIMESTAMPDIFF(SECOND, st.contacted_at, st.sales_qualified_at) / 86400.0
+            END) AS avg_days_contact_to_sql,
 
-        AVG(CASE WHEN st.sales_qualified_at IS NOT NULL AND st.quoted_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.sales_qualified_at) / 24.0
-            END) AS avg_days_quote_to_sql,
+        AVG(CASE WHEN st.quoted_at IS NOT NULL AND st.sales_qualified_at IS NOT NULL
+                      AND TIMESTAMPDIFF(SECOND, st.sales_qualified_at, st.quoted_at) > 0
+                 THEN TIMESTAMPDIFF(SECOND, st.sales_qualified_at, st.quoted_at) / 86400.0
+            END) AS avg_days_sql_to_quote,
 
         AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.quoted_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.quoted_at, st.to_win_at) / 24.0
+                      AND TIMESTAMPDIFF(SECOND, st.quoted_at, st.to_win_at) > 0
+                 THEN TIMESTAMPDIFF(SECOND, st.quoted_at, st.to_win_at) / 86400.0
             END) AS avg_days_quote_to_win,
-
-        /* SQL → Win: time from sales qualified to win */
-        AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.sales_qualified_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.sales_qualified_at, st.to_win_at) / 24.0
-            END) AS avg_days_sql_to_win,
 
         /* Full cycle: assigned → win */
         AVG(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL
-                 THEN TIMESTAMPDIFF(HOUR, st.assigned_at, st.to_win_at) / 24.0
+                      AND TIMESTAMPDIFF(SECOND, st.assigned_at, st.to_win_at) > 0
+                 THEN TIMESTAMPDIFF(SECOND, st.assigned_at, st.to_win_at) / 86400.0
             END) AS avg_days_full_cycle,
 
-        COUNT(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL THEN 1 END) AS completed_cycles
+        COUNT(CASE WHEN st.to_win_at IS NOT NULL AND st.assigned_at IS NOT NULL
+                        AND TIMESTAMPDIFF(SECOND, st.assigned_at, st.to_win_at) > 0
+                   THEN 1 END) AS completed_cycles
     " : "
         NULL AS avg_days_to_contact,
-        NULL AS avg_days_contact_to_quote,
-        NULL AS avg_days_quote_to_sql,
+        NULL AS avg_days_contact_to_sql,
+        NULL AS avg_days_sql_to_quote,
         NULL AS avg_days_quote_to_win,
-        NULL AS avg_days_sql_to_win,
         NULL AS avg_days_full_cycle,
         0    AS completed_cycles
     ";
@@ -179,17 +182,16 @@ try {
             'total_win_amount'     => (float) $r['total_win_amount'],
             'last_activity'        => $phTs($r['last_activity']),
 
-            // Timing (null if migration not yet run)
-            'avg_days_to_contact'      => $r['avg_days_to_contact']      !== null ? round((float)$r['avg_days_to_contact'],       1) : null,
-            'avg_days_contact_to_quote'=> $r['avg_days_contact_to_quote']!== null ? round((float)$r['avg_days_contact_to_quote'],  1) : null,
-            'avg_days_quote_to_sql'    => $r['avg_days_quote_to_sql']    !== null ? round((float)$r['avg_days_quote_to_sql'],     1) : null,
-            'avg_days_quote_to_win'    => $r['avg_days_quote_to_win']    !== null ? round((float)$r['avg_days_quote_to_win'],     1) : null,
-            'avg_days_sql_to_win'      => $r['avg_days_sql_to_win']      !== null ? round((float)$r['avg_days_sql_to_win'],       1) : null,
-            'avg_days_full_cycle'      => $avgFull,
+            // Timing — flow: Assigned→Contacted→SQL→Quoted→Win
+            'avg_days_to_contact'    => $r['avg_days_to_contact']    !== null ? round((float)$r['avg_days_to_contact'],    1) : null,
+            'avg_days_contact_to_sql'=> $r['avg_days_contact_to_sql']!== null ? round((float)$r['avg_days_contact_to_sql'],1) : null,
+            'avg_days_sql_to_quote'  => $r['avg_days_sql_to_quote']  !== null ? round((float)$r['avg_days_sql_to_quote'],  1) : null,
+            'avg_days_quote_to_win'  => $r['avg_days_quote_to_win']  !== null ? round((float)$r['avg_days_quote_to_win'],  1) : null,
+            'avg_days_full_cycle'    => $avgFull,
             'avg_days_processing'    => $r['avg_days_processing'] !== null ? round((float)$r['avg_days_processing'], 1) : null,
             'completed_cycles'       => (int) $r['completed_cycles'],
 
-            // Conversion rates
+            // Conversion rates (Assigned→Contacted→SQL→Quoted→Win)
             'contact_rate'  => $assigned  > 0 ? round($contacted / $assigned  * 100, 1) : 0,
             'sql_rate'      => $contacted > 0 ? round($sqlYes    / $contacted * 100, 1) : 0,
             'quote_rate'    => $sqlYes    > 0 ? round($quoted    / $sqlYes    * 100, 1) : 0,

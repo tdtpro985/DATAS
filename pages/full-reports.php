@@ -618,15 +618,17 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <script>const BASE = '<?= $base ?>';</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
-<script src="<?= $base ?>/static/js/full-reports.js?v=2"></script>
+<script src="<?= $base ?>/static/js/full-reports.js?v=11"></script>
 
 <script>
-// Move SR modal to body to escape any stacking context issues
+// Move modals to body to escape stacking context issues
 document.addEventListener('DOMContentLoaded', function() {
-    const srModal = document.getElementById('srDetailModal');
-    if (srModal && srModal.parentNode !== document.body) {
-        document.body.appendChild(srModal);
-    }
+    ['srDetailModal', 'projDetailModal'].forEach(function(id) {
+        const el = document.getElementById(id);
+        if (el && el.parentNode !== document.body) {
+            document.body.appendChild(el);
+        }
+    });
 });
 </script>
 
@@ -740,18 +742,36 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="modal-stat-val c-blue" id="srModalToContact">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">Contact → Quote</div>
-                    <div class="modal-stat-val c-yellow" id="srModalToQuote">—</div>
+                    <div class="modal-stat-label">Contact → SQL</div>
+                    <div class="modal-stat-val c-yellow" id="srModalToSql">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">Quote → SQL</div>
-                    <div class="modal-stat-val c-green" id="srModalToSql">—</div>
+                    <div class="modal-stat-label">SQL → Quote</div>
+                    <div class="modal-stat-val c-green" id="srModalToQuote">—</div>
                 </div>
                 <div class="modal-stat">
-                    <div class="modal-stat-label">SQL → Win</div>
+                    <div class="modal-stat-label">Quote → Win</div>
                     <div class="modal-stat-val c-purple" id="srModalToWin">—</div>
                 </div>
             </div>
+        </div>
+
+        <!-- Assigned Projects List -->
+        <div class="modal-section">
+            <div class="modal-section-title">📋 Assigned Projects</div>
+            <div id="srModalProjectsList" style="margin-top:0.6rem;">
+                <div style="text-align:center;padding:1.2rem;color:var(--text-secondary);font-size:0.82rem;">Loading projects...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Project Detail Sub-Modal (stacked above SR modal) -->
+<div id="projDetailModal" style="position:fixed;inset:0;z-index:2000000;background:rgba(0,0,0,0.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;">
+    <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;width:min(700px,95vw);max-height:88vh;overflow-y:auto;padding:2rem 2rem 1.5rem;position:relative;box-shadow:0 28px 90px rgba(0,0,0,0.75);">
+        <button onclick="FullReports.closeProjModal()" title="Close" style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+        <div id="projDetailContent">
+            <div class="loading"><div class="spinner"></div><span>Loading project...</span></div>
         </div>
     </div>
 </div>

@@ -618,10 +618,9 @@ const FullReports = {
 
         try {
             const range = this.getPeriodDateRange(this.filters.period);
-            const params = new URLSearchParams({
-                date_from: range.from,
-                date_to: range.to
-            });
+            const params = new URLSearchParams();
+            if (range.from) params.set('date_from', range.from);
+            if (range.to)   params.set('date_to',   range.to);
 
             const res = await fetch(`${BASE}/api/v1/users/sr-performance?${params}`, { credentials: 'include' });
             if (!res.ok) throw new Error('Failed to load SR Performance data');
@@ -676,13 +675,14 @@ const FullReports = {
                     <div class="funnel-row"><span class="funnel-label">Win</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:${r.win_count/maxFunnel*100}%;background:#f97316;"></div></div><span class="funnel-num">${r.win_count}</span></div>
                 </div>`;
 
-                return `<tr onclick="FullReports.showSRDetails(${r.id})" style="cursor:pointer;">
+                return `<tr class="sr-clickable-row" onclick="FullReports.showSRDetails(${r.id})" title="Click to view full details">
                     <td data-label="Rank">${rankBadge}</td>
                     <td data-label="Sales Representative"><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
                     <td data-label="Assigned" class="num-cell">${r.total_assigned}</td>
                     <td data-label="Funnel Breakdown">${funnelHtml}</td>
                     <td data-label="Full Cycle Time" class="num-cell">${fullCycle}</td>
                     <td data-label="Win Rate" class="num-cell"><span class="badge ${winBadge}">${winRate.toFixed(1)}%</span></td>
+                    <td data-label="Details" class="num-cell"><span class="sr-view-btn">View Details →</span></td>
                 </tr>`;
             }).join('');
 
@@ -697,6 +697,7 @@ const FullReports = {
                                 <th>Funnel Breakdown</th>
                                 <th class="num-cell">⚡ Full Cycle</th>
                                 <th class="num-cell">Win Rate</th>
+                                <th class="num-cell"></th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
@@ -767,11 +768,34 @@ const FullReports = {
                         min-width: 100px;
                     }
                     #srPerformanceReport .data-table th:nth-child(6),
-                    #srPerformanceReport .data-table td:nth-child(6) { 
+                    #srPerformanceReport .data-table td:nth-child(6) {
                         width: auto;
                         min-width: 90px;
                     }
-                    
+                    #srPerformanceReport .data-table th:nth-child(7),
+                    #srPerformanceReport .data-table td:nth-child(7) {
+                        width: auto;
+                        min-width: 110px;
+                    }
+
+                    .sr-clickable-row { cursor: pointer; }
+                    .sr-clickable-row:hover .sr-view-btn { opacity: 1; transform: translateX(0); color: var(--orange-400); }
+                    .sr-view-btn {
+                        display: inline-block;
+                        font-size: 0.72rem;
+                        font-weight: 700;
+                        color: var(--text-secondary);
+                        background: rgba(255,128,0,0.08);
+                        border: 1px solid rgba(255,128,0,0.18);
+                        border-radius: 999px;
+                        padding: 0.22rem 0.7rem;
+                        white-space: nowrap;
+                        opacity: 0.55;
+                        transform: translateX(-4px);
+                        transition: opacity 0.18s ease, transform 0.18s ease, color 0.18s ease;
+                        pointer-events: none;
+                    }
+
                     /* Center all content */
                     #srPerformanceReport .sr-name-cell {
                         display: flex;
@@ -843,11 +867,41 @@ const FullReports = {
                     .modal-track-ip { background:rgba(59,130,246,0.12); color:#60a5fa; }
                     .modal-track-co { background:rgba(16,185,129,0.12); color:#34d399; }
                     
+                    /* ── Assigned Projects table inside SR modal ── */
+                    .sr-proj-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
+                    .sr-proj-table th { text-align:left; padding:0.45rem 0.6rem; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.08); }
+                    .sr-proj-table td { padding:0.5rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text-primary); vertical-align:middle; }
+                    .sr-proj-table tr:last-child td { border-bottom:none; }
+                    .sr-proj-table tbody tr { cursor:pointer; transition:background 0.12s; }
+                    .sr-proj-table tbody tr:hover { background:rgba(255,255,255,0.04); }
+                    .sr-proj-table tbody tr:hover .proj-view-btn { opacity:1; }
+                    .proj-view-btn { opacity:0; font-size:0.72rem; font-weight:700; color:var(--orange-400); transition:opacity 0.15s; white-space:nowrap; }
+                    .stage-pip { display:inline-block; font-size:0.6rem; font-weight:700; padding:0.1rem 0.35rem; border-radius:999px; margin-right:2px; }
+                    .stage-pip.c { background:rgba(59,130,246,0.15); color:#60a5fa; }
+                    .stage-pip.s { background:rgba(16,185,129,0.15); color:#34d399; }
+                    .stage-pip.q { background:rgba(245,158,11,0.15); color:#fbbf24; }
+                    .stage-pip.w { background:rgba(249,115,22,0.15); color:#fb923c; }
+                    .ts-badge { font-size:0.65rem; font-weight:700; padding:0.15rem 0.5rem; border-radius:999px; }
+                    .ts-badge.ns { background:rgba(108,117,125,0.15); color:#adb5bd; }
+                    .ts-badge.ip { background:rgba(59,130,246,0.12); color:#60a5fa; }
+                    .ts-badge.co { background:rgba(16,185,129,0.12); color:#34d399; }
+
+                    /* ── Project Detail sub-modal content ── */
+                    .pd-header { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.08); }
+                    .pd-title { font-size:1.1rem; font-weight:800; color:var(--text-primary); line-height:1.3; }
+                    .pd-sub  { font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem; }
+                    .pd-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.75rem; margin-bottom:1.25rem; }
+                    .pd-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.65rem 0.85rem; }
+                    .pd-label { font-size:0.64rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.2rem; }
+                    .pd-val   { font-size:0.88rem; font-weight:600; color:var(--text-primary); }
+                    .pd-section-title { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin:1rem 0 0.6rem; padding-bottom:0.35rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+
                     @media (max-width: 768px) {
                         .detail-modal { width:100%; max-width:95vw; padding:1.5rem; }
                         .modal-stat-grid { grid-template-columns:repeat(2,1fr); }
+                        .pd-grid { grid-template-columns:1fr; }
                     }
-                    
+
                     @media (max-width: 480px) {
                         .modal-stat-grid { grid-template-columns:1fr; }
                     }
@@ -1239,73 +1293,19 @@ const FullReports = {
     },
 
     // ── SR Performance Modal Functions ──
-    showSRDetails(srId) {
-        const rep = this.srPerformanceData?.find(r => r.id === srId);
-        if (!rep) {
-            console.error('[FULL REPORTS] SR not found:', srId);
-            return;
-        }
-
-        // Populate modal
-        const initial = rep.full_name ? rep.full_name.charAt(0).toUpperCase() : '?';
-        document.getElementById('srModalAvatar').textContent = initial;
-        document.getElementById('srModalName').textContent = rep.full_name || '—';
-        document.getElementById('srModalEmail').textContent = rep.email || '—';
-        
-        const branchEl = document.getElementById('srModalBranch');
-        if (rep.branch) {
-            branchEl.textContent = rep.branch;
-            branchEl.style.display = 'inline-block';
-        } else {
-            branchEl.style.display = 'none';
-        }
-
-        // Overview stats
-        document.getElementById('srModalAssigned').textContent = rep.total_assigned || 0;
-        document.getElementById('srModalContacted').textContent = rep.contacted_count || 0;
-        document.getElementById('srModalSqlYes').textContent = rep.sql_yes_count || 0;
-        document.getElementById('srModalSqlNo').textContent = rep.sql_no_count || 0;
-        document.getElementById('srModalQuoted').textContent = rep.quoted_count || 0;
-        document.getElementById('srModalWins').textContent = rep.win_count || 0;
-        document.getElementById('srModalWinRate').textContent = (rep.win_rate || 0).toFixed(1) + '%';
-        document.getElementById('srModalWinAmount').textContent = '₱' + this.formatNumber(rep.total_win_amount || 0);
-        document.getElementById('srModalPipeline').textContent = '₱' + this.formatNumber(rep.total_pipeline_value || 0);
-
-        // Conversion rates
-        document.getElementById('srModalContactRate').textContent = (rep.contact_rate || 0).toFixed(1) + '%';
-        document.getElementById('srModalSqlRate').textContent = (rep.sql_rate || 0).toFixed(1) + '%';
-        document.getElementById('srModalQuoteRate').textContent = (rep.quote_rate || 0).toFixed(1) + '%';
-        document.getElementById('srModalWinRate2').textContent = (rep.win_rate || 0).toFixed(1) + '%';
-
-        // Speed metrics (if available)
-        const timingSection = document.getElementById('srModalTimingSection');
-        if (rep.avg_days_full_cycle !== null && rep.avg_days_full_cycle !== undefined) {
-            timingSection.style.display = 'block';
-            document.getElementById('srModalFullCycle').textContent = this.formatDetailedTime(rep.avg_days_full_cycle);
-            document.getElementById('srModalToContact').textContent = rep.avg_days_to_contact !== null ? this.formatDetailedTime(rep.avg_days_to_contact) : '—';
-            document.getElementById('srModalToQuote').textContent = rep.avg_days_contact_to_quote !== null ? this.formatDetailedTime(rep.avg_days_contact_to_quote) : '—';
-            document.getElementById('srModalToSql').textContent = rep.avg_days_quote_to_sql !== null ? this.formatDetailedTime(rep.avg_days_quote_to_sql) : '—';
-            document.getElementById('srModalToWin').textContent = rep.avg_days_sql_to_win !== null ? this.formatDetailedTime(rep.avg_days_sql_to_win) : '—';
-        } else {
-            timingSection.style.display = 'none';
-        }
-
-        // Tracking status
-        document.getElementById('srModalNotStarted').textContent = rep.not_started_count || 0;
-        document.getElementById('srModalInProgress').textContent = rep.in_progress_count || 0;
-        document.getElementById('srModalComplete').textContent = rep.complete_count || 0;
-
-        // Show modal
+    async showSRDetails(srId) {
         const overlay = document.getElementById('srDetailModal');
-        overlay.classList.add('active');
-        
-        // Setup close button handler
+
+        // Open immediately with loading state
+        overlay.style.display = 'flex';
+        document.getElementById('srModalAvatar').textContent   = '…';
+        document.getElementById('srModalName').textContent     = 'Loading...';
+        document.getElementById('srModalEmail').textContent    = '';
+        document.getElementById('srModalBranch').style.display = 'none';
+
+        // Wire up close handlers once
         const closeBtn = document.getElementById('closeSRDetailModal');
-        if (closeBtn) {
-            closeBtn.onclick = () => this.closeSRModal();
-        }
-        
-        // Close on escape or click outside
+        if (closeBtn) closeBtn.onclick = () => this.closeSRModal();
         const closeHandler = (e) => {
             if (e.key === 'Escape' || e.target === overlay) {
                 this.closeSRModal();
@@ -1315,32 +1315,229 @@ const FullReports = {
         };
         document.addEventListener('keydown', closeHandler);
         overlay.addEventListener('click', closeHandler);
+
+        // Fetch both APIs in parallel — stats + project detail (all projects, no date filter)
+        try {
+            const [perfRes, detailRes] = await Promise.all([
+                fetch(`${BASE}/api/v1/users/sr-performance?sr_id=${srId}`,        { credentials: 'include' }),
+                fetch(`${BASE}/api/v1/users/sr-performance-detail?sr_id=${srId}`, { credentials: 'include' }),
+            ]);
+            if (!perfRes.ok)   throw new Error('Performance API error ' + perfRes.status);
+            if (!detailRes.ok) throw new Error('Detail API error '      + detailRes.status);
+
+            const perfData   = await perfRes.json();
+            const detailData = await detailRes.json();
+            const rep        = perfData.reps?.[0];
+            const projects   = detailData.projects || [];
+
+            if (!rep) {
+                document.getElementById('srModalName').textContent = 'Data not found';
+                return;
+            }
+
+            // Identity
+            document.getElementById('srModalAvatar').textContent = rep.full_name ? rep.full_name.charAt(0).toUpperCase() : '?';
+            document.getElementById('srModalName').textContent   = rep.full_name || '—';
+            document.getElementById('srModalEmail').textContent  = rep.email || '—';
+            const branchEl = document.getElementById('srModalBranch');
+            if (rep.branch) { branchEl.textContent = rep.branch; branchEl.style.display = 'inline-block'; }
+
+            // Overview
+            document.getElementById('srModalAssigned').textContent  = rep.total_assigned    || 0;
+            document.getElementById('srModalContacted').textContent = rep.contacted_count   || 0;
+            document.getElementById('srModalSqlYes').textContent    = rep.sql_yes_count     || 0;
+            document.getElementById('srModalSqlNo').textContent     = rep.sql_no_count      || 0;
+            document.getElementById('srModalQuoted').textContent    = rep.quoted_count      || 0;
+            document.getElementById('srModalWins').textContent      = rep.win_count         || 0;
+            document.getElementById('srModalWinRate').textContent   = (rep.win_rate   || 0).toFixed(1) + '%';
+            document.getElementById('srModalWinAmount').textContent = '₱' + this.formatNumber(rep.total_win_amount    || 0);
+            document.getElementById('srModalPipeline').textContent  = '₱' + this.formatNumber(rep.total_pipeline_value || 0);
+
+            // Conversion rates
+            document.getElementById('srModalContactRate').textContent = (rep.contact_rate || 0).toFixed(1) + '%';
+            document.getElementById('srModalSqlRate').textContent     = (rep.sql_rate     || 0).toFixed(1) + '%';
+            document.getElementById('srModalQuoteRate').textContent   = (rep.quote_rate   || 0).toFixed(1) + '%';
+            document.getElementById('srModalWinRate2').textContent    = (rep.win_rate     || 0).toFixed(1) + '%';
+
+            // Tracking status
+            document.getElementById('srModalNotStarted').textContent = rep.not_started_count || 0;
+            document.getElementById('srModalInProgress').textContent = rep.in_progress_count || 0;
+            document.getElementById('srModalComplete').textContent   = rep.complete_count    || 0;
+
+            // Speed metrics — averages across ALL projects (from detail response, no limit)
+            // Values from detail API are in seconds; convert to days for formatDetailedTime
+            const secToDay = s => (s !== null && s !== undefined) ? s / 86400 : null;
+            document.getElementById('srModalTimingSection').style.display = 'block';
+            document.getElementById('srModalCycles').textContent    = detailData.cycle_count || 0;
+            document.getElementById('srModalFullCycle').textContent = this.formatDetailedTime(secToDay(detailData.avg_full_cycle_sec));
+            document.getElementById('srModalToContact').textContent = this.formatDetailedTime(secToDay(detailData.avg_assign_to_contact));
+            document.getElementById('srModalToSql').textContent     = this.formatDetailedTime(secToDay(detailData.avg_contact_to_sql));
+            document.getElementById('srModalToQuote').textContent   = this.formatDetailedTime(secToDay(detailData.avg_sql_to_quote));
+            document.getElementById('srModalToWin').textContent     = this.formatDetailedTime(secToDay(detailData.avg_quote_to_win));
+
+            // Project list
+            this.renderSRProjectsList(projects);
+
+        } catch (e) {
+            console.error('[SR Modal] Failed to load SR details:', e);
+            document.getElementById('srModalName').textContent = 'Error loading data';
+        }
+    },
+
+    renderSRProjectsList(projects) {
+        const container = document.getElementById('srModalProjectsList');
+        if (!projects.length) {
+            container.innerHTML = '<div style="color:var(--text-muted);font-size:0.8rem;text-align:center;padding:1rem;">No projects found</div>';
+            return;
+        }
+
+        const tsClass = s => s === 'Complete' ? 'co' : s === 'In Progress' ? 'ip' : 'ns';
+
+        const isYes = v => String(v ?? '').toLowerCase() === 'yes';
+        const rows = projects.map(p => {
+            const stages = [
+                isYes(p.contacted)       ? '<span class="stage-pip c">C</span>'   : '',
+                isYes(p.sales_qualified) ? '<span class="stage-pip s">SQL</span>' : '',
+                isYes(p.quoted)          ? '<span class="stage-pip q">Q</span>'   : '',
+                isYes(p.to_win)          ? '<span class="stage-pip w">W</span>'   : '',
+            ].join('');
+            const ts   = p.tracking_status || 'Not Started';
+            const val  = p.project_value ? '₱' + this.formatNumber(p.project_value) : '—';
+            const name = this.escapeHtml(p.project_name || '—');
+            const con  = this.escapeHtml(p.contractor_name || '—');
+            return `<tr onclick="FullReports.showProjectDetail(${p.project_id})">
+                <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${name}">${name}</td>
+                <td style="color:var(--text-secondary);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${con}">${con}</td>
+                <td style="font-weight:700;color:var(--orange-400);">${val}</td>
+                <td>${stages || '<span style="color:var(--text-muted);font-size:0.72rem;">—</span>'}</td>
+                <td><span class="ts-badge ${tsClass(ts)}">${ts}</span></td>
+                <td style="text-align:right;"><span class="proj-view-btn">View →</span></td>
+            </tr>`;
+        }).join('');
+
+        container.innerHTML = `<table class="sr-proj-table">
+            <thead><tr>
+                <th>Project</th><th>Contractor</th><th>Value</th><th>Stages</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+        </table>`;
+    },
+
+    async showProjectDetail(projectId) {
+        const modal = document.getElementById('projDetailModal');
+        if (!modal) { console.error('[Project Modal] #projDetailModal not found'); return; }
+
+        modal.style.display = 'flex';
+        document.getElementById('projDetailContent').innerHTML =
+            '<div class="loading"><div class="spinner"></div><span>Loading project...</span></div>';
+
+        // Close on Escape or backdrop click (stop propagation so SR modal stays open)
+        const closeHandler = (e) => {
+            if (e.key === 'Escape') {
+                this.closeProjModal();
+                document.removeEventListener('keydown', closeHandler);
+                modal.removeEventListener('click', closeHandler);
+            }
+        };
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) { this.closeProjModal(); }
+            e.stopPropagation();
+        }, { once: true });
+        document.addEventListener('keydown', closeHandler);
+
+        try {
+            const [projRes, stRes] = await Promise.all([
+                fetch(`${BASE}/api/v1/projects?db_id=${projectId}&size=1`, { credentials: 'include' }),
+                fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`,  { credentials: 'include' }),
+            ]);
+            const projData = await projRes.json();
+            const stData   = await stRes.json();
+
+            const p  = projData.projects?.[0];
+            const st = stData.exists ? stData.data : null;
+
+            if (!p) {
+                document.getElementById('projDetailContent').innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:2rem;">Project not found</p>';
+                return;
+            }
+
+            const fmt  = v => v != null ? '₱' + this.formatNumber(v) : '—';
+            const esc  = v => this.escapeHtml(v || '—');
+            const bool = v => v === true ? '<span style="color:#34d399;font-weight:700;">Yes</span>' : v === false ? '<span style="color:#f87171;font-weight:700;">No</span>' : '<span style="color:var(--text-muted);">—</span>';
+
+            document.getElementById('projDetailContent').innerHTML = `
+                <div class="pd-header">
+                    <div style="flex:1;">
+                        <div class="pd-title">${esc(p.project_name)}</div>
+                        <div class="pd-sub">${esc(p.contractor_name)} · ${p.publication_date || '—'}</div>
+                    </div>
+                    <div style="text-align:right;flex-shrink:0;">
+                        <div style="font-size:1.3rem;font-weight:800;color:var(--orange-400);">${fmt(p.project_value)}</div>
+                        <div style="font-size:0.72rem;color:var(--text-muted);margin-top:0.15rem;">${esc(p.status)}</div>
+                    </div>
+                </div>
+
+                <div class="pd-section-title">Basic Information</div>
+                <div class="pd-grid">
+                    <div class="pd-item"><div class="pd-label">Source</div><div class="pd-val">${esc(p.source)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Region</div><div class="pd-val">${esc(p.project_region || p.region)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Contact Person</div><div class="pd-val">${esc(p.contact_person)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Contact Number</div><div class="pd-val">${esc(p.contact_number)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Contractor ID</div><div class="pd-val">${esc(p.contractor_id || p.contract_id)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Publication Date</div><div class="pd-val">${esc(p.publication_date)}</div></div>
+                </div>
+
+                ${st ? `
+                <div class="pd-section-title">Sales Tracking</div>
+                <div class="pd-grid">
+                    <div class="pd-item"><div class="pd-label">Assigned SR</div><div class="pd-val">${esc(st.sales_rep_name)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Branch</div><div class="pd-val">${esc(st.branch)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Contacted</div><div class="pd-val">${bool(st.contacted)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Sales Qualified</div><div class="pd-val">${bool(st.sales_qualified)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Quoted</div><div class="pd-val">${bool(st.quoted)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Win</div><div class="pd-val">${bool(st.to_win)}</div></div>
+                    <div class="pd-item"><div class="pd-label">W/A Amount</div><div class="pd-val">${fmt(st.wa_amount)}</div></div>
+                    <div class="pd-item"><div class="pd-label">Tracking Status</div><div class="pd-val">${esc(st.tracking_status)}</div></div>
+                    ${st.notes ? `<div class="pd-item" style="grid-column:1/-1;"><div class="pd-label">Notes</div><div class="pd-val" style="white-space:pre-wrap;font-size:0.82rem;">${esc(st.notes)}</div></div>` : ''}
+                </div>` : '<div style="color:var(--text-muted);font-size:0.8rem;padding:0.5rem 0;">No sales tracking record for this project.</div>'}
+            `;
+        } catch (e) {
+            console.error('[Project Modal] Error:', e);
+            document.getElementById('projDetailContent').innerHTML = '<p style="color:#f87171;text-align:center;padding:2rem;">Error loading project details</p>';
+        }
+    },
+
+    closeProjModal() {
+        const modal = document.getElementById('projDetailModal');
+        if (modal) modal.style.display = 'none';
     },
 
     closeSRModal() {
         const overlay = document.getElementById('srDetailModal');
         if (overlay) {
-            overlay.classList.remove('active');
+            overlay.style.display = 'none';
         }
     },
 
     // Helper: format days as detailed time (days, hours, minutes, seconds)
     formatDetailedTime(days) {
         if (days === null || days === undefined) return '—';
-        
-        const totalSeconds = Math.floor(days * 24 * 60 * 60);
-        const d = Math.floor(totalSeconds / (24 * 60 * 60));
-        const h = Math.floor((totalSeconds % (24 * 60 * 60)) / (60 * 60));
-        const m = Math.floor((totalSeconds % (60 * 60)) / 60);
+
+        const totalSeconds = Math.round(days * 86400);
+        if (totalSeconds <= 0) return '—';
+
+        const d = Math.floor(totalSeconds / 86400);
+        const h = Math.floor((totalSeconds % 86400) / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
         const s = totalSeconds % 60;
 
         const parts = [];
         if (d > 0) parts.push(`${d}d`);
         if (h > 0) parts.push(`${h}h`);
         if (m > 0) parts.push(`${m}m`);
-        if (s > 0 || parts.length === 0) parts.push(`${s}s`);
+        if (s > 0) parts.push(`${s}s`);
 
-        return parts.join(' ');
+        return parts.length > 0 ? parts.join(' ') : '—';
     }
 };
 

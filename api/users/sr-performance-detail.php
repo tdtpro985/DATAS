@@ -63,15 +63,15 @@ try {
         WHERE st.sales_rep_id = :sr_id
           AND p.archived_at IS NULL
         ORDER BY st.updated_at DESC
-        LIMIT 100
     ");
     $stmt->execute([':sr_id' => $srId]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Compute avg full cycle from completed rows (assigned → win)
-    $cycles = array_filter($rows, fn($r) => $r['full_cycle_seconds'] !== null);
-    $avgFullCycleSec = count($cycles) > 0
-        ? round(array_sum(array_column($cycles, 'full_cycle_seconds')) / count($cycles))
+    // Compute avg full cycle from completed rows (assigned → win, > 0 sec)
+    $cycles = array_filter($rows, fn($r) => !empty($r['full_cycle_seconds']) && (int)$r['full_cycle_seconds'] > 0);
+    $cycleCount = count($cycles);
+    $avgFullCycleSec = $cycleCount > 0
+        ? round(array_sum(array_column($cycles, 'full_cycle_seconds')) / $cycleCount)
         : null;
 
     // Compute per-stage averages in seconds
@@ -80,16 +80,17 @@ try {
         foreach ($rows as $r) {
             if (!empty($r[$fromCol]) && !empty($r[$toCol])) {
                 $diff = strtotime($r[$toCol]) - strtotime($r[$fromCol]);
-                if ($diff >= 0) $vals[] = $diff;
+                if ($diff > 0) $vals[] = $diff;
             }
         }
         return count($vals) > 0 ? (int)round(array_sum($vals) / count($vals)) : null;
     }
 
-    $avgAssignToContact   = avgSecondsCol($rows, 'assigned_at', 'contacted_at');
-    $avgContactToQuote    = avgSecondsCol($rows, 'contacted_at', 'quoted_at');
-    $avgQuoteToSql        = avgSecondsCol($rows, 'quoted_at', 'sales_qualified_at');
-    $avgSqlToWin          = avgSecondsCol($rows, 'sales_qualified_at', 'to_win_at');
+    // Flow: Assigned → Contacted → SQL → Quoted → Win
+    $avgAssignToContact = avgSecondsCol($rows, 'assigned_at',        'contacted_at');
+    $avgContactToSql    = avgSecondsCol($rows, 'contacted_at',       'sales_qualified_at');
+    $avgSqlToQuote      = avgSecondsCol($rows, 'sales_qualified_at', 'quoted_at');
+    $avgQuoteToWin      = avgSecondsCol($rows, 'quoted_at',          'to_win_at');
 
     // Fallback: avg assigned → last updated
     $avgProcessingSec = null;
@@ -140,15 +141,17 @@ try {
     }, $rows);
 
     jsonResponse([
-        'projects'               => $projects,
-        'avg_full_cycle_sec'     => $avgFullCycleSec,
-        'avg_assign_to_contact'  => $avgAssignToContact,
-        'avg_contact_to_quote'   => $avgContactToQuote,
-        'avg_quote_to_sql'       => $avgQuoteToSql,
-        'avg_sql_to_win'         => $avgSqlToWin,
-        'avg_processing_sec'     => $avgProcessingSec,
-        'total_sec'              => $totalSec,
-        'has_timing_data'        => $hasTs,
+        'projects'              => $projects,
+        'total_projects'        => count($rows),
+        'cycle_count'           => $cycleCount,
+        'avg_full_cycle_sec'    => $avgFullCycleSec,
+        'avg_assign_to_contact' => $avgAssignToContact,
+        'avg_contact_to_sql'    => $avgContactToSql,
+        'avg_sql_to_quote'      => $avgSqlToQuote,
+        'avg_quote_to_win'      => $avgQuoteToWin,
+        'avg_processing_sec'    => $avgProcessingSec,
+        'total_sec'             => $totalSec,
+        'has_timing_data'       => $hasTs,
     ]);
 
 } catch (Exception $e) {
