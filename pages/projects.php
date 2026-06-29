@@ -233,7 +233,7 @@ window.PROJECT_TYPE = '<?= $type ?>';
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script src="<?= $base ?>/static/js/projects.js?v=19"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=20"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=3"></script>
 </body>
 </html>
