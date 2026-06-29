@@ -2,11 +2,6 @@
    projects.js — Projects Table View Page JavaScript
    ============================================================ */
 
-// Prevent duplicate initialization
-if (typeof ProjectsPage !== 'undefined') {
-    console.warn('[PROJECTS] ProjectsPage already defined, skipping redefinition');
-} else {
-
 // Projects Page JavaScript
 const ProjectsPage = {
     type: null, // Will be set in init()
@@ -2120,5 +2115,3 @@ function showConfirmationModal(title, message, type = 'warning') {
         document.body.appendChild(overlay);
     });
 }
-
-} // End of ProjectsPage wrapper
