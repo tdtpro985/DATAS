@@ -76,8 +76,14 @@ const ProjectsPage = {
 
     async loadProjects() {
         try {
-            // Fetch ALL projects without size limit for accurate statistics
-            const apiUrl = `${BASE}/api/v1/projects`;
+            // Fetch projects with type filter
+            // Pass the type parameter to API for server-side filtering
+            let apiUrl = `${BASE}/api/v1/projects`;
+            
+            // Add type parameter if specified
+            if (this.type && this.type !== 'all') {
+                apiUrl += `?type=${encodeURIComponent(this.type)}`;
+            }
 
             const response = await fetch(apiUrl, {
                 credentials: 'include'
@@ -101,27 +107,9 @@ const ProjectsPage = {
             
             this.totalProjects = this.allProjects.length;
 
-            // Filter by type (priority / non-priority)
-            // Check if is_priority_encoded field exists
-            if (this.type === 'priority') {
-                this.allProjects = this.allProjects.filter(p => {
-                    // Use is_priority_encoded field if available, fallback to status
-                    if (p.is_priority_encoded !== undefined && p.is_priority_encoded !== null) {
-                        return p.is_priority_encoded === 'yes';
-                    }
-                    // Fallback to status-based filtering for backward compatibility
-                    return String(p.status || '').trim().toLowerCase() === 'priority';
-                });
-            } else if (this.type === 'non-priority') {
-                this.allProjects = this.allProjects.filter(p => {
-                    // Use is_priority_encoded field if available, fallback to status
-                    if (p.is_priority_encoded !== undefined && p.is_priority_encoded !== null) {
-                        return p.is_priority_encoded !== 'yes';
-                    }
-                    // Fallback to status-based filtering for backward compatibility
-                    return String(p.status || '').trim().toLowerCase() !== 'priority';
-                });
-            }
+            // NOTE: Filtering by type is now done server-side via API
+            // No need for additional client-side filtering by type
+            // The allProjects already contains only the filtered projects from API
 
             // Update summary cards
             this.updateSummaryCards();
