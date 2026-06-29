@@ -1,3 +1,186 @@
+// ── Load Performance Data from API ──────────────────────────────
+let daily30, weekly8, monthly6, bySource, byStatus, byRegion;
+let performanceData = null;
+
+async function loadPerformanceData() {
+    try {
+        const response = await fetch(`${BASE}/api/v1/encoder-performance-data`, {
+            credentials: 'include'
+        });
+        
+        if (!response.ok) {
+            throw new Error('Failed to load performance data');
+        }
+        
+        performanceData = await response.json();
+        
+        // Extract data
+        daily30 = performanceData.daily30 || [];
+        weekly8 = performanceData.weekly8 || [];
+        monthly6 = performanceData.monthly6 || [];
+        bySource = performanceData.bySource || [];
+        byStatus = performanceData.byStatus || [];
+        byRegion = performanceData.byRegion || [];
+        
+        // Set quality score
+        window.ENCODER_QUALITY_SCORE = performanceData.qualityScore || 0;
+        window.ENCODER_QUALITY_COLOR = performanceData.scoreColor || '#ef4444';
+        
+        // Initialize charts
+        initializeCharts();
+        
+    } catch (error) {
+        console.error('Error loading performance data:', error);
+        // Show error message to user
+        document.body.insertAdjacentHTML('beforeend', `
+            <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: white; padding: 1rem; border-radius: 8px; z-index: 9999;">
+                ⚠️ Failed to load performance data
+            </div>
+        `);
+    }
+}
+
+function initializeCharts() {
+    // Build all charts after data is loaded
+    buildDailyChart(30);
+    buildTrendChart('weekly');
+    // Rebuild inline charts with loaded data
+    buildInlineCharts();
+}
+
+function buildInlineCharts() {
+    // Status Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: byStatus.map(s => s.status),
+            datasets: [{
+                data: byStatus.map(s => s.cnt),
+                backgroundColor: byStatus.map(s => statusColorMap[s.status] || MUTED),
+                borderWidth: 2,
+                borderColor: '#FFFFFF',
+                hoverOffset: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '68%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { padding: 10, boxWidth: 10, font: { size: 10 } }
+                },
+                tooltip: {
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
+                    borderWidth: 1,
+                    callbacks: {
+                        label: item => ` ${item.label}: ${item.raw} (${Math.round(item.raw * 100 / byStatus.reduce((a,s)=>a+parseInt(s.cnt),0))}%)`
+                    }
+                }
+            }
+        }
+    });
+
+    // Source Chart
+    const sourceCtx = document.getElementById('sourceChart').getContext('2d');
+    new Chart(sourceCtx, {
+        type: 'bar',
+        data: {
+            labels: bySource.map(s => s.source),
+            datasets: [{
+                label: 'Projects',
+                data: bySource.map(s => s.cnt),
+                backgroundColor: bySource.map(s => sourceColorMap[s.source] || MUTED),
+                borderRadius: 6,
+                borderSkipped: false,
+                maxBarThickness: 60,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
+                    borderWidth: 1,
+                }
+            },
+            scales: {
+                x: { grid: { display: false } },
+                y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
+                     grid: { color: 'rgba(255,255,255,0.05)' } }
+            }
+        }
+    });
+
+    // Region Chart
+    const regionCtx = document.getElementById('regionChart').getContext('2d');
+    const regionLabels = byRegion.map(r => r.region_name.replace(/Region\s+/i, 'Reg. ').replace(/\s+\(.*?\)/, ''));
+    new Chart(regionCtx, {
+        type: 'bar',
+        data: {
+            labels: regionLabels,
+            datasets: [{
+                label: 'Projects',
+                data: byRegion.map(r => r.cnt),
+                backgroundColor: byRegion.map((_, i) =>
+                    `rgba(96,165,250,${0.85 - i * 0.06})`
+                ),
+                borderRadius: 4,
+                borderSkipped: false,
+                maxBarThickness: 20,
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
+                    borderWidth: 1,
+                    callbacks: {
+                        title: items => byRegion[items[0].dataIndex].region_name,
+                    }
+                }
+            },
+            scales: {
+                x: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
+                     grid: { color: 'rgba(255,255,255,0.05)' } },
+                y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+            }
+        }
+    });
+
+    // Quality Ring Chart
+    const score = window.ENCODER_QUALITY_SCORE ?? 0;
+    const color = window.ENCODER_QUALITY_COLOR ?? '#FF7A00';
+    const qualityCtx = document.getElementById('qualityRingChart').getContext('2d');
+    new Chart(qualityCtx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [score, 100 - score],
+                backgroundColor: [color, 'rgba(255,255,255,0.05)'],
+                borderWidth: 0,
+                hoverOffset: 0,
+            }]
+        },
+        options: {
+            responsive: false,
+            cutout: '78%',
+            plugins: { legend: { display: false }, tooltip: { enabled: false } },
+            events: [],
+        }
+    });
+}
 
 // ── Chart.js global defaults (dark theme) ───────────────────────
 Chart.defaults.color = 'rgba(55,65,81,0.75)';
@@ -36,6 +219,8 @@ const dailyCtx = document.getElementById('dailyChart').getContext('2d');
 let dailyChart;
 
 function buildDailyChart(range) {
+    if (!daily30 || daily30.length === 0) return;
+    
     const data = range === 7 ? daily30.slice(-7) : daily30;
     const today = new Date().toISOString().slice(0, 10);
 
@@ -290,3 +475,9 @@ document.getElementById('trendTabs').addEventListener('click', e => {
         }
     });
 })();
+
+
+// ── Initialize on page load ─────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    loadPerformanceData();
+});

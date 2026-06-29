@@ -29,6 +29,20 @@ try {
     $conditions = ['p.archived_at IS NULL'];
     $params     = [];
 
+    // Check if is_actual_project column exists (exclude illegitimate projects)
+    static $hasIllegitimateCol = null;
+    if ($hasIllegitimateCol === null) {
+        try {
+            $colChk = $db->query("SHOW COLUMNS FROM projects LIKE 'is_actual_project'");
+            $hasIllegitimateCol = $colChk->rowCount() > 0;
+        } catch (Exception $e) {
+            $hasIllegitimateCol = false;
+        }
+    }
+    if ($hasIllegitimateCol) {
+        $conditions[] = "(p.is_actual_project IS NULL OR p.is_actual_project != 'no')";
+    }
+
     $month  = getMonth();
     $year   = getYear();
     if ($month !== null && $year !== null) {

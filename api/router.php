@@ -58,6 +58,7 @@ elseif ($path === 'auth/me')                                             { requi
 elseif ($path === 'auth/verify-2fa')                                     { require __DIR__ . '/auth/verify-2fa.php'; }
 elseif ($path === 'auth/request-password-reset')                         { require __DIR__ . '/auth/request-password-reset.php'; }
 elseif ($path === 'kpi')                                                 { require __DIR__ . '/kpi.php'; }
+elseif ($path === 'encoder-performance-data')                            { require __DIR__ . '/encoder-performance-data.php'; }
 elseif ($path === 'priority-alerts')                                    { require __DIR__ . '/priority-alerts.php'; }
 elseif ($path === 'export')                                              { require __DIR__ . '/export.php'; }
 elseif ($path === 'contractors/ranking')                                 { require __DIR__ . '/contractors/ranking.php'; }

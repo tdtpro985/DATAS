@@ -487,16 +487,8 @@ $firstDate = $summary['first_encoded_at'] ? date('M j, Y', strtotime($summary['f
 
 <script>
 const BASE = '<?= $base ?>';
-const daily30   = <?= json_encode($daily30, JSON_UNESCAPED_UNICODE) ?>;
-const weekly8   = <?= json_encode($weekly8, JSON_UNESCAPED_UNICODE) ?>;
-const monthly6  = <?= json_encode($monthly6, JSON_UNESCAPED_UNICODE) ?>;
-const bySource  = <?= json_encode($bySource, JSON_UNESCAPED_UNICODE) ?>;
-const byStatus  = <?= json_encode($byStatus, JSON_UNESCAPED_UNICODE) ?>;
-const byRegion  = <?= json_encode($byRegion, JSON_UNESCAPED_UNICODE) ?>;
-const myUserId  = <?= $userId ?>;
-window.ENCODER_QUALITY_SCORE = <?= $qualityScore ?>;
-window.ENCODER_QUALITY_COLOR = '<?= $scoreColor ?>';
+const myUserId = <?= $userId ?>;
 </script>
-<script src="<?= $base ?>/static/js/encoder-performance.js?v=1"></script>
+<script src="<?= $base ?>/static/js/encoder-performance.js?v=2"></script>
 </body>
 </html>
