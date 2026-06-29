@@ -663,7 +663,8 @@ const FullReports = {
                 if (winRate >= 30) winBadge = 'badge-success';
                 else if (winRate >= 15) winBadge = 'badge-warning';
 
-                const fullCycle = r.avg_days_full_cycle !== null ? r.avg_days_full_cycle.toFixed(1) + ' days' : '—';
+                const activeAssigned = (r.not_started_count || 0) + (r.in_progress_count || 0);
+                const completedCount = r.complete_count || 0;
 
                 // Funnel mini bars
                 const maxFunnel = Math.max(r.total_assigned, r.contacted_count, r.sql_yes_count, r.quoted_count, r.win_count, 1);
@@ -678,11 +679,10 @@ const FullReports = {
                 return `<tr class="sr-clickable-row" onclick="FullReports.showSRDetails(${r.id})" title="Click to view full details">
                     <td data-label="Rank">${rankBadge}</td>
                     <td data-label="Sales Representative"><div class="sr-name-cell"><div class="sr-avatar">${initial}</div><div><div class="sr-name">${this.escapeHtml(r.full_name)}</div><div class="sr-email">${this.escapeHtml(r.email)}</div>${r.branch ? '<div class="sr-branch">'+this.escapeHtml(r.branch)+'</div>' : ''}</div></div></td>
-                    <td data-label="Assigned" class="num-cell">${r.total_assigned}</td>
+                    <td data-label="Assigned" class="num-cell">${activeAssigned}</td>
                     <td data-label="Funnel Breakdown">${funnelHtml}</td>
-                    <td data-label="Full Cycle Time" class="num-cell">${fullCycle}</td>
-                    <td data-label="Win Rate" class="num-cell"><span class="badge ${winBadge}">${winRate.toFixed(1)}%</span></td>
-                    <td data-label="Details" class="num-cell"><span class="sr-view-btn">View Details →</span></td>
+                    <td data-label="Completed" class="num-cell">${completedCount}</td>
+                    <td data-label="Win Rate" class="num-cell"><span class="badge ${winBadge}">${r.win_count} <span style="opacity:0.7;font-weight:500;">(${winRate.toFixed(1)}%)</span></span></td>
                 </tr>`;
             }).join('');
 
@@ -695,9 +695,8 @@ const FullReports = {
                                 <th>Sales Rep</th>
                                 <th class="num-cell">Assigned</th>
                                 <th>Funnel Breakdown</th>
-                                <th class="num-cell">⚡ Full Cycle</th>
+                                <th class="num-cell">Completed</th>
                                 <th class="num-cell">Win Rate</th>
-                                <th class="num-cell"></th>
                             </tr>
                         </thead>
                         <tbody>${tableRows}</tbody>
