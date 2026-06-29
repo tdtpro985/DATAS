@@ -247,7 +247,7 @@ xdebug.profiler.output_name
 debug*.php
 test*.php
 check*.php
-verify*.php
+
 sample*.php
 dev*.php
 

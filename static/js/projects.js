@@ -9,7 +9,7 @@ if (typeof ProjectsPage !== 'undefined') {
 
 // Projects Page JavaScript
 const ProjectsPage = {
-    type: window.PROJECT_TYPE || 'all',
+    type: null, // Will be set in init()
     currentPage: 1,
     pageSize: 50,
     totalProjects: 0,
@@ -17,6 +17,10 @@ const ProjectsPage = {
     filteredProjects: [],
 
     async init() {
+        // Set type from window.PROJECT_TYPE (must be set AFTER the script that defines window.PROJECT_TYPE)
+        this.type = window.PROJECT_TYPE || 'all';
+        console.log('[PROJECTS] Initialized with type:', this.type);
+        
         // Initialize role manager
         await RoleManager.init();
         

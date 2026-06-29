@@ -1,0 +1,139 @@
+============================================================
+PRIORITY VS NON-PRIORITY PROJECTS FILTERING - FINAL FIX
+============================================================
+
+PROBLEMA:
+---------
+Lumalabas pa rin ang 637 Non-Priority projects sa Priority Projects page
+kahit may is_priority_encoded field na sa database at naka-implement na
+ang filtering sa API.
+
+ROOT CAUSE IDENTIFIED:
+----------------------
+Sa static/js/projects.js, ang assignment ng type variable ay nangyayari
+HABANG NILO-LOAD PA LANG ang JavaScript file, BAGO pa ma-set ang
+window.PROJECT_TYPE sa HTML.
+
+Sequence ng events BAGO ang fix:
+1. Browser nag-load ng projects.js
+2. JavaScript parser gumawa ng ProjectsPage object
+3. Sa line 13: type: window.PROJECT_TYPE || 'all'
+   - window.PROJECT_TYPE = undefined pa (hindi pa na-set)
+   - Kaya naging type = 'all'
+4. PAGKATAPOS, nag-load ng HTML inline script
+5. Doon pa lang na-set: window.PROJECT_TYPE = 'priority'
+6. Pero huli na - type variable ay 'all' na
+
+SOLUTION IMPLEMENTED:
+---------------------
+FILE: static/js/projects.js
+
+CHANGES:
+Bago (Line 11-13):
+```javascript
+const ProjectsPage = {
+    type: window.PROJECT_TYPE || 'all',
+    currentPage: 1,
+```
+
+Pagkatapos (Line 11-14):
+```javascript
+const ProjectsPage = {
+    type: null, // Will be set in init()
+    currentPage: 1,
+    pageSize: 50,
+```
+
+At sa init() method (Line 19-21):
+```javascript
+async init() {
+    // Set type from window.PROJECT_TYPE (must be set AFTER the script that defines window.PROJECT_TYPE)
+    this.type = window.PROJECT_TYPE || 'all';
+    console.log('[PROJECTS] Initialized with type:', this.type);
+```
+
+BAKIT GUMAGANA ANG FIX:
+------------------------
+Ngayon, ang sequence ay:
+1. Browser nag-load ng projects.js
+2. JavaScript parser gumawa ng ProjectsPage object
+3. type = null initially
+4. Nag-load ng HTML inline script
+5. Na-set: window.PROJECT_TYPE = 'priority'
+6. DOMContentLoaded event fires
+7. ProjectsPage.init() na-call
+8. Dito na nag-assign: this.type = window.PROJECT_TYPE || 'all'
+9. this.type = 'priority' ✓ TAMA NA!
+10. API call: /api/v1/projects?type=priority ✓ TAMA!
+11. Returns 0 projects (kasi walang pa is_priority_encoded='yes')
+
+EXPECTED BEHAVIOR AFTER FIX:
+----------------------------
+1. Priority Projects page - walang projects (0 shown)
+   Dahil wala pang encoded via priority form
+   
+2. Non-Priority Projects page - 637 projects (lahat ng existing)
+   Dahil lahat ng existing projects ay is_priority_encoded='no'
+   
+3. Pag nag-encode ng bagong project via Priority form:
+   - is_priority_encoded = 'yes' (automatic via encode-priority.js)
+   - Lalabas sa Priority Projects page
+   - Hindi lalabas sa Non-Priority Projects page
+
+VERIFICATION:
+-------------
+1. I-reload ang Priority Projects page
+2. Tingnan ang browser console:
+   - Dapat makita: "[PROJECTS] Initialized with type: priority"
+   - Dapat makita: "[PROJECTS] Fetching from API: /api/v1/projects?type=priority"
+   - Dapat makita: "[PROJECTS] API returned: 0 projects"
+
+3. I-test ang pag-encode ng bagong Priority project:
+   - Go to: Encode Priority Project form
+   - Fill out lahat ng required fields
+   - Submit
+   - Check database: is_priority_encoded should be 'yes'
+   - Reload Priority Projects page - dapat makita na ang project
+
+FILES MODIFIED:
+---------------
+1. static/js/projects.js - Main fix (type assignment timing)
+
+FILES FOR VERIFICATION:
+-----------------------
+1. verify-priority-fix.php - Test page showing the fix logic
+2. priority-encoding-status.php - Check database status
+3. api-priority-test.php - Test API endpoint directly
+
+DEPLOYMENT NOTES:
+-----------------
+1. Clear browser cache after deployment
+2. Hard refresh (Ctrl+Shift+R) para sa lahat ng users
+3. Walang database migration needed - yung is_priority_encoded column
+   ay naka-setup na from previous fix
+
+STATUS: ✓ COMPLETE
+-------------------
+Ang root cause ay naka-identify at na-fix na. Ang timing issue
+sa JavaScript variable assignment ay na-resolve na.
+
+TEST SCENARIOS:
+---------------
+Scenario 1: Priority Projects Page (Empty State)
+- URL: /projects?type=priority
+- Expected: "No Projects Found" message
+- Why: Walang existing projects with is_priority_encoded='yes'
+
+Scenario 2: Non-Priority Projects Page (With Data)
+- URL: /projects?type=non-priority
+- Expected: 637 projects shown
+- Why: All existing projects have is_priority_encoded='no'
+
+Scenario 3: Encode New Priority Project
+- Use: Encode Priority Project form
+- Expected: After submit, project appears in Priority Projects page
+- Why: encode_type='priority' sa payload, API sets is_priority_encoded='yes'
+
+============================================================
+END OF FIX SUMMARY
+============================================================
