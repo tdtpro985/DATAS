@@ -2,6 +2,11 @@
    projects.js — Projects Table View Page JavaScript
    ============================================================ */
 
+// Prevent duplicate initialization
+if (typeof ProjectsPage !== 'undefined') {
+    console.warn('[PROJECTS] ProjectsPage already defined, skipping redefinition');
+} else {
+
 // Projects Page JavaScript
 const ProjectsPage = {
     type: window.PROJECT_TYPE || 'all',
@@ -2104,3 +2109,4 @@ function showConfirmationModal(title, message, type = 'warning') {
     });
 }
 
+} // End of ProjectsPage wrapper
