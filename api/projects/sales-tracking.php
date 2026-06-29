@@ -201,22 +201,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $assignedAt        = null;
 
     if ($hasTimestampCols && $existing) {
-        // Stamp ONLY when transitioning to 'Yes' for the first time; never overwrite an existing stamp
+        // Stamp when ANY response is given (Yes or No) for the first time; never overwrite an existing stamp
         $contactedAt      = !empty($existing['contacted_at'])       ? $existing['contacted_at']
-                          : (strtolower($contacted ?? '')           === 'yes' ? $now : null);
+                          : (($contacted      !== null && $contacted      !== '') ? $now : null);
         $salesQualifiedAt = !empty($existing['sales_qualified_at']) ? $existing['sales_qualified_at']
-                          : (strtolower($salesQualified ?? '')      === 'yes' ? $now : null);
+                          : (($salesQualified !== null && $salesQualified !== '') ? $now : null);
         $quotedAt         = !empty($existing['quoted_at'])          ? $existing['quoted_at']
-                          : (strtolower($quoted ?? '')              === 'yes' ? $now : null);
+                          : (($quoted         !== null && $quoted         !== '') ? $now : null);
         $toWinAt          = !empty($existing['to_win_at'])          ? $existing['to_win_at']
-                          : (strtolower($toWin ?? '')               === 'yes' ? $now : null);
+                          : (($toWin          !== null && $toWin          !== '') ? $now : null);
         $assignedAt       = $existing['assigned_at'] ?? $existing['created_at'] ?? $now;
     } elseif ($hasTimestampCols && !$existing) {
         $assignedAt       = $now;
-        $contactedAt      = strtolower($contacted ?? '')      === 'yes' ? $now : null;
-        $salesQualifiedAt = strtolower($salesQualified ?? '') === 'yes' ? $now : null;
-        $quotedAt         = strtolower($quoted ?? '')         === 'yes' ? $now : null;
-        $toWinAt          = strtolower($toWin ?? '')          === 'yes' ? $now : null;
+        $contactedAt      = ($contacted      !== null && $contacted      !== '') ? $now : null;
+        $salesQualifiedAt = ($salesQualified !== null && $salesQualified !== '') ? $now : null;
+        $quotedAt         = ($quoted         !== null && $quoted         !== '') ? $now : null;
+        $toWinAt          = ($toWin          !== null && $toWin          !== '') ? $now : null;
     }
 
     if ($existing) {
