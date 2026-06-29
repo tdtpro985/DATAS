@@ -92,15 +92,17 @@ try {
         ['name' => 'Win',                   'color' => '#F97316', 'count' => (int) $td['win'],           'description' => 'Naka yes ang Win at may W/A Amount na'],
     ];
 
-    $prevCount = $totalProjects > 0 ? $totalProjects : null;
+    // Seed from total projects so Assigned shows % of all projects.
+    // Always update $prevCount so each stage divides against the TRUE
+    // previous stage (not a stage several hops back that happened to be > 0).
+    $prevCount = $totalProjects;
     foreach ($stages as &$stage) {
-        $stage['conversion'] = ($prevCount !== null && $prevCount > 0)
+        $stage['conversion'] = $prevCount > 0
             ? round(($stage['count'] / $prevCount) * 100, 1)
-            : null;
-        if ($stage['count'] > 0) {
-            $prevCount = $stage['count'];
-        }
+            : null;          // previous stage was 0 → can't compute rate
+        $prevCount = $stage['count'];   // always advance, even when 0
     }
+    unset($stage);
 
     jsonResponse(['stages' => $stages]);
 
