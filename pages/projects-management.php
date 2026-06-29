@@ -1283,17 +1283,26 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
         </div>
         <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
-            
+
             <!-- Archive/Restore Button for Admins and Superadmins -->
-            <button type="button" class="btn-delete" 
-                    id="archiveBtn" 
+            <button type="button" class="btn-delete"
+                    id="archiveBtn"
                     data-role-access="admin,superadmin"
                     style="display: none;">
                 🗄️ Archive Project
             </button>
-            
-            <button type="button" class="btn-primary" 
-                    onclick="saveSalesTracking()" 
+
+            <!-- Clear Sales Tracking for Admins and Superadmins -->
+            <button type="button" class="btn-delete"
+                    id="clearTrackingBtn"
+                    data-role-access="admin,superadmin"
+                    onclick="clearSalesTracking()"
+                    style="display:none;background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;">
+                🗑️ Clear Sales Tracking
+            </button>
+
+            <button type="button" class="btn-primary"
+                    onclick="saveSalesTracking()"
                     id="saveTrackingBtn"
                     data-role-access="superadmin,admin,sales_rep">💾 Save Sales Tracking</button>
         </div>
@@ -1346,7 +1355,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/projects-management-clean.js?v=11"></script>
+<script src="<?= $base ?>/static/js/projects-management-clean.js?v=12"></script>
 
 </body>
 </html>

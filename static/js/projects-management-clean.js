@@ -2885,6 +2885,41 @@ function showActualProjectModalPM(projectId) {
     });
 }
 
+async function clearSalesTracking() {
+    const modal = document.getElementById('detailsModal');
+    const projectId = parseInt(modal.dataset.projectId);
+    if (!projectId) return;
+
+    if (!confirm('Clear all sales tracking data for this project? This cannot be undone.')) return;
+
+    const btn = document.getElementById('clearTrackingBtn');
+    const orig = btn.innerHTML;
+    btn.innerHTML = '⏳ Clearing...';
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(`${BASE}/api/v1/projects/${projectId}/sales-tracking`, {
+            method: 'DELETE',
+            credentials: 'include',
+        });
+        const data = await res.json();
+        if (data.success) {
+            showToast('Sales tracking cleared.', 'success');
+            closeDetailsModal();
+            // Refresh project list
+            if (typeof loadProjects === 'function') loadProjects();
+        } else {
+            showToast(data.error || 'Failed to clear sales tracking.', 'error');
+        }
+    } catch (e) {
+        console.error('[clearSalesTracking]', e);
+        showToast('Error clearing sales tracking.', 'error');
+    } finally {
+        btn.innerHTML = orig;
+        btn.disabled = false;
+    }
+}
+
 async function saveSalesTracking() {
     const modal = document.getElementById('detailsModal');
     const projectId = parseInt(modal.dataset.projectId);
