@@ -42,7 +42,7 @@ BOTH NOW USE SAME LOGIC:
 4. JavaScript excludes empty contractor names
 5. NO size limits
 
-FILES MODIFIED (15 total):
+FILES MODIFIED (17 total):
 ==========================
 API Endpoints (Server-side filtering):
 1. api/kpi.php ← Fixed contractor count logic
@@ -57,19 +57,22 @@ JavaScript (Client-side double-check):
 8. static/js/projects.js ← UPDATED: Added client-side filters
 9. static/js/admin.js
 10. static/js/full-reports.js
-11. static/js/illegitimate-projects.js
+11. static/js/illegitimate-projects.js ← FIXED: Table alignment
 12. static/js/encoder-performance.js
 
 PHP Pages:
 13. pages/encoder-performance.php
 14. pages/reports.php ← Changed default to "Overall (All Time)"
+15. pages/illegitimate-projects.php ← FIXED: Table header alignment
 
 DEPLOYMENT:
 ===========
-1. Upload 15 files to production (added pages/reports.php)
+1. Upload 17 files to production
 2. Restart Apache: systemctl restart httpd
-3. Refresh both dashboards in browser (Ctrl+F5)
-4. Verify counts match
+3. Refresh all pages in browser (Ctrl+F5)
+4. Verify:
+   - Dashboard Report = Project Leads counts ✓
+   - Illegitimate Projects table aligned ✓
 
 EXPECTED RESULT:
 ================

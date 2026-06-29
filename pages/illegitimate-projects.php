@@ -86,14 +86,14 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Contractor</th>
-                            <th>Project Name</th>
-                            <th>Region</th>
-                            <th>Source</th>
-                            <th style="text-align: center;">Status</th>
-                            <th style="text-align: right;">Project Value</th>
-                            <th style="text-align: center;">Sales Tracking</th>
-                            <th style="text-align: right;">Published Date</th>
+                            <th style="max-width: 200px;">Contractor</th>
+                            <th style="max-width: 250px;">Project Name</th>
+                            <th style="max-width: 150px;">Region</th>
+                            <th style="max-width: 100px;">Source</th>
+                            <th style="text-align: center; width: 80px;">Status</th>
+                            <th style="text-align: right; min-width: 120px;">Project Value</th>
+                            <th style="text-align: center; min-width: 120px;">Sales Tracking</th>
+                            <th style="text-align: right; min-width: 110px;">Published Date</th>
                         </tr>
                     </thead>
                     <tbody id="projects-tbody">

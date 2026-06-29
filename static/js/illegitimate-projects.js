@@ -149,14 +149,14 @@ const IllegalitimateProjectsPage = {
 
             return `
                 <tr onclick="IllegalitimateProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
-                    <td title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
-                    <td title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
-                    <td>${this.escapeHtml(project.region || '—')}</td>
-                    <td>${this.escapeHtml(project.source || '—')}</td>
-                    <td style="text-align: center;"><span class="status-circle ${statusClass}"></span></td>
-                    <td style="text-align: right; font-weight: 600; color: #34d399;">${value}</td>
-                    <td style="text-align: center;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
-                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem;">${dateStr}</td>
+                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
+                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
+                    <td style="max-width: 150px;">${this.escapeHtml(project.region || '—')}</td>
+                    <td style="max-width: 100px;">${this.escapeHtml(project.source || '—')}</td>
+                    <td style="text-align: center; width: 80px;"><span class="status-circle ${statusClass}"></span></td>
+                    <td style="text-align: right; font-weight: 600; color: #34d399; min-width: 120px;">${value}</td>
+                    <td style="text-align: center; min-width: 120px;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
+                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem; min-width: 110px;">${dateStr}</td>
                 </tr>
             `;
         }).join('');
