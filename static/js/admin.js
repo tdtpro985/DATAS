@@ -379,7 +379,7 @@ const PROJECTS_PER_PAGE = 10;
 let projectsCurrentPage = 1;
 
 async function loadProjects() {
-    const res = await fetch(_B + '/api/v1/projects?page=1&size=500', { credentials: 'include' });
+    const res = await fetch(_B + '/api/v1/projects', { credentials: 'include' });
     if (res.ok) {
         const data = await res.json();
         allProjects = (data.projects || []).filter(p => String(p.status || '').trim().toLowerCase() !== 'priority');

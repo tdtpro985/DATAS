@@ -291,7 +291,7 @@ const FullReports = {
 
     async loadAllData() {
         try {
-            const projectsRes = await fetch(`${BASE}/api/v1/projects?size=10000`, { credentials: 'include' });
+            const projectsRes = await fetch(`${BASE}/api/v1/projects`, { credentials: 'include' });
             const projectsData = await projectsRes.json();
             this.data.projects = projectsData.projects || [];
 

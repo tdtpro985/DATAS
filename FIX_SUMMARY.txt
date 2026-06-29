@@ -1,0 +1,39 @@
+STATISTICS DISCREPANCY FIX
+==========================
+
+PROBLEMA:
+- Dashboard Report: 633 projects
+- Project Leads (Non-Priority): 500 projects
+- Hindi match kahit puro non-priority lang
+
+ROOT CAUSE:
+1. May LIMIT sa API query (size=1000, size=500)
+2. Nag-exclude ng illegitimate projects pero hindi consistent
+
+SOLUTION:
+1. Tanggal na lahat ng size limits - fetch ALL projects
+2. Added illegitimate project filtering sa lahat ng API endpoints
+3. Extracted inline code to API endpoints
+
+FILES MODIFIED:
+- api/kpi.php (added illegitimate filter)
+- api/charts/funnel.php (added illegitimate filter)
+- api/charts/regional-stats.php (added illegitimate filter)
+- api/contractors/ranking.php (added illegitimate filter)
+- api/projects/index.php (removed size limit)
+- api/encoder-performance-data.php (NEW)
+- api/router.php (added new route)
+- static/js/projects.js (removed size param)
+- static/js/admin.js (removed size param)
+- static/js/full-reports.js (removed size param)
+- static/js/illegitimate-projects.js (removed size param)
+- static/js/encoder-performance.js (fetch from API)
+- pages/encoder-performance.php (removed inline data)
+
+DEPLOYMENT:
+1. Upload all modified files via SFTP
+2. Clear cache/restart Apache
+3. Test both dashboards - dapat match na
+
+RESULT:
+Dashboard Report at Project Leads ay magkapareho na ng count!

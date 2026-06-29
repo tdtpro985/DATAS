@@ -23,10 +23,16 @@ try {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     try {
-        // List projects with pagination
+        // List projects with optional pagination
+        // If size=0 or size not specified, return ALL projects (no limit)
+        // Otherwise use pagination
         $page = max(1, (int)qp('page', 1));
-        $size = min(500, max(1, (int)qp('size', 50)));
-        $offset = ($page - 1) * $size;
+        $sizeParam = qp('size', null);
+        
+        // If size is explicitly 0 or not provided, fetch all
+        $fetchAll = ($sizeParam === null || $sizeParam === '0' || (int)$sizeParam === 0);
+        $size = $fetchAll ? PHP_INT_MAX : min(10000, max(1, (int)$sizeParam));
+        $offset = $fetchAll ? 0 : (($page - 1) * $size);
         
         // Get type filter (for compatibility with frontend calls)
         $type = trim($_GET['type'] ?? '');
@@ -91,21 +97,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $total = (int)$countRow['cnt'];
 
         // Get paginated results with sales tracking data (if columns exist)
+        $limitClause = $fetchAll ? '' : 'LIMIT :size OFFSET :offset';
+        
         $stmt = $db->prepare("
             SELECT p.*
             FROM projects p
             WHERE " . $whereClause . "
             ORDER BY p.created_at DESC
-            LIMIT :size OFFSET :offset
+            $limitClause
         ");
         
         // Bind parameters
         foreach ($params as $key => $value) {
             $stmt->bindValue($key, $value);
         }
-        $stmt->bindValue(':size', $size, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-$stmt->execute();
+        
+        if (!$fetchAll) {
+            $stmt->bindValue(':size', $size, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+        }
+        
+        $stmt->execute();
         $projects = $stmt->fetchAll();
         
         // Convert numeric fields from string to proper numeric types

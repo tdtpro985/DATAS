@@ -28,7 +28,7 @@ const IllegalitimateProjectsPage = {
 
     async loadProjects() {
         try {
-            const response = await fetch(BASE + '/api/v1/projects/illegitimate?size=1000', {
+            const response = await fetch(BASE + '/api/v1/projects/illegitimate', {
                 credentials: 'include'
             });
 
