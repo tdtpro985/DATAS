@@ -9,7 +9,7 @@
 require_once __DIR__ . '/../db.php';
 require_once __DIR__ . '/../helpers.php';
 
-requireAuth();
+$currentUser = requireAuth();
 
 if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
     jsonError('Method not allowed', 405);
@@ -26,6 +26,12 @@ $source = qp('source', '');
 $search = qp('search', '');
 $salesRepId = qp('sales_rep_id', '');
 
+// SECURITY: If the current user is a sales_rep, they can ONLY see their own assigned projects
+// Admins and superadmins can filter by any sales_rep_id or see all assigned projects
+if ($currentUser['role'] === 'sales_rep') {
+    $salesRepId = $currentUser['id']; // Force to current user's ID
+}
+
 $db = getDB();
 
 // SECURITY: Validate input format
@@ -36,6 +42,12 @@ if ($region && $region !== 'all' && !preg_match('/^[a-zA-Z0-9\s\-,\.\(\)]+$/', $
 // Build WHERE clause - check if project HAS assignment and is not archived
 $where = ['p.assigned_to IS NOT NULL', 'p.archived_at IS NULL']; // Assignment exists and not archived
 $params = [];
+
+// Filter by sales rep ID (required for sales_rep role, optional for admin/superadmin)
+if ($salesRepId) {
+    $where[] = 'p.assigned_to = :sales_rep_id';
+    $params[':sales_rep_id'] = $salesRepId;
+}
 
 if ($status && $status !== 'all') {
     $where[] = 'p.status = :status';
@@ -50,11 +62,6 @@ if ($region && $region !== 'all') {
 if ($source && $source !== 'all') {
     $where[] = 'p.source = :source';
     $params[':source'] = $source;
-}
-
-if ($salesRepId) {
-    $where[] = 'p.assigned_to = :sales_rep_id';
-    $params[':sales_rep_id'] = $salesRepId;
 }
 
 if ($search) {
