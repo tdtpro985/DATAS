@@ -202,14 +202,14 @@ $firstDate = $pipe['first_track'] ? phDt($pipe['first_track']) : '—';
 <title>My Performance — TDT Powersteel</title>
 <link rel="icon" href="<?= $base ?>/static/images/logo_header.png" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+<link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
 <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
 <link rel="stylesheet" href="<?= $base ?>/static/css/modern-theme.css?v=1">
 <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
 <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
-<link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
-<link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
-<link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+<link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=4">
+<link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=6">
+<link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
 <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/sr-my-performance.css?v=1">
 </head>
@@ -544,6 +544,6 @@ window.SR_DATA = {
     pipeline:   [<?= $total ?>,<?= $contacted ?>,<?= $quoted ?>,<?= $qualified ?>,<?= $toWin ?>,<?= $completed ?>]
 };
 </script>
-<script src="<?= $base ?>/static/js/sr-my-performance.js?v=1"></script>
+<script src="<?= $base ?>/static/js/sr-my-performance.js?v=2"></script>
 </body>
 </html>

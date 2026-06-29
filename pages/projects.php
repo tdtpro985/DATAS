@@ -39,13 +39,13 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <!-- Core Styles -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/projects.css?v=5">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/projects.css?v=6">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
@@ -229,8 +229,8 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script src="<?= $base ?>/static/js/projects.js?v=18"></script>
-<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=6"></script>
+<script src="<?= $base ?>/static/js/projects.js?v=19"></script>
+<script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=3"></script>
 <script>
 const BASE = '<?= $base ?>';
 </script>

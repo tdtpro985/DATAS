@@ -29,9 +29,9 @@ if (!in_array($role, ['admin', 'superadmin'], true)) {
     <title>Activity Logs — TDT Powersteel</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=23">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">

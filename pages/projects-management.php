@@ -54,11 +54,11 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     
@@ -68,7 +68,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     
     <!-- Philippine DateTime -->
     <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
-    <link rel="stylesheet" href="<?= $base ?>/static/css/projects-management.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/projects-management.css?v=2">
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)($_SESSION['user']['id'] ?? 0) ?>">
@@ -381,7 +381,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/projects-management-clean.js?v=12"></script>
+<script src="<?= $base ?>/static/js/projects-management-clean.js?v=13"></script>
 
 <script>
 const BASE = '<?= $base ?>';

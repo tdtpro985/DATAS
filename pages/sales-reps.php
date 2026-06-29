@@ -37,11 +37,11 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Core Styles -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
 

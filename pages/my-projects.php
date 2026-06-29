@@ -44,11 +44,11 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
@@ -59,7 +59,7 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
     
     <!-- Philippine DateTime -->
     <script src="<?= $base ?>/static/js/date-formatter-ph.js?v=1"></script>
-    <link rel="stylesheet" href="<?= $base ?>/static/css/my-projects.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/my-projects.css?v=6">
 </head>
 
 <body data-role="<?= $role ?>" data-user-id="<?= (int)$userId ?>">
@@ -165,7 +165,7 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script src="<?= $base ?>/static/js/my-projects.js?v=9"></script>
+<script src="<?= $base ?>/static/js/my-projects.js?v=19"></script>
 <script>
 const BASE = '<?= $base ?>';
 const CURRENT_USER_ID = <?= $userId ?>;

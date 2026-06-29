@@ -30,22 +30,22 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <title>Illegitimate Projects | TDT Powersteel SILEP</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=8">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-theme.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/header.css?v=6">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=4">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=5">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=4">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=6">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=25">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modal-system.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-modal-fix.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-projects.css?v=2">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-projects.css?v=3">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-page="illegitimate-projects">
 <?php require __DIR__ . '/sidebar.php'; ?>
@@ -118,7 +118,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
 <script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/illegitimate-projects.js?v=3"></script><script>
+<script src="<?= $base ?>/static/js/illegitimate-projects.js?v=4"></script><script>
 const BASE = '<?= $base ?>';
 </script>
 </body>

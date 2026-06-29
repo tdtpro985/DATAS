@@ -47,7 +47,7 @@ if ($role === 'encoder') {
     <!-- Modern Select Dropdowns Styling -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
     <link rel="stylesheet" href="<?= $base ?>/static/css/custom-select-dropdown.css">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/reports.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/reports.css?v=2">
 </head>
 <body>
     <div class="dashboard-container">
@@ -649,6 +649,6 @@ if ($role === 'encoder') {
 <script>
 const BASE = '<?= $base ?>';
 </script>
-<script src="<?= $base ?>/static/js/reports.js?v=1"></script>
+<script src="<?= $base ?>/static/js/reports.js?v=2"></script>
 </body>
 </html>
