@@ -33,7 +33,7 @@ async function loadPerformanceData() {
         console.error('Error loading performance data:', error);
         // Show error message to user
         document.body.insertAdjacentHTML('beforeend', `
-            <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: #111827; padding: 1rem; border-radius: 8px; z-index: 9999;">
+            <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: #000000; padding: 1rem; border-radius: 8px; z-index: 9999;">
                 ⚠️ Failed to load performance data
             </div>
         `);
@@ -74,7 +74,7 @@ function buildInlineCharts() {
                 },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         label: item => ` ${item.label}: ${item.raw} (${Math.round(item.raw * 100 / byStatus.reduce((a,s)=>a+parseInt(s.cnt),0))}%)`
@@ -106,7 +106,7 @@ function buildInlineCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                 }
             },
@@ -144,7 +144,7 @@ function buildInlineCharts() {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         title: items => byRegion[items[0].dataIndex].region_name,
@@ -245,7 +245,7 @@ function buildDailyChart(range) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         title: items => data[items[0].dataIndex].date,
@@ -297,7 +297,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
                 },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         label: item => ` ${item.label}: ${item.raw} (${Math.round(item.raw * 100 / byStatus.reduce((a,s)=>a+parseInt(s.cnt),0))}%)`
@@ -331,7 +331,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                 }
             },
@@ -371,7 +371,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         title: items => byRegion[items[0].dataIndex].region_name,
@@ -427,7 +427,7 @@ function buildTrendChart(period) {
                 legend: { display: false },
                 tooltip: {
                     backgroundColor: '#FFFFFF',
-                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#111827', bodyColor: '#111827',
+                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#000000', bodyColor: '#000000',
                     borderWidth: 1,
                     callbacks: {
                         label: item => ` ${item.raw} project${item.raw !== 1 ? 's' : ''}`

@@ -1303,7 +1303,7 @@
 .role-admin      { background: rgba(59,130,246,0.12);  color: #1D4ED8; }
 .role-encoder    { background: rgba(16,185,129,0.12);  color: #065F46; }
 .role-sales_rep  { background: rgba(139,92,246,0.12);  color: #5B21B6; }
-.role-user       { background: rgba(148,163,184,0.12); color: #111827; }
+.role-user       { background: rgba(148,163,184,0.12); color: #000000; }
 
 /* Action toggle button */
 .action-toggle {

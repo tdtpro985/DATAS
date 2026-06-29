@@ -26,7 +26,7 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
             backgroundColor: data.map(d=>d.date===phToday?BLUE:'rgba(96,165,250,0.35)'),
             borderRadius:5, borderSkipped:false, maxBarThickness:30 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.12)', titleColor:'#111827', bodyColor:'#111827',borderWidth:1,
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.12)', titleColor:'#000000', bodyColor:'#000000',borderWidth:1,
             callbacks:{title:i=>data[i[0].dataIndex].date,label:i=>` ${i.raw} update${i.raw!==1?'s':''}`}}},
         scales:{ x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}},
                  y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
@@ -44,7 +44,7 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
             borderWidth:2, borderColor:'#FFFFFF', hoverOffset:6 }]
     }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%',
         plugins:{ legend:{position:'bottom',labels:{padding:10,boxWidth:10,font:{size:10}}},
-                  tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.1)', titleColor:'#111827', bodyColor:'#111827',borderWidth:1} }
+                  tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.1)', titleColor:'#000000', bodyColor:'#000000',borderWidth:1} }
     }});
 })();
 
@@ -59,7 +59,7 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
             backgroundColor:data.map(s=>stMap[s.proj_status]||MUTED),
             borderRadius:6, borderSkipped:false, maxBarThickness:56 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#111827', bodyColor:'#111827'}},
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#000000', bodyColor:'#000000'}},
         scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
     }});
 })();
@@ -74,7 +74,7 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
         labels, datasets:[{ label:'Count', data:counts, backgroundColor:colors,
             borderRadius:6, borderSkipped:false, maxBarThickness:48 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#111827', bodyColor:'#111827'}},
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#000000', bodyColor:'#000000'}},
         scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
     }});
 })();

@@ -882,7 +882,7 @@ function renderSalesRepsSimple(salesReps) {
         
         repCard.innerHTML = `
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #111827; font-weight: 700; font-size: 1.5rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #000000; font-weight: 700; font-size: 1.5rem;">
                     ${(rep.full_name || rep.email).charAt(0).toUpperCase()}
                 </div>
                 <div style="flex: 1;">
@@ -1179,7 +1179,7 @@ function createAssignmentStatusBar() {
         left: 0;
         right: 0;
         background: #10b981;
-        color: #111827;
+        color: #000000;
         padding: 1rem;
         text-align: center;
         font-weight: 500;
@@ -1190,7 +1190,7 @@ function createAssignmentStatusBar() {
     statusBar.innerHTML = `
         📋 Assignment Mode: Selected Sales Rep <strong>${assignmentState.selectedSalesRepName}</strong> 
         | Selected Projects: <span id="selectedProjectCount">0</span>
-        <button onclick="cancelAssignment()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #111827; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Cancel</button>
+        <button onclick="cancelAssignment()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #000000; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Cancel</button>
         <button onclick="proceedWithAssignment()" style="margin-left: 0.5rem; background: white; color: #10b981; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer; font-weight: 500;">Assign Selected</button>
     `;
     
@@ -1421,7 +1421,7 @@ function showProjectSelectionBanner(salesRepName) {
         align-items: center;
         gap: 1rem;
         background: linear-gradient(135deg, #10b981, #059669);
-        color: #111827;
+        color: #000000;
         padding: 0.875rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 500;
@@ -1432,7 +1432,7 @@ function showProjectSelectionBanner(salesRepName) {
     statusContainer.innerHTML = `
         <span>📋 Assignment Mode: Selected Sales Rep <strong style="color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">${salesRepName}</strong></span>
         <span style="color: rgba(255,255,255,0.95);">| Selected Projects: <span id="selectedCount" style="font-weight: 900; color: #fff; background: rgba(0,0,0,0.25); padding: 0.15rem 0.6rem; border-radius: 0.375rem; font-size: 1.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">0</span></span>
-        <button onclick="exitProjectSelectionMode()" style="background: rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.15); color: #111827; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;">Cancel</button>
+        <button onclick="exitProjectSelectionMode()" style="background: rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.15); color: #000000; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;">Cancel</button>
     `;
     
     // Create assign projects button
@@ -1826,7 +1826,7 @@ function showBulkUnassignBanner() {
         left: 0;
         right: 0;
         background: linear-gradient(135deg, #dc2626, #b91c1c);
-        color: #111827;
+        color: #000000;
         padding: 1rem;
         text-align: center;
         font-weight: 500;
@@ -1836,7 +1836,7 @@ function showBulkUnassignBanner() {
     
     banner.innerHTML = `
         🗑️ Unassign Mode: Selected Projects: <span id="selectedCount">0</span>
-        <button onclick="exitProjectSelectionMode()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #111827; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Cancel</button>
+        <button onclick="exitProjectSelectionMode()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #000000; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Cancel</button>
     `;
     
     document.body.appendChild(banner);
@@ -1881,7 +1881,7 @@ function showBulkUnassignButtons() {
             <button onclick="exitProjectSelectionMode()" class="btn-secondary" style="padding: 0.75rem 1.5rem; background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.12);">
                 Cancel
             </button>
-            <button id="proceedBtn" class="btn-delete" data-can-click="false" style="padding: 0.75rem 2rem; background: #dc2626; border-color: #dc2626; color: #111827; opacity: 0.5; cursor: not-allowed;">
+            <button id="proceedBtn" class="btn-delete" data-can-click="false" style="padding: 0.75rem 2rem; background: #dc2626; border-color: #dc2626; color: #000000; opacity: 0.5; cursor: not-allowed;">
                 Unassign Projects (<span id="proceedBtnCount">0</span>)
             </button>
         </div>
@@ -2125,7 +2125,7 @@ function showConfirmationModal(title, message, onConfirm, onCancel = null) {
                 <div style="width:44px; height:44px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; font-weight:700; flex-shrink:0;">?</div>
                 <div style="flex:1;">
                     <h3 style="margin:0 0 0.35rem; color:#fff; font-size:1.1rem; font-weight:700;">${title}</h3>
-                    <p style="margin:0; color:#6B7280; font-size:0.95rem; line-height:1.5;">${message}</p>
+                    <p style="margin:0; color:#374151; font-size:0.95rem; line-height:1.5;">${message}</p>
                 </div>
             </div>
             <div style="display:flex; justify-content:flex-end; padding:1.25rem 2rem; gap:0.75rem;">
@@ -2334,7 +2334,7 @@ function showNotificationToast(message, type = 'info') {
         max-width: 400px;
         padding: 1rem 1.5rem;
         background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: #111827;
+        color: #000000;
         border-radius: 0.75rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         transform: translateX(100%);
@@ -2439,7 +2439,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: ${iconColor};
                     border: 1px solid ${iconColor};
                     border-radius: 0.75rem;
-                    color: #111827;
+                    color: #000000;
                     font-size: 0.9rem;
                     font-weight: 700;
                     cursor: pointer;
@@ -2767,7 +2767,7 @@ function showActualProjectModalPM(projectId) {
         </div>
         
         <div style="display: flex; gap: 0.75rem; justify-content: center;">
-            <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #111827; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
+            <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #000000; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
                 Save
             </button>
         </div>

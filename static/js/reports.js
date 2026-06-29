@@ -443,7 +443,7 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                ticks: { color: '#374151', font: { size: 10 } },
+                                ticks: { color: '#1F2937', font: { size: 10 } },
                                 grid: { color: 'rgba(0,0,0,0.07)' }
                             },
                             x: {

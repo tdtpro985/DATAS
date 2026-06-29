@@ -54,11 +54,11 @@
     --bg-overlay-light: rgba(0, 0, 0, 0.35);
 
     /* ── Text System ───────────────────────────────────────── */
-    --text-primary: #111827;
-    --text-secondary: #374151;
-    --text-tertiary: #6B7280;
+    --text-primary: #000000;
+    --text-secondary: #1F2937;
+    --text-tertiary: #374151;
     --text-accent: #FF7A00;
-    --text-muted: #6B7280;
+    --text-muted: #374151;
     --text-on-accent: #FFFFFF;
     --text-on-dark: #FFFFFF;
 
