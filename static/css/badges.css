@@ -51,7 +51,7 @@
     box-shadow: 
         0 4px 12px rgba(239, 68, 68, 0.4),
         0 0 20px rgba(239, 68, 68, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     animation: priorityPulse 2s ease-in-out infinite;
     position: relative;
     overflow: hidden;
@@ -64,7 +64,7 @@
     background: linear-gradient(
         45deg,
         transparent 30%,
-        rgba(255, 255, 255, 0.3) 50%,
+        rgba(0, 0, 0, 0.06) 50%,
         transparent 70%
     );
     animation: shimmer 3s infinite;
@@ -91,7 +91,7 @@
     background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .badge-success:hover,
@@ -106,7 +106,7 @@
     background: linear-gradient(135deg, var(--warning-500) 0%, var(--warning-600) 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .badge-warning:hover,
@@ -121,7 +121,7 @@
     background: linear-gradient(135deg, var(--info-500) 0%, var(--info-600) 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .badge-info:hover,
@@ -135,7 +135,7 @@
     background: linear-gradient(135deg, var(--danger-500) 0%, var(--danger-600) 100%);
     color: white;
     box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -175,13 +175,13 @@
 
 /* Subtle badges */
 .badge-subtle {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.04);
     color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .badge-subtle:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(0, 0, 0, 0.06);
     color: var(--text-primary);
 }
 
@@ -190,7 +190,7 @@
     background: var(--gradient-primary);
     color: var(--text-on-dark);
     box-shadow: var(--shadow-glow-md);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     font-weight: 900;
 }
 
@@ -219,7 +219,7 @@
 .role-badge-superadmin,
 .role-superadmin {
     background: linear-gradient(135deg, rgba(245,158,11,0.25), rgba(255,128,0,0.25));
-    color: #fbbf24;
+    color: #92400E;
     border: 1px solid rgba(245,158,11,0.4);
     box-shadow: 0 0 15px rgba(245,158,11,0.2);
 }
@@ -227,7 +227,7 @@
 .role-badge-admin,
 .role-admin {
     background: linear-gradient(135deg, rgba(59,130,246,0.25), rgba(96,165,250,0.25));
-    color: #60a5fa;
+    color: #1D4ED8;
     border: 1px solid rgba(59,130,246,0.4);
     box-shadow: 0 0 15px rgba(59,130,246,0.2);
 }
@@ -235,7 +235,7 @@
 .role-badge-sales_rep,
 .role-sales_rep {
     background: linear-gradient(135deg, rgba(139,92,246,0.25), rgba(167,139,250,0.25));
-    color: #a78bfa;
+    color: #5B21B6;
     border: 1px solid rgba(139,92,246,0.4);
     box-shadow: 0 0 15px rgba(139,92,246,0.2);
 }
@@ -243,7 +243,7 @@
 .role-badge-encoder,
 .role-encoder {
     background: linear-gradient(135deg, rgba(16,185,129,0.25), rgba(52,211,153,0.25));
-    color: #34d399;
+    color: #065F46;
     border: 1px solid rgba(16,185,129,0.4);
     box-shadow: 0 0 15px rgba(16,185,129,0.2);
 }
@@ -251,7 +251,7 @@
 .role-badge-user,
 .role-user {
     background: linear-gradient(135deg, rgba(148,163,184,0.25), rgba(203,213,225,0.25));
-    color: #cbd5e1;
+    color: #374151;
     border: 1px solid rgba(148,163,184,0.4);
     box-shadow: 0 0 15px rgba(148,163,184,0.2);
 }
@@ -387,7 +387,7 @@
     align-items: center;
     gap: var(--sp-2);
     padding: var(--sp-1-5) var(--sp-3);
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: var(--radius-md);
     font-size: var(--text-xs);
@@ -397,7 +397,7 @@
 }
 
 .tag:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.04);
     border-color: rgba(255, 128, 0, 0.3);
     color: var(--text-primary);
     transform: translateY(-2px);
@@ -409,7 +409,7 @@
     justify-content: center;
     width: 16px;
     height: 16px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.05);
     border-radius: 50%;
     cursor: pointer;
     transition: all var(--transition-fast);

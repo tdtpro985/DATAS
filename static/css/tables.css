@@ -12,9 +12,8 @@
     overflow-x: auto;
     overflow-y: hidden;
     border-radius: var(--radius-xl);
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.5) 0%, rgba(20, 23, 31, 0.7) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: var(--shadow-lg);
     margin-bottom: var(--sp-5);
 }
@@ -24,7 +23,7 @@
 }
 
 .table-wrapper::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.04);
     border-radius: var(--radius-full);
 }
 
@@ -53,17 +52,16 @@
 }
 
 .data-table thead th {
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.9) 0%, rgba(20, 23, 31, 0.95) 100%);
-    backdrop-filter: blur(15px);
+    background: #F4F5FA;
     color: var(--text-secondary);
     font-weight: 800;
     font-size: var(--text-xs);
     text-transform: uppercase;
     letter-spacing: 0.1em;
     padding: var(--sp-4) var(--sp-4);
-    text-align: center !important; /* Force center align headers */
-    border-bottom: 2px solid rgba(255, 128, 0, 0.25);
-    border-right: 1px solid rgba(255, 255, 255, 0.08); /* Vertical divider */
+    text-align: center !important;
+    border-bottom: 2px solid rgba(255, 122, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.06); /* Vertical divider */
     position: sticky;
     top: 0;
     z-index: 10;
@@ -129,7 +127,7 @@
 
 .data-table tbody tr {
     transition: all var(--transition-fast);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     position: relative;
 }
 
@@ -159,7 +157,7 @@
 
 /* Alternating row colors */
 .data-table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.080);
 }
 
 .data-table tbody tr:nth-child(even):hover {
@@ -190,7 +188,7 @@
     color: var(--text-primary);
     vertical-align: middle;
     text-align: center !important; /* Force center align all data */
-    border-right: 1px solid rgba(255, 255, 255, 0.05); /* Vertical divider */
+    border-right: 1px solid rgba(0, 0, 0, 0.150); /* Vertical divider */
     transition: all var(--transition-fast);
 }
 
@@ -264,8 +262,8 @@
     width: 32px;
     height: 32px;
     padding: 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.150);
+    border: 1px solid rgba(0, 0, 0, 0.300);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     cursor: pointer;
@@ -297,9 +295,9 @@
     justify-content: space-between;
     gap: var(--sp-4);
     padding: var(--sp-4);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.01) 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.080) 0%, rgba(0, 0, 0, 0.040) 100%);
     border-radius: var(--radius-xl);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.150);
     margin-top: var(--sp-4);
 }
 
@@ -326,8 +324,8 @@
     min-width: 36px;
     height: 36px;
     padding: 0 var(--sp-3);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.150);
+    border: 1px solid rgba(0, 0, 0, 0.300);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
     cursor: pointer;
@@ -489,12 +487,12 @@
 
 /* Striped table variant */
 .data-table.table-striped tbody tr:nth-child(odd) {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.120);
 }
 
 /* Bordered table variant */
 .data-table.table-bordered tbody td {
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-right: 1px solid rgba(0, 0, 0, 0.240);
 }
 
 .data-table.table-bordered tbody td:last-child {
@@ -502,7 +500,7 @@
 }
 
 .data-table.table-bordered thead th {
-    border-right: 1px solid rgba(255, 255, 255, 0.12);
+    border-right: 1px solid rgba(0, 0, 0, 0.360);
 }
 
 .data-table.table-bordered thead th:last-child {
@@ -518,9 +516,8 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     border-radius: var(--radius-xl);
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.5) 0%, rgba(20, 23, 31, 0.7) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.08);
     box-shadow: var(--shadow-lg);
 }
 

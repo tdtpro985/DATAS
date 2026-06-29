@@ -722,7 +722,7 @@ const FullReports = {
                         text-align: center;
                         vertical-align: middle;
                         padding: 0.8rem 0.5rem;
-                        border-right: 1px solid rgba(255,255,255,0.06);
+                        border-right: 1px solid rgba(0,0,0,0.06);
                         word-wrap: break-word;
                         overflow-wrap: break-word;
                         max-width: 250px;
@@ -814,7 +814,7 @@ const FullReports = {
                     .rank-1 { background:rgba(255,193,7,0.15); color:#FFD700; }
                     .rank-2 { background:rgba(192,192,192,0.15); color:#C0C0C0; }
                     .rank-3 { background:rgba(205,127,50,0.15); color:#CD7F32; }
-                    .rank-n { background:rgba(255,255,255,0.06); color:var(--text-secondary); }
+                    .rank-n { background:rgba(0,0,0,0.04); color:var(--text-secondary); }
                     .sr-name-cell { display:flex; align-items:center; gap:0.7rem; }
                     .sr-avatar { width:34px; height:34px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem; color:#000; flex-shrink:0; }
                     .sr-name { font-weight:700; color:var(--text-primary); line-height:1.2; font-size:0.875rem; }
@@ -823,7 +823,7 @@ const FullReports = {
                     .funnel-mini { display:flex; flex-direction:column; gap:0.3rem; min-width:190px; max-width:220px; }
                     .funnel-row { display:flex; align-items:center; gap:0.4rem; }
                     .funnel-label { font-size:0.65rem; color:var(--text-secondary); width:55px; flex-shrink:0; font-weight:600; text-align:left; }
-                    .funnel-bar-wrap { flex:1; height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; }
+                    .funnel-bar-wrap { flex:1; height:5px; background:rgba(0,0,0,0.08); border-radius:3px; overflow:hidden; }
                     .funnel-bar { height:100%; border-radius:3px; transition:width 0.4s ease; }
                     .funnel-num { font-size:0.68rem; font-weight:700; color:var(--text-primary); width:20px; text-align:right; flex-shrink:0; }
                     .badge { display:inline-block; padding:0.18rem 0.55rem; border-radius:999px; font-size:0.72rem; font-weight:700; white-space:nowrap; }
@@ -834,11 +834,11 @@ const FullReports = {
                     /* Detail Modal - Exact match with SR Performance */
                     .detail-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.90); z-index:999999; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
                     .detail-modal-overlay.active { display:flex; }
-                    .detail-modal { background:var(--bg-card); border:1px solid rgba(255,255,255,0.1); border-radius:var(--radius-lg); width:95%; max-width:1100px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:1000000; }
+                    .detail-modal { background:var(--bg-card); border:1px solid rgba(0,0,0,0.09); border-radius:var(--radius-lg); width:95%; max-width:1100px; max-height:88vh; overflow-y:auto; padding:2rem; position:relative; box-shadow:var(--shadow-xl); animation:modalIn 0.18s ease; z-index:1000000; }
                     @keyframes modalIn { from { opacity:0; transform:translateY(12px) scale(0.98); } to { opacity:1; transform:none; } }
                     
-                    .modal-close-btn { position:absolute; top:1rem; right:1rem; background:rgba(255,255,255,0.07); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s, color 0.15s; }
-                    .modal-close-btn:hover { background:rgba(255,255,255,0.12); color:var(--text-primary); }
+                    .modal-close-btn { position:absolute; top:1rem; right:1rem; background:rgba(0,0,0,0.05); border:none; border-radius:50%; width:30px; height:30px; color:var(--text-secondary); font-size:1.1rem; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background 0.15s, color 0.15s; }
+                    .modal-close-btn:hover { background:rgba(0,0,0,0.08); color:var(--text-primary); }
                     
                     .modal-sr-header { display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem; }
                     .modal-avatar { width:52px; height:52px; border-radius:50%; background:var(--gradient-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.4rem; color:#000; flex-shrink:0; }
@@ -847,10 +847,10 @@ const FullReports = {
                     .modal-sr-branch { display:inline-block; margin-top:0.3rem; font-size:0.72rem; background:rgba(255,128,0,0.1); color:var(--orange-400); padding:0.1rem 0.55rem; border-radius:999px; font-weight:700; }
                     
                     .modal-section { margin-bottom:1.5rem; }
-                    .modal-section-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+                    .modal-section-title { font-size:0.7rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin-bottom:0.75rem; padding-bottom:0.4rem; border-bottom:1px solid rgba(0,0,0,0.08); }
                     
                     .modal-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.75rem; }
-                    .modal-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:var(--radius-md); padding:0.75rem 1rem; }
+                    .modal-stat { background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.07); border-radius:var(--radius-md); padding:0.75rem 1rem; }
                     .modal-stat-label { font-size:0.68rem; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; }
                     .modal-stat-val { font-size:1.25rem; font-weight:800; color:var(--text-primary); margin-top:0.15rem; }
                     .modal-stat-val.c-green { color:#10B981; }
@@ -868,11 +868,11 @@ const FullReports = {
                     
                     /* ── Assigned Projects table inside SR modal ── */
                     .sr-proj-table { width:100%; border-collapse:collapse; font-size:0.78rem; }
-                    .sr-proj-table th { text-align:left; padding:0.45rem 0.6rem; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); border-bottom:1px solid rgba(255,255,255,0.08); }
-                    .sr-proj-table td { padding:0.5rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.04); color:var(--text-primary); vertical-align:middle; }
+                    .sr-proj-table th { text-align:left; padding:0.45rem 0.6rem; font-size:0.65rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); border-bottom:1px solid rgba(0,0,0,0.08); }
+                    .sr-proj-table td { padding:0.5rem 0.6rem; border-bottom:1px solid rgba(0,0,0,0.06); color:var(--text-primary); vertical-align:middle; }
                     .sr-proj-table tr:last-child td { border-bottom:none; }
                     .sr-proj-table tbody tr { cursor:pointer; transition:background 0.12s; }
-                    .sr-proj-table tbody tr:hover { background:rgba(255,255,255,0.04); }
+                    .sr-proj-table tbody tr:hover { background:rgba(255,122,0,0.04); }
                     .sr-proj-table tbody tr:hover .proj-view-btn { opacity:1; }
                     .proj-view-btn { opacity:0; font-size:0.72rem; font-weight:700; color:var(--orange-400); transition:opacity 0.15s; white-space:nowrap; }
                     .stage-pip { display:inline-block; font-size:0.6rem; font-weight:700; padding:0.1rem 0.35rem; border-radius:999px; margin-right:2px; }
@@ -886,14 +886,14 @@ const FullReports = {
                     .ts-badge.co { background:rgba(16,185,129,0.12); color:#34d399; }
 
                     /* ── Project Detail sub-modal content ── */
-                    .pd-header { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.08); }
+                    .pd-header { display:flex; align-items:flex-start; gap:1rem; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(0,0,0,0.08); }
                     .pd-title { font-size:1.1rem; font-weight:800; color:var(--text-primary); line-height:1.3; }
                     .pd-sub  { font-size:0.8rem; color:var(--text-muted); margin-top:0.25rem; }
                     .pd-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:0.75rem; margin-bottom:1.25rem; }
-                    .pd-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.06); border-radius:8px; padding:0.65rem 0.85rem; }
+                    .pd-item { background:rgba(0,0,0,0.02); border:1px solid rgba(0,0,0,0.07); border-radius:8px; padding:0.65rem 0.85rem; }
                     .pd-label { font-size:0.64rem; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:var(--text-muted); margin-bottom:0.2rem; }
                     .pd-val   { font-size:0.88rem; font-weight:600; color:var(--text-primary); }
-                    .pd-section-title { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin:1rem 0 0.6rem; padding-bottom:0.35rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+                    .pd-section-title { font-size:0.68rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-secondary); margin:1rem 0 0.6rem; padding-bottom:0.35rem; border-bottom:1px solid rgba(0,0,0,0.08); }
 
                     @media (max-width: 768px) {
                         .detail-modal { width:100%; max-width:95vw; padding:1.5rem; }

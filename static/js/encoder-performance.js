@@ -1,7 +1,7 @@
 
 // ── Chart.js global defaults (dark theme) ───────────────────────
-Chart.defaults.color = 'rgba(255,255,255,0.45)';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+Chart.defaults.color = 'rgba(55,65,81,0.75)';
+Chart.defaults.borderColor = 'rgba(0,0,0,0.07)';
 Chart.defaults.font.family = "'Inter', sans-serif";
 
 const ORANGE   = 'rgba(255,122,0,0.85)';
@@ -59,8 +59,8 @@ function buildDailyChart(range) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    borderColor: 'rgba(255,122,0,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#374151', bodyColor: '#374151',
                     borderWidth: 1,
                     callbacks: {
                         title: items => data[items[0].dataIndex].date,
@@ -97,7 +97,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
                 data: byStatus.map(s => s.cnt),
                 backgroundColor: byStatus.map(s => statusColorMap[s.status] || MUTED),
                 borderWidth: 2,
-                borderColor: '#0f1520',
+                borderColor: '#FFFFFF',
                 hoverOffset: 6,
             }]
         },
@@ -111,8 +111,8 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
                     labels: { padding: 10, boxWidth: 10, font: { size: 10 } }
                 },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    borderColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
                     borderWidth: 1,
                     callbacks: {
                         label: item => ` ${item.label}: ${item.raw} (${Math.round(item.raw * 100 / byStatus.reduce((a,s)=>a+parseInt(s.cnt),0))}%)`
@@ -145,8 +145,8 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    borderColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
                     borderWidth: 1,
                 }
             },
@@ -185,8 +185,8 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    borderColor: 'rgba(255,255,255,0.1)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.1)', titleColor: '#374151', bodyColor: '#374151',
                     borderWidth: 1,
                     callbacks: {
                         title: items => byRegion[items[0].dataIndex].region_name,
@@ -241,8 +241,8 @@ function buildTrendChart(period) {
             plugins: {
                 legend: { display: false },
                 tooltip: {
-                    backgroundColor: '#1e293b',
-                    borderColor: 'rgba(255,122,0,0.3)',
+                    backgroundColor: '#FFFFFF',
+                    borderColor: 'rgba(0,0,0,0.12)', titleColor: '#374151', bodyColor: '#374151',
                     borderWidth: 1,
                     callbacks: {
                         label: item => ` ${item.raw} project${item.raw !== 1 ? 's' : ''}`

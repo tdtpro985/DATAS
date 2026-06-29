@@ -1,8 +1,13 @@
 /* ============================================================
-   LIGHT THEME — Orange + White
-   Overrides hardcoded dark values from admin.css, components.css, etc.
-   Loaded last via sidebar.php so it always wins cascade.
+   LIGHT THEME — Orange + White (v2)
+   Core CSS files (admin.css, components.css, tables.css, badges.css)
+   are now fully light-themed. This file catches any remaining
+   hardcoded dark values in older/page-specific CSS files.
+   Loaded via sidebar.php (every authenticated page).
    ============================================================ */
+
+/* ── Color scheme hint ─────────────────────────────────── */
+html { color-scheme: light; }
 
 /* ── Body & page background ─────────────────────────────── */
 body {
@@ -10,31 +15,10 @@ body {
     color: var(--text-primary) !important;
 }
 
-body::before {
-    background:
-        radial-gradient(circle at 15% 25%, rgba(255, 122, 0, 0.04) 0%, transparent 50%),
-        radial-gradient(circle at 85% 75%, rgba(255, 122, 0, 0.03) 0%, transparent 50%),
-        radial-gradient(circle at 50% 50%, rgba(255, 122, 0, 0.02) 0%, transparent 60%) !important;
-}
-
-body::after {
-    background-image:
-        linear-gradient(rgba(0, 0, 0, 0.012) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.012) 1px, transparent 1px) !important;
-    opacity: 0.5 !important;
-}
-
 /* ── App shell ───────────────────────────────────────────── */
 .ap-shell {
     background: var(--bg-app) !important;
     color: var(--text-primary) !important;
-}
-
-.ap-shell::before {
-    background:
-        radial-gradient(circle at 15% 25%, rgba(255, 122, 0, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 85% 75%, rgba(255, 122, 0, 0.03) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(255, 122, 0, 0.02) 0%, transparent 50%) !important;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────── */
@@ -44,37 +28,12 @@ body::after {
     box-shadow: 2px 0 16px rgba(0, 0, 0, 0.07), 1px 0 4px rgba(0, 0, 0, 0.04) !important;
 }
 
-.ap-sidebar::before {
-    background: linear-gradient(
-        180deg,
-        rgba(255, 122, 0, 0.04) 0%,
-        transparent 25%,
-        transparent 75%,
-        rgba(255, 122, 0, 0.02) 100%
-    ) !important;
-}
-
-.ap-sidebar::after {
-    background: linear-gradient(
-        180deg,
-        transparent 0%,
-        rgba(255, 122, 0, 0.3) 50%,
-        transparent 100%
-    ) !important;
-}
-
 .ap-sidebar-logo {
-    background: linear-gradient(135deg, rgba(255, 122, 0, 0.04) 0%, transparent 100%) !important;
-    border-bottom: 1px solid rgba(255, 122, 0, 0.12) !important;
-}
-
-.ap-sidebar-user {
-    background: rgba(255, 122, 0, 0.03) !important;
     border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
-.ap-sidebar-user:hover {
-    background: rgba(255, 122, 0, 0.06) !important;
+.ap-sidebar-user {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
 }
 
 .ap-sidebar-user-name {
@@ -94,14 +53,12 @@ body::after {
     background: rgba(255, 122, 0, 0.07) !important;
     color: var(--text-primary) !important;
     border-color: rgba(255, 122, 0, 0.18) !important;
-    box-shadow: 0 2px 8px rgba(255, 122, 0, 0.1) !important;
 }
 
 .ap-nav-item.active {
     background: linear-gradient(135deg, rgba(255, 122, 0, 0.12), rgba(255, 165, 0, 0.08)) !important;
     color: var(--orange-600) !important;
     border-color: rgba(255, 122, 0, 0.22) !important;
-    box-shadow: 0 2px 12px rgba(255, 122, 0, 0.15) !important;
 }
 
 .ap-nav-dropdown-toggle {
@@ -127,9 +84,11 @@ body::after {
     color: var(--orange-600) !important;
 }
 
-/* Sidebar mobile overlay */
-.ap-sidebar-overlay {
-    background: rgba(0, 0, 0, 0.5) !important;
+/* ── Top bar ──────────────────────────────────────────────── */
+.ap-topbar {
+    background: #FFFFFF !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
 }
 
 /* ── Main content ────────────────────────────────────────── */
@@ -146,19 +105,9 @@ body::after {
 .panel,
 .widget,
 .summary-card,
-[class*="-card"]:not([class*="badge"]):not([class*="btn"]) {
+[class*="-card"]:not([class*="badge"]):not([class*="btn"]):not([class*="role-badge"]) {
     background: #FFFFFF !important;
     border-color: rgba(0, 0, 0, 0.07) !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06), 0 4px 12px rgba(0, 0, 0, 0.04) !important;
-}
-
-[class*="-card"]:hover:not([class*="badge"]):not([class*="btn"]) {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.06) !important;
-}
-
-/* ── Page header ─────────────────────────────────────────── */
-.page-header {
-    border-bottom-color: rgba(255, 122, 0, 0.15) !important;
 }
 
 /* ── Data tables ─────────────────────────────────────────── */
@@ -172,14 +121,12 @@ table thead th,
 th {
     background: #F4F5FA !important;
     color: var(--text-secondary) !important;
-    border-bottom: 2px solid rgba(0, 0, 0, 0.08) !important;
     border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .data-table tbody td,
 table tbody td,
 td {
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
     color: var(--text-primary) !important;
     border-color: rgba(0, 0, 0, 0.05) !important;
 }
@@ -189,20 +136,13 @@ table tbody tr:hover td {
     background: rgba(255, 122, 0, 0.03) !important;
 }
 
-/* Row striping */
-.data-table tbody tr:nth-child(even) td,
-table.striped tbody tr:nth-child(even) td {
-    background: rgba(0, 0, 0, 0.015) !important;
-}
-
 /* ── Form inputs ─────────────────────────────────────────── */
 input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="submit"]):not([type="button"]):not([type="reset"]):not([type="color"]):not([type="file"]):not([type="image"]),
 select,
 textarea,
 .form-control,
 .form-input,
-.search-input,
-[class*="input"] {
+.search-input {
     background: var(--bg-input) !important;
     color: var(--text-primary) !important;
     border-color: rgba(0, 0, 0, 0.12) !important;
@@ -223,44 +163,55 @@ textarea:focus,
     outline: none !important;
 }
 
+/* select option bg on light */
+select option {
+    background: #FFFFFF !important;
+    color: var(--text-primary) !important;
+}
+
 /* ── Modals ──────────────────────────────────────────────── */
 .modal-overlay {
     background: rgba(0, 0, 0, 0.5) !important;
     backdrop-filter: blur(4px) !important;
 }
 
-.modal-content {
+.modal-content,
+.modern-modal-content {
     background: #FFFFFF !important;
     color: var(--text-primary) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.09) !important;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
 }
 
 .modal-header {
     background: #FFFFFF !important;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-bottom-color: rgba(0, 0, 0, 0.08) !important;
     color: var(--text-primary) !important;
 }
 
 .modal-header h2,
-.modal-header h3 {
+.modal-header h3,
+.modern-modal-title {
     color: var(--text-primary) !important;
 }
 
-.modal-body {
+.modal-body,
+.modern-modal-body {
     background: #FFFFFF !important;
     color: var(--text-primary) !important;
 }
 
 .modal-footer,
-.modal-actions {
+.modal-actions,
+.modern-modal-footer {
     background: #F8F9FC !important;
-    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    border-top-color: rgba(0, 0, 0, 0.08) !important;
 }
 
 .modal-close {
     color: var(--text-muted) !important;
     background: rgba(0, 0, 0, 0.04) !important;
+    border-color: rgba(0, 0, 0, 0.1) !important;
 }
 
 .modal-close:hover {
@@ -269,6 +220,19 @@ textarea:focus,
 }
 
 /* ── Buttons ─────────────────────────────────────────────── */
+.btn-primary,
+button.btn-primary {
+    background: var(--orange-500) !important;
+    border-color: var(--orange-500) !important;
+    color: #FFFFFF !important;
+}
+
+.btn-primary:hover,
+button.btn-primary:hover {
+    background: var(--orange-600) !important;
+    border-color: var(--orange-600) !important;
+}
+
 .btn-secondary,
 button.btn-secondary {
     background: rgba(0, 0, 0, 0.05) !important;
@@ -288,65 +252,13 @@ button.btn-secondary:hover {
     color: var(--text-primary) !important;
 }
 
-/* Primary button stays orange */
-.btn-primary,
-button.btn-primary {
-    background: var(--orange-500) !important;
-    border-color: var(--orange-500) !important;
-    color: #FFFFFF !important;
-}
-
-.btn-primary:hover,
-button.btn-primary:hover {
-    background: var(--orange-600) !important;
-    border-color: var(--orange-600) !important;
-}
-
-/* ── Dropdowns / select menus ────────────────────────────── */
-.dropdown-menu,
-.select-dropdown,
-.custom-dropdown,
-[class*="dropdown-menu"],
-[class*="select-menu"] {
-    background: #FFFFFF !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
-    color: var(--text-primary) !important;
-}
-
-.dropdown-item,
-.select-option,
-[class*="dropdown-item"],
-[class*="select-option"] {
-    color: var(--text-primary) !important;
-}
-
-.dropdown-item:hover,
-.select-option:hover {
-    background: rgba(255, 122, 0, 0.06) !important;
-    color: var(--orange-600) !important;
-}
-
 /* ── Toasts ──────────────────────────────────────────────── */
 .toast,
-.toast-container .toast {
+.modern-notification {
     background: #FFFFFF !important;
     color: var(--text-primary) !important;
-    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(0, 0, 0, 0.09) !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* ── User role badges in sidebar ─────────────────────────── */
-.ap-sidebar-user-role.role-superadmin {
-    background: linear-gradient(135deg, rgba(255, 122, 0, 0.12), rgba(255, 165, 0, 0.1)) !important;
-    color: var(--orange-700) !important;
-    border: 1px solid rgba(255, 122, 0, 0.25) !important;
-}
-
-.ap-sidebar-user-role.role-admin {
-    background: rgba(59, 130, 246, 0.1) !important;
-    color: #1D4ED8 !important;
-    border: 1px solid rgba(59, 130, 246, 0.25) !important;
 }
 
 /* ── Scrollbars ──────────────────────────────────────────── */
@@ -363,77 +275,85 @@ button.btn-primary:hover {
     background: rgba(255, 122, 0, 0.5) !important;
 }
 
-/* ── Dividers / borders ──────────────────────────────────── */
+/* ── Dividers ────────────────────────────────────────────── */
 hr,
 .divider {
     border-color: rgba(0, 0, 0, 0.08) !important;
 }
 
-/* ── Section / filter bars ───────────────────────────────── */
-.filter-bar,
-.toolbar,
-.search-bar,
-[class*="filter-"],
-[class*="toolbar-"] {
-    background: #FFFFFF !important;
-    border-color: rgba(0, 0, 0, 0.08) !important;
+/* ── Role badges (sidebar and topbar pills) ──────────────── */
+.ap-sidebar-user-role.role-badge-superadmin,
+.role-badge-superadmin {
+    background: rgba(255, 122, 0, 0.1) !important;
+    color: #C45400 !important;
+    border: 1px solid rgba(255, 122, 0, 0.25) !important;
 }
 
-/* ── Status track badges in various pages ────────────────── */
-.ts-badge.ns { background: rgba(100,116,139,0.12) !important; color: #334155 !important; }
-.ts-badge.ip { background: rgba(59,130,246,0.12) !important;  color: #1D4ED8 !important; }
-.ts-badge.co { background: rgba(16,185,129,0.12) !important;  color: #047857 !important; }
+.ap-sidebar-user-role.role-badge-admin,
+.role-badge-admin {
+    background: rgba(37, 99, 235, 0.1) !important;
+    color: #1D4ED8 !important;
+    border: 1px solid rgba(37, 99, 235, 0.25) !important;
+}
 
-/* ── Sidebar role pills ──────────────────────────────────── */
-.role-admin    { background: rgba(59,130,246,0.1) !important; color: #1e40af !important; }
-.role-user     { background: rgba(100,116,139,0.1) !important; color: #334155 !important; }
-.role-encoder  { background: rgba(139,92,246,0.1) !important; color: #4c1d95 !important; }
+.ap-sidebar-user-role.role-badge-sales_rep,
+.role-badge-sales_rep {
+    background: rgba(124, 58, 237, 0.1) !important;
+    color: #5B21B6 !important;
+    border: 1px solid rgba(124, 58, 237, 0.25) !important;
+}
 
-/* ── Loading spinner backdrop ────────────────────────────── */
+.ap-sidebar-user-role.role-badge-encoder,
+.role-badge-encoder {
+    background: rgba(5, 150, 105, 0.1) !important;
+    color: #065F46 !important;
+    border: 1px solid rgba(5, 150, 105, 0.25) !important;
+}
+
+/* ── Loading overlay ─────────────────────────────────────── */
 .loading-overlay {
     background: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* ── Credits modal & misc overlays ──────────────────────── */
+/* ── Stat/KPI values ─────────────────────────────────────── */
+.stat-value,
+.kpi-value,
+.metric-value,
+.ap-stat-value {
+    color: var(--text-primary) !important;
+}
+
+.stat-label,
+.kpi-label,
+.metric-label,
+.ap-stat-label {
+    color: var(--text-secondary) !important;
+}
+
+/* ── Data table wrapper ──────────────────────────────────── */
+.data-table-wrapper,
+.table-wrapper,
+.ap-table-card {
+    background: #FFFFFF !important;
+    border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ── Modal body inline text ──────────────────────────────── */
+.modal-body label,
+.modal-body p {
+    color: var(--text-primary);
+}
+
+/* ── Tracking status badges ──────────────────────────────── */
+.ts-badge.ns { background: rgba(100,116,139,0.1) !important; color: #334155 !important; }
+.ts-badge.ip { background: rgba(37,99,235,0.1) !important;   color: #1D4ED8 !important; }
+.ts-badge.co { background: rgba(5,150,105,0.1) !important;   color: #047857 !important; }
+
+/* ── Credits modal ───────────────────────────────────────── */
 .credits-modal,
 .credits-content,
 .overlay-panel {
     background: #FFFFFF !important;
     color: var(--text-primary) !important;
     border-color: rgba(0, 0, 0, 0.1) !important;
-}
-
-/* ── Page-specific: projects-management inline styles ────── */
-.modal-body label,
-.modal-body p,
-.modal-body span:not(.badge):not([class*="pill"]):not([class*="status"]) {
-    color: var(--text-primary);
-}
-
-/* ── Data table wrapper ──────────────────────────────────── */
-.data-table-wrapper {
-    background: #FFFFFF !important;
-    border: 1px solid rgba(0, 0, 0, 0.07) !important;
-    border-radius: 0.75rem;
-}
-
-/* ── Stat/KPI number colors ──────────────────────────────── */
-.stat-value,
-.kpi-value,
-.metric-value {
-    color: var(--text-primary) !important;
-}
-
-.stat-label,
-.kpi-label,
-.metric-label {
-    color: var(--text-secondary) !important;
-}
-
-/* ── Orange accent text stays orange ─────────────────────── */
-.text-orange,
-.text-accent,
-[style*="color: var(--orange"],
-[style*="color:var(--orange"] {
-    color: var(--orange-500) !important;
 }

@@ -1,5 +1,5 @@
-Chart.defaults.color = 'rgba(255,255,255,0.45)';
-Chart.defaults.borderColor = 'rgba(255,255,255,0.06)';
+Chart.defaults.color = 'rgba(55,65,81,0.75)';
+Chart.defaults.borderColor = 'rgba(0,0,0,0.07)';
 Chart.defaults.font.family = "'Inter', sans-serif";
 
 // Toggle timeline cards
@@ -26,10 +26,10 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
             backgroundColor: data.map(d=>d.date===phToday?BLUE:'rgba(96,165,250,0.35)'),
             borderRadius:5, borderSkipped:false, maxBarThickness:30 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(96,165,250,0.3)',borderWidth:1,
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.12)', titleColor:'#374151', bodyColor:'#374151',borderWidth:1,
             callbacks:{title:i=>data[i[0].dataIndex].date,label:i=>` ${i.raw} update${i.raw!==1?'s':''}`}}},
         scales:{ x:{grid:{display:false},ticks:{maxRotation:45,font:{size:10}}},
-                 y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(255,255,255,0.05)'}}}
+                 y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
     }});
 })();
 
@@ -41,10 +41,10 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
     new Chart(ctx, { type:'doughnut', data:{
         labels:data.map(s=>s.source),
         datasets:[{ data:data.map(s=>s.cnt), backgroundColor:data.map(s=>srcMap[s.source]||MUTED),
-            borderWidth:2, borderColor:'#0f1520', hoverOffset:6 }]
+            borderWidth:2, borderColor:'#FFFFFF', hoverOffset:6 }]
     }, options:{ responsive:true, maintainAspectRatio:false, cutout:'68%',
         plugins:{ legend:{position:'bottom',labels:{padding:10,boxWidth:10,font:{size:10}}},
-                  tooltip:{backgroundColor:'#1e293b',borderColor:'rgba(255,255,255,0.1)',borderWidth:1} }
+                  tooltip:{backgroundColor:'#FFFFFF',borderColor:'rgba(0,0,0,0.1)', titleColor:'#374151', bodyColor:'#374151',borderWidth:1} }
     }});
 })();
 
@@ -59,8 +59,8 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
             backgroundColor:data.map(s=>stMap[s.proj_status]||MUTED),
             borderRadius:6, borderSkipped:false, maxBarThickness:56 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#1e293b',borderWidth:1,borderColor:'rgba(255,255,255,0.1)'}},
-        scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(255,255,255,0.05)'}}}
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#374151', bodyColor:'#374151'}},
+        scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
     }});
 })();
 
@@ -74,7 +74,7 @@ const stMap  = { 'For Execution':BLUE,'Awarded':GREEN,'For Bidding':YELLOW,'Prio
         labels, datasets:[{ label:'Count', data:counts, backgroundColor:colors,
             borderRadius:6, borderSkipped:false, maxBarThickness:48 }]
     }, options:{ responsive:true, maintainAspectRatio:false,
-        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#1e293b',borderWidth:1,borderColor:'rgba(255,255,255,0.1)'}},
-        scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(255,255,255,0.05)'}}}
+        plugins:{ legend:{display:false}, tooltip:{backgroundColor:'#FFFFFF',borderWidth:1,borderColor:'rgba(0,0,0,0.1)', titleColor:'#374151', bodyColor:'#374151'}},
+        scales:{ x:{grid:{display:false}}, y:{beginAtZero:true,ticks:{stepSize:1,precision:0},grid:{color:'rgba(0,0,0,0.07)'}}}
     }});
 })();
