@@ -102,14 +102,25 @@ const ProjectsPage = {
             this.totalProjects = this.allProjects.length;
 
             // Filter by type (priority / non-priority)
+            // Check if is_priority_encoded field exists
             if (this.type === 'priority') {
-                this.allProjects = this.allProjects.filter(p => 
-                    String(p.status || '').trim().toLowerCase() === 'priority'
-                );
+                this.allProjects = this.allProjects.filter(p => {
+                    // Use is_priority_encoded field if available, fallback to status
+                    if (p.is_priority_encoded !== undefined && p.is_priority_encoded !== null) {
+                        return p.is_priority_encoded === 'yes';
+                    }
+                    // Fallback to status-based filtering for backward compatibility
+                    return String(p.status || '').trim().toLowerCase() === 'priority';
+                });
             } else if (this.type === 'non-priority') {
-                this.allProjects = this.allProjects.filter(p => 
-                    String(p.status || '').trim().toLowerCase() !== 'priority'
-                );
+                this.allProjects = this.allProjects.filter(p => {
+                    // Use is_priority_encoded field if available, fallback to status
+                    if (p.is_priority_encoded !== undefined && p.is_priority_encoded !== null) {
+                        return p.is_priority_encoded !== 'yes';
+                    }
+                    // Fallback to status-based filtering for backward compatibility
+                    return String(p.status || '').trim().toLowerCase() !== 'priority';
+                });
             }
 
             // Update summary cards

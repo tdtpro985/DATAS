@@ -62,13 +62,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
         $params = [];
         
+        // Check if is_priority_encoded column exists (might not be migrated yet)
+        static $hasPriorityEncodedCol = null;
+        if ($hasPriorityEncodedCol === null) {
+            try {
+                $colChk = $db->query("SHOW COLUMNS FROM projects LIKE 'is_priority_encoded'");
+                $hasPriorityEncodedCol = $colChk->rowCount() > 0;
+            } catch (Exception $e) {
+                $hasPriorityEncodedCol = false;
+            }
+        }
+        
         if ($type === 'priority') {
-            $whereConditions[] = "LOWER(TRIM(p.status)) = 'priority'";
+            if ($hasPriorityEncodedCol) {
+                // Use is_priority_encoded field if available
+                $whereConditions[] = "p.is_priority_encoded = 'yes'";
+            } else {
+                // Fallback to status-based filtering for backward compatibility
+                $whereConditions[] = "LOWER(TRIM(p.status)) = 'priority'";
+            }
         } elseif ($type === 'non-priority') {
-            $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+            if ($hasPriorityEncodedCol) {
+                // Use is_priority_encoded field if available
+                $whereConditions[] = "(p.is_priority_encoded = 'no' OR p.is_priority_encoded IS NULL)";
+            } else {
+                // Fallback to status-based filtering for backward compatibility
+                $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+            }
         } elseif ($type === 'leads') {
             // Handle leads type (same as non-priority for compatibility)
-            $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+            if ($hasPriorityEncodedCol) {
+                $whereConditions[] = "(p.is_priority_encoded = 'no' OR p.is_priority_encoded IS NULL)";
+            } else {
+                $whereConditions[] = "LOWER(TRIM(p.status)) != 'priority'";
+            }
         }
         
         // Add search filter
@@ -367,12 +394,21 @@ if (!preg_match('/^[a-zA-Z0-9\s\-,\.]+$/', $projectCity)) {
     jsonError('Invalid project city format', 422);
 }
 
+// Determine if this is a priority encoded project
+// Priority projects are encoded with status='Priority' OR via priority form
+$isPriorityEncoded = (trim(strtolower($status)) === 'priority') ? 'yes' : 'no';
+
+// Check if the request came from the priority encode form
+if (isset($body['encode_type']) && strtolower(trim($body['encode_type'])) === 'priority') {
+    $isPriorityEncoded = 'yes';
+}
+
 $db = getDB();
 $stmt = $db->prepare("
     INSERT INTO projects (
         contractor_id, contractor_name, contact_person, contact_number, address,
         region, city_province, project_id, project_name, project_value,
-        status, source, notice_reference_number, publication_date, sheet_pile_type, sheet_pile_amount,
+        status, is_priority_encoded, source, notice_reference_number, publication_date, sheet_pile_type, sheet_pile_amount,
         drbs, drbs_value, accomplishment_rate, ms_plate, angle_bars,
         channel_bars, wide_flange, gi_bi, encoded_by,
         contract_country, contract_region, contract_province, contract_city,
@@ -382,7 +418,7 @@ $stmt = $db->prepare("
     ) VALUES (
         :contractor_id, :contractor_name, :contact_person, :contact_number, :address,
         :region, :city_province, :project_id, :project_name, :project_value,
-        :status, :source, :notice_reference_number, :publication_date, :sheet_pile_type, :sheet_pile_amount,
+        :status, :is_priority_encoded, :source, :notice_reference_number, :publication_date, :sheet_pile_type, :sheet_pile_amount,
         :drbs, :drbs_value, :accomplishment_rate, :ms_plate, :angle_bars,
         :channel_bars, :wide_flange, :gi_bi, :encoded_by,
         :contract_country, :contract_region, :contract_province, :contract_city,
@@ -404,6 +440,7 @@ $stmt->execute([
     ':project_name'      => $projectName,
     ':project_value'     => $projectValue,
     ':status'            => $status,
+    ':is_priority_encoded' => $isPriorityEncoded,
     ':source'            => $source,
     ':notice_reference_number' => trim($body['notice_reference_number'] ?? '') ?: null,
     ':publication_date'  => trim($body['publication_date'] ?? '') ?: null,

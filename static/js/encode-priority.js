@@ -839,7 +839,8 @@ const PriorityForm = {
             drbs_value: getFieldNumber('drbsValue'),
             
             status: 'Priority',
-            form_type: 'priority'
+            form_type: 'priority',
+            encode_type: 'priority'  // Mark this as a priority encoded project
         };
         
         // Debug: Log contractor location fields
