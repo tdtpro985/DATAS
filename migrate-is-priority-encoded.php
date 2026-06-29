@@ -44,16 +44,39 @@ try {
     }
 
     // Migrate existing data: Projects with status='Priority' should be marked as priority encoded
+    // Check different case variations
     echo "\n→ Migrating existing priority projects...\n";
     $stmt = $db->prepare("
         UPDATE projects 
         SET is_priority_encoded = 'yes' 
-        WHERE LOWER(TRIM(status)) = 'priority' 
+        WHERE (
+            LOWER(TRIM(status)) = 'priority'
+            OR UPPER(TRIM(status)) = 'PRIORITY'
+            OR status LIKE '%Priority%'
+            OR status LIKE '%PRIORITY%'
+        )
         AND is_priority_encoded = 'no'
+        AND archived_at IS NULL
     ");
     $stmt->execute();
     $count = $stmt->rowCount();
     echo "✓ Migrated $count existing priority projects.\n";
+    
+    // Show what statuses exist in the database
+    echo "\n→ Checking existing status values...\n";
+    $stmt = $db->query("
+        SELECT DISTINCT status, COUNT(*) as count
+        FROM projects
+        WHERE archived_at IS NULL
+        GROUP BY status
+        ORDER BY count DESC
+    ");
+    echo "Status values in database:\n";
+    while ($row = $stmt->fetch()) {
+        $status = $row['status'] ?? 'NULL';
+        $count = $row['count'];
+        echo "  - '$status': $count projects\n";
+    }
 
     echo "\n===== MIGRATION COMPLETE =====\n";
 
