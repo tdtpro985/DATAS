@@ -77,7 +77,8 @@ const ProjectsPage = {
     async loadProjects() {
         try {
             // All roles see all projects — sales_rep is read-only
-            const apiUrl = `${BASE}/api/v1/projects?size=1000`;
+            // Use large size to get all projects for accurate statistics
+            const apiUrl = `${BASE}/api/v1/projects?size=10000`;
 
             const response = await fetch(apiUrl, {
                 credentials: 'include'
