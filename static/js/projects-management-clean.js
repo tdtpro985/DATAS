@@ -2890,7 +2890,12 @@ async function clearSalesTracking() {
     const projectId = parseInt(modal.dataset.projectId);
     if (!projectId) return;
 
-    if (!confirm('Clear all sales tracking data for this project? This cannot be undone.')) return;
+    const confirmed = await showConfirmationModal(
+        'Clear Sales Tracking',
+        'This will permanently delete all sales tracking data for this project. This action cannot be undone.',
+        'danger'
+    );
+    if (!confirmed) return;
 
     const btn = document.getElementById('clearTrackingBtn');
     const orig = btn.innerHTML;
