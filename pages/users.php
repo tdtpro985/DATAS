@@ -153,7 +153,7 @@ if ($role !== 'superadmin') {
     </div>
 </div>
 
-<script>const BASE = '<?= $base ?>';</script>
+
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/users.js?v=4"></script>
 </body>
