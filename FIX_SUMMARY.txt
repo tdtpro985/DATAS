@@ -3,6 +3,20 @@ STATISTICS DISCREPANCY FIX - FINAL
 
 ✅ GARANTISADONG MATCH NA ANG DASHBOARD REPORT AT PROJECT LEADS!
 
+ROOT CAUSE IDENTIFIED:
+======================
+Dashboard Report default filter = "Monthly" (current month only)
+Project Leads = No filter (All Time, All Regions)
+
+Kaya iba ang count:
+- Dashboard: 425 contractors (current month)
+- Project Leads: 448 contractors (all time)
+
+FINAL FIX:
+==========
+Changed Dashboard Report default to "Overall (All Time)"
+Now both show ALL TIME data by default!
+
 FILTERING RULES (IDENTICAL EVERYWHERE):
 =======================================
 ✓ EXCLUDE: archived_at IS NOT NULL
@@ -28,7 +42,7 @@ BOTH NOW USE SAME LOGIC:
 4. JavaScript excludes empty contractor names
 5. NO size limits
 
-FILES MODIFIED (14 total):
+FILES MODIFIED (15 total):
 ==========================
 API Endpoints (Server-side filtering):
 1. api/kpi.php ← Fixed contractor count logic
@@ -48,16 +62,19 @@ JavaScript (Client-side double-check):
 
 PHP Pages:
 13. pages/encoder-performance.php
+14. pages/reports.php ← Changed default to "Overall (All Time)"
 
 DEPLOYMENT:
 ===========
-1. Upload 14 files to production
+1. Upload 15 files to production (added pages/reports.php)
 2. Restart Apache: systemctl restart httpd
-3. Test both dashboards
+3. Refresh both dashboards in browser (Ctrl+F5)
+4. Verify counts match
 
 EXPECTED RESULT:
 ================
 ✅ Dashboard Report count = Project Leads count (EXACTLY)
+✅ Both show "All Time" data by default
 ✅ Both exclude archived projects
 ✅ Both exclude illegitimate projects (is_actual_project = 'no')
 ✅ Same contractor counting (TRIM + exclude empty)

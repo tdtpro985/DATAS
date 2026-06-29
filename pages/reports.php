@@ -62,8 +62,8 @@ if ($role === 'encoder') {
                     <div class="control-group">
                         <div class="control-label">Period</div>
                         <select class="control-select" id="period-select">
-                            <option value="overall">Overall (All Time)</option>
-                            <option value="monthly" selected>Monthly</option>
+                            <option value="overall" selected>Overall (All Time)</option>
+                            <option value="monthly">Monthly</option>
                             <option value="weekly">Weekly</option>
                             <option value="daily">Daily</option>
                         </select>
