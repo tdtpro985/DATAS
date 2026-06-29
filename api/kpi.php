@@ -56,17 +56,28 @@ try {
 
     $where = 'WHERE ' . implode(' AND ', $conditions);
 
-    // Totals
+    // Totals - count projects and unique contractors (trimmed, non-empty)
     $stmt = $db->prepare("
         SELECT
-            COUNT(*)                        AS projects_encoded,
-            COUNT(DISTINCT contractor_name) AS contractors_identified,
+            COUNT(*) AS projects_encoded,
             COALESCE(SUM(project_value), 0) AS total_pipeline_value
         FROM projects
         $where
     ");
     $stmt->execute($params);
     $totals = $stmt->fetch();
+    
+    // Count unique contractors separately (excluding empty/null after trim)
+    $stmt_contractors = $db->prepare("
+        SELECT COUNT(DISTINCT TRIM(contractor_name)) AS contractors_identified
+        FROM projects
+        $where
+        AND TRIM(COALESCE(contractor_name, '')) != ''
+    ");
+    $stmt_contractors->execute($params);
+    $contractorCount = $stmt_contractors->fetch();
+    
+    $totals['contractors_identified'] = $contractorCount['contractors_identified'];
 
     // Status breakdown
     $stmt2 = $db->prepare("
