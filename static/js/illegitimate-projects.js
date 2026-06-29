@@ -149,14 +149,14 @@ const IllegalitimateProjectsPage = {
 
             return `
                 <tr onclick="IllegalitimateProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
-                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(project.contractor_name)}">${this.escapeHtml(project.contractor_name || '—')}</td>
-                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${this.escapeHtml(project.project_name)}">${this.escapeHtml(project.project_name || '—')}</td>
-                    <td style="max-width: 150px;">${this.escapeHtml(project.region || '—')}</td>
-                    <td style="max-width: 100px;">${this.escapeHtml(project.source || '—')}</td>
-                    <td style="text-align: center; width: 80px;"><span class="status-circle ${statusClass}"></span></td>
-                    <td style="text-align: right; font-weight: 600; color: #34d399; min-width: 120px;">${value}</td>
-                    <td style="text-align: center; min-width: 120px;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
-                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem; min-width: 110px;">${dateStr}</td>
+                    <td style="width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.75rem;" title="${this.escapeHtml(project.contractor_name || 'NO CONTRACTOR')}">${this.escapeHtml(project.contractor_name || '—')}</td>
+                    <td style="width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.75rem;" title="${this.escapeHtml(project.project_name || 'NO PROJECT NAME')}">${this.escapeHtml(project.project_name || '—')}</td>
+                    <td style="width: 150px; padding: 0.75rem;">${this.escapeHtml(project.region || project.project_region || '—')}</td>
+                    <td style="width: 100px; padding: 0.75rem;">${this.escapeHtml(project.source || '—')}</td>
+                    <td style="text-align: center; width: 80px; padding: 0.75rem;"><span class="status-circle ${statusClass}"></span></td>
+                    <td style="text-align: right; font-weight: 600; color: #34d399; width: 120px; padding: 0.75rem;">${value}</td>
+                    <td style="text-align: center; width: 120px; padding: 0.75rem;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
+                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem; width: 110px; padding: 0.75rem;">${dateStr}</td>
                 </tr>
             `;
         }).join('');

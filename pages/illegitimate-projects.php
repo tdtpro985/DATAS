@@ -83,17 +83,17 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
                 <div class="legend-item"><span class="status-circle for-bidding"></span> For Bidding</div>
             </div>
             <div class="table-wrapper">
-                <table class="data-table">
+                <table class="data-table" style="table-layout: fixed; width: 100%;">
                     <thead>
                         <tr>
-                            <th style="max-width: 200px;">Contractor</th>
-                            <th style="max-width: 250px;">Project Name</th>
-                            <th style="max-width: 150px;">Region</th>
-                            <th style="max-width: 100px;">Source</th>
-                            <th style="text-align: center; width: 80px;">Status</th>
-                            <th style="text-align: right; min-width: 120px;">Project Value</th>
-                            <th style="text-align: center; min-width: 120px;">Sales Tracking</th>
-                            <th style="text-align: right; min-width: 110px;">Published Date</th>
+                            <th style="width: 200px; padding: 0.75rem;">Contractor</th>
+                            <th style="width: 250px; padding: 0.75rem;">Project Name</th>
+                            <th style="width: 150px; padding: 0.75rem;">Region</th>
+                            <th style="width: 100px; padding: 0.75rem;">Source</th>
+                            <th style="text-align: center; width: 80px; padding: 0.75rem;">Status</th>
+                            <th style="text-align: right; width: 120px; padding: 0.75rem;">Project Value</th>
+                            <th style="text-align: center; width: 120px; padding: 0.75rem;">Sales Tracking</th>
+                            <th style="text-align: right; width: 110px; padding: 0.75rem;">Published Date</th>
                         </tr>
                     </thead>
                     <tbody id="projects-tbody">
