@@ -1282,26 +1282,25 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             <!-- Content will be inserted here -->
         </div>
         <div class="modal-actions">
-            <button type="button" class="btn-secondary" onclick="closeDetailsModal()">Close</button>
-
-            <!-- Archive/Restore Button for Admins and Superadmins -->
-            <button type="button" class="btn-delete"
-                    id="archiveBtn"
-                    data-role-access="admin,superadmin"
-                    style="display: none;">
-                🗄️ Archive Project
-            </button>
-
-            <!-- Clear Sales Tracking for Admins and Superadmins -->
-            <button type="button" class="btn-delete"
+            <!-- Destructive actions pushed to the left -->
+            <button type="button" class="btn-action btn-delete"
                     id="clearTrackingBtn"
                     data-role-access="admin,superadmin"
                     onclick="clearSalesTracking()"
-                    style="display:none;background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.4);color:#f87171;">
+                    style="display:none;margin-right:auto;">
                 🗑️ Clear Sales Tracking
             </button>
 
-            <button type="button" class="btn-primary"
+            <button type="button" class="btn-action btn-secondary" onclick="closeDetailsModal()">Close</button>
+
+            <button type="button" class="btn-action btn-delete"
+                    id="archiveBtn"
+                    data-role-access="admin,superadmin"
+                    style="display:none;">
+                🗄️ Archive Project
+            </button>
+
+            <button type="button" class="btn-action btn-primary"
                     onclick="saveSalesTracking()"
                     id="saveTrackingBtn"
                     data-role-access="superadmin,admin,sales_rep">💾 Save Sales Tracking</button>
