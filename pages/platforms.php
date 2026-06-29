@@ -33,7 +33,7 @@ $fullName = $_SESSION['user']['full_name'] ?? $email;
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=2">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/roles.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">

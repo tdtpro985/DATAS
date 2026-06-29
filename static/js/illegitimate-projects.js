@@ -211,7 +211,7 @@ const IllegalitimateProjectsPage = {
             cellValue.style.padding = '0.75rem';
             cellValue.style.textAlign = 'right';
             cellValue.style.fontWeight = '600';
-            cellValue.style.color = '#34d399';
+            cellValue.style.color = '#059669';
             cellValue.textContent = value;
 
             const cellTracking = document.createElement('td');

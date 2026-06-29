@@ -80,8 +80,8 @@
 }
 
 .data-table thead th:hover {
-    color: var(--text-primary);
-    background: linear-gradient(135deg, rgba(26, 29, 37, 1) 0%, rgba(20, 23, 31, 1) 100%);
+    color: #FF7A00;
+    background: rgba(255, 122, 0, 0.06);
 }
 
 /* Sortable headers */

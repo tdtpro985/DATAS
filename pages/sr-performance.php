@@ -33,7 +33,7 @@ if (!in_array($role, ['superadmin', 'admin'], true)) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/header.css?v=6">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">

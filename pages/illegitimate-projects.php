@@ -36,7 +36,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/layout.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/header.css?v=6">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=3">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/tables.css?v=4">
     <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modals.css?v=5">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
@@ -45,7 +45,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-dropdowns.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-modal-fix.css?v=1">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-projects.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/illegitimate-projects.css?v=2">
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>" data-page="illegitimate-projects">
 <?php require __DIR__ . '/sidebar.php'; ?>
@@ -118,7 +118,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
 <script src="<?= $base ?>/static/js/modal-system.js?v=1"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
-<script src="<?= $base ?>/static/js/illegitimate-projects.js?v=2"></script><script>
+<script src="<?= $base ?>/static/js/illegitimate-projects.js?v=3"></script><script>
 const BASE = '<?= $base ?>';
 </script>
 </body>
