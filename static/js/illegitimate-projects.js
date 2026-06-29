@@ -113,21 +113,28 @@ const IllegalitimateProjectsPage = {
         const end = start + this.pageSize;
         const pageProjects = this.filteredProjects.slice(start, end);
 
+        // Clear tbody first
+        tbody.innerHTML = '';
+
         if (this.filteredProjects.length === 0) {
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="8" class="empty-state">
-                        <div class="empty-state-icon">📭</div>
-                        <h3>No Illegitimate Projects Found</h3>
-                        <p>Try adjusting your search or filters</p>
-                    </td>
-                </tr>
+            const emptyRow = document.createElement('tr');
+            const emptyCell = document.createElement('td');
+            emptyCell.colSpan = 8;
+            emptyCell.className = 'empty-state';
+            emptyCell.innerHTML = `
+                <div class="empty-state-icon">📭</div>
+                <h3>No Illegitimate Projects Found</h3>
+                <p>Try adjusting your search or filters</p>
             `;
+            emptyRow.appendChild(emptyCell);
+            tbody.appendChild(emptyRow);
             this.updatePagination();
             return;
         }
 
-        tbody.innerHTML = pageProjects.map(project => {
+        // Build each row
+        pageProjects.forEach(project => {
+            // Format date
             let dateStr = '—';
             if (project.publication_date) {
                 const dt = new Date(project.publication_date);
@@ -138,28 +145,105 @@ const IllegalitimateProjectsPage = {
                 });
             }
             
+            // Format value
             const value = project.project_value !== null && project.project_value !== undefined
                 ? '₱' + parseFloat(project.project_value).toLocaleString('en-PH', { minimumFractionDigits: 2 })
                 : '—';
+            
+            // Get status
             const status = project.status || '—';
             const statusClass = this.getStatusClass(status);
             
+            // Get tracking status
             const trackingStatus = project.tracking_status || 'Not Started';
             const trackingStatusClass = trackingStatus.toLowerCase().replace(/\s+/g, '-');
 
-            return `
-                <tr onclick="IllegalitimateProjectsPage.viewProject(${project.id})" style="cursor: pointer;">
-                    <td style="width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.75rem;" title="${this.escapeHtml(project.contractor_name || 'NO CONTRACTOR')}">${this.escapeHtml(project.contractor_name || '—')}</td>
-                    <td style="width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; padding: 0.75rem;" title="${this.escapeHtml(project.project_name || 'NO PROJECT NAME')}">${this.escapeHtml(project.project_name || '—')}</td>
-                    <td style="width: 150px; padding: 0.75rem;">${this.escapeHtml(project.region || project.project_region || '—')}</td>
-                    <td style="width: 100px; padding: 0.75rem;">${this.escapeHtml(project.source || '—')}</td>
-                    <td style="text-align: center; width: 80px; padding: 0.75rem;"><span class="status-circle ${statusClass}"></span></td>
-                    <td style="text-align: right; font-weight: 600; color: #34d399; width: 120px; padding: 0.75rem;">${value}</td>
-                    <td style="text-align: center; width: 120px; padding: 0.75rem;"><span class="tracking-badge tracking-${trackingStatusClass}">${trackingStatus}</span></td>
-                    <td style="text-align: right; color: var(--text-secondary); font-size: 0.85rem; width: 110px; padding: 0.75rem;">${dateStr}</td>
-                </tr>
-            `;
-        }).join('');
+            // Get field values with fallbacks
+            const contractorName = project.contractor_name || '—';
+            const projectName = project.project_name || '—';
+            const region = project.region || project.project_region || '—';
+            const source = project.source || '—';
+
+            // Create row
+            const row = document.createElement('tr');
+            row.style.cursor = 'pointer';
+            row.onclick = () => this.viewProject(project.id);
+
+            // Create cells
+            const cellContractor = document.createElement('td');
+            cellContractor.style.width = '200px';
+            cellContractor.style.padding = '0.75rem';
+            cellContractor.style.overflow = 'hidden';
+            cellContractor.style.textOverflow = 'ellipsis';
+            cellContractor.style.whiteSpace = 'nowrap';
+            cellContractor.title = contractorName;
+            cellContractor.textContent = contractorName;
+
+            const cellProjectName = document.createElement('td');
+            cellProjectName.style.width = '250px';
+            cellProjectName.style.padding = '0.75rem';
+            cellProjectName.style.overflow = 'hidden';
+            cellProjectName.style.textOverflow = 'ellipsis';
+            cellProjectName.style.whiteSpace = 'nowrap';
+            cellProjectName.title = projectName;
+            cellProjectName.textContent = projectName;
+
+            const cellRegion = document.createElement('td');
+            cellRegion.style.width = '150px';
+            cellRegion.style.padding = '0.75rem';
+            cellRegion.textContent = region;
+
+            const cellSource = document.createElement('td');
+            cellSource.style.width = '100px';
+            cellSource.style.padding = '0.75rem';
+            cellSource.textContent = source;
+
+            const cellStatus = document.createElement('td');
+            cellStatus.style.width = '80px';
+            cellStatus.style.padding = '0.75rem';
+            cellStatus.style.textAlign = 'center';
+            const statusSpan = document.createElement('span');
+            statusSpan.className = 'status-circle ' + statusClass;
+            cellStatus.appendChild(statusSpan);
+
+            const cellValue = document.createElement('td');
+            cellValue.style.width = '120px';
+            cellValue.style.padding = '0.75rem';
+            cellValue.style.textAlign = 'right';
+            cellValue.style.fontWeight = '600';
+            cellValue.style.color = '#34d399';
+            cellValue.textContent = value;
+
+            const cellTracking = document.createElement('td');
+            cellTracking.style.width = '120px';
+            cellTracking.style.padding = '0.75rem';
+            cellTracking.style.textAlign = 'center';
+            const trackingSpan = document.createElement('span');
+            trackingSpan.className = 'tracking-badge tracking-' + trackingStatusClass;
+            trackingSpan.textContent = trackingStatus;
+            cellTracking.appendChild(trackingSpan);
+
+            const cellDate = document.createElement('td');
+            cellDate.style.width = '110px';
+            cellDate.style.padding = '0.75rem';
+            cellDate.style.textAlign = 'right';
+            cellDate.style.color = 'var(--text-secondary)';
+            cellDate.style.fontSize = '0.85rem';
+            cellDate.textContent = dateStr;
+
+            // Append cells to row
+            row.appendChild(cellContractor);
+            row.appendChild(cellProjectName);
+            row.appendChild(cellRegion);
+            row.appendChild(cellSource);
+            row.appendChild(cellStatus);
+            row.appendChild(cellValue);
+            row.appendChild(cellTracking);
+            row.appendChild(cellDate);
+
+            // Append row to tbody
+            tbody.appendChild(row);
+        });
 
         this.updatePagination();
     },
