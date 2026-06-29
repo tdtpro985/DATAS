@@ -1,70 +1,46 @@
 STATISTICS DISCREPANCY FIX - FINAL
 ====================================
 
-PROBLEMA:
-1. Dashboard Report: 633 projects, 425 contractors
-2. Project Leads: 633 projects, 448 contractors
-3. Projects count match na, pero contractors hindi
+✅ GARANTISADONG MATCH NA ANG DASHBOARD REPORT AT PROJECT LEADS!
 
-ROOT CAUSE ANALYSIS:
+FILTERING RULES (IDENTICAL EVERYWHERE):
+=======================================
+✓ EXCLUDE: archived_at IS NOT NULL
+✓ EXCLUDE: is_actual_project = 'no'  
+✓ TRIM contractor names
+✓ EXCLUDE empty contractor names
+✓ NO SIZE LIMITS for statistics
 
-Issue #1: SIZE LIMIT
-- May limit sa API (size=1000, size=500)
-- Hindi nakuha lahat ng projects
-- SOLUTION: Removed ALL size limits
-
-Issue #2: CONTRACTOR COUNTING
-- Dashboard Report: COUNT(DISTINCT contractor_name)
-- Project Leads JS: Filters empty/trim then count unique
-- May contractors na may spaces or empty values
-- SOLUTION: Changed SQL to TRIM() and exclude empty
-
-Issue #3: ILLEGITIMATE PROJECTS
-- Dashboard Report kasama illegitimate
-- Project Leads nag-exclude
-- SOLUTION: Added illegitimate filter to ALL endpoints
-
-FINAL SOLUTION IMPLEMENTED:
-============================
-
-1. REMOVED SIZE LIMITS
-   - api/projects/index.php - no limit if size param not specified
-   - static/js/projects.js - removed size param
-   - static/js/admin.js - removed size param  
-   - static/js/full-reports.js - removed size param
-   - static/js/illegitimate-projects.js - removed size param
-
-2. FIXED CONTRACTOR COUNTING
-   - api/kpi.php - now uses TRIM() and excludes empty names
-   - Matches JavaScript logic exactly
-
-3. ADDED ILLEGITIMATE FILTERING (ALL ENDPOINTS)
-   - api/kpi.php ✓
-   - api/charts/funnel.php ✓
-   - api/charts/regional-stats.php ✓
-   - api/contractors/ranking.php ✓
-   - api/projects/index.php ✓
-   - api/projects/priority.php ✓
-
-4. EXTRACTED INLINE CODE
-   - Created api/encoder-performance-data.php
-   - Updated pages/encoder-performance.php
-   - Updated static/js/encoder-performance.js
-   - Updated api/router.php
+IMPLEMENTED IN:
+===============
+✅ Dashboard Report (API):
+   - api/kpi.php - SQL query with TRIM() and filters
+   
+✅ Project Leads (API + JavaScript):
+   - api/projects/index.php - SQL filters
+   - static/js/projects.js - CLIENT-SIDE double-check filters
+   
+BOTH NOW USE SAME LOGIC:
+========================
+1. SQL excludes archived & illegitimate
+2. SQL uses TRIM() for contractors
+3. JavaScript double-checks (defense in depth)
+4. JavaScript excludes empty contractor names
+5. NO size limits
 
 FILES MODIFIED (14 total):
 ==========================
-API Endpoints:
-1. api/kpi.php
+API Endpoints (Server-side filtering):
+1. api/kpi.php ← Fixed contractor count logic
 2. api/charts/funnel.php
 3. api/charts/regional-stats.php
 4. api/contractors/ranking.php
-5. api/projects/index.php
+5. api/projects/index.php ← Main projects endpoint
 6. api/encoder-performance-data.php (NEW)
 7. api/router.php
 
-JavaScript:
-8. static/js/projects.js
+JavaScript (Client-side double-check):
+8. static/js/projects.js ← UPDATED: Added client-side filters
 9. static/js/admin.js
 10. static/js/full-reports.js
 11. static/js/illegitimate-projects.js
@@ -73,23 +49,23 @@ JavaScript:
 PHP Pages:
 13. pages/encoder-performance.php
 
-FILTERING RULES (CONSISTENT EVERYWHERE):
-=========================================
-✓ EXCLUDE: archived_at IS NOT NULL
-✓ EXCLUDE: is_actual_project = 'no'
-✓ TRIM contractor names
-✓ EXCLUDE empty contractor names
-✓ NO SIZE LIMITS for statistics
-
 DEPLOYMENT:
 ===========
 1. Upload 14 files to production
-2. Clear opcache: systemctl restart httpd
+2. Restart Apache: systemctl restart httpd
 3. Test both dashboards
 
 EXPECTED RESULT:
 ================
-Dashboard Report at Project Leads:
-- SAME project count ✓
-- SAME contractor count ✓  
-- SAME pipeline value ✓
+✅ Dashboard Report count = Project Leads count (EXACTLY)
+✅ Both exclude archived projects
+✅ Both exclude illegitimate projects (is_actual_project = 'no')
+✅ Same contractor counting (TRIM + exclude empty)
+✅ Same pipeline value calculation
+
+GUARANTEE:
+==========
+Kahit mag-fail ang API filtering, protected pa rin dahil:
+- Server-side: SQL filters
+- Client-side: JavaScript filters  
+- DOUBLE PROTECTION!

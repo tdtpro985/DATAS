@@ -86,7 +86,19 @@ const ProjectsPage = {
             if (!response.ok) throw new Error('Failed to load projects');
 
             const data = await response.json();
-            this.allProjects = data.projects || [];
+            
+            // IMPORTANT: Filter out archived and illegitimate projects
+            // API should already exclude these, but double-check client-side
+            this.allProjects = (data.projects || []).filter(p => {
+                // Exclude archived projects
+                if (p.archived_at) return false;
+                
+                // Exclude illegitimate projects (is_actual_project = 'no')
+                if (p.is_actual_project === 'no') return false;
+                
+                return true;
+            });
+            
             this.totalProjects = this.allProjects.length;
 
             // Filter by type (priority / non-priority)
@@ -124,8 +136,8 @@ const ProjectsPage = {
         const isSalesRep = userRole === 'sales_rep';
         
         if (isSalesRep) {
-            // Cards show stats for all visible (non-archived) projects
-            const activeProjects = this.allProjects.filter(p => !p.archived_at);
+            // Cards show stats for all visible projects (already filtered - no archived, no illegitimate)
+            const activeProjects = this.allProjects;
 
             const uniqueContractors = new Set(
                 activeProjects
@@ -148,13 +160,13 @@ const ProjectsPage = {
             document.getElementById('myNonPriorityProjects').textContent = nonPriorityCount.toLocaleString();
             document.getElementById('myPriorityProjects').textContent = priorityCount.toLocaleString();
         } else {
-            // Admin/Other roles - show all non-archived projects
-            const activeProjects = this.allProjects.filter(p => !p.archived_at);
+            // Admin/Other roles - allProjects is already filtered (no archived, no illegitimate)
+            const activeProjects = this.allProjects;
             
             // Total Projects
             document.getElementById('totalProjects').textContent = activeProjects.length.toLocaleString();
 
-            // Total Unique Contractors
+            // Total Unique Contractors (trimmed, non-empty only - matches SQL logic)
             const uniqueContractors = new Set(
                 activeProjects
                     .map(p => (p.contractor_name || '').trim())
