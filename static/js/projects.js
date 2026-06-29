@@ -90,6 +90,9 @@ const ProjectsPage = {
                 apiUrl += `?type=${encodeURIComponent(this.type)}`;
             }
 
+            console.log('[PROJECTS] Fetching from API:', apiUrl);
+            console.log('[PROJECTS] Type filter:', this.type);
+
             const response = await fetch(apiUrl, {
                 credentials: 'include'
             });
@@ -97,6 +100,9 @@ const ProjectsPage = {
             if (!response.ok) throw new Error('Failed to load projects');
 
             const data = await response.json();
+            
+            console.log('[PROJECTS] API returned:', data.total, 'projects');
+            console.log('[PROJECTS] Sample project (if any):', data.projects[0]);
             
             // IMPORTANT: Filter out archived and illegitimate projects
             // API should already exclude these, but double-check client-side
@@ -111,6 +117,8 @@ const ProjectsPage = {
             });
             
             this.totalProjects = this.allProjects.length;
+            
+            console.log('[PROJECTS] After client-side filtering:', this.totalProjects, 'projects');
 
             // NOTE: Filtering by type is now done server-side via API
             // No need for additional client-side filtering by type
