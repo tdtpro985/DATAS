@@ -42,7 +42,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/projects.css?v=5">
@@ -136,7 +136,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
 </div> <!-- /.ap-shell -->
 <!-- ── Modals ── -->
 <div class="modal-overlay" id="detailsModal" style="z-index:100000;">
-    <div class="modal-content">
+    <div class="modal-content modal-full">
         <div class="modal-header"><h2>📋 Project Details</h2><button class="modal-close" onclick="closeDetailsModal()">×</button></div>
         <div class="modal-body" id="detailsModalBody"></div>
         <div class="modal-actions">
