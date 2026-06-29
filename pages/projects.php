@@ -225,17 +225,15 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         <div class="modal-actions"><button type="button" class="btn-secondary" onclick="closeTrackingModal()">Cancel</button><button type="button" class="btn-primary" onclick="saveTracking()">Save Tracking</button></div>
     </div>
 </div>
+<script>
+const BASE = '<?= $base ?>';
+window.PROJECT_TYPE = '<?= $type ?>';
+</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
 <script src="<?= $base ?>/static/js/projects.js?v=19"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=3"></script>
-<script>
-const BASE = '<?= $base ?>';
-</script>
-<script>
-window.PROJECT_TYPE = '<?= $type ?>';
-</script>
 </body>
 </html>
