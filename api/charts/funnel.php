@@ -92,7 +92,7 @@ try {
         ['name' => 'Win',                   'color' => '#F97316', 'count' => (int) $td['win'],           'description' => 'Naka yes ang Win at may W/A Amount na'],
     ];
 
-    $prevCount = null;
+    $prevCount = $totalProjects > 0 ? $totalProjects : null;
     foreach ($stages as &$stage) {
         $stage['conversion'] = ($prevCount !== null && $prevCount > 0)
             ? round(($stage['count'] / $prevCount) * 100, 1)
