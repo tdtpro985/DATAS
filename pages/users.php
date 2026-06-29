@@ -32,7 +32,7 @@ if ($role !== 'superadmin') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Core Styles -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">

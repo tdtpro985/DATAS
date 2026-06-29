@@ -1113,3 +1113,35 @@
     0% { background-position: 200% 0; }
     100% { background-position: -200% 0; }
 }
+
+/* ── Extracted from projects.php ── */
+/* ── Role-based Visibility ── */
+        [data-role-access]:not([data-role-access*="superadmin"]):not([data-role-access*="admin"]):not([data-role-access*="sales_rep"]) {
+            display: none !important;
+        }
+        body[data-role="encoder"] [data-role-access]:not([data-role-access*="encoder"]) {
+            display: none !important;
+        }
+        body[data-role="sales_rep"] [data-role-access]:not([data-role-access*="sales_rep"]) {
+            display: none !important;
+        }
+        /* ── Edit Options Modal ── */
+        .edit-options-grid { display: grid; gap: 0.75rem; }
+        .edit-option-card {
+            display: flex; align-items: center; gap: 1rem; width: 100%;
+            padding: 1rem 1.25rem; background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 0.875rem;
+            color: var(--text-primary); cursor: pointer; text-align: left;
+            transition: background 0.2s, border-color 0.2s, transform 0.15s;
+        }
+        .edit-option-card:hover {
+            background: rgba(255, 140, 0, 0.1);
+            border-color: rgba(255, 140, 0, 0.35);
+            transform: translateY(-1px);
+        }
+        .edit-option-icon { font-size: 1.6rem; width: 2.5rem; text-align: center; flex-shrink: 0; }
+        .edit-option-content { flex: 1; }
+        .edit-option-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem; }
+        .edit-option-desc { font-size: 0.8rem; color: var(--text-secondary); }
+        .edit-option-arrow { font-size: 1.1rem; color: var(--text-secondary); flex-shrink: 0; transition: transform 0.2s, color 0.2s; }
+        .edit-option-card:hover .edit-option-arrow { transform: translateX(4px); color: var(--orange-500); }

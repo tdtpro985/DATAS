@@ -15,12 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 $fallback = [
     'stages' => [
-        ['name' => 'Prospects',                  'color' => '#64748B', 'count' => 0, 'description' => 'Raw projects',             'conversion' => null],
-        ['name' => 'Contacted',                  'color' => '#3B82F6', 'count' => 0, 'description' => 'Contacted',                'conversion' => null],
-        ['name' => 'Sales Qualified Leads',      'color' => '#10B981', 'count' => 0, 'description' => 'SQL Yes',                  'conversion' => null],
-        ['name' => 'Not Sales Qualified Leads',  'color' => '#EF4444', 'count' => 0, 'description' => 'SQL No',                   'conversion' => null],
-        ['name' => 'Quoted',                     'color' => '#F59E0B', 'count' => 0, 'description' => 'Quoted Yes',               'conversion' => null],
-        ['name' => 'Win',                        'color' => '#8B5CF6', 'count' => 0, 'description' => 'Win',                      'conversion' => null],
+        ['name' => 'Assigned',              'color' => '#3B82F6', 'count' => 0, 'description' => 'Projects assigned to an SR',    'conversion' => null],
+        ['name' => 'Contacted',             'color' => '#8B5CF6', 'count' => 0, 'description' => 'Contacted',                     'conversion' => null],
+        ['name' => 'Sales Qualified Leads', 'color' => '#10B981', 'count' => 0, 'description' => 'SQL Yes',                       'conversion' => null],
+        ['name' => 'Quoted',                'color' => '#F59E0B', 'count' => 0, 'description' => 'Quoted Yes',                    'conversion' => null],
+        ['name' => 'Win',                   'color' => '#F97316', 'count' => 0, 'description' => 'Win',                           'conversion' => null],
     ],
 ];
 
@@ -70,13 +69,13 @@ try {
     $stmt->execute($params);
     $td = $stmt->fetch();
 
+    // Flow: Assigned → Contacted → Sales Qualified Leads → Quoted → Win
     $stages = [
-        ['name' => 'Prospects',                 'color' => '#64748B', 'count' => $totalProjects,          'description' => 'Raw projects (di pa nagagalaw)'],
-        ['name' => 'Contacted',                 'color' => '#3B82F6', 'count' => (int) $td['contacted'],  'description' => 'Projects na naka Yes ung contacted'],
-        ['name' => 'Sales Qualified Leads',     'color' => '#10B981', 'count' => (int) $td['sql_yes'],    'description' => 'Naka yes na ung Sales Qualified Leads'],
-        ['name' => 'Not Sales Qualified Leads', 'color' => '#EF4444', 'count' => (int) $td['sql_no'],     'description' => 'Naka No sa Sales Qualified Leads'],
-        ['name' => 'Quoted',                    'color' => '#F59E0B', 'count' => (int) $td['quoted'],     'description' => 'Mga naka Yes na Quoted'],
-        ['name' => 'Win',                       'color' => '#8B5CF6', 'count' => (int) $td['win'],        'description' => 'Naka yes na yung Win at may W/L Amount na'],
+        ['name' => 'Assigned',              'color' => '#3B82F6', 'count' => (int) $td['total_tracked'], 'description' => 'Projects na naka-assign sa SR'],
+        ['name' => 'Contacted',             'color' => '#8B5CF6', 'count' => (int) $td['contacted'],     'description' => 'Projects na naka Yes ang contacted'],
+        ['name' => 'Sales Qualified Leads', 'color' => '#10B981', 'count' => (int) $td['sql_yes'],       'description' => 'Naka yes ang Sales Qualified Leads'],
+        ['name' => 'Quoted',                'color' => '#F59E0B', 'count' => (int) $td['quoted'],        'description' => 'Mga naka Yes ang Quoted'],
+        ['name' => 'Win',                   'color' => '#F97316', 'count' => (int) $td['win'],           'description' => 'Naka yes ang Win at may W/A Amount na'],
     ];
 
     $prevCount = null;
@@ -84,7 +83,7 @@ try {
         $stage['conversion'] = ($prevCount !== null && $prevCount > 0)
             ? round(($stage['count'] / $prevCount) * 100, 1)
             : null;
-        if ($stage['name'] !== 'Not Sales Qualified Leads' && $stage['count'] > 0) {
+        if ($stage['count'] > 0) {
             $prevCount = $stage['count'];
         }
     }

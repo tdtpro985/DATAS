@@ -39,44 +39,12 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Core Styles -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=24">
     <link rel="stylesheet" href="<?= $base ?>/static/css/credits-modal.css?v=3">
-    <style>
-        /* ── Role-based Visibility ── */
-        [data-role-access]:not([data-role-access*="superadmin"]):not([data-role-access*="admin"]):not([data-role-access*="sales_rep"]) {
-            display: none !important;
-        }
-        body[data-role="encoder"] [data-role-access]:not([data-role-access*="encoder"]) {
-            display: none !important;
-        }
-        body[data-role="sales_rep"] [data-role-access]:not([data-role-access*="sales_rep"]) {
-            display: none !important;
-        }
-        /* ── Edit Options Modal ── */
-        .edit-options-grid { display: grid; gap: 0.75rem; }
-        .edit-option-card {
-            display: flex; align-items: center; gap: 1rem; width: 100%;
-            padding: 1rem 1.25rem; background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 0.875rem;
-            color: var(--text-primary); cursor: pointer; text-align: left;
-            transition: background 0.2s, border-color 0.2s, transform 0.15s;
-        }
-        .edit-option-card:hover {
-            background: rgba(255, 140, 0, 0.1);
-            border-color: rgba(255, 140, 0, 0.35);
-            transform: translateY(-1px);
-        }
-        .edit-option-icon { font-size: 1.6rem; width: 2.5rem; text-align: center; flex-shrink: 0; }
-        .edit-option-content { flex: 1; }
-        .edit-option-title { font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.2rem; }
-        .edit-option-desc { font-size: 0.8rem; color: var(--text-secondary); }
-        .edit-option-arrow { font-size: 1.1rem; color: var(--text-secondary); flex-shrink: 0; transition: transform 0.2s, color 0.2s; }
-        .edit-option-card:hover .edit-option-arrow { transform: translateX(4px); color: var(--orange-500); }
-    </style>
     <link rel="stylesheet" href="<?= $base ?>/static/css/projects.css?v=5">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-select-v2.css">
 </head>
@@ -257,21 +225,17 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
         <div class="modal-actions"><button type="button" class="btn-secondary" onclick="closeTrackingModal()">Cancel</button><button type="button" class="btn-primary" onclick="saveTracking()">Save Tracking</button></div>
     </div>
 </div>
-<script>const BASE = '<?= $base ?>';</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    ['detailsModal','editOptionsModal','editSectionModal','assignModal','trackingModal'].forEach(function(id) {
-        var el = document.getElementById(id);
-        if (el && el.parentNode !== document.body) document.body.appendChild(el);
-    });
-});
-</script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
 <script src="<?= $base ?>/static/js/utils.js?v=2"></script>
 <script src="<?= $base ?>/static/js/toast.js?v=1"></script>
 <script src="<?= $base ?>/static/js/roles.js?v=2"></script>
-<script>window.PROJECT_TYPE = '<?= $type ?>';</script>
 <script src="<?= $base ?>/static/js/projects.js?v=18"></script>
 <script src="<?= $base ?>/static/js/projects-sales-tracking.js?v=6"></script>
+<script>
+const BASE = '<?= $base ?>';
+</script>
+<script>
+window.PROJECT_TYPE = '<?= $type ?>';
+</script>
 </body>
 </html>

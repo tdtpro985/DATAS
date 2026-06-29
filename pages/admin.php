@@ -41,7 +41,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
