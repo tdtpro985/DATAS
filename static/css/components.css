@@ -65,7 +65,7 @@
 .modal-header h2 {
     font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     display: flex;
     align-items: center;
     gap: 0.5rem;
@@ -83,12 +83,12 @@
     cursor: pointer;
     transition: all 0.2s;
     font-size: 1.25rem;
-    color: var(--text-secondary, #6B7280);
+    color: var(--text-secondary, #374151);
 }
 
 .modal-close:hover {
     background: rgba(0, 0, 0, 0.07);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
 }
 
 .modal-body {
@@ -187,7 +187,7 @@
 .modern-modal-title {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     margin: 0;
 }
 
@@ -198,7 +198,7 @@
 
 .modern-modal-body p {
     font-size: 1rem;
-    color: var(--text-secondary, #6B7280);
+    color: var(--text-secondary, #374151);
     margin: 0;
     line-height: 1.6;
 }
@@ -265,7 +265,7 @@
 .btn-secondary {
     background: rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.14);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
 }
 
 .btn-secondary:hover {
@@ -337,7 +337,7 @@
     cursor: pointer;
     transition: all 0.2s;
     background: rgba(0, 0, 0, 0.04);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -375,7 +375,7 @@
 
 .modern-btn-secondary {
     background: rgba(0, 0, 0, 0.05);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     border: 1px solid rgba(0, 0, 0, 0.12);
 }
 
@@ -470,7 +470,7 @@
 .tracking-badge.not-started,
 .tracking-not-started {
     background: rgba(100, 116, 139, 0.1);
-    color: #374151;
+    color: #111827;
     border: 1px solid rgba(107, 114, 128, 0.3);
 }
 
@@ -631,7 +631,7 @@
 .notification-message,
 .modern-notification-message {
     flex: 1;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     font-size: 0.9rem;
     font-weight: 500;
     line-height: 1.5;
@@ -657,7 +657,7 @@
 .notification-close:hover,
 .modern-notification-close:hover {
     background: rgba(0, 0, 0, 0.07);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -775,7 +775,7 @@
 .data-table td {
     padding: 0.875rem 1rem;
     font-size: 0.875rem;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     border-right: 1px solid rgba(0, 0, 0, 0.05);
     vertical-align: middle;
     line-height: 1.5;
@@ -980,7 +980,7 @@
     background: var(--bg-input, #F4F5FA);
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0.5rem;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     font-size: 0.9rem;
     font-family: var(--font, 'Inter', sans-serif);
     outline: none;
@@ -1043,7 +1043,7 @@ textarea.form-control {
     background: rgba(0, 0, 0, 0.04);
     border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 0.5rem;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
@@ -1181,7 +1181,7 @@ textarea.form-control {
 .detail-value {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     word-break: break-word;
 }
 
@@ -1278,7 +1278,7 @@ textarea.form-control {
 
 .tab-btn:hover {
     background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
 }
 
 .tab-btn.active {
@@ -1399,7 +1399,7 @@ textarea.form-control {
 .summary-card-value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     line-height: 1;
 }
 
@@ -1436,7 +1436,7 @@ textarea.form-control {
     background: var(--bg-input, #F4F5FA);
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0.75rem;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     font-size: 0.9rem;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -1461,7 +1461,7 @@ textarea.form-control {
     background: var(--bg-input, #F4F5FA);
     border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0.75rem;
-    color: var(--text-primary, #374151);
+    color: var(--text-primary, #111827);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;

@@ -570,9 +570,9 @@ const FullReports = {
             <div style="display:flex;justify-content:space-between;align-items:center;padding:1rem;background:var(--bg-card);border-top:1px solid var(--border-color);">
                 <div style="color:var(--text-secondary);font-size:0.85rem;">${contractors.length > 0 ? 'Showing '+(startIdx+1)+'-'+Math.min(startIdx+this.contractorPagination.pageSize,contractors.length)+' of '+contractors.length : 'No results'}</div>
                 <div style="display:flex;gap:0.5rem;">
-                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage-1})" ${this.contractorPagination.currentPage===1?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color: #374151;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage===1?'opacity:0.5;cursor:not-allowed;':''}">Previous</button>
+                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage-1})" ${this.contractorPagination.currentPage===1?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color: #111827;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage===1?'opacity:0.5;cursor:not-allowed;':''}">Previous</button>
                     <span style="display:flex;align-items:center;padding:0 1rem;color:var(--text-primary);font-weight:600;font-size:0.85rem;">Page ${this.contractorPagination.currentPage} of ${Math.max(1, totalPages)}</span>
-                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage+1})" ${this.contractorPagination.currentPage>=totalPages?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color: #374151;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage>=totalPages?'opacity:0.5;cursor:not-allowed;':''}">Next</button>
+                    <button onclick="FullReports.changeContractorPage(${this.contractorPagination.currentPage+1})" ${this.contractorPagination.currentPage>=totalPages?'disabled':''} style="padding:0.4rem 0.8rem;background:var(--primary);color: #111827;border:none;border-radius:4px;cursor:pointer;font-size:0.85rem;${this.contractorPagination.currentPage>=totalPages?'opacity:0.5;cursor:not-allowed;':''}">Next</button>
                 </div>
             </div></div>`;
     },
@@ -1005,7 +1005,7 @@ const FullReports = {
         const sorted = Object.entries(byRegion).sort((a,b)=>b[1].count-a[1].count).slice(0,10);
         this.charts.projectsByRegion = new Chart(ctx, {
             type:'bar', data:{ labels: sorted.map(([r])=>r), datasets:[{ label:'Project Count', data: sorted.map(([,d])=>d.count), backgroundColor:'rgba(249,115,22,0.7)', borderColor:'rgba(249,115,22,1)', borderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2, plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#6B7280'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#6B7280',maxRotation:45}, grid:{display:false} } } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2, plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#374151'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#374151',maxRotation:45}, grid:{display:false} } } }
         });
     },
 
@@ -1016,7 +1016,7 @@ const FullReports = {
         const colors = ['rgba(239,68,68,0.8)','rgba(249,115,22,0.8)','rgba(34,197,94,0.8)','rgba(59,130,246,0.8)','rgba(168,85,247,0.8)','rgba(236,72,153,0.8)'];
         this.charts.projectsByStatus = new Chart(ctx, {
             type:'doughnut', data:{ labels:Object.keys(byStatus), datasets:[{ data:Object.values(byStatus), backgroundColor:colors, borderColor: '#FFFFFF', borderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:1.5, plugins:{ legend:{position:'right',labels:{color:'#6B7280',font:{size:11}}}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:1.5, plugins:{ legend:{position:'right',labels:{color:'#374151',font:{size:11}}}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} } }
         });
     },
 
@@ -1027,7 +1027,7 @@ const FullReports = {
         const sorted = Object.entries(bySource).sort((a,b)=>b[1]-a[1]).slice(0,8);
         this.charts.projectsBySource = new Chart(ctx, {
             type:'bar', data:{ labels:sorted.map(([s])=>s), datasets:[{ label:'Project Count', data:sorted.map(([,c])=>c), backgroundColor:'rgba(59,130,246,0.7)', borderColor:'rgba(59,130,246,1)', borderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:1.5, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} }, scales:{ x:{ beginAtZero:true, ticks:{color:'#6B7280'}, grid:{color:'rgba(0,0,0,0.04)'} }, y:{ ticks:{color:'#6B7280'}, grid:{display:false} } } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:1.5, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} }, scales:{ x:{ beginAtZero:true, ticks:{color:'#374151'}, grid:{color:'rgba(0,0,0,0.04)'} }, y:{ ticks:{color:'#374151'}, grid:{display:false} } } }
         });
     },
 
@@ -1037,7 +1037,7 @@ const FullReports = {
         if (this.charts.salesFunnel) this.charts.salesFunnel.destroy();
         this.charts.salesFunnel = new Chart(ctx, {
             type:'bar', data:{ labels:Object.keys(trackingCounts), datasets:[{ label:'Project Count', data:Object.values(trackingCounts), backgroundColor:['rgba(239,68,68,0.7)','rgba(249,115,22,0.7)','rgba(34,197,94,0.7)'], borderColor:['rgba(239,68,68,1)','rgba(249,115,22,1)','rgba(34,197,94,1)'], borderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2.5, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} }, scales:{ x:{ beginAtZero:true, ticks:{color:'#6B7280'}, grid:{color:'rgba(0,0,0,0.04)'} }, y:{ ticks:{color:'#6B7280',font:{size:13}}, grid:{display:false} } } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2.5, indexAxis:'y', plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} }, scales:{ x:{ beginAtZero:true, ticks:{color:'#374151'}, grid:{color:'rgba(0,0,0,0.04)'} }, y:{ ticks:{color:'#374151',font:{size:13}}, grid:{display:false} } } }
         });
     },
 
@@ -1047,7 +1047,7 @@ const FullReports = {
         if (this.charts.materialBreakdown) this.charts.materialBreakdown.destroy();
         this.charts.materialBreakdown = new Chart(ctx, {
             type:'bar', data:{ labels:Object.keys(materialData), datasets:[{ label:'Total Amount', data:Object.values(materialData), backgroundColor:'rgba(168,85,247,0.7)', borderColor:'rgba(168,85,247,1)', borderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2, plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#6B7280'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#6B7280'}, grid:{display:false} } } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2, plugins:{ legend:{display:false}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#374151'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#374151'}, grid:{display:false} } } }
         });
     },
 
@@ -1058,7 +1058,7 @@ const FullReports = {
         const sorted = Object.keys(byMonth).sort();
         this.charts.monthlyTrends = new Chart(ctx, {
             type:'line', data:{ labels:sorted, datasets:[{ label:'Projects Published', data:sorted.map(m=>byMonth[m]), backgroundColor:'rgba(249,115,22,0.1)', borderColor:'rgba(249,115,22,1)', borderWidth:3, fill:true, tension:0.4, pointRadius:5, pointBackgroundColor:'rgba(249,115,22,1)', pointBorderColor:'#fff', pointBorderWidth:2 }] },
-            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2.5, plugins:{ legend:{display:true,labels:{color:'#6B7280'}}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#374151',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#6B7280'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#6B7280'}, grid:{display:false} } } }
+            options:{ responsive:true, maintainAspectRatio:true, aspectRatio:2.5, plugins:{ legend:{display:true,labels:{color:'#374151'}}, tooltip:{backgroundColor: '#FFFFFF',titleColor:'#f97316',bodyColor: '#111827',borderColor:'#f97316',borderWidth:1} }, scales:{ y:{ beginAtZero:true, ticks:{color:'#374151'}, grid:{color:'rgba(0,0,0,0.04)'} }, x:{ ticks:{color:'#374151'}, grid:{display:false} } } }
         });
     },
 

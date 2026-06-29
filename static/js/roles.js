@@ -43,7 +43,7 @@ const RoleManager = {
         encoder:    { label: 'Encoder',      bg: '#10b981', color: '#fff' },
         sales_rep:  { label: 'Sales Rep',    bg: '#8b5cf6', color: '#fff' },
         // Fallback for unknown roles
-        _unknown:   { label: 'Read Only',    bg: '#6b7280', color: '#fff' },
+        _unknown:   { label: 'Read Only',    bg: '#374151', color: '#fff' },
     },
 
     // ---------- init() ----------

@@ -1579,7 +1579,7 @@ const ProjectsPage = {
             </div>
             
             <div style="display: flex; gap: 0.75rem; justify-content: center;">
-                <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #374151; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
+                <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #111827; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
                     Save
                 </button>
             </div>
@@ -1947,7 +1947,7 @@ function showNotificationToast(message, type = 'info') {
         max-width: 400px;
         padding: 1rem 1.5rem;
         background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: #374151;
+        color: #111827;
         border-radius: 0.75rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         transform: translateX(100%);
@@ -2023,10 +2023,10 @@ function showConfirmationModal(title, message, type = 'warning') {
         modal.innerHTML = `
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <div style="font-size: 3rem; margin-bottom: 0.5rem;">${icon}</div>
-                <h3 style="font-size: 1.25rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem;">
                     ${title}
                 </h3>
-                <p style="color: #6B7280; line-height: 1.5;">
+                <p style="color: #374151; line-height: 1.5;">
                     ${message}
                 </p>
             </div>
@@ -2038,7 +2038,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: rgba(107, 114, 128, 0.2);
                     border: 1px solid rgba(107, 114, 128, 0.4);
                     border-radius: 0.75rem;
-                    color: #374151;
+                    color: #111827;
                     font-size: 0.9rem;
                     font-weight: 600;
                     cursor: pointer;
@@ -2051,7 +2051,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: ${iconColor};
                     border: 1px solid ${iconColor};
                     border-radius: 0.75rem;
-                    color: #374151;
+                    color: #111827;
                     font-size: 0.9rem;
                     font-weight: 700;
                     cursor: pointer;

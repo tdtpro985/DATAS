@@ -26,7 +26,7 @@
 
         /* tracking badges */
         .tracking-badge { display: inline-block; padding: 0.3rem 0.6rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
-        .tracking-not-started { background: rgba(107,114,128,0.1); color: #6B7280; border: 1px solid rgba(107,114,128,0.2); }
+        .tracking-not-started { background: rgba(107,114,128,0.1); color: #374151; border: 1px solid rgba(107,114,128,0.2); }
         .tracking-in-progress { background: rgba(251,191,36,0.12); color: #B45309; border: 1px solid rgba(251,191,36,0.3); }
         .tracking-complete { background: rgba(16,185,129,0.1); color: #059669; border: 1px solid rgba(16,185,129,0.25); }
 

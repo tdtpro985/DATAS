@@ -672,12 +672,12 @@
 .tracking-badge.not-started,
 .tracking-not-started {
     background: rgba(107, 114, 128, 0.12);
-    color: #9ca3af;
+    color: #6B7280;
     border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 .tracking-badge.not-started::before {
-    background: #9ca3af;
+    background: #6B7280;
 }
 
 .tracking-badge.in-progress,

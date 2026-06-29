@@ -95,7 +95,7 @@
         .title {
             font-size: 0.95rem;
             font-weight: 700;
-            color: #1F2937;
+            color: #111827;
             
             white-space: nowrap;
         }
@@ -144,7 +144,7 @@
             background: #F4F5FA;
             border: 1.5px solid rgba(255,122,0,0.18);
             border-left: 2.5px solid #FF7A00;
-            color: #374151;
+            color: #111827;
             padding: 0.28rem 1.7rem 0.28rem 0.55rem;
             border-radius: 6px;
             font-size: 0.7rem;
@@ -181,7 +181,7 @@
 
         .control-select option {
             background: #FFFFFF;
-            color: #374151;
+            color: #111827;
             padding: 0.5rem;
             border: none;
         }
@@ -482,7 +482,7 @@
         .kpi-value {
             font-size: 1.05rem;
             font-weight: 800;
-            color: #1F2937;
+            color: #111827;
             line-height: 1;
             margin-bottom: 0.15rem;
             text-shadow: none;
@@ -490,7 +490,7 @@
         
         .kpi-label {
             font-size: 0.65rem;
-            color: #6B7280;
+            color: #374151;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-align: center;
@@ -613,7 +613,7 @@
         
         .target-number {
             font-size: 1.3rem;
-            color: #1F2937;
+            color: #111827;
             font-weight: 700;
             line-height: 1;
             word-break: normal;
@@ -827,7 +827,7 @@
 
         .live-detail-label {
             font-size: 0.78em;
-            color: #9CA3AF;
+            color: #6B7280;
             text-transform: uppercase;
             letter-spacing: 0.4px;
             margin-bottom: 0.18em;
@@ -835,7 +835,7 @@
         
         .live-detail-value {
             font-size: 0.95em;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
             line-height: 1.25;
             word-break: break-word;
@@ -853,7 +853,7 @@
         
         .live-footer {
             font-size: 0.82rem;
-            color: #6B7280;
+            color: #374151;
             text-align: center;
             margin-top: 0.25rem;
             border-top: 1px solid rgba(0, 0, 0, 0.160);
@@ -882,7 +882,7 @@
 
         .material-label {
             font-size: 0.68rem;
-            color: #9CA3AF;
+            color: #6B7280;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             margin-bottom: 0.18rem;
@@ -890,7 +890,7 @@
 
         .material-value {
             font-size: 0.9rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
             line-height: 1.2;
             white-space: normal;
@@ -967,7 +967,7 @@
         
         .slideshow-timer-text {
             font-size: calc(0.6rem * max(1, var(--slide-scale, 1) * 0.9));
-            color: #9CA3AF;
+            color: #6B7280;
             text-align: center;
             margin-top: 0.3rem;
             font-weight: 500;
@@ -1048,7 +1048,7 @@
         .toggle-btn {
             background: transparent;
             border: none;
-            color: #6B7280;
+            color: #374151;
             padding: 0.4rem 0.8rem;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -1282,7 +1282,7 @@
         
         .section-title {
             font-size: 0.85rem;
-            color: #6B7280;
+            color: #374151;
             margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
@@ -1363,13 +1363,13 @@
         
         .contractor-rank {
             font-size: 0.7rem;
-            color: #9CA3AF;
+            color: #6B7280;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1466,7 +1466,7 @@
         
         .funnel-name {
             font-size: 0.85rem;
-            color: #374151;
+            color: #111827;
             font-weight: 600;
             
         }
@@ -1479,7 +1479,7 @@
         
         .funnel-count {
             font-size: 0.85rem;
-            color: #374151;
+            color: #111827;
             font-weight: 700;
             min-width: 30px;
             
@@ -1487,7 +1487,7 @@
         
         .funnel-percentage {
             font-size: 0.8rem;
-            color: #9CA3AF;
+            color: #6B7280;
             min-width: 45px;
         }
         
@@ -1565,7 +1565,7 @@
         /* Section Title */
         .section-title {
             font-size: 0.8rem;
-            color: #6B7280;
+            color: #374151;
             margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
@@ -1618,13 +1618,13 @@
         
         .contractor-rank {
             font-size: 0.8rem;
-            color: #9CA3AF;
+            color: #6B7280;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.8rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1674,7 +1674,7 @@
         
         .category-name {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1686,7 +1686,7 @@
         
         .category-count {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 600;
             min-width: 25px;
         }
@@ -1700,7 +1700,7 @@
         
         .category-percentage {
             font-size: 0.65rem;
-            color: #9CA3AF;
+            color: #6B7280;
             min-width: 40px;
         }
         
@@ -1752,13 +1752,13 @@
         
         .contractor-rank {
             font-size: 0.7rem;
-            color: #9CA3AF;
+            color: #6B7280;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1831,7 +1831,7 @@
         
         .live-contractor .live-detail-value {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1873,7 +1873,7 @@
         
         .category-name {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         
@@ -1885,7 +1885,7 @@
         
         .category-count {
             font-size: 0.7rem;
-            color: #374151;
+            color: #111827;
             font-weight: 600;
             min-width: 25px;
         }
@@ -1899,7 +1899,7 @@
         
         .category-percentage {
             font-size: 0.65rem;
-            color: #9CA3AF;
+            color: #6B7280;
             min-width: 40px;
         }
         
@@ -2876,7 +2876,7 @@
         }
         
         .material-value {
-            color: #374151;
+            color: #111827;
             font-weight: 500;
         }
         

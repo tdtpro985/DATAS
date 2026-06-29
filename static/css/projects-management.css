@@ -29,7 +29,7 @@
         
         .tracking-not-started {
             background: rgba(156, 163, 175, 0.1);
-            color: #9ca3af;
+            color: #6B7280;
             border: 1px solid rgba(156, 163, 175, 0.2);
         }
         
@@ -620,7 +620,7 @@
         
         .sr-card-status.offline {
             background: rgba(107, 114, 128, 0.15);
-            color: #9ca3af;
+            color: #6B7280;
             border: 1px solid rgba(107, 114, 128, 0.3);
         }
         

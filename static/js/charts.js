@@ -264,7 +264,7 @@ async function loadPieChart() {
                         // Label name
                         ctx.textAlign    = align;
                         ctx.textBaseline = 'bottom';
-                        ctx.fillStyle = '#374151';
+                        ctx.fillStyle = '#111827';
                         ctx.font         = 'bold 11px Inter, sans-serif';
                         ctx.fillText(p.label, textX, p.ly);
 

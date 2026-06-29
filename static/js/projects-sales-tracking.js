@@ -204,14 +204,14 @@ function showClearTrackingConfirm() {
                 </h2>
             </div>
             <div style="padding: 1.5rem;">
-                <p style="color: #6B7280; line-height: 1.6; margin: 0;">
+                <p style="color: #374151; line-height: 1.6; margin: 0;">
                     Are you sure you want to clear all sales tracking data for this project?
                     <br><br>
                     <strong style="color: #f87171;">This action cannot be undone.</strong>
                 </p>
             </div>
             <div style="display: flex; gap: 1rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(0,0,0,0.08);">
-                <button class="clear-confirm-cancel" style="padding: 0.75rem 1.5rem; background: rgba(107, 114, 128, 0.2); border: 1px solid rgba(107, 114, 128, 0.4); border-radius: 0.75rem; color: #374151; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+                <button class="clear-confirm-cancel" style="padding: 0.75rem 1.5rem; background: rgba(107, 114, 128, 0.2); border: 1px solid rgba(107, 114, 128, 0.4); border-radius: 0.75rem; color: #111827; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
                     Cancel
                 </button>
                 <button class="clear-confirm-ok" style="padding: 0.75rem 1.5rem; background: #fbbf24; border: 1px solid #fbbf24; border-radius: 0.75rem; color: #000; font-size: 0.9rem; font-weight: 700; cursor: pointer;">
