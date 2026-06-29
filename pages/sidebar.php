@@ -16,6 +16,7 @@ try {
     $pdo = null;
 }
 ?>
+<link rel="stylesheet" href="<?= $base ?>/static/css/light-theme.css?v=1">
 <div class="ap-shell">
     <aside class="ap-sidebar" id="ap-sidebar">
         <div class="ap-sidebar-logo">

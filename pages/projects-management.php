@@ -54,7 +54,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/utility.css?v=2">
     <link rel="stylesheet" href="<?= $base ?>/static/css/components.css?v=1">
@@ -129,14 +129,14 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
         
         .modal-content {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 1rem;
             max-width: 800px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             animation: slideInUp 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
         }
         
         .modal-content.modal-large {
@@ -148,7 +148,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             align-items: center;
             justify-content: space-between;
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
         
         .modal-header h2 {
@@ -161,8 +161,8 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
         }
         
         .modal-close {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 0.5rem;
             width: 32px;
             height: 32px;
@@ -174,9 +174,9 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             font-size: 1.25rem;
             color: var(--text-secondary);
         }
-        
+
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.09);
             color: var(--text-primary);
         }
         
@@ -207,8 +207,8 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
         }
         
         .detail-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.07);
             border-radius: 0.75rem;
             padding: 1rem;
         }

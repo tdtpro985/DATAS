@@ -41,27 +41,26 @@
     --gray-900: #0F172A;
     --gray-950: #060A12;
 
-    /* ── Background System - Ultra Modern Dark Theme ───────── */
-    /* Slightly cooler/deeper for premium contrast against warm orange */
-    --bg-app: #07090D;
-    --bg-dark: #0B0E14;
-    --bg-elevated: #11151E;
-    --bg-card: #161B26;
-    --bg-card-hover: #1D2330;
-    --bg-card-alt: #131822;
-    --bg-input: #1B2130;
-    --bg-input-hover: #222A3B;
-    --bg-overlay: rgba(7, 9, 13, 0.96);
-    --bg-overlay-light: rgba(7, 9, 13, 0.72);
+    /* ── Background System - Light Theme ───────────────────── */
+    --bg-app: #F2F4F8;
+    --bg-dark: #E8EBF2;
+    --bg-elevated: #FFFFFF;
+    --bg-card: #FFFFFF;
+    --bg-card-hover: #FFF8F2;
+    --bg-card-alt: #F8F9FC;
+    --bg-input: #F4F5FA;
+    --bg-input-hover: #ECEEF6;
+    --bg-overlay: rgba(0, 0, 0, 0.55);
+    --bg-overlay-light: rgba(0, 0, 0, 0.35);
 
     /* ── Text System ───────────────────────────────────────── */
-    --text-primary: #F8FAFC;
-    --text-secondary: #B8C0D0;
-    --text-tertiary: #8A93A6;
+    --text-primary: #1C1C2E;
+    --text-secondary: #4A4A6A;
+    --text-tertiary: #6B6B8A;
     --text-accent: #FF7A00;
-    --text-muted: #6B7488;
-    --text-on-accent: #1A0E00;
-    --text-on-dark: #000000;
+    --text-muted: #9898B8;
+    --text-on-accent: #FFFFFF;
+    --text-on-dark: #FFFFFF;
 
     /* ── Status Colors - Enhanced ──────────────────────────── */
     --success-50: #ECFDF5;
@@ -87,10 +86,10 @@
     /* ── Gradients - Ultra Modern (warm orange → amber) ────── */
     --gradient-primary: linear-gradient(135deg, #FF7A00 0%, #FFB23C 100%);
     --gradient-primary-hover: linear-gradient(135deg, #FF8C1A 0%, #FFC457 100%);
-    --gradient-dark: linear-gradient(135deg, #161B26 0%, #11151E 100%);
-    --gradient-dark-alt: linear-gradient(135deg, #131822 0%, #0B0E14 100%);
-    --gradient-overlay: linear-gradient(180deg, rgba(7, 9, 13, 0) 0%, rgba(7, 9, 13, 0.92) 100%);
-    --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.12) 50%, transparent 100%);
+    --gradient-dark: linear-gradient(135deg, #FFFFFF 0%, #F4F5FA 100%);
+    --gradient-dark-alt: linear-gradient(135deg, #F8F9FC 0%, #F2F4F8 100%);
+    --gradient-overlay: linear-gradient(180deg, rgba(242,244,248,0) 0%, rgba(242,244,248,0.92) 100%);
+    --gradient-shimmer: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.04) 50%, transparent 100%);
     --gradient-accent: linear-gradient(135deg, #FFB23C 0%, #FF7A00 50%, #ED6A00 100%);
     --gradient-glow: radial-gradient(circle at center, rgba(255, 122, 0, 0.28) 0%, transparent 70%);
     --gradient-mesh: radial-gradient(at 20% 20%, rgba(255,122,0,0.12) 0px, transparent 50%),
@@ -99,13 +98,13 @@
 
 
     /* ── Shadows - Professional Depth System ───────────────── */
-    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
-    --shadow-sm: 0 2px 4px 0 rgba(0, 0, 0, 0.3);
-    --shadow-md: 0 4px 8px -2px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 10px 20px -5px rgba(0, 0, 0, 0.5), 0 4px 8px -2px rgba(0, 0, 0, 0.4);
-    --shadow-xl: 0 20px 40px -10px rgba(0, 0, 0, 0.6), 0 10px 20px -5px rgba(0, 0, 0, 0.5);
-    --shadow-2xl: 0 30px 60px -15px rgba(0, 0, 0, 0.7), 0 15px 30px -8px rgba(0, 0, 0, 0.6);
-    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.3);
+    --shadow-xs: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.07);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.06);
+    --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.11), 0 8px 16px rgba(0, 0, 0, 0.07);
+    --shadow-2xl: 0 24px 56px rgba(0, 0, 0, 0.13), 0 12px 24px rgba(0, 0, 0, 0.08);
+    --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.06);
     
     /* Glow Effects */
     --shadow-glow-sm: 0 0 10px rgba(255, 128, 0, 0.2);
@@ -158,7 +157,7 @@
     --radius-md: 8px;
     --radius-lg: 12px;
 
-    color-scheme: dark;
+    color-scheme: light;
 }
 
 /* ---------- Reset ---------- */

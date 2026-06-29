@@ -29,7 +29,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     <title>Full Reports — TDT Powersteel</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=6">
+    <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/admin.css?v=23">
     <link rel="stylesheet" href="<?= $base ?>/static/css/badges.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/toast.css?v=1">
@@ -42,17 +42,13 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     
     <style>
         :root {
-            --primary: #f97316;
-            --primary-dark: #ea580c;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --primary: var(--orange-500);
+            --primary-dark: var(--orange-600);
+            --border-color: rgba(0, 0, 0, 0.08);
         }
 
         body {
-            background: var(--bg-dark);
+            background: var(--bg-app);
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
         }
@@ -108,7 +104,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 
         .filter-group select,
         .filter-group input {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-input);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 0.6rem 1rem;
@@ -186,13 +182,14 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         }
 
         .stat-card {
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95) 0%, rgba(42, 42, 42, 0.95) 100%);
-            border: 1px solid rgba(255, 128, 0, 0.2);
+            background: #FFFFFF;
+            border: 1px solid rgba(255, 128, 0, 0.15);
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         
         .stat-card::before {
@@ -222,7 +219,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            color: #888;
+            color: var(--text-secondary);
             margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
@@ -232,9 +229,8 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         .stat-value {
             font-size: 1.8rem;
             font-weight: 900;
-            color: #fff;
+            color: var(--text-primary);
             margin-bottom: 0.5rem;
-            text-shadow: 0 2px 4px rgba(255, 128, 0, 0.2);
             line-height: 1.2;
         }
 
