@@ -96,7 +96,7 @@ $stmt = $db->prepare("
     LEFT JOIN users u_encoded ON p.encoded_by = u_encoded.id
     LEFT JOIN users u_assigned ON p.assigned_to = u_assigned.id
     LEFT JOIN users u_assigned_by ON p.assigned_by = u_assigned_by.id
-    LEFT JOIN sales_tracking st ON p.id = st.project_id
+    LEFT JOIN sales_tracking st ON p.id = st.project_id AND st.sales_rep_id = p.assigned_to
     $whereClause
     ORDER BY p.assigned_at DESC
     LIMIT :size OFFSET :offset

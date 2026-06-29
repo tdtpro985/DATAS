@@ -1,0 +1,256 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║              PRODUCTION DEPLOYMENT - QUICK REFERENCE CARD                ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+ISSUE #1: MODAL WIDTH (MINOR UI FIX)
+═════════════════════════════════════
+What: Modal sa projects page ay maliit, gusto full width
+Fix: Updated static/css/projects.css
+Deploy: Standard - just push and refresh
+
+ISSUE #2: SALES REP CROSS-VISIBILITY (CRITICAL DATA ISSUE)
+═══════════════════════════════════════════════════════════
+What: Dennis projects appearing in Melody's account
+Fix: Updated api/projects/assigned.php query
+Deploy: Needs data migration
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                    LOCAL MACHINE - DEPLOY STEPS                        │
+└────────────────────────────────────────────────────────────────────────┘
+
+Option A: Use the Batch Script (Easiest)
+─────────────────────────────────────────
+  double-click: deploy-sales-rep-fix.bat
+  
+  The script will:
+    ✓ Stage all files
+    ✓ Commit with detailed message
+    ✓ Push to remote
+    ✓ Show next steps
+
+Option B: Manual Git Commands
+──────────────────────────────
+  git add api/projects/assigned.php
+  git add static/css/projects.css
+  git add check-assignments.php
+  git add fix-sales-tracking-sync.php
+  git add SALES_REP_FIX_DEPLOYMENT.md
+  git add GAWIN_MO_TO.txt
+  git commit -m "Fix: Sales rep assignment filtering and modal width"
+  git push
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                   PRODUCTION SERVER - DEPLOY STEPS                     │
+└────────────────────────────────────────────────────────────────────────┘
+
+STEP 1: Connect to Server
+──────────────────────────
+  Windows (PowerShell/CMD):
+    ssh user@production-server
+  
+  Or use PuTTY:
+    Host: production-server
+    Port: 22
+
+STEP 2: Navigate to DATAS Directory
+────────────────────────────────────
+  cd /var/www/html/datas
+  # or wherever DATAS is located
+  # Find it using: find /var/www -name "DATAS" -type d
+
+STEP 3: Backup Current State (IMPORTANT!)
+──────────────────────────────────────────
+  # Backup database
+  mysqldump -u root -p datas_db > backup_before_fix_$(date +%Y%m%d_%H%M%S).sql
+  
+  # Backup code (just in case)
+  tar -czf ../datas_backup_$(date +%Y%m%d_%H%M%S).tar.gz .
+
+STEP 4: Pull Latest Changes
+────────────────────────────
+  git pull origin main
+  # or: git pull origin master (depending on your branch)
+  
+  Expected output:
+    Updating abc1234..def5678
+    Fast-forward
+     api/projects/assigned.php | 2 +-
+     static/css/projects.css   | 8 ++++++++
+     ...
+
+STEP 5: Verify Files Updated
+─────────────────────────────
+  # Check if API file has the fix
+  grep "st.sales_rep_id = p.assigned_to" api/projects/assigned.php
+  
+  Expected: Should see the line with the JOIN condition
+
+STEP 6: Run Diagnostic Script
+──────────────────────────────
+  php check-assignments.php
+  
+  Or via browser:
+  https://datas.lan/check-assignments.php
+  
+  Review output:
+    ✓ How many projects assigned to Dennis (ID: 6)?
+    ✓ How many projects assigned to Melody (ID: 10)?
+    ✓ Are there any mismatches (⚠️ symbols)?
+
+STEP 7: Fix Data Mismatches (IF NEEDED)
+────────────────────────────────────────
+  php fix-sales-tracking-sync.php
+  
+  Or via browser:
+  https://datas.lan/fix-sales-tracking-sync.php
+  
+  The script will:
+    ✓ Update sales_tracking.sales_rep_id to match projects.assigned_to
+    ✓ Delete orphaned records
+    ✓ Show summary of changes
+
+STEP 8: Restart PHP (if using PHP-FPM)
+───────────────────────────────────────
+  sudo systemctl restart php-fpm
+  # or
+  sudo systemctl restart php7.4-fpm
+  # or
+  sudo systemctl restart php8.1-fpm
+
+STEP 9: Clear OpCache (if enabled)
+───────────────────────────────────
+  # Option A: Restart web server
+  sudo systemctl restart apache2
+  # or
+  sudo systemctl restart nginx
+  
+  # Option B: Use OPcache reset (if available)
+  php -r "opcache_reset();"
+
+STEP 10: Test on Browser
+─────────────────────────
+  1. Login as Melody Nool
+     Email: cmnool@tdtpowersteel.com.ph
+     Go to: My Projects
+     Check: Should only see HER projects, NOT Dennis's
+  
+  2. Login as Dennis Espinar
+     Email: despinar@tdtpowersteel.com.ph
+     Go to: My Projects
+     Check: Should only see HIS projects, NOT Melody's
+  
+  3. Hard refresh on all browsers
+     Ctrl + F5 (Windows)
+     Cmd + Shift + R (Mac)
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                         VERIFICATION CHECKLIST                         │
+└────────────────────────────────────────────────────────────────────────┘
+
+□ Code deployed successfully (git pull worked)
+□ Files verified (grep command shows new code)
+□ Database backed up
+□ Diagnostic script ran successfully
+□ Data fix script ran (if there were mismatches)
+□ PHP/Web server restarted
+□ Tested as Melody - only sees her projects
+□ Tested as Dennis - only sees his projects
+□ Modal width is now full screen
+□ All browsers hard-refreshed
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                            ROLLBACK PLAN                               │
+└────────────────────────────────────────────────────────────────────────┘
+
+IF SOMETHING GOES WRONG:
+
+Code Rollback:
+  cd /var/www/html/datas
+  git log --oneline -5  # Find commit hash before fix
+  git revert <commit_hash>
+  git push
+
+Database Rollback:
+  mysql -u root -p datas_db < backup_before_fix_YYYYMMDD_HHMMSS.sql
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                          TROUBLESHOOTING                               │
+└────────────────────────────────────────────────────────────────────────┘
+
+Problem: git pull fails with conflicts
+Solution:
+  git stash
+  git pull
+  git stash pop
+
+Problem: Permission denied on files
+Solution:
+  sudo chown -R www-data:www-data /var/www/html/datas
+  sudo chmod -R 755 /var/www/html/datas
+
+Problem: PHP scripts don't run via browser
+Solution:
+  - Check Apache/Nginx config allows PHP execution
+  - Verify PHP is installed: php --version
+  - Check error logs: tail -f /var/log/apache2/error.log
+
+Problem: Still seeing cross-user projects after fix
+Solution:
+  1. Verify API code: grep "sales_rep_id = p.assigned_to" api/projects/assigned.php
+  2. Clear browser cache completely
+  3. Check database manually:
+     mysql -u root -p
+     use datas_db;
+     SELECT p.id, p.assigned_to, st.sales_rep_id 
+     FROM projects p 
+     LEFT JOIN sales_tracking st ON p.id = st.project_id 
+     WHERE p.assigned_to IS NOT NULL 
+     AND st.sales_rep_id IS NOT NULL 
+     AND p.assigned_to != st.sales_rep_id;
+
+Problem: Modal still not full width
+Solution:
+  - Hard refresh: Ctrl + F5
+  - Clear browser cache
+  - Verify CSS file updated: grep "detailsModal" static/css/projects.css
+  - Check browser console for CSS load errors
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                      IMPORTANT REMINDERS                               │
+└────────────────────────────────────────────────────────────────────────┘
+
+⚠️  ALWAYS backup database before running fix scripts
+⚠️  Test on staging environment first if available
+⚠️  Notify users before deployment (data changes)
+⚠️  Keep backup files for at least 7 days
+⚠️  Document any issues encountered
+
+✓  Delete diagnostic scripts after successful deployment:
+   rm check-assignments.php
+   rm fix-sales-tracking-sync.php
+
+✓  Monitor error logs after deployment:
+   tail -f /var/log/apache2/error.log
+   tail -f /var/log/php_errors.log
+
+═══════════════════════════════════════════════════════════════════════════
+
+QUICK COMMAND SUMMARY FOR SSH:
+===============================
+
+cd /var/www/html/datas
+git pull
+php check-assignments.php
+php fix-sales-tracking-sync.php
+sudo systemctl restart php-fpm
+sudo systemctl restart apache2
+
+═══════════════════════════════════════════════════════════════════════════
+
+For detailed technical documentation, see:
+  SALES_REP_FIX_DEPLOYMENT.md
+
+For user-facing instructions, see:
+  GAWIN_MO_TO.txt
+
+═══════════════════════════════════════════════════════════════════════════

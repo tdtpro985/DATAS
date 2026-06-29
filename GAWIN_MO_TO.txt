@@ -164,13 +164,192 @@ Ito ay common issue sa web development. Kaya importante:
 
 ═══════════════════════════════════════════════════════════════════════════
 
-SUMMARY:
-========
+╔══════════════════════════════════════════════════════════════════════════╗
+║                SALES REP ASSIGNMENT FIX - MELODY/DENNIS ISSUE            ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+ANG PROBLEMA:
+═════════════
+Ang projects na assigned kay Dennis Espinar ay lumalabas din sa account
+ni Melody Nool (at baka vice versa).
+
+ROOT CAUSE:
+═══════════
+May mismatch between:
+  - projects.assigned_to (sino ang naka-assign)
+  - sales_tracking.sales_rep_id (sino ang may tracking record)
+
+Puwedeng:
+  1. May sales_tracking record na sales_rep_id = 10 (Melody)
+     pero yung projects.assigned_to = 6 (Dennis)
+  
+  2. Yung LEFT JOIN sa query ay walang check kung matching ang
+     sales_rep_id sa assigned_to
+
+ANG FIX:
+════════
+✓ Updated api/projects/assigned.php
+  - Added: AND st.sales_rep_id = p.assigned_to sa JOIN
+  - Ensures sales_tracking record matches assigned sales rep
+
+✓ Created diagnostic scripts:
+  - check-assignments.php (check ang data)
+  - fix-sales-tracking-sync.php (auto-fix ang mismatches)
+
+┌────────────────────────────────────────────────────────────────────────┐
+│               MGA HAKBANG - DEPLOYMENT SA PRODUCTION                   │
+└────────────────────────────────────────────────────────────────────────┘
+
+STEP 1: Commit and Push ang Changes
+────────────────────────────────────
+git add api/projects/assigned.php
+git add check-assignments.php
+git add fix-sales-tracking-sync.php
+git commit -m "Fix: Sales rep assignment filtering - prevent cross-user visibility"
+git push
+
+STEP 2: Deploy sa Production Server
+────────────────────────────────────
+ssh user@production-server
+cd /path/to/DATAS
+git pull
+
+STEP 3: Check ang Data (Diagnostic)
+────────────────────────────────────
+Via browser, open:
+  https://datas.lan/check-assignments.php
+
+O via SSH:
+  cd /path/to/DATAS
+  php check-assignments.php
+
+Expected output:
+  - List of projects assigned to Dennis (ID: 6)
+  - List of projects assigned to Melody (ID: 10)
+  - Highlight mismatches with ⚠️ symbol
+
+STEP 4: Kung May Mismatches, Run ang Fix Script
+────────────────────────────────────────────────
+Via browser:
+  https://datas.lan/fix-sales-tracking-sync.php
+
+O via SSH:
+  cd /path/to/DATAS
+  php fix-sales-tracking-sync.php
+
+Ang script ay:
+  ✓ Mag-update ng sales_tracking.sales_rep_id to match projects.assigned_to
+  ✓ Mag-delete ng orphaned sales_tracking records
+  ✓ Mag-display ng summary ng changes
+
+STEP 5: Verify na Fixed Na
+───────────────────────────
+1. Login as Melody Nool
+   - Go to My Projects
+   - Check kung Dennis projects ay wala na
+
+2. Login as Dennis Espinar
+   - Go to My Projects
+   - Check kung lahat ng assigned projects ay nandito
+
+3. Test filtering:
+   - Priority vs Non-Priority
+   - Search functionality
+   - Regional filtering
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                    ALTERNATIVE - MANUAL FIX VIA SQL                    │
+└────────────────────────────────────────────────────────────────────────┘
+
+Kung ayaw mo gumamit ng PHP scripts, pwede rin via direct SQL:
+
+-- Step 1: Check mismatches
+SELECT 
+    p.id,
+    p.project_name,
+    p.assigned_to,
+    u1.full_name as assigned_to_name,
+    st.sales_rep_id,
+    u2.full_name as tracking_rep_name
+FROM projects p
+LEFT JOIN sales_tracking st ON p.id = st.project_id
+LEFT JOIN users u1 ON p.assigned_to = u1.id
+LEFT JOIN users u2 ON st.sales_rep_id = u2.id
+WHERE p.assigned_to IS NOT NULL
+AND st.id IS NOT NULL
+AND p.assigned_to != st.sales_rep_id;
+
+-- Step 2: Fix mismatches
+UPDATE sales_tracking st
+INNER JOIN projects p ON st.project_id = p.id
+SET st.sales_rep_id = p.assigned_to,
+    st.updated_at = NOW()
+WHERE p.assigned_to IS NOT NULL
+AND p.assigned_to != st.sales_rep_id;
+
+-- Step 3: Delete orphaned records
+DELETE st FROM sales_tracking st
+LEFT JOIN projects p ON st.project_id = p.id
+WHERE p.assigned_to IS NULL OR p.assigned_to = 0;
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                         FILES MODIFIED/CREATED                         │
+└────────────────────────────────────────────────────────────────────────┘
+
+Modified:
+  M api/projects/assigned.php
+    - Line 85: Added AND st.sales_rep_id = p.assigned_to
+
+  M static/css/projects.css
+    - Added #detailsModal .modal-content full-width styles
+
+Created:
+  + check-assignments.php
+    - Diagnostic tool to check Dennis vs Melody assignments
+    
+  + fix-sales-tracking-sync.php
+    - Auto-fix tool to sync sales_tracking with projects
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                          EXPECTED BEHAVIOR                             │
+└────────────────────────────────────────────────────────────────────────┘
+
+BEFORE FIX:
+  Melody logs in → Sees Dennis projects ❌
+  Dennis logs in → Sees Melody projects ❌
+
+AFTER FIX:
+  Melody logs in → Sees only HER assigned projects ✓
+  Dennis logs in → Sees only HIS assigned projects ✓
+
+API Behavior:
+  GET /api/v1/projects/assigned?sales_rep_id=6
+  → Returns ONLY projects where assigned_to = 6 ✓
+  → Joins ONLY sales_tracking where sales_rep_id = 6 ✓
+
+═══════════════════════════════════════════════════════════════════════════
+
+SUMMARY - PRIORITY FIX:
+=======================
 ✓ Code fixed (ad69084)
 ✓ Version bumped (007cfea) 
 ✓ Ready to deploy
 ✓ Just need: git push + hard refresh
 
-NEXT ACTION: git push, then Ctrl+F5 sa browser!
+SUMMARY - ASSIGNMENT FIX:
+=========================
+✓ API query fixed (api/projects/assigned.php)
+✓ Diagnostic script created (check-assignments.php)
+✓ Auto-fix script created (fix-sales-tracking-sync.php)
+✓ Ready to deploy
+
+NEXT ACTIONS:
+=============
+1. git push
+2. SSH to production: git pull
+3. Run check-assignments.php
+4. Run fix-sales-tracking-sync.php
+5. Test login as Melody and Dennis
+6. Hard refresh browsers (Ctrl+F5)
 
 ═══════════════════════════════════════════════════════════════════════════
