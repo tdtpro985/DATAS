@@ -1,0 +1,176 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                    GAWIN MO TO PARA GUMANA - PRIORITY FIX                ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+ANO ANG NANGYARI:
+═════════════════
+✓ Na-fix na ang code (commit: ad69084)
+✓ Na-increment na ang version to v23 (commit: 007cfea)
+✓ Ready na i-deploy!
+
+ANG PROBLEMA DATI:
+══════════════════
+Ang browser mo ay naka-cache pa ng OLD VERSION (v22) ng projects.js
+kahit na-fix na ang code. Kaya ganun pa rin ang lumalabas.
+
+ANG SOLUSYON:
+═════════════
+Nag-increase ako ng version from v=22 to v=23 para ma-force ang
+browser na mag-download ng BAGONG VERSION.
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                         MGA HAKBANG (SUNDIN MO):                       │
+└────────────────────────────────────────────────────────────────────────┘
+
+STEP 1: Deploy to Server
+─────────────────────────
+git push
+
+STEP 2: Hard Refresh sa Browser
+────────────────────────────────
+Option A: Hard Refresh (RECOMMENDED)
+  → Press: Ctrl + F5 (Windows) or Cmd + Shift + R (Mac)
+  → Ito ay "hard refresh" - ignores cache
+
+Option B: Clear Cache (kung di gumana ang hard refresh)
+  → Press: Ctrl + Shift + Delete
+  → Select: "Cached images and files"
+  → Select: "All time"
+  → Click: "Clear data"
+  → Reload page
+
+Option C: Incognito Mode (para mag-test)
+  → Ctrl + Shift + N (open incognito)
+  → Login
+  → Go to Priority Projects page
+  → Check kung 0 projects na
+
+STEP 3: Verify na Gumagana Na
+──────────────────────────────
+1. Go to: http://datas.lan/projects?type=priority
+
+2. Press F12 (open Developer Console)
+
+3. Tignan ang Console tab, dapat makita:
+   ✓ [PROJECTS] Initialized with type: priority
+   ✓ [PROJECTS] Fetching from API: /api/v1/projects?type=priority
+   ✓ [PROJECTS] API returned: 0 projects
+
+4. Tignan ang page:
+   ✓ Total Projects: 0
+   ✓ "No Projects Found" message
+
+KUNG GUMAGANA NA:
+═════════════════
+✓ Priority Projects page → 0 projects
+✓ Non-Priority Projects page → 637 projects
+✓ Tama na!
+
+KUNG DI PA RIN GUMAGANA:
+════════════════════════
+1. Check kung na-deploy na ba ang changes:
+   git log --oneline -2
+   Dapat makita:
+   - 007cfea Cache bust: Increment projects.js version to v23...
+   - ad69084 Fix: Priority projects filtering - correct type...
+
+2. Check kung na-pull na ba ng server:
+   (SSH to server, then:)
+   cd /path/to/datas
+   git pull
+   
+3. Clear ALL browser data:
+   Settings → Clear browsing data → All time → Everything
+   
+4. Try different browser:
+   Edge, Firefox, Chrome - test sa lahat
+
+5. Check server cache:
+   (Kung may OpCache or APCu)
+   Restart PHP-FPM or Apache
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                     QUICK REFERENCE - EXPECTED OUTPUT                  │
+└────────────────────────────────────────────────────────────────────────┘
+
+Priority Projects (/projects?type=priority):
+  Console: [PROJECTS] Initialized with type: priority ✓
+  Console: [PROJECTS] Fetching from API: /api/v1/projects?type=priority ✓
+  Console: [PROJECTS] API returned: 0 projects ✓
+  Display: "No Projects Found" ✓
+
+Non-Priority Projects (/projects?type=non-priority):
+  Console: [PROJECTS] Initialized with type: non-priority ✓
+  Console: [PROJECTS] API returned: 637 projects ✓
+  Display: Shows all 637 projects ✓
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                          TROUBLESHOOTING GUIDE                         │
+└────────────────────────────────────────────────────────────────────────┘
+
+Problem: Still showing 637 projects
+Solution: 
+  1. Check console - ano ang type value?
+  2. If "all" - browser cache issue, clear cache
+  3. If "priority" but 637 projects - API issue, check database
+
+Problem: Console shows "type: all" instead of "priority"
+Solution:
+  1. Hard refresh (Ctrl + F5)
+  2. Clear cache completely
+  3. Check if v=23 in page source (View Source)
+  4. Try incognito mode
+
+Problem: Page source still shows v=22
+Solution:
+  1. Server not deployed yet - run git pull on server
+  2. Check file on server: cat pages/projects.php | grep "projects.js"
+  3. Should see: projects.js?v=23
+
+Problem: Incognito works but normal browser doesn't
+Solution:
+  1. Definitely cache issue
+  2. Clear all browser data
+  3. Close and reopen browser
+  4. If still not working, restart computer (clears memory cache)
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                            FILES MODIFIED                              │
+└────────────────────────────────────────────────────────────────────────┘
+
+Commit 1 (ad69084):
+  M static/js/projects.js
+  - Fixed type assignment timing issue
+  - Now reads window.PROJECT_TYPE in init() method
+
+Commit 2 (007cfea):
+  M pages/projects.php
+  - Incremented version from v=22 to v=23
+  - Forces browser to download new file
+
+┌────────────────────────────────────────────────────────────────────────┐
+│                         BAKIT NANGYARI ITO?                            │
+└────────────────────────────────────────────────────────────────────────┘
+
+1. Una, may timing bug sa code (fixed in ad69084)
+2. Pero kahit fixed na, browser nag-cache pa ng old version
+3. Kaya need i-increment ang version number (fixed in 007cfea)
+4. Ngayon, browser mag-download ng new file with fixed code
+
+Ito ay common issue sa web development. Kaya importante:
+- ALWAYS increment version after JS changes
+- Use hard refresh when testing
+- Deploy to production properly
+
+═══════════════════════════════════════════════════════════════════════════
+
+SUMMARY:
+========
+✓ Code fixed (ad69084)
+✓ Version bumped (007cfea) 
+✓ Ready to deploy
+✓ Just need: git push + hard refresh
+
+NEXT ACTION: git push, then Ctrl+F5 sa browser!
+
+═══════════════════════════════════════════════════════════════════════════

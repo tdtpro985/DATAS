@@ -226,7 +226,7 @@ $pageIcon = $isPriority ? '⭐' : ($isNonPriority ? '📋' : '📁');
     </div>
 </div>
 <script>
-const BASE = '<?= $base ?>';
+
 window.PROJECT_TYPE = '<?= $type ?>';
 </script>
 <script src="<?= $base ?>/static/js/auth.js?v=2"></script>
