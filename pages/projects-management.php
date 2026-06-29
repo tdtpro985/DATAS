@@ -51,7 +51,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     
     <!-- CSS -->
     <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">

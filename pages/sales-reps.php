@@ -33,7 +33,7 @@ if ($role !== 'superadmin' && $role !== 'admin') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales Representatives | TDT Powersteel SILEP</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <!-- Core Styles -->

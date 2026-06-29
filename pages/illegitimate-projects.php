@@ -29,7 +29,7 @@ if (!in_array($role, ['superadmin', 'admin', 'sales_rep'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Illegitimate Projects | TDT Powersteel SILEP</title>
     <link rel="icon" type="image/svg+xml" href="<?= $base ?>/static/images/logo_header.png">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<?= $base ?>/static/css/base.css?v=7">
     <link rel="stylesheet" href="<?= $base ?>/static/css/animations.css?v=3">
     <link rel="stylesheet" href="<?= $base ?>/static/css/modern-theme.css?v=1">
