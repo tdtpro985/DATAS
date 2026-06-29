@@ -86,7 +86,7 @@
     gap: var(--sp-4);
     margin-bottom: var(--sp-5);
     padding-bottom: var(--sp-3);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.160);
     position: relative;
 }
 
@@ -135,9 +135,9 @@
     color: var(--text-secondary);
     margin-bottom: var(--sp-4);
     padding: var(--sp-3) var(--sp-4);
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.090);
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.150);
     animation: fadeInDown 0.6s ease-out 0.1s both;
 }
 
@@ -183,9 +183,9 @@
     display: inline-flex;
     align-items: center;
     gap: var(--sp-2);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.150) 0%, rgba(0, 0, 0, 0.080) 100%);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.200);
     border-radius: var(--radius-lg);
     padding: var(--sp-2) var(--sp-4);
     font-size: var(--text-sm);
@@ -235,8 +235,8 @@
 .search-input {
     width: 100%;
     padding: var(--sp-3) var(--sp-4) var(--sp-3) var(--sp-12);
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.150);
+    border: 2px solid rgba(0, 0, 0, 0.200);
     border-radius: var(--radius-lg);
     color: var(--text-primary);
     font-size: var(--text-sm);
@@ -251,7 +251,7 @@
 
 .search-input:focus {
     border-color: var(--orange-500);
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.160);
     box-shadow: 0 0 0 4px rgba(255, 128, 0, 0.1);
 }
 
@@ -279,9 +279,9 @@
     align-items: center;
     gap: var(--sp-3);
     padding: var(--sp-4);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.090) 0%, rgba(0, 0, 0, 0.040) 100%);
     border-radius: var(--radius-xl);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.160);
     margin-bottom: var(--sp-5);
     flex-wrap: wrap;
 }

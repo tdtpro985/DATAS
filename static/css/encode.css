@@ -5,8 +5,8 @@
             margin-top: 2rem;
         }
         .encode-option-card {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.120);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 16px;
             padding: 2rem;
             cursor: pointer;
@@ -18,10 +18,10 @@
             gap: 1rem;
         }
         .encode-option-card:hover {
-            background: rgba(255,255,255,0.08);
-            border-color: rgba(255,255,255,0.2);
+            background: rgba(0, 0, 0, 0.160);
+            border-color: rgba(0, 0, 0, 0.300);
             transform: translateY(-4px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.30);
         }
         .option-icon {
             font-size: 3rem;
@@ -54,12 +54,12 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             padding-top: 1rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
+            border-top: 1px solid rgba(0, 0, 0, 0.200);
             margin-top: auto;
         }
         .step-count {
             display: inline-block;
-            background: rgba(255,255,255,0.1);
+            background: rgba(0, 0, 0, 0.200);
             padding: 0.5rem 0.75rem;
             border-radius: 6px;
             font-weight: 600;

@@ -188,8 +188,8 @@ function showClearTrackingConfirm() {
         const confirmModal = document.createElement('div');
         confirmModal.className = 'clear-tracking-confirm-modal';
         confirmModal.style.cssText = `
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 1rem;
             max-width: 500px;
             width: 100%;
@@ -198,20 +198,20 @@ function showClearTrackingConfirm() {
         `;
         
         confirmModal.innerHTML = `
-            <div style="padding: 1.5rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+            <div style="padding: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.08);">
                 <h2 style="margin: 0; font-size: 1.25rem; color: #fbbf24; display: flex; align-items: center; gap: 0.5rem;">
                     <span>⚠️</span> Clear Sales Tracking
                 </h2>
             </div>
             <div style="padding: 1.5rem;">
-                <p style="color: #94a3b8; line-height: 1.6; margin: 0;">
+                <p style="color: #6B7280; line-height: 1.6; margin: 0;">
                     Are you sure you want to clear all sales tracking data for this project?
                     <br><br>
                     <strong style="color: #f87171;">This action cannot be undone.</strong>
                 </p>
             </div>
-            <div style="display: flex; gap: 1rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                <button class="clear-confirm-cancel" style="padding: 0.75rem 1.5rem; background: rgba(107, 114, 128, 0.2); border: 1px solid rgba(107, 114, 128, 0.4); border-radius: 0.75rem; color: white; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
+            <div style="display: flex; gap: 1rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(0,0,0,0.08);">
+                <button class="clear-confirm-cancel" style="padding: 0.75rem 1.5rem; background: rgba(107, 114, 128, 0.2); border: 1px solid rgba(107, 114, 128, 0.4); border-radius: 0.75rem; color: #374151; font-size: 0.9rem; font-weight: 600; cursor: pointer;">
                     Cancel
                 </button>
                 <button class="clear-confirm-ok" style="padding: 0.75rem 1.5rem; background: #fbbf24; border: 1px solid #fbbf24; border-radius: 0.75rem; color: #000; font-size: 0.9rem; font-weight: 700; cursor: pointer;">
@@ -423,7 +423,7 @@ function generateContractForm(project) {
             </div>
         </div>
         
-        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.08);">
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(0,0,0,0.06);">
             <h3 style="font-size: 0.9rem; font-weight: 700; color: var(--orange-500); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                 📍 Contractor Location
             </h3>
@@ -475,11 +475,11 @@ function generateProjectForm(project) {
             display: flex; align-items: center; gap: 0.5rem;
             padding: 0.55rem 1rem;
             border: 1px solid ${currentStatus.toLowerCase() === s.toLowerCase()
-                ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(255,255,255,0.25)')
-                : 'rgba(255,255,255,0.08)'};
+                ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(0,0,0,0.14)')
+                : 'rgba(0,0,0,0.06)'};
             border-radius: 8px;
             background: ${currentStatus.toLowerCase() === s.toLowerCase()
-                ? (s.toLowerCase() === 'priority' ? 'rgba(255,128,0,0.12)' : 'rgba(255,255,255,0.07)')
+                ? (s.toLowerCase() === 'priority' ? 'rgba(255,128,0,0.12)' : 'rgba(0,0,0,0.05)')
                 : 'transparent'};
             cursor: pointer; font-size: 0.85rem; font-weight: 600;
             color: ${s.toLowerCase() === 'priority' ? '#ff8000' : 'var(--text-primary)'};
@@ -492,12 +492,12 @@ function generateProjectForm(project) {
             <span style="
                 width:14px; height:14px; border-radius:50%;
                 border: 2px solid ${currentStatus.toLowerCase() === s.toLowerCase()
-                    ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(255,255,255,0.6)')
-                    : 'rgba(255,255,255,0.3)'};
+                    ? (s.toLowerCase() === 'priority' ? '#ff8000' : 'rgba(0,0,0,0.3)')
+                    : 'rgba(0,0,0,0.15)'};
                 display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;
             ">
                 ${currentStatus.toLowerCase() === s.toLowerCase()
-                    ? `<span style="width:6px;height:6px;border-radius:50%;background:${s.toLowerCase() === 'priority' ? '#ff8000' : '#fff'};display:block;"></span>`
+                    ? `<span style="width:6px;height:6px;border-radius:50%;background:${s.toLowerCase() === 'priority' ? '#ff8000' : '#FF7A00'};display:block;"></span>`
                     : ''}
             </span>
             ${s}
@@ -575,7 +575,7 @@ function selectStatusRadio(label, value) {
         const lbl = radio.closest('label');
         if (!lbl) return;
         const isPriority = radio.value.toLowerCase() === 'priority';
-        lbl.style.border = '1px solid rgba(255,255,255,0.08)';
+        lbl.style.border = '1px solid rgba(0,0,0,0.06)';
         lbl.style.background = 'transparent';
         // Reset dot
         const dot = lbl.querySelector('span > span');
@@ -584,14 +584,14 @@ function selectStatusRadio(label, value) {
 
     // Activate selected label
     const isPriority = value.toLowerCase() === 'priority';
-    label.style.border = `1px solid ${isPriority ? '#ff8000' : 'rgba(255,255,255,0.25)'}`;
-    label.style.background = isPriority ? 'rgba(255,128,0,0.12)' : 'rgba(255,255,255,0.07)';
+    label.style.border = `1px solid ${isPriority ? '#ff8000' : 'rgba(0,0,0,0.14)'}`;
+    label.style.background = isPriority ? 'rgba(255,128,0,0.12)' : 'rgba(0,0,0,0.05)';
     label.querySelector('input').checked = true;
     const ring = label.querySelector('span');
-    ring.style.borderColor = isPriority ? '#ff8000' : 'rgba(255,255,255,0.6)';
+    ring.style.borderColor = isPriority ? '#ff8000' : 'rgba(0,0,0,0.3)';
     // Add inner dot
     const innerDot = document.createElement('span');
-    innerDot.style.cssText = `width:6px;height:6px;border-radius:50%;background:${isPriority ? '#ff8000' : '#fff'};display:block;`;
+    innerDot.style.cssText = `width:6px;height:6px;border-radius:50%;background:${isPriority ? '#ff8000' : '#FF7A00'};display:block;`;
     ring.appendChild(innerDot);
 }
 
@@ -661,7 +661,7 @@ function generatePicturesForm(project) {
             <p style="color: var(--text-secondary); margin-bottom: 1rem;">
                 Pictures functionality will be implemented here.
             </p>
-            <div style="text-align: center; padding: 3rem; background: rgba(255,255,255,0.03); border-radius: 0.5rem;">
+            <div style="text-align: center; padding: 3rem; background: rgba(0,0,0,0.02); border-radius: 0.5rem;">
                 <div style="font-size: 3rem; margin-bottom: 1rem;">📸</div>
                 <p style="color: var(--text-muted);">Picture upload feature coming soon</p>
             </div>

@@ -448,13 +448,13 @@ function viewProjectSR(projectId) {
                     <label class="sales-form-label">Sales Representative</label>
                     <input type="text" class="sales-form-input" id="sales-rep-display" readonly
                            value="${escapeHtml(project.assigned_to_name || project.sales_rep_name || '—')}"
-                           style="background:rgba(255,255,255,0.05);cursor:not-allowed;">
+                           style="background:rgba(0,0,0,0.04);cursor:not-allowed;">
                 </div>
                 <div class="sales-form-group">
                     <label class="sales-form-label">Branch</label>
                     <input type="text" class="sales-form-input" id="branch-input" readonly
                            value="${escapeHtml(project.assigned_to_branch || project.tracking_branch || '—')}"
-                           style="background:rgba(255,255,255,0.05);cursor:not-allowed;">
+                           style="background:rgba(0,0,0,0.04);cursor:not-allowed;">
                 </div>
                 <div class="sales-form-group">
                     <label class="sales-form-label">W/L Amount (₱) <span id="wl-amount-required" style="color:#ff7070;display:none;">*</span></label>

@@ -87,7 +87,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         </div>
         <div class="filter-group" style="min-width:auto;">
             <label>Date Basis</label>
-            <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
+            <div style="display:flex;gap:0;background:rgba(0,0,0,0.04);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
                 <button id="dateTogglePublished" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;transition:background 0.15s;">Published</button>
                 <button id="dateToggleEncoded" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;transition:background 0.15s,color 0.15s;">Encoded</button>
             </div>
@@ -375,7 +375,7 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
 <!-- Project Detail Sub-Modal (stacked above SR modal) -->
 <div id="projDetailModal" style="position:fixed;inset:0;z-index:2000000;background:rgba(0,0,0,0.82);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;">
     <div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:16px;width:min(700px,95vw);max-height:88vh;overflow-y:auto;padding:2rem 2rem 1.5rem;position:relative;box-shadow:0 28px 90px rgba(0,0,0,0.75);">
-        <button onclick="FullReports.closeProjModal()" title="Close" style="position:absolute;top:1rem;right:1rem;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:var(--text-primary);width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+        <button onclick="FullReports.closeProjModal()" title="Close" style="position:absolute;top:1rem;right:1rem;background:rgba(0,0,0,0.06);border:1px solid var(--border-color);color:var(--text-primary);width:2rem;height:2rem;border-radius:50%;cursor:pointer;font-size:0.95rem;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
         <div id="projDetailContent">
             <div class="loading"><div class="spinner"></div><span>Loading project...</span></div>
         </div>
@@ -387,11 +387,11 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
     <div class="modal-box" style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:12px;width:540px;max-width:90vw;max-height:85vh;overflow-y:auto;padding:1.75rem;box-shadow:0 24px 80px rgba(0,0,0,0.6);position:relative;z-index:1000000;">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
             <h3 style="margin:0;font-size:1.2rem;font-weight:800;color:var(--text-primary);">📥 Export Report</h3>
-            <button onclick="closeExportModal()" style="background:rgba(255,255,255,0.07);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
+            <button onclick="closeExportModal()" style="background:rgba(0,0,0,0.05);border:none;border-radius:50%;width:30px;height:30px;color:var(--text-secondary);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;">✕</button>
         </div>
         <div style="margin-bottom:1.25rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Period</label>
-            <select id="exportPeriodSelect" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
+            <select id="exportPeriodSelect" style="width:100%;background:rgba(0,0,0,0.04);border:1px solid var(--border-color);border-radius:8px;padding:0.6rem 0.9rem;color:var(--text-primary);font-size:0.85rem;">
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
                 <option value="semi-monthly">Semi-Monthly</option>
@@ -402,37 +402,37 @@ if (!in_array($role, ['admin', 'superadmin', 'sales_rep'], true)) {
         </div>
         <div style="margin-bottom:1.25rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.5rem;">Date Basis</label>
-            <div style="display:flex;gap:0;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
+            <div style="display:flex;gap:0;background:rgba(0,0,0,0.04);border:1px solid var(--border-color);border-radius:8px;overflow:hidden;">
                 <button id="exportTogglePub" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:var(--primary);color:#fff;font-weight:700;font-size:0.8rem;cursor:pointer;">Published</button>
                 <button id="exportToggleEnc" type="button" style="flex:1;padding:0.6rem 1rem;border:none;background:transparent;color:var(--text-secondary);font-weight:600;font-size:0.8rem;cursor:pointer;">Encoded</button>
             </div>
         </div>
-        <div id="exportPeriodRange" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:6px;">
+        <div id="exportPeriodRange" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:1rem;padding:0.5rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:6px;">
             Period: <span id="exportPeriodRangeText" style="color:var(--text-primary);font-weight:600;">Loading...</span>
         </div>
         <div id="exportDateError" style="display:none;font-size:0.75rem;color:#f87171;margin-bottom:0.75rem;padding:0.4rem 0.6rem;background:rgba(239,68,68,0.1);border-radius:6px;"></div>
         <div style="margin-bottom:1.5rem;">
             <label style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-secondary);display:block;margin-bottom:0.6rem;">Sections to Export</label>
             <div style="display:flex;flex-direction:column;gap:0.5rem;">
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="executive" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 📈 Executive Summary
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="projects" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 📊 Project Analytics
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="contractors" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🏢 Contractor Analytics
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="sales" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 💼 Sales Performance
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="geographic" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🗺️ Geographic
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="material" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> 🔩 Material Req.
                 </label>
-                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(255,255,255,0.03);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(255,255,255,0.08);transition:background 0.15s;">
+                <label style="display:flex;align-items:center;gap:0.75rem;padding:0.6rem 0.75rem;background:rgba(0,0,0,0.02);border-radius:8px;cursor:pointer;font-size:0.9rem;color:var(--text-primary);border:1px solid rgba(0,0,0,0.06);transition:background 0.15s;">
                     <input type="checkbox" class="export-section" value="encoding" checked style="accent-color:var(--primary);width:18px;height:18px;cursor:pointer;"> ⌨️ Encoding Performance
                 </label>
             </div>

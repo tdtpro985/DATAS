@@ -45,7 +45,7 @@
 .by { background:rgba(251,191,36,.12);  color:#fbbf24; }
 .bp { background:rgba(167,139,250,.12); color:#a78bfa; }
 .br { background:rgba(248,113,113,.12); color:#f87171; }
-.bm { background:rgba(148,163,184,.1);  color:#94a3b8; }
+.bm { background:rgba(148,163,184,.1);  color:var(--text-secondary); }
 
 /* ── Funnel ── */
 .funnel-card { background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.07);
@@ -68,7 +68,7 @@
 .f-count { font-size:1.5rem; font-weight:800; line-height:1; color:rgba(255,255,255,.25); }
 .f-box.active .f-count { color:var(--fc); }
 .f-label { font-size:.65rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--text-secondary); }
-.f-pct { font-size:.7rem; font-weight:700; color:var(--fc,#94a3b8); }
+.f-pct { font-size:.7rem; font-weight:700; color:var(--fc,var(--text-secondary)); }
 .f-dur { font-size:.65rem; color:var(--text-muted); margin-top:.1rem; line-height:1.3; }
 .f-dur strong { color:rgba(255,255,255,.5); }
 
@@ -133,7 +133,7 @@
 .team-row:last-child { border-bottom:none; }
 .rnk { width:1.6rem; height:1.6rem; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.68rem; font-weight:800; flex-shrink:0; }
 .rnk.gold   { background:rgba(251,191,36,.18); color:#fbbf24; }
-.rnk.silver { background:rgba(148,163,184,.15); color:#94a3b8; }
+.rnk.silver { background:rgba(148,163,184,.15); color:var(--text-secondary); }
 .rnk.bronze { background:rgba(180,83,9,.15);   color:#b45309; }
 .rnk.me     { background:rgba(96,165,250,.18);  color:#60a5fa; }
 .rnk.other  { background:rgba(255,255,255,.05); color:var(--text-secondary); }
@@ -161,7 +161,7 @@
 .chip-aw { background:rgba(52,211,153,.15);  color:#34d399; }
 .chip-pr { background:rgba(255,122,0,.15);   color:#fb923c; }
 .chip-cp { background:rgba(52,211,153,.15);  color:#34d399; }
-.chip-ns { background:rgba(148,163,184,.1);  color:#94a3b8; }
+.chip-ns { background:rgba(148,163,184,.1);  color:var(--text-secondary); }
 .sdots { display:flex; gap:.22rem; align-items:center; }
 .sd { width:.5rem; height:.5rem; border-radius:50%; }
 .sd-y { background:#34d399; } .sd-n { background:rgba(248,113,113,.4); } .sd-p { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); }

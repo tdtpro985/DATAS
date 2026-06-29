@@ -840,7 +840,7 @@ function showSettingsResultModal(changes, message) {
 
     changesList.innerHTML = Object.entries(changes).map(([key, { oldValue, newValue }]) => {
         return `
-            <div style="padding:1rem;border:1px solid rgba(255,255,255,0.08);border-radius:0.75rem;background:rgba(255,255,255,0.02);">
+            <div style="padding:1rem;border:1px solid rgba(0,0,0,0.06);border-radius:0.75rem;background:rgba(0,0,0,0.02);">
                 <div style="font-weight:700;margin-bottom:0.35rem;color:var(--text-primary);">${formatSettingLabel(key)}</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;font-size:0.95rem;line-height:1.4;">
                     <div style="color:var(--text-muted);"><strong>Previous:</strong> <span>${formatSettingValue(oldValue)}</span></div>

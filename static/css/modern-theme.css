@@ -8,7 +8,7 @@
 ══════════════════════════════════════════════════════════ */
 
 .card {
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.95) 0%, rgba(20, 23, 31, 0.98) 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-radius: var(--radius-2xl);
@@ -16,7 +16,7 @@
     box-shadow: 
         var(--shadow-lg),
         0 0 0 1px rgba(255, 128, 0, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.150);
     transition: all var(--transition-base);
     position: relative;
     overflow: hidden;
@@ -94,7 +94,7 @@
 
 /* Card variants */
 .card-elevated {
-    background: linear-gradient(135deg, rgba(30, 33, 41, 0.95) 0%, rgba(24, 27, 35, 0.98) 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%);
     box-shadow: 
         var(--shadow-xl),
         0 0 0 1px rgba(255, 128, 0, 0.12);
@@ -102,7 +102,7 @@
 
 .card-flat {
     box-shadow: none;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.160);
 }
 
 .card-interactive {
@@ -145,7 +145,7 @@ button::after, .btn::after {
     width: 0;
     height: 0;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.300);
     transform: translate(-50%, -50%);
     transition: width 0.6s, height 0.6s;
 }
@@ -171,7 +171,7 @@ button:active::after, .btn:active::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.300), transparent);
     opacity: 0;
     transition: opacity var(--transition-base);
     border-radius: inherit;
@@ -201,16 +201,16 @@ button:active::after, .btn:active::after {
 
 /* Secondary Button - Ghost Style */
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.150);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.225);
     color: var(--text-primary);
     padding: var(--sp-3) var(--sp-6);
     font-size: var(--text-sm);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.200);
     border-color: rgba(255, 128, 0, 0.3);
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
@@ -238,14 +238,14 @@ button:active::after, .btn:active::after {
     height: 40px;
     padding: 0;
     border-radius: var(--radius-lg);
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.150);
+    border: 1px solid rgba(0, 0, 0, 0.200);
     color: var(--text-secondary);
     font-size: var(--text-lg);
 }
 
 .btn-icon:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.200);
     border-color: rgba(255, 128, 0, 0.3);
     color: var(--orange-500);
 }
@@ -269,7 +269,7 @@ button:active::after, .btn:active::after {
 
 input, select, textarea {
     background: var(--bg-input);
-    border: 2px solid rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(0, 0, 0, 0.200);
     border-radius: var(--radius-lg);
     padding: var(--sp-3) var(--sp-4);
     color: var(--text-primary);
@@ -333,7 +333,7 @@ input:hover, select:hover, textarea:hover {
 .kpi-card {
     background: var(--gradient-dark);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.160);
     border-radius: var(--radius-xl);
     padding: var(--sp-5);
     display: flex;
@@ -451,7 +451,7 @@ input:hover, select:hover, textarea:hover {
 }
 
 .kpi-change.positive {
-    background: rgba(16, 185, 129, 0.15);
+    background: rgba(0, 0, 0, 0.225);
     color: var(--success-500);
 }
 
@@ -471,7 +471,7 @@ input:hover, select:hover, textarea:hover {
 }
 
 .data-table thead th {
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.6) 0%, rgba(20, 23, 31, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 1) 100%);
     backdrop-filter: blur(10px);
     color: var(--text-secondary);
     font-weight: 700;
@@ -496,7 +496,7 @@ input:hover, select:hover, textarea:hover {
 
 .data-table tbody tr {
     transition: all var(--transition-fast);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.150);
     position: relative;
 }
 
@@ -531,7 +531,7 @@ input:hover, select:hover, textarea:hover {
 
 /* Alternating row colors */
 .data-table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.080);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -562,7 +562,7 @@ input:hover, select:hover, textarea:hover {
 .badge-awarded {
     background: linear-gradient(135deg, var(--success-500) 0%, var(--success-600) 100%);
     color: white;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.30);
 }
 
 .badge-bidding {
@@ -578,9 +578,9 @@ input:hover, select:hover, textarea:hover {
 }
 
 .badge-neutral {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.200);
     color: var(--text-secondary);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.225);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -594,7 +594,7 @@ input:hover, select:hover, textarea:hover {
     border-radius: var(--radius-full);
     overflow: hidden;
     position: relative;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.300);
 }
 
 .progress-bar-fill {
@@ -639,7 +639,7 @@ input:hover, select:hover, textarea:hover {
     left: 50%;
     transform: translateX(-50%) translateY(-4px);
     padding: var(--sp-2) var(--sp-3);
-    background: rgba(26, 29, 37, 0.95);
+    background: #FFFFFF;
     backdrop-filter: blur(10px);
     color: var(--text-primary);
     font-size: var(--text-xs);
@@ -661,7 +661,7 @@ input:hover, select:hover, textarea:hover {
     left: 50%;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-top-color: rgba(26, 29, 37, 0.95);
+    border-top-color: #FFFFFF;
     opacity: 0;
     pointer-events: none;
     transition: all var(--transition-base);
@@ -750,24 +750,24 @@ input:hover, select:hover, textarea:hover {
 ══════════════════════════════════════════════════════════ */
 
 .glass {
-    background: rgba(26, 29, 37, 0.7);
+    background: rgba(255, 255, 255, 1);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.200);
 }
 
 .glass-strong {
-    background: rgba(26, 29, 37, 0.9);
+    background: #FFFFFF;
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(0, 0, 0, 0.225);
 }
 
 .glass-subtle {
-    background: rgba(26, 29, 37, 0.5);
+    background: rgba(255, 255, 255, 1);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.150);
 }
 
 /* ══════════════════════════════════════════════════════════

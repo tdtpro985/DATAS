@@ -37,8 +37,8 @@
     align-items: center;
     gap: 0.35rem;
     padding: 0.25rem 0.7rem;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(0, 0, 0, 0.150);
+    border: 1px solid rgba(0, 0, 0, 0.160);
     border-radius: 100px;
     font-size: 0.75rem;
     color: var(--text-secondary);
@@ -76,7 +76,7 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0, 0, 0, 0.180);
 }
 
 /* ── KPI Grid ── */
@@ -90,8 +90,8 @@
 @media (max-width: 560px)  { .kpi-grid { grid-template-columns: 1fr 1fr; } }
 
 .kpi-card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.090);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     padding: 1.1rem 1.25rem;
     display: flex;
@@ -111,7 +111,7 @@
     transition: transform 0.3s;
     transform-origin: left;
 }
-.kpi-card:hover { border-color: rgba(255,255,255,0.13); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
+.kpi-card:hover { border-color: rgba(0, 0, 0, 0.195); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25); }
 .kpi-card:hover::before { transform: scaleX(1); }
 
 .kpi-top {
@@ -137,7 +137,7 @@
     border-radius: 4px;
 }
 .kpi-trend.up   { background: rgba(52,211,153,0.12); color: #34d399; }
-.kpi-trend.flat { background: rgba(148,163,184,0.1);  color: #94a3b8; }
+.kpi-trend.flat { background: rgba(148,163,184,0.1);  color: var(--text-secondary); }
 .kpi-trend.rank { background: rgba(251,191,36,0.12);  color: #fbbf24; }
 
 .kpi-value {
@@ -175,8 +175,8 @@
 }
 
 .chart-card {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     padding: 1.25rem;
     display: flex;
@@ -221,8 +221,8 @@
 @media (max-width: 900px) { .quality-grid { grid-template-columns: 1fr; } }
 
 .quality-score-card {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     padding: 1.5rem;
     display: flex;
@@ -273,8 +273,8 @@
 }
 
 .quality-bars-card {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     padding: 1.25rem;
     display: flex;
@@ -297,7 +297,7 @@
 .quality-bar-track {
     flex: 1;
     height: 6px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0, 0, 0, 0.180);
     border-radius: 100px;
     overflow: hidden;
 }
@@ -317,8 +317,8 @@
 
 /* ── Team ranking ── */
 .team-card {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     padding: 1.25rem;
     margin-bottom: 1rem;
@@ -328,7 +328,7 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.5rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.120);
 }
 .team-row:last-child { border-bottom: none; }
 .team-rank-badge {
@@ -343,17 +343,17 @@
     flex-shrink: 0;
 }
 .team-rank-badge.gold   { background: rgba(251,191,36,0.18); color: #fbbf24; }
-.team-rank-badge.silver { background: rgba(148,163,184,0.15); color: #94a3b8; }
+.team-rank-badge.silver { background: rgba(148,163,184,0.15); color: var(--text-secondary); }
 .team-rank-badge.bronze { background: rgba(180,83,9,0.15);    color: #b45309; }
 .team-rank-badge.me     { background: rgba(255,122,0,0.18);   color: #fb923c; }
-.team-rank-badge.other  { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
+.team-rank-badge.other  { background: rgba(0, 0, 0, 0.150); color: var(--text-secondary); }
 
 .team-name { flex: 1; font-size: 0.82rem; font-weight: 600; color: var(--text-primary); }
 .team-name.me { color: #fb923c; }
 .team-bar-wrap { width: 40%; position: relative; }
 .team-bar-track {
     height: 8px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0, 0, 0, 0.150);
     border-radius: 100px;
     overflow: hidden;
 }
@@ -373,8 +373,8 @@
 
 /* ── Recent table ── */
 .recent-card {
-    background: rgba(255,255,255,0.025);
-    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.140);
     border-radius: 0.875rem;
     overflow: hidden;
     margin-bottom: 2rem;
@@ -385,7 +385,7 @@
     font-size: 0.78rem;
 }
 .recent-table thead th {
-    background: rgba(255,255,255,0.04);
+    background: rgba(0, 0, 0, 0.120);
     color: rgba(255,255,255,0.45);
     font-weight: 700;
     text-transform: uppercase;
@@ -393,12 +393,12 @@
     font-size: 0.65rem;
     padding: 0.65rem 1rem;
     text-align: left;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.180);
     white-space: nowrap;
 }
 .recent-table tbody td {
     padding: 0.7rem 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.04);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.120);
     color: var(--text-primary);
     vertical-align: middle;
 }
@@ -424,7 +424,7 @@
 .chip-bidding   { background:rgba(251,191,36,0.15);  color:#fbbf24; }
 .chip-awarded   { background:rgba(52,211,153,0.15);  color:#34d399; }
 .chip-priority  { background:rgba(255,122,0,0.15);   color:#fb923c; }
-.chip-other     { background:rgba(148,163,184,0.1);  color:#94a3b8; }
+.chip-other     { background:rgba(148,163,184,0.1);  color:var(--text-secondary); }
 
 /* ── Chart tabs ── */
 .chart-tabs {
@@ -437,7 +437,7 @@
     font-size: 0.68rem;
     font-weight: 600;
     cursor: pointer;
-    border: 1px solid rgba(255,255,255,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.160);
     background: transparent;
     color: var(--text-secondary);
     transition: all 0.2s;

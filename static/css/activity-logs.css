@@ -1,11 +1,11 @@
         :root {
             --primary: #f97316;
             --primary-dark: #ea580c;
-            --bg-dark: #0f172a;
-            --bg-card: #1e293b;
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-dark: var(--bg-input);
+            --bg-card: #FFFFFF;
+            --text-primary: var(--text-primary);
+            --text-secondary: var(--text-secondary);
+            --border-color: rgba(0, 0, 0, 0.200);
         }
 
         body {
@@ -65,7 +65,7 @@
 
         .filter-group select,
         .filter-group input {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 0.6rem 1rem;
@@ -108,7 +108,7 @@
         }
 
         .tab-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
             padding: 0.6rem 1.2rem;
@@ -120,7 +120,7 @@
         }
 
         .tab-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.200);
             color: var(--text-primary);
         }
 
@@ -160,13 +160,13 @@
 
         .logs-table td {
             padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.150);
             font-size: 0.9rem;
             color: var(--text-primary);
         }
 
         .logs-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.090);
         }
 
         .action-badge {
@@ -182,8 +182,8 @@
         .action-badge.create { background: rgba(34, 197, 94, 0.2); color: #10b981; }
         .action-badge.update { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
         .action-badge.delete { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
-        .action-badge.login { background: rgba(16, 185, 129, 0.2); color: #10b981; }
-        .action-badge.logout { background: rgba(148, 163, 184, 0.2); color: #94a3b8; }
+        .action-badge.login { background: rgba(0, 0, 0, 0.300); color: #10b981; }
+        .action-badge.logout { background: rgba(148, 163, 184, 0.2); color: var(--text-secondary); }
         .action-badge.assign { background: rgba(168, 85, 247, 0.2); color: #a855f7; }
         .action-badge.archive { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
 

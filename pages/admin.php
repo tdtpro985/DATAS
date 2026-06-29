@@ -175,7 +175,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--sp-4); gap: 1rem;">
                     <input type="text" id="searchInput" placeholder="Search users..." 
                            style="flex: 1; max-width: 400px; padding: 0.75rem 1rem; background: var(--bg-input); 
-                                  border: 1px solid rgba(255, 255, 255, 0.1); border-radius: var(--radius-md); 
+                                  border: 1px solid rgba(0,0,0,0.08); border-radius: var(--radius-md); 
                                   color: var(--text-primary); font-size: 0.9rem;">
                     <button class="btn-primary" onclick="showModal()">+ New User</button>
                 </div>
@@ -309,7 +309,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                 </div>
 
                 <!-- Settings Tabs -->
-                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:1rem;">
+                <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;border-bottom:1px solid rgba(0,0,0,0.08);padding-bottom:1rem;">
                     <button class="admin-tab-btn active" data-tab="general" onclick="switchSettingsTab('general')">
                         <span>⚙️</span> General
                     </button>
@@ -539,7 +539,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                             </div>
 
                             <!-- Export Section -->
-                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
+                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.08);">
                                 <label class="setting-label">📤 Database Export</label>
                                 <p class="setting-desc">Download database backups as .SQL files</p>
                                 <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
@@ -553,7 +553,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                             </div>
 
                             <!-- Action Buttons -->
-                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.1);">
+                            <div class="setting-item" style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(0,0,0,0.08);">
                                 <label class="setting-label">System Tools</label>
                                 <p class="setting-desc">Perform system maintenance and diagnostic operations</p>
                                 <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:1rem;">
@@ -576,7 +576,7 @@ if ($role !== 'admin' && $role !== 'superadmin') {
                 </div>
 
                 <!-- Bottom Save Button -->
-                <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.1);">
+                <div style="display:flex;justify-content:flex-end;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(0,0,0,0.08);">
                     <button class="btn-secondary" onclick="restoreDefaultSettings()">↩️ Restore Defaults</button>
                     <button class="btn-primary" onclick="saveAllSettings()">💾 Save All Settings</button>
                 </div>

@@ -362,7 +362,7 @@ if ($currentView === 'archived' && !in_array($role, ['admin', 'superadmin'])) {
             
             <!-- Search box for filtering SRs -->
             <div style="margin-bottom: 1.5rem;">
-                <input type="text" id="srSearchInput" placeholder="Search by name or branch..." style="width: 100%; padding: 0.75rem 1rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.75rem; color: var(--text-primary); font-size: 0.9rem; outline: none;">
+                <input type="text" id="srSearchInput" placeholder="Search by name or branch..." style="width: 100%; padding: 0.75rem 1rem; background: var(--bg-input, #F4F5FA); border: 1px solid rgba(0,0,0,0.12); border-radius: 0.75rem; color: var(--text-primary); font-size: 0.9rem; outline: none;">
             </div>
             
             <!-- Sales Reps Grid -->

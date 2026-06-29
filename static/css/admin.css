@@ -1257,7 +1257,7 @@
 .user-table tbody tr:last-child td { border-bottom: none; }
 .project-table tbody tr.clickable-row { cursor: pointer; transition: background 0.15s; }
 .project-table tbody tr.clickable-row:hover { background: rgba(255,122,0,0.04); }
-.project-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+.project-table tbody tr:hover td { background: rgba(255,122,0,0.03); }
 
 .project-detail-list {
     display: grid;

@@ -1,7 +1,7 @@
 :root {
-            --form-bg: rgba(20, 24, 32, 0.65);
+            --form-bg: rgba(255, 255, 255, 1);
             --form-border: rgba(249, 115, 22, 0.2);
-            --input-bg: rgba(30, 36, 48, 0.85);
+            --input-bg: rgba(255, 255, 255, 1);
             --input-border: rgba(249, 115, 22, 0.2);
             --input-focus: rgba(249, 115, 22, 0.35);
         }
@@ -76,14 +76,14 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: rgba(30, 36, 48, 0.9);
+            background: #FFFFFF;
             border: 2px solid rgba(249, 115, 22, 0.2);
             font-weight: 700;
             font-size: 0.7rem;
             color: var(--text-secondary);
             position: relative;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.25);
         }
         .step-badge.active {
             background: linear-gradient(135deg, #f97316 0%, #fb923c 100%);
@@ -96,7 +96,7 @@
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             border-color: #10b981;
             color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.30);
         }
         .step-line {
             position: absolute;
@@ -144,7 +144,7 @@
             padding: 0.5rem;
             margin-bottom: 0.3rem;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.270);
             transition: all 0.3s ease;
         }
         .form-section:hover {
@@ -248,7 +248,7 @@
         .form-group select:focus {
             border-color: var(--input-focus);
             box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.1);
-            background: rgba(30, 36, 48, 0.95);
+            background: #FFFFFF;
         }
 
         .form-group select {
@@ -303,20 +303,20 @@
         .btn-success {
             background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.30);
         }
         .btn-success:hover {
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.40);
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.200);
             color: var(--text-primary);
-            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            border: 1.5px solid rgba(0, 0, 0, 0.300);
         }
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.225);
             border-color: rgba(255, 255, 255, 0.3);
         }
 
@@ -467,7 +467,7 @@
             width: 6px;
         }
         .form-step::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
             border-radius: 3px;
         }
         .form-step::-webkit-scrollbar-thumb {
@@ -581,11 +581,11 @@
             top: calc(100% + 3px);
             left: 0;
             right: 0;
-            background: #1e2430;
+            background: var(--bg-input);
             border: 1.5px solid rgba(249, 115, 22, 0.35);
             border-radius: 6px;
             z-index: 9999;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
             overflow: hidden;
         }
 
@@ -596,9 +596,9 @@
         .searchable-select-search {
             width: 100%;
             box-sizing: border-box;
-            background: rgba(255,255,255,0.05);
+            background: rgba(0, 0, 0, 0.150);
             border: none;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.160);
             padding: 0.4rem 0.6rem;
             color: var(--text-primary);
             font-size: 0.75rem;

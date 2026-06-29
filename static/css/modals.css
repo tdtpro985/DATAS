@@ -10,7 +10,7 @@
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(8, 9, 11, 0.85);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: var(--z-modal-backdrop);
@@ -31,7 +31,7 @@
 ══════════════════════════════════════════════════════════ */
 
 .modal-content {
-    background: linear-gradient(135deg, rgba(26, 29, 37, 0.98) 0%, rgba(20, 23, 31, 0.98) 100%);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 100%);
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
     border: 1px solid rgba(255, 128, 0, 0.15);
@@ -101,7 +101,7 @@
     justify-content: space-between;
     gap: var(--sp-4);
     padding: var(--sp-6) var(--sp-6) var(--sp-5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.160);
     flex-shrink: 0;
     background: linear-gradient(135deg, rgba(255, 128, 0, 0.05) 0%, transparent 100%);
 }
@@ -130,8 +130,8 @@
     width: 36px;
     height: 36px;
     padding: 0;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.150);
+    border: 1px solid rgba(0, 0, 0, 0.200);
     border-radius: var(--radius-lg);
     color: var(--text-secondary);
     cursor: pointer;
@@ -163,7 +163,7 @@
 }
 
 .modal-body::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
+    background: rgba(0, 0, 0, 0.080);
     border-radius: var(--radius-full);
 }
 
@@ -182,7 +182,7 @@
     justify-content: flex-end;
     gap: var(--sp-3);
     padding: var(--sp-5) var(--sp-6) var(--sp-6);
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(0, 0, 0, 0.160);
     flex-shrink: 0;
     background: linear-gradient(180deg, transparent 0%, rgba(255, 128, 0, 0.02) 100%);
 }
@@ -277,7 +277,7 @@
 
 .modal-confirm-icon.success {
     color: var(--success-500);
-    filter: drop-shadow(0 0 20px rgba(16, 185, 129, 0.5));
+    filter: drop-shadow(0 0 20px rgba(5, 150, 105, 0.4));
     animation: scaleIn 0.5s ease-out;
 }
 
@@ -302,7 +302,7 @@
 .detail-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(8, 9, 11, 0.9);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(12px);
     z-index: var(--z-modal);
     display: none;
@@ -328,14 +328,14 @@
     align-items: flex-start;
     gap: var(--sp-4);
     padding: var(--sp-4);
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.090);
+    border: 1px solid rgba(0, 0, 0, 0.160);
     border-radius: var(--radius-lg);
     transition: all var(--transition-base);
 }
 
 .detail-item:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.150);
     border-color: rgba(255, 128, 0, 0.2);
     transform: translateX(4px);
 }
@@ -364,7 +364,7 @@
 .image-modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(0, 0, 0, 0.88);
     backdrop-filter: blur(20px);
     z-index: var(--z-maximum);
     display: none;
@@ -401,7 +401,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.6);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--radius-full);

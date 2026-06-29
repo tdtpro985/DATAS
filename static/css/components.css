@@ -1181,7 +1181,7 @@ textarea.form-control {
 .detail-value {
     font-size: 0.95rem;
     font-weight: 600;
-    color: var(--text-primary, #F8FAFC);
+    color: var(--text-primary, #374151);
     word-break: break-word;
 }
 
@@ -1278,7 +1278,7 @@ textarea.form-control {
 
 .tab-btn:hover {
     background: rgba(255, 255, 255, 0.05);
-    color: var(--text-primary, #F8FAFC);
+    color: var(--text-primary, #374151);
 }
 
 .tab-btn.active {
@@ -1399,7 +1399,7 @@ textarea.form-control {
 .summary-card-value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: var(--text-primary, #F8FAFC);
+    color: var(--text-primary, #374151);
     line-height: 1;
 }
 
@@ -1433,10 +1433,10 @@ textarea.form-control {
 .search-box input {
     width: 100%;
     padding: 0.75rem 1rem 0.75rem 2.75rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-input, #F4F5FA);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0.75rem;
-    color: var(--text-primary, #F8FAFC);
+    color: var(--text-primary, #374151);
     font-size: 0.9rem;
     outline: none;
     transition: border-color 0.2s, box-shadow 0.2s;
@@ -1458,10 +1458,10 @@ textarea.form-control {
 
 .filter-select {
     padding: 0.75rem 2.5rem 0.75rem 1rem;
-    background: rgba(15, 23, 42, 0.8);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-input, #F4F5FA);
+    border: 1px solid rgba(0, 0, 0, 0.12);
     border-radius: 0.75rem;
-    color: var(--text-primary, #F8FAFC);
+    color: var(--text-primary, #374151);
     font-size: 0.9rem;
     font-weight: 600;
     cursor: pointer;

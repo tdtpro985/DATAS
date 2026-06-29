@@ -22,10 +22,10 @@
     min-width: 300px;
     max-width: 500px;
     padding: 16px;
-    background: var(--bg-card, #1A1D23);
+    background: var(--bg-card, #FFFFFF);
     border-radius: 12px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(255, 255, 255, 0.40);
+    border: 1px solid rgba(0, 0, 0, 0.200);
     pointer-events: all;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -72,7 +72,7 @@
 }
 
 .toast-close:hover {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.200);
     color: var(--text-primary, #FFFFFF);
 }
 
@@ -82,7 +82,7 @@
 }
 
 .toast-success .toast-icon {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(0, 0, 0, 0.300);
     color: #6ee7b7;
 }
 
@@ -138,7 +138,7 @@
 .confirm-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
     display: flex;
@@ -154,13 +154,13 @@
 }
 
 .confirm-dialog {
-    background: var(--bg-card, #1A1D23);
+    background: var(--bg-card, #FFFFFF);
     border-radius: 16px;
     padding: 32px;
     max-width: 400px;
     width: 90%;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.200);
     text-align: center;
     transform: scale(0.9);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -182,7 +182,7 @@
 }
 
 .confirm-icon-success {
-    background: rgba(16, 185, 129, 0.2);
+    background: rgba(0, 0, 0, 0.300);
     color: #6ee7b7;
 }
 
@@ -234,12 +234,12 @@
 
 .confirm-cancel {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.300);
     color: var(--text-secondary, #ADB5BD);
 }
 
 .confirm-cancel:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(0, 0, 0, 0.150);
     border-color: rgba(255, 255, 255, 0.3);
     color: var(--text-primary, #FFFFFF);
 }

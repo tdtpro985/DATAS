@@ -872,8 +872,8 @@ function renderSalesRepsSimple(salesReps) {
     salesReps.forEach(rep => {
         const repCard = document.createElement('div');
         repCard.style.cssText = `
-            background: rgba(15, 23, 42, 0.9);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: #FFFFFF;
+            border: 2px solid rgba(0,0,0,0.08);
             border-radius: 0.75rem;
             padding: 1.5rem;
             cursor: pointer;
@@ -882,7 +882,7 @@ function renderSalesRepsSimple(salesReps) {
         
         repCard.innerHTML = `
             <div style="display: flex; align-items: center; gap: 1rem;">
-                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.5rem;">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, #3b82f6, #1d4ed8); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #374151; font-weight: 700; font-size: 1.5rem;">
                     ${(rep.full_name || rep.email).charAt(0).toUpperCase()}
                 </div>
                 <div style="flex: 1;">
@@ -906,7 +906,7 @@ function renderSalesRepsSimple(salesReps) {
             repCard.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
         });
         repCard.addEventListener('mouseleave', () => {
-            repCard.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+            repCard.style.borderColor = 'rgba(0,0,0,0.08)';
             repCard.style.transform = 'translateY(0)';
             repCard.style.boxShadow = 'none';
         });
@@ -968,11 +968,11 @@ function renderSalesReps(salesReps) {
             margin: 1rem 0;
         `;
         separator.innerHTML = `
-            <div style="flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1);"></div>
+            <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.08);"></div>
             <span style="color: var(--text-muted); font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">
                 Other Sales Representatives
             </span>
-            <div style="flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1);"></div>
+            <div style="flex: 1; height: 1px; background: rgba(0,0,0,0.08);"></div>
         `;
         grid.appendChild(separator);
     }
@@ -988,8 +988,8 @@ function renderSalesRepCard(rep, container, isRecommended) {
     
     // Different styling for recommended reps
     const baseStyle = `
-        background: rgba(15, 23, 42, 0.9);
-        border: 2px solid rgba(255, 255, 255, 0.1);
+        background: #FFFFFF;
+        border: 2px solid rgba(0,0,0,0.08);
         border-radius: 0.75rem;
         padding: 1.5rem;
         cursor: pointer;
@@ -1074,8 +1074,8 @@ function renderSalesRepCard(rep, container, isRecommended) {
             repCard.style.transform = 'translateY(0)';
             repCard.style.boxShadow = '0 4px 12px rgba(251, 191, 36, 0.15)';
         } else {
-            repCard.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-            repCard.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+            repCard.style.borderColor = 'rgba(0,0,0,0.08)';
+            repCard.style.backgroundColor = '#FFFFFF';
             repCard.style.transform = 'translateY(0)';
         }
     });
@@ -1179,7 +1179,7 @@ function createAssignmentStatusBar() {
         left: 0;
         right: 0;
         background: #10b981;
-        color: white;
+        color: #374151;
         padding: 1rem;
         text-align: center;
         font-weight: 500;
@@ -1190,7 +1190,7 @@ function createAssignmentStatusBar() {
     statusBar.innerHTML = `
         📋 Assignment Mode: Selected Sales Rep <strong>${assignmentState.selectedSalesRepName}</strong> 
         | Selected Projects: <span id="selectedProjectCount">0</span>
-        <button onclick="cancelAssignment()" style="margin-left: 1rem; background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Cancel</button>
+        <button onclick="cancelAssignment()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #374151; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">Cancel</button>
         <button onclick="proceedWithAssignment()" style="margin-left: 0.5rem; background: white; color: #10b981; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer; font-weight: 500;">Assign Selected</button>
     `;
     
@@ -1421,7 +1421,7 @@ function showProjectSelectionBanner(salesRepName) {
         align-items: center;
         gap: 1rem;
         background: linear-gradient(135deg, #10b981, #059669);
-        color: white;
+        color: #374151;
         padding: 0.875rem 1.5rem;
         border-radius: 0.75rem;
         font-weight: 500;
@@ -1432,7 +1432,7 @@ function showProjectSelectionBanner(salesRepName) {
     statusContainer.innerHTML = `
         <span>📋 Assignment Mode: Selected Sales Rep <strong style="color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.4);">${salesRepName}</strong></span>
         <span style="color: rgba(255,255,255,0.95);">| Selected Projects: <span id="selectedCount" style="font-weight: 900; color: #fff; background: rgba(0,0,0,0.25); padding: 0.15rem 0.6rem; border-radius: 0.375rem; font-size: 1.05rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);">0</span></span>
-        <button onclick="exitProjectSelectionMode()" style="background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;">Cancel</button>
+        <button onclick="exitProjectSelectionMode()" style="background: rgba(0,0,0,0.14); border: 1px solid rgba(0,0,0,0.15); color: #374151; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.875rem; font-weight: 600;">Cancel</button>
     `;
     
     // Create assign projects button
@@ -1564,7 +1564,7 @@ function updateSelectedCount() {
     countElements.forEach(el => {
         el.textContent = count;
         el.style.color = '#fff';
-        el.style.background = count > 0 ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)';
+        el.style.background = count > 0 ? 'rgba(0,0,0,0.14)' : 'rgba(0,0,0,0.25)';
     });
     
     const assignButtonCountElement = document.getElementById('assignButtonCount');
@@ -1826,7 +1826,7 @@ function showBulkUnassignBanner() {
         left: 0;
         right: 0;
         background: linear-gradient(135deg, #dc2626, #b91c1c);
-        color: white;
+        color: #374151;
         padding: 1rem;
         text-align: center;
         font-weight: 500;
@@ -1836,7 +1836,7 @@ function showBulkUnassignBanner() {
     
     banner.innerHTML = `
         🗑️ Unassign Mode: Selected Projects: <span id="selectedCount">0</span>
-        <button onclick="exitProjectSelectionMode()" style="margin-left: 1rem; background: rgba(255,255,255,0.2); border: none; color: white; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Cancel</button>
+        <button onclick="exitProjectSelectionMode()" style="margin-left: 1rem; background: rgba(0,0,0,0.12); border: none; color: #374151; padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer;">Cancel</button>
     `;
     
     document.body.appendChild(banner);
@@ -1878,10 +1878,10 @@ function showBulkUnassignButtons() {
             </div>
         </div>
         <div style="display: flex; gap: 0.75rem;">
-            <button onclick="exitProjectSelectionMode()" class="btn-secondary" style="padding: 0.75rem 1.5rem; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);">
+            <button onclick="exitProjectSelectionMode()" class="btn-secondary" style="padding: 0.75rem 1.5rem; background: rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.12);">
                 Cancel
             </button>
-            <button id="proceedBtn" class="btn-delete" data-can-click="false" style="padding: 0.75rem 2rem; background: #dc2626; border-color: #dc2626; color: white; opacity: 0.5; cursor: not-allowed;">
+            <button id="proceedBtn" class="btn-delete" data-can-click="false" style="padding: 0.75rem 2rem; background: #dc2626; border-color: #dc2626; color: #374151; opacity: 0.5; cursor: not-allowed;">
                 Unassign Projects (<span id="proceedBtnCount">0</span>)
             </button>
         </div>
@@ -2041,7 +2041,7 @@ function showNotificationModal(title, message, type = 'info') {
 
     modal.innerHTML = `
         <div style="
-            background: #1e293b;
+            background: #FFFFFF;
             border: 2px solid ${color.border};
             border-radius: 1rem;
             max-width: 500px; width: 90%;
@@ -2052,7 +2052,7 @@ function showNotificationModal(title, message, type = 'info') {
             <div style="
                 display: flex; align-items: center; gap: 1rem;
                 padding: 1.75rem 2rem;
-                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-bottom: 1px solid rgba(0,0,0,0.08);
                 background: ${color.bg};
             ">
                 <div style="
@@ -2114,14 +2114,14 @@ function showConfirmationModal(title, message, onConfirm, onCancel = null) {
 
     modal.innerHTML = `
         <div style="
-            background: #1e293b;
+            background: #FFFFFF;
             border: 2px solid #3b82f6;
             border-radius: 1rem;
             max-width: 500px; width: 90%;
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
             overflow: hidden;
         ">
-            <div style="display:flex; align-items:center; gap:1rem; padding:1.75rem 2rem; border-bottom:1px solid rgba(255,255,255,0.1);">
+            <div style="display:flex; align-items:center; gap:1rem; padding:1.75rem 2rem; border-bottom:1px solid rgba(0,0,0,0.08);">
                 <div style="width:44px; height:44px; border-radius:50%; background:#3b82f6; display:flex; align-items:center; justify-content:center; color:#fff; font-size:1.4rem; font-weight:700; flex-shrink:0;">?</div>
                 <div style="flex:1;">
                     <h3 style="margin:0 0 0.35rem; color:#fff; font-size:1.1rem; font-weight:700;">${title}</h3>
@@ -2334,7 +2334,7 @@ function showNotificationToast(message, type = 'info') {
         max-width: 400px;
         padding: 1rem 1.5rem;
         background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: white;
+        color: #374151;
         border-radius: 0.75rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         transform: translateX(100%);
@@ -2393,7 +2393,7 @@ function showConfirmationModal(title, message, type = 'warning') {
         const modal = document.createElement('div');
         modal.style.cssText = `
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 1rem;
             max-width: 400px;
             width: 100%;
@@ -2439,7 +2439,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: ${iconColor};
                     border: 1px solid ${iconColor};
                     border-radius: 0.75rem;
-                    color: white;
+                    color: #374151;
                     font-size: 0.9rem;
                     font-weight: 700;
                     cursor: pointer;
@@ -2747,7 +2747,7 @@ function showActualProjectModalPM(projectId) {
     overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 10000; animation: fadeIn 0.2s;';
     
     const modalBox = document.createElement('div');
-    modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); animation: slideUp 0.3s;';
+    modalBox.style.cssText = 'background: #FFFFFF; padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(0,0,0,0.08); animation: slideUp 0.3s;';
     
     modalBox.innerHTML = `
         <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -2761,13 +2761,13 @@ function showActualProjectModalPM(projectId) {
                 <button type="button" class="actual-project-btn" data-value="yes" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">Yes</button>
                 <button type="button" class="actual-project-btn" data-value="no" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">No</button>
             </div>
-            <small style="display: block; margin-top: 0.75rem; color: rgba(255,255,255,0.6); font-size: 0.75rem; text-align: center;">
+            <small style="display: block; margin-top: 0.75rem; color: rgba(0,0,0,0.3); font-size: 0.75rem; text-align: center;">
                 Select "No" if this is spam, duplicate, or invalid.
             </small>
         </div>
         
         <div style="display: flex; gap: 0.75rem; justify-content: center;">
-            <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: white; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
+            <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #374151; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
                 Save
             </button>
         </div>

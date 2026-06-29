@@ -78,7 +78,7 @@ async function loadPieChart() {
                 // Optionally show a "no data" message on the canvas
                 var ctx2 = canvas.getContext('2d');
                 ctx2.clearRect(0, 0, canvas.width, canvas.height);
-                ctx2.fillStyle = 'rgba(255,255,255,0.35)';
+                ctx2.fillStyle = 'rgba(55,65,81,0.7)';
                 ctx2.font = 'bold 14px Inter, sans-serif';
                 ctx2.textAlign = 'center';
                 ctx2.textBaseline = 'middle';
@@ -128,7 +128,7 @@ async function loadPieChart() {
                     data: values,
                     backgroundColor: colors,
                     borderWidth: 2,
-                    borderColor: '#0f172a',
+                    borderColor: '#FFFFFF',
                     hoverOffset: 12
                 }]
             },
@@ -144,7 +144,7 @@ async function loadPieChart() {
                     datalabels: { display: false }, // handled by custom afterDraw below
                     tooltip: {
                         enabled: true,
-                        backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                        backgroundColor: '#FFFFFF',
                         titleFont: { size: 13, weight: 'bold' },
                         bodyFont: { size: 12 },
                         padding: 12,
@@ -264,7 +264,7 @@ async function loadPieChart() {
                         // Label name
                         ctx.textAlign    = align;
                         ctx.textBaseline = 'bottom';
-                        ctx.fillStyle    = '#ffffff';
+                        ctx.fillStyle = '#374151';
                         ctx.font         = 'bold 11px Inter, sans-serif';
                         ctx.fillText(p.label, textX, p.ly);
 
@@ -300,7 +300,7 @@ function displayPieError(message) {
     var width = canvas.width || canvas.offsetWidth || 300;
     var height = canvas.height || canvas.offsetHeight || 260;
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = 'rgba(255,255,255,0.72)';
+    ctx.fillStyle = 'rgba(55,65,81,0.8)';
     ctx.font = 'bold 14px Inter, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';

@@ -33,7 +33,7 @@ async function loadPerformanceData() {
         console.error('Error loading performance data:', error);
         // Show error message to user
         document.body.insertAdjacentHTML('beforeend', `
-            <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: white; padding: 1rem; border-radius: 8px; z-index: 9999;">
+            <div style="position: fixed; top: 20px; right: 20px; background: #ef4444; color: #374151; padding: 1rem; border-radius: 8px; z-index: 9999;">
                 ⚠️ Failed to load performance data
             </div>
         `);
@@ -113,7 +113,7 @@ function buildInlineCharts() {
             scales: {
                 x: { grid: { display: false } },
                 y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } }
+                     grid: { color: 'rgba(0,0,0,0.04)' } }
             }
         }
     });
@@ -153,7 +153,7 @@ function buildInlineCharts() {
             },
             scales: {
                 x: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } },
+                     grid: { color: 'rgba(0,0,0,0.04)' } },
                 y: { grid: { display: false }, ticks: { font: { size: 10 } } }
             }
         }
@@ -168,7 +168,7 @@ function buildInlineCharts() {
         data: {
             datasets: [{
                 data: [score, 100 - score],
-                backgroundColor: [color, 'rgba(255,255,255,0.05)'],
+                backgroundColor: [color, 'rgba(0,0,0,0.04)'],
                 borderWidth: 0,
                 hoverOffset: 0,
             }]
@@ -256,7 +256,7 @@ function buildDailyChart(range) {
             scales: {
                 x: { grid: { display: false }, ticks: { maxRotation: 45, font: { size: 10 } } },
                 y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } }
+                     grid: { color: 'rgba(0,0,0,0.04)' } }
             }
         }
     });
@@ -338,7 +338,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
             scales: {
                 x: { grid: { display: false } },
                 y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } }
+                     grid: { color: 'rgba(0,0,0,0.04)' } }
             }
         }
     });
@@ -380,7 +380,7 @@ document.getElementById('dailyTabs').addEventListener('click', e => {
             },
             scales: {
                 x: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } },
+                     grid: { color: 'rgba(0,0,0,0.04)' } },
                 y: { grid: { display: false }, ticks: { font: { size: 10 } } }
             }
         }
@@ -437,7 +437,7 @@ function buildTrendChart(period) {
             scales: {
                 x: { grid: { display: false } },
                 y: { beginAtZero: true, ticks: { stepSize: 1, precision: 0 },
-                     grid: { color: 'rgba(255,255,255,0.05)' } }
+                     grid: { color: 'rgba(0,0,0,0.04)' } }
             }
         }
     });
@@ -462,7 +462,7 @@ document.getElementById('trendTabs').addEventListener('click', e => {
         data: {
             datasets: [{
                 data: [score, 100 - score],
-                backgroundColor: [color, 'rgba(255,255,255,0.05)'],
+                backgroundColor: [color, 'rgba(0,0,0,0.04)'],
                 borderWidth: 0,
                 hoverOffset: 0,
             }]

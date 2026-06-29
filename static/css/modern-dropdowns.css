@@ -14,14 +14,14 @@ select.form-control {
     appearance: none !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
-    background-color: #0f172a !important;
+    background-color: var(--bg-input) !important;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
     background-repeat: no-repeat !important;
     background-position: right 0.75rem center !important;
     background-size: 14px 14px !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(0, 0, 0, 0.200) !important;
     border-radius: 0.625rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
@@ -43,7 +43,7 @@ select:hover,
 select.form-control:hover {
     border-color: rgba(255, 128, 0, 0.4) !important;
     background-color: #131c31 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.300) !important;
 }
 
 /* ── Focus State ── */
@@ -54,7 +54,7 @@ select:focus,
 .form-group select:focus,
 select.form-control:focus {
     border-color: #ff8c00 !important;
-    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 0 0 3px rgba(255, 128, 0, 0.15), 0 2px 8px rgba(0, 0, 0, 0.300) !important;
     background-color: #131c31 !important;
 }
 
@@ -72,8 +72,8 @@ select option,
 .sales-form-select option,
 .form-group select option,
 select.form-control option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
     padding: 0.5rem 0.75rem !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
@@ -96,8 +96,8 @@ select:disabled,
 select[disabled] {
     opacity: 0.4 !important;
     cursor: not-allowed !important;
-    background-color: #0a0f1a !important;
-    border-color: rgba(255, 255, 255, 0.05) !important;
+    background-color: var(--bg-app) !important;
+    border-color: rgba(0, 0, 0, 0.150) !important;
     color: #475569 !important;
 }
 
@@ -116,10 +116,10 @@ select option:first-child {
 .projects-toolbar .filter-select,
 .pm-filters .filter-select {
     padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
-    background-color: #0f172a !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-color: var(--bg-input) !important;
+    border: 1px solid rgba(0, 0, 0, 0.200) !important;
     border-radius: 0.625rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 600 !important;
     min-height: 40px !important;
@@ -140,10 +140,10 @@ select option:first-child {
 /* ── Navigation Header Dropdowns ── */
 .nav-select {
     padding: 0.5rem 2rem 0.5rem 0.75rem !important;
-    background-color: rgba(15, 23, 42, 0.8) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background-color: rgba(255, 255, 255, 1) !important;
+    border: 1px solid rgba(0, 0, 0, 0.160) !important;
     border-radius: 0.5rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.8rem !important;
     font-weight: 500 !important;
     min-height: 36px !important;
@@ -152,7 +152,7 @@ select option:first-child {
 
 .nav-select:hover {
     border-color: rgba(255, 128, 0, 0.3) !important;
-    background-color: rgba(15, 23, 42, 0.95) !important;
+    background-color: #FFFFFF !important;
 }
 
 .nav-select:focus {
@@ -161,17 +161,17 @@ select option:first-child {
 }
 
 .nav-select option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
 }
 
 /* ── Sales Form Dropdowns ── */
 .sales-form-select {
     padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
-    background-color: #0f172a !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-color: var(--bg-input) !important;
+    border: 1px solid rgba(0, 0, 0, 0.200) !important;
     border-radius: 0.625rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     min-height: 40px !important;
@@ -187,17 +187,17 @@ select option:first-child {
 }
 
 .sales-form-select option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
 }
 
 /* ── Form Group Dropdowns ── */
 .form-group select {
     padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
-    background-color: #0f172a !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-color: var(--bg-input) !important;
+    border: 1px solid rgba(0, 0, 0, 0.200) !important;
     border-radius: 0.625rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     min-height: 40px !important;
@@ -214,17 +214,17 @@ select option:first-child {
 }
 
 .form-group select option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
 }
 
 /* ── Admin Panel Dropdowns ── */
 select.form-control {
     padding: 0.625rem 2.25rem 0.625rem 0.875rem !important;
-    background-color: #0f172a !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background-color: var(--bg-input) !important;
+    border: 1px solid rgba(0, 0, 0, 0.200) !important;
     border-radius: 0.625rem !important;
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     min-height: 40px !important;
@@ -240,8 +240,8 @@ select.form-control:focus {
 }
 
 select.form-control option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
 }
 
 /* =============================================================
@@ -273,7 +273,7 @@ select::-webkit-scrollbar {
 }
 
 select::-webkit-scrollbar-track {
-    background: #0f172a;
+    background: var(--bg-input);
     border-radius: 3px;
 }
 
@@ -309,37 +309,37 @@ select::-webkit-scrollbar-thumb:hover {
 
 /* Ensure all selects in the app have consistent dark styling */
 body select {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
-    border-color: rgba(255, 255, 255, 0.1) !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
+    border-color: rgba(0, 0, 0, 0.200) !important;
 }
 
 body select option {
-    background-color: #0f172a !important;
-    color: #e2e8f0 !important;
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
 }
 
 /* Fix for Firefox select dropdown */
 @-moz-document url-prefix() {
     select {
-        background-color: #0f172a !important;
-        color: #e2e8f0 !important;
+        background-color: var(--bg-input) !important;
+        color: var(--text-primary) !important;
     }
     
     select option {
-        background-color: #0f172a !important;
-        color: #e2e8f0 !important;
+        background-color: var(--bg-input) !important;
+        color: var(--text-primary) !important;
     }
 }
 
 /* Fix for Chrome/Edge select dropdown */
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
     select {
-        background-color: #0f172a !important;
+        background-color: var(--bg-input) !important;
     }
     
     select option {
-        background-color: #0f172a !important;
-        color: #e2e8f0 !important;
+        background-color: var(--bg-input) !important;
+        color: var(--text-primary) !important;
     }
 }

@@ -415,7 +415,7 @@ $firstDate = $summary['first_encoded_at'] ? date('M j, Y', strtotime($summary['f
             $isMe   = (int)$t['id'] === $userId;
             $rClass = $isMe ? 'me' : ($rankBadgeClass[$i] ?? 'other');
             $barPct = round(100 * (int)$t['cnt'] / $maxTeam);
-            $barCol = $isMe ? 'linear-gradient(90deg,#ff7a00,#fbbf24)' : 'rgba(255,255,255,0.12)';
+            $barCol = $isMe ? 'linear-gradient(90deg,#ff7a00,#fbbf24)' : 'rgba(0,0,0,0.08)';
             $medal  = $i === 0 ? '🥇' : ($i === 1 ? '🥈' : ($i === 2 ? '🥉' : '#' . ($i + 1)));
         ?>
         <div class="team-row">

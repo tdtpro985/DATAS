@@ -19,7 +19,7 @@ function showConfirm(message, title = 'Confirm') {
                             ${escapeHtml(message)}
                         </p>
                     </div>
-                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 0.75rem; justify-content: flex-end;">
+                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(0,0,0,0.08); display: flex; gap: 0.75rem; justify-content: flex-end;">
                         <button class="btn-secondary" onclick="closeConfirmModal(false)">Cancel</button>
                         <button class="btn-primary" onclick="closeConfirmModal(true)">OK</button>
                     </div>
@@ -57,10 +57,10 @@ function showPrompt(message, title = 'Input', defaultValue = '') {
                             ${escapeHtml(message)}
                         </label>
                         <input type="text" id="promptInput" value="${escapeHtml(defaultValue)}" 
-                               style="width: 100%; padding: 0.75rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 6px; color: var(--text-primary); font-size: 1rem;"
+                               style="width: 100%; padding: 0.75rem; background: var(--bg-input, #F4F5FA); border: 1px solid rgba(0,0,0,0.12); border-radius: 6px; color: var(--text-primary); font-size: 1rem;"
                                onkeypress="if(event.key==='Enter') closePromptModal(document.getElementById('promptInput').value)">
                     </div>
-                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 0.75rem; justify-content: flex-end;">
+                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(0,0,0,0.08); display: flex; gap: 0.75rem; justify-content: flex-end;">
                         <button class="btn-secondary" onclick="closePromptModal(null)">Cancel</button>
                         <button class="btn-primary" onclick="closePromptModal(document.getElementById('promptInput').value)">OK</button>
                     </div>
@@ -124,7 +124,7 @@ function showAlert(message, title = 'Notice', type = 'info') {
                             ${escapeHtml(message)}
                         </p>
                     </div>
-                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; gap: 0.75rem; justify-content: flex-end;">
+                    <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid rgba(0,0,0,0.08); display: flex; gap: 0.75rem; justify-content: flex-end;">
                         <button class="btn-primary" onclick="closeAlertModal()" style="background: ${colors[type] || colors.info};">OK</button>
                     </div>
                 </div>

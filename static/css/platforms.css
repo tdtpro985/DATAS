@@ -32,8 +32,8 @@
         }
 
         .summary-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.150) 0%, rgba(0, 0, 0, 0.080) 100%);
+            border: 1px solid rgba(0, 0, 0, 0.160);
             border-radius: 1rem;
             padding: 1.5rem;
             display: flex;
@@ -106,7 +106,7 @@
         /* Search & Filter Bar */
         .platforms-toolbar {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: 1rem;
             padding: 1.5rem;
             margin-bottom: 1.5rem;
@@ -127,8 +127,8 @@
         .search-box input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.75rem;
-            background: #0f172a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-input);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.75rem;
             color: var(--text-primary);
             font-size: 0.9rem;
@@ -152,7 +152,7 @@
 
         .btn-refresh, .btn-add {
             padding: 0.75rem 1.25rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.75rem;
             font-size: 0.9rem;
             font-weight: 600;
@@ -164,13 +164,13 @@
             text-decoration: none;
         }
         .btn-refresh {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
             color: var(--text-primary);
         }
 
         .btn-refresh:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.200);
+            border-color: rgba(0, 0, 0, 0.300);
         }
 
         .btn-add {
@@ -194,8 +194,8 @@
         .yes-no-btn {
             flex: 1;
             padding: 0.625rem 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.150);
+            border: 2px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.5rem;
             color: var(--text-secondary);
             font-size: 0.875rem;
@@ -206,8 +206,8 @@
         }
         
         .yes-no-btn:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.160);
+            border-color: rgba(0, 0, 0, 0.300);
             transform: translateY(-2px);
         }
         
@@ -225,10 +225,10 @@
         }
 
         .yes-no-btn.active.yes {
-            background: rgba(16, 185, 129, 0.9) !important;
-            border-color: rgba(16, 185, 129, 1) !important;
+            background: #FFFFFF !important;
+            border-color: #FFFFFF !important;
             color: #fff !important;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.40);
         }
         
         .yes-no-btn.active.no {
@@ -287,8 +287,8 @@
         .sales-form-select,
         .sales-form-textarea {
             padding: 0.75rem;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.5rem;
             color: var(--text-primary);
             font-size: 0.9rem;
@@ -334,7 +334,7 @@
         /* Platform Leads Table Card */
         .platforms-card {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: 1rem;
             overflow: hidden;
             width: 100%;
@@ -356,7 +356,7 @@
         }
         
         .table-wrapper::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
         }
         
         .table-wrapper::-webkit-scrollbar-thumb {
@@ -374,7 +374,7 @@
             table-layout: fixed;
         }
         .platforms-table thead {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.090);
             position: sticky;
             top: 0;
             z-index: 10;
@@ -388,7 +388,7 @@
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.180);
             white-space: nowrap;
         }
         
@@ -401,7 +401,7 @@
         .platforms-table th:nth-child(7) { width: 12%; } /* Date Added */
 
         .platforms-table tbody tr {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.120);
             transition: background 0.2s;
             cursor: pointer;
         }
@@ -508,7 +508,7 @@
             left: 240px; /* Sidebar width */
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(4px);
             z-index: 1000;
             align-items: center;
@@ -523,14 +523,14 @@
 
         .modal-content {
             background: var(--bg-card);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 1rem;
             max-width: 800px;
             width: 90%;
             max-height: 85vh;
             overflow-y: auto;
             animation: slideInUp 0.3s ease;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
             margin: auto;
         }
 
@@ -573,7 +573,7 @@
             align-items: center;
             justify-content: space-between;
             padding: 1.5rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.180);
         }
         
         @media (max-width: 480px) {
@@ -599,8 +599,8 @@
         }
 
         .modal-close {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.150);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.5rem;
             width: 32px;
             height: 32px;
@@ -614,7 +614,7 @@
         }
 
         .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.200);
             color: var(--text-primary);
         }
 
@@ -645,8 +645,8 @@
         }
 
         .detail-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.090);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: 0.75rem;
             padding: 1rem;
         }
@@ -668,8 +668,8 @@
         }
 
         .materials-content {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.090);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: 0.75rem;
             padding: 1rem;
             font-size: 0.9rem;
@@ -683,19 +683,19 @@
             justify-content: flex-end;
             gap: 1rem;
             padding: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            border-top: 1px solid rgba(0, 0, 0, 0.180);
             flex-wrap: wrap;
         }
 
         .btn-action {
             padding: 0.75rem 1.5rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.75rem;
             font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(0, 0, 0, 0.150);
             color: var(--text-primary);
             display: inline-flex;
             align-items: center;
@@ -704,7 +704,7 @@
 
         .btn-action:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
         }
 
         .btn-save {
@@ -772,8 +772,8 @@
         .form-group select,
         .form-group textarea {
             padding: 0.75rem;
-            background: rgba(15, 23, 42, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: 0.5rem;
             color: var(--text-primary);
             font-size: 0.9rem;

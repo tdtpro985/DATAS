@@ -1,7 +1,7 @@
         :root {
             --primary: var(--orange-500);
             --primary-dark: var(--orange-600);
-            --border-color: rgba(0, 0, 0, 0.08);
+            --border-color: rgba(0, 0, 0, 0.160);
         }
 
         body {
@@ -146,7 +146,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.180);
         }
         
         .stat-card::before {
@@ -212,7 +212,7 @@
         }
 
         .stat-change.positive {
-            background: rgba(16, 185, 129, 0.15);
+            background: rgba(0, 0, 0, 0.225);
             color: #10b981;
         }
 
@@ -252,13 +252,13 @@
 
         .data-table td {
             padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.150);
             font-size: 0.9rem;
             color: var(--text-primary);
         }
 
         .data-table tbody tr:hover {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(0, 0, 0, 0.090);
         }
 
         /* Chart Container */

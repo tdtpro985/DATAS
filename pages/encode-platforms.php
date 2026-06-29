@@ -135,7 +135,7 @@ if (!in_array($role, ['encoder', 'admin', 'superadmin'], true)) {
         <div class="modal-body">
             <p id="errorMessage">An error occurred.</p>
         </div>
-        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1);">
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1.5rem; border-top: 1px solid rgba(0,0,0,0.08);">
             <button type="button" class="btn btn-primary" onclick="closeErrorModal()">
                 OK
             </button>

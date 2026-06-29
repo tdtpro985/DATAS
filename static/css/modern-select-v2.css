@@ -18,17 +18,17 @@ select.form-control,
     -moz-appearance: none !important;
     
     /* Modern gradient background */
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    background: linear-gradient(135deg, var(--bg-input) 0%, #FFFFFF 100%) !important;
     
     /* Modern border with gradient effect */
     border: 2px solid transparent !important;
     background-image: 
-        linear-gradient(135deg, #0f172a, #1e293b),
+        linear-gradient(135deg, var(--bg-input), #FFFFFF),
         linear-gradient(90deg, rgba(255, 128, 0, 0.2), rgba(255, 165, 0, 0.3)) !important;
     background-origin: border-box !important;
     background-clip: padding-box, border-box !important;
     
-    color: #e2e8f0 !important;
+    color: var(--text-primary) !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
     padding: 0.75rem 2.5rem 0.75rem 1rem !important;
@@ -36,13 +36,13 @@ select.form-control,
     cursor: pointer !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     box-shadow: 
-        0 4px 6px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+        0 4px 6px rgba(255, 255, 255, 0.30),
+        inset 0 1px 0 rgba(0, 0, 0, 0.150) !important;
     position: relative !important;
     
     /* Custom arrow */
     background-image: 
-        linear-gradient(135deg, #0f172a, #1e293b),
+        linear-gradient(135deg, var(--bg-input), #FFFFFF),
         linear-gradient(90deg, rgba(255, 128, 0, 0.2), rgba(255, 165, 0, 0.3)),
         url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
     background-repeat: no-repeat, no-repeat, no-repeat !important;
@@ -59,17 +59,17 @@ select:hover,
 .form-group select:hover,
 select.form-control:hover,
 .pm-filter-select:hover {
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    background: linear-gradient(135deg, #FFFFFF 0%, #334155 100%) !important;
     border: 2px solid #ff8000 !important;
     box-shadow: 
         0 8px 16px rgba(255, 128, 0, 0.25),
         0 0 20px rgba(255, 128, 0, 0.15),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        inset 0 1px 0 rgba(0, 0, 0, 0.200) !important;
     transform: translateY(-2px) !important;
     
     /* Update arrow on hover */
     background-image: 
-        linear-gradient(135deg, #1e293b, #334155),
+        linear-gradient(135deg, #FFFFFF, #334155),
         url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffa500' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
     background-repeat: no-repeat, no-repeat !important;
     background-position: padding-box, right 0.75rem center !important;
@@ -87,17 +87,17 @@ select:active,
 select.form-control:focus,
 .pm-filter-select:focus {
     outline: none !important;
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%) !important;
+    background: linear-gradient(135deg, #FFFFFF 0%, #334155 100%) !important;
     border: 2px solid #ff8000 !important;
     box-shadow: 
         0 0 0 4px rgba(255, 128, 0, 0.2),
         0 8px 20px rgba(255, 128, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        inset 0 1px 0 rgba(0, 0, 0, 0.200) !important;
     transform: translateY(-2px) !important;
     
     /* Animated arrow on focus */
     background-image: 
-        linear-gradient(135deg, #1e293b, #334155),
+        linear-gradient(135deg, #FFFFFF, #334155),
         url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffa500' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e") !important;
     background-repeat: no-repeat, no-repeat !important;
     background-position: padding-box, right 0.75rem center !important;
@@ -113,8 +113,8 @@ select option,
 .form-group select option,
 select.form-control option,
 .pm-filter-select option {
-    background: #1e293b !important;
-    color: #e2e8f0 !important;
+    background: #FFFFFF !important;
+    color: var(--text-primary) !important;
     padding: 0.75rem 1rem !important;
     font-size: 0.875rem !important;
     font-weight: 500 !important;
@@ -126,7 +126,7 @@ select.form-control option,
 select optgroup,
 .filter-select optgroup,
 .control-select optgroup {
-    background: #0f172a !important;
+    background: var(--bg-input) !important;
     color: #ff8000 !important;
     font-weight: 700 !important;
     font-size: 0.8rem !important;
@@ -178,7 +178,7 @@ select::-webkit-scrollbar {
 }
 
 select::-webkit-scrollbar-track {
-    background: #0f172a !important;
+    background: var(--bg-input) !important;
     border-radius: 4px !important;
 }
 
@@ -243,13 +243,13 @@ select:active::before {
         background-repeat: no-repeat !important;
         background-position: right 0.75rem center !important;
         background-size: 16px !important;
-        background-color: #0f172a !important;
+        background-color: var(--bg-input) !important;
     }
     
     /* Firefox dropdown menu styling */
     select option {
-        background-color: #1e293b !important;
-        color: #e2e8f0 !important;
+        background-color: #FFFFFF !important;
+        color: var(--text-primary) !important;
     }
     
     select option:hover {
@@ -281,8 +281,8 @@ select:active::before {
     }
     
     select option {
-        background: #1e293b !important;
-        color: #e2e8f0 !important;
+        background: #FFFFFF !important;
+        color: var(--text-primary) !important;
     }
     
     select option:checked {
@@ -298,8 +298,8 @@ select {
 
 /* ── Additional Option Styling for Better Visibility ── */
 select option {
-    background-color: #1e293b !important;
-    color: #e2e8f0 !important;
+    background-color: #FFFFFF !important;
+    color: var(--text-primary) !important;
     padding: 10px !important;
     line-height: 1.5 !important;
 }
@@ -322,8 +322,8 @@ select option:focus {
     .filter-select,
     .control-select {
         box-shadow: 
-            0 4px 8px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+            0 4px 8px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(0, 0, 0, 0.160) !important;
     }
 }
 

@@ -11,22 +11,22 @@
         /* Per-project timestamps table */
         .ts-table { width:100%; border-collapse:separate; border-spacing:0; font-size:0.72rem; border-radius:6px; overflow:hidden; }
         .ts-table thead { position:sticky; top:0; z-index:2; }
-        .ts-table th { background:rgba(255,255,255,0.06); color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.55rem 0.7rem; text-align:left; border-bottom:1px solid rgba(255,255,255,0.08); white-space:nowrap; font-size:0.65rem; }
-        .ts-table td { padding:0.5rem 0.7rem; border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:middle; color:var(--text-primary); }
-        .ts-table tbody tr:nth-child(even) td { background:rgba(255,255,255,0.015); }
+        .ts-table th { background:rgba(0, 0, 0, 0.180); color:var(--text-secondary); font-weight:700; text-transform:uppercase; letter-spacing:0.06em; padding:0.55rem 0.7rem; text-align:left; border-bottom:1px solid rgba(0, 0, 0, 0.160); white-space:nowrap; font-size:0.65rem; }
+        .ts-table td { padding:0.5rem 0.7rem; border-bottom:1px solid rgba(0, 0, 0, 0.120); vertical-align:middle; color:var(--text-primary); }
+        .ts-table tbody tr:nth-child(even) td { background:rgba(0, 0, 0, 0.060); }
         .ts-table tbody tr:hover td { background:rgba(255,128,0,0.04); }
         .ts-table tbody tr:last-child td { border-bottom:none; }
         .ts-null { color:var(--text-muted); font-style:italic; }
         .ts-yes  { color:#34d399; font-weight:700; }
         .ts-no   { color:#f87171; font-weight:700; }
         .ts-dur  { color:var(--orange-400); font-weight:700; font-size:0.78rem; white-space:nowrap; }
-        .ts-complete   { background:rgba(16,185,129,0.12); color:#34d399; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
+        .ts-complete   { background:rgba(0, 0, 0, 0.240); color:#34d399; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
         .ts-inprogress { background:rgba(59,130,246,0.12);  color:#60a5fa; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
         .ts-notstarted { background:rgba(108,117,125,0.15); color:#adb5bd; padding:0.1rem 0.4rem; border-radius:4px; font-size:0.68rem; white-space:nowrap; }
 
         .kpi-card {
             background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.07);
+            border: 1px solid rgba(0, 0, 0, 0.140);
             border-radius: var(--radius-lg);
             padding: 1.1rem 1.25rem;
             display: flex;
@@ -69,8 +69,8 @@
             gap: 0.75rem;
             align-items: flex-end;
             margin-bottom: var(--sp-5);
-            background: rgba(255,255,255,0.02);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0, 0, 0, 0.080);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: var(--radius-lg);
             padding: 1rem 1.25rem;
         }
@@ -93,7 +93,7 @@
         .tb-group input,
         .tb-group select {
             background: var(--bg-input);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: var(--radius-md);
             color: var(--text-primary);
             padding: 0.55rem 0.9rem;
@@ -140,7 +140,7 @@
             font-size: 0.875rem;
         }
         .sr-table thead th {
-            background: rgba(255,255,255,0.035);
+            background: rgba(0, 0, 0, 0.105);
             color: var(--text-secondary);
             font-weight: 700;
             font-size: 0.7rem;
@@ -148,7 +148,7 @@
             letter-spacing: 0.08em;
             padding: 0.8rem 1rem;
             text-align: left;
-            border-bottom: 1px solid rgba(255,255,255,0.07);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.140);
             white-space: nowrap;
             user-select: none;
         }
@@ -158,7 +158,7 @@
         .sr-table thead th.sort-asc::after  { content: ' ↑'; color: var(--orange-500); }
 
         .sr-table tbody tr {
-            border-bottom: 1px solid rgba(255,255,255,0.045);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.135);
             cursor: pointer;
             transition: background 0.12s;
         }
@@ -177,7 +177,7 @@
         .rank-1 { background: rgba(255,193,7,0.15);  color: #FFD700; }
         .rank-2 { background: rgba(192,192,192,0.15); color: #C0C0C0; }
         .rank-3 { background: rgba(205,127,50,0.15);  color: #CD7F32; }
-        .rank-n { background: rgba(255,255,255,0.06); color: var(--text-secondary); }
+        .rank-n { background: rgba(0, 0, 0, 0.180); color: var(--text-secondary); }
 
         /* sr name */
         .sr-name-cell { display: flex; align-items: center; gap: 0.7rem; }
@@ -202,7 +202,7 @@
         .funnel-mini { display: flex; flex-direction: column; gap: 0.3rem; min-width: 190px; }
         .funnel-row  { display: flex; align-items: center; gap: 0.4rem; }
         .funnel-label { font-size: 0.65rem; color: var(--text-secondary); width: 55px; flex-shrink: 0; font-weight: 600; }
-        .funnel-bar-wrap { flex: 1; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+        .funnel-bar-wrap { flex: 1; height: 5px; background: rgba(0, 0, 0, 0.140); border-radius: 3px; overflow: hidden; }
         .funnel-bar  { height: 100%; border-radius: 3px; transition: width 0.4s ease; }
         .funnel-num  { font-size: 0.68rem; font-weight: 700; color: var(--text-primary); width: 20px; text-align: right; flex-shrink: 0; }
 
@@ -215,11 +215,11 @@
         .track-badge { padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.68rem; font-weight: 700; }
         .track-ns { background: rgba(108,117,125,0.2); color: #adb5bd; }
         .track-ip { background: rgba(59,130,246,0.15); color: #60a5fa; }
-        .track-co { background: rgba(16,185,129,0.15); color: #34d399; }
+        .track-co { background: rgba(0, 0, 0, 0.225); color: #34d399; }
 
         /* win rate badge */
         .badge { display: inline-block; padding: 0.18rem 0.55rem; border-radius: 999px; font-size: 0.72rem; font-weight: 700; }
-        .badge-success { background: rgba(16,185,129,0.15); color: #34d399; }
+        .badge-success { background: rgba(0, 0, 0, 0.225); color: #34d399; }
         .badge-warning { background: rgba(245,158,11,0.15); color: #fcd34d; }
         .badge-danger  { background: rgba(239,68,68,0.15);  color: #f87171; }
 
@@ -249,7 +249,7 @@
         .detail-modal-overlay {
             display: none;
             position: fixed; inset: 0;
-            background: rgba(0,0,0,0.65);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 100000;
             align-items: center;
             justify-content: center;
@@ -258,7 +258,7 @@
         .detail-modal-overlay.active { display: flex; }
         .detail-modal {
             background: var(--bg-card);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(0, 0, 0, 0.200);
             border-radius: var(--radius-lg);
             width: 95%;
             max-width: 1100px;
@@ -273,7 +273,7 @@
 
         .modal-close-btn {
             position: absolute; top: 1rem; right: 1rem;
-            background: rgba(255,255,255,0.07);
+            background: rgba(0, 0, 0, 0.140);
             border: none; border-radius: 50%;
             width: 30px; height: 30px;
             color: var(--text-secondary);
@@ -281,7 +281,7 @@
             cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: background 0.15s, color 0.15s;
         }
-        .modal-close-btn:hover { background: rgba(255,255,255,0.12); color: var(--text-primary); }
+        .modal-close-btn:hover { background: rgba(0, 0, 0, 0.240); color: var(--text-primary); }
 
         .modal-sr-header {
             display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;
@@ -307,15 +307,15 @@
             text-transform: uppercase; letter-spacing: 0.08em;
             color: var(--text-secondary); margin-bottom: 0.75rem;
             padding-bottom: 0.4rem;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.180);
         }
 
         .modal-stat-grid {
             display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;
         }
         .modal-stat {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
+            background: rgba(0, 0, 0, 0.090);
+            border: 1px solid rgba(0, 0, 0, 0.180);
             border-radius: var(--radius-md);
             padding: 0.75rem 1rem;
         }
@@ -330,7 +330,7 @@
         .modal-funnel { display: flex; flex-direction: column; gap: 0.6rem; }
         .modal-funnel-row { display: flex; align-items: center; gap: 0.75rem; }
         .modal-funnel-label { width: 130px; flex-shrink:0; font-size: 0.8rem; color: var(--text-secondary); font-weight: 600; }
-        .modal-funnel-bar-wrap { flex:1; height:8px; background:rgba(255,255,255,0.07); border-radius:4px; overflow:hidden; }
+        .modal-funnel-bar-wrap { flex:1; height:8px; background:rgba(0, 0, 0, 0.140); border-radius:4px; overflow:hidden; }
         .modal-funnel-bar { height:100%; border-radius:4px; transition: width 0.5s ease; }
         .modal-funnel-count { width: 30px; text-align:right; font-size:0.8rem; font-weight:700; color:var(--text-primary); flex-shrink:0; }
         .modal-funnel-pct { width: 48px; text-align:right; font-size:0.72rem; color:var(--text-muted); flex-shrink:0; }
@@ -345,4 +345,4 @@
         .modal-track-badge .mtn { font-size: 1.4rem; font-weight: 800; display: block; }
         .modal-track-ns { background: rgba(108,117,125,0.15); color: #adb5bd; }
         .modal-track-ip { background: rgba(59,130,246,0.12);  color: #60a5fa; }
-        .modal-track-co { background: rgba(16,185,129,0.12);  color: #34d399; }
+        .modal-track-co { background: rgba(0, 0, 0, 0.240);  color: #34d399; }

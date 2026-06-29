@@ -1037,7 +1037,7 @@ const ProjectsPage = {
             grid.innerHTML = images.map(img => `
                 <a href="${BASE}/${img.file_path}" target="_blank" style="
                     display: block; border-radius: 8px; overflow: hidden;
-                    border: 1px solid rgba(255,255,255,0.1);
+                    border: 1px solid rgba(0,0,0,0.08);
                     aspect-ratio: 1 / 1;
                     background: #111;
                 ">
@@ -1559,7 +1559,7 @@ const ProjectsPage = {
         // Use CSS class styling instead of inline styles to respect sidebar positioning
         
         const modalBox = document.createElement('div');
-        modalBox.style.cssText = 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); animation: slideUp 0.3s;';
+        modalBox.style.cssText = 'background: #FFFFFF; padding: 2rem; border-radius: 1rem; max-width: 500px; width: 90%; box-shadow: 0 20px 60px rgba(0,0,0,0.5); border: 1px solid rgba(0,0,0,0.08); animation: slideUp 0.3s;';
         
         modalBox.innerHTML = `
             <div style="text-align: center; margin-bottom: 1.5rem;">
@@ -1573,13 +1573,13 @@ const ProjectsPage = {
                     <button type="button" class="actual-project-btn" data-value="yes" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(34, 197, 94, 0.5); background: rgba(34, 197, 94, 0.1); color: #22c55e; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">Yes</button>
                     <button type="button" class="actual-project-btn" data-value="no" style="flex: 1; padding: 0.75rem 1.5rem; border: 2px solid rgba(239, 68, 68, 0.5); background: rgba(239, 68, 68, 0.1); color: #ef4444; border-radius: 0.5rem; cursor: pointer; font-weight: 600; transition: all 0.2s;">No</button>
                 </div>
-                <small style="display: block; margin-top: 0.75rem; color: rgba(255,255,255,0.6); font-size: 0.75rem; text-align: center;">
+                <small style="display: block; margin-top: 0.75rem; color: rgba(0,0,0,0.3); font-size: 0.75rem; text-align: center;">
                     Select "No" if this is spam, duplicate, or invalid.
                 </small>
             </div>
             
             <div style="display: flex; gap: 0.75rem; justify-content: center;">
-                <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: white; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
+                <button id="actualProjectSaveBtn" disabled style="padding: 0.75rem 2rem; background: #ff8c00; color: #374151; border: none; border-radius: 0.5rem; cursor: not-allowed; font-weight: 600; opacity: 0.5; transition: all 0.2s;">
                     Save
                 </button>
             </div>
@@ -1947,7 +1947,7 @@ function showNotificationToast(message, type = 'info') {
         max-width: 400px;
         padding: 1rem 1.5rem;
         background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
-        color: white;
+        color: #374151;
         border-radius: 0.75rem;
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         transform: translateX(100%);
@@ -2005,8 +2005,8 @@ function showConfirmationModal(title, message, type = 'warning') {
         
         const modal = document.createElement('div');
         modal.style.cssText = `
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 1rem;
             max-width: 400px;
             width: 100%;
@@ -2023,10 +2023,10 @@ function showConfirmationModal(title, message, type = 'warning') {
         modal.innerHTML = `
             <div style="text-align: center; margin-bottom: 1.5rem;">
                 <div style="font-size: 3rem; margin-bottom: 0.5rem;">${icon}</div>
-                <h3 style="font-size: 1.25rem; font-weight: 700; color: white; margin-bottom: 0.5rem;">
+                <h3 style="font-size: 1.25rem; font-weight: 700; color: #374151; margin-bottom: 0.5rem;">
                     ${title}
                 </h3>
-                <p style="color: #94a3b8; line-height: 1.5;">
+                <p style="color: #6B7280; line-height: 1.5;">
                     ${message}
                 </p>
             </div>
@@ -2038,7 +2038,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: rgba(107, 114, 128, 0.2);
                     border: 1px solid rgba(107, 114, 128, 0.4);
                     border-radius: 0.75rem;
-                    color: white;
+                    color: #374151;
                     font-size: 0.9rem;
                     font-weight: 600;
                     cursor: pointer;
@@ -2051,7 +2051,7 @@ function showConfirmationModal(title, message, type = 'warning') {
                     background: ${iconColor};
                     border: 1px solid ${iconColor};
                     border-radius: 0.75rem;
-                    color: white;
+                    color: #374151;
                     font-size: 0.9rem;
                     font-weight: 700;
                     cursor: pointer;

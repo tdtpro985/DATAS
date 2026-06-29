@@ -78,7 +78,7 @@ $pageIcon  = $currentView === 'priority' ? '⭐' : '📋';
         </div>
 
         <!-- View Tabs -->
-        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0;">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(0,0,0,0.06); padding-bottom: 0;">
             <a href="?view=non-priority"
                style="padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600; text-decoration: none; border-radius: 0.5rem 0.5rem 0 0; transition: all 0.2s;
                       <?= $currentView !== 'priority' ? 'color: var(--orange-500); border-bottom: 2px solid var(--orange-500); background: rgba(255,128,0,0.08);' : 'color: var(--text-secondary); border-bottom: 2px solid transparent;' ?>">
