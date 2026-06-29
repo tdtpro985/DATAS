@@ -376,7 +376,7 @@
                                     font: { size: 11 },
                                     callback: (value) => '₱' + Utils.formatNumber(value)
                                 },
-                                grid: { color: '#333' }
+                                grid: { color: 'rgba(0,0,0,0.07)' }
                             },
                             x: {
                                 ticks: {
@@ -386,7 +386,7 @@
                                     minRotation: 45,
                                     autoSkip: false
                                 },
-                                grid: { color: '#333' }
+                                grid: { color: 'rgba(0,0,0,0.07)' }
                             }
                         }
                     }
@@ -443,8 +443,8 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                ticks: { color: '#888', font: { size: 10 } },
-                                grid: { color: '#333' }
+                                ticks: { color: '#6B7280', font: { size: 10 } },
+                                grid: { color: 'rgba(0,0,0,0.07)' }
                             },
                             x: {
                                 ticks: {
@@ -454,7 +454,7 @@
                                     minRotation: 45,
                                     autoSkip: false
                                 },
-                                grid: { color: '#333' }
+                                grid: { color: 'rgba(0,0,0,0.07)' }
                             }
                         }
                     }

@@ -10,7 +10,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background: linear-gradient(135deg, var(--bg-app) 0%, #F2F4F8 100%);
+            background: #F4F5FA;
             font-family: 'Inter', sans-serif;
         }
         
@@ -44,9 +44,7 @@
             width: 3px;
         }
         
-        ::-webkit-scrollbar-track {
-            background: #333;
-        }
+        ::-webkit-scrollbar-track { background: #F0F2F7; }
         
         ::-webkit-scrollbar-thumb {
             background: #555;
@@ -63,7 +61,7 @@
         
         /* Header */
         .dashboard-header {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
+            background: #FFFFFF;
             padding: clamp(0.3rem, 0.8vh, 0.4rem) clamp(0.5rem, 1.2vw, 0.8rem);
             display: flex;
             justify-content: space-between;
@@ -71,7 +69,7 @@
             flex-shrink: 0;
             min-height: clamp(38px, 5vh, 45px);
             border-bottom: 2px solid #ff8000;
-            box-shadow: 0 2px 8px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
             flex-wrap: nowrap;
             gap: 0.4rem;
             overflow: hidden;
@@ -97,14 +95,14 @@
         .title {
             font-size: 0.95rem;
             font-weight: 700;
-            color: #fff;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.200);
+            color: #1F2937;
+            
             white-space: nowrap;
         }
         
         .title .brand {
             color: #ff8000;
-            text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
         }
         
         .header-right {
@@ -135,7 +133,7 @@
         
         .control-label {
             font-size: 0.6rem;
-            color: #888;
+            color: #6B7280;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-weight: 500;
@@ -143,9 +141,9 @@
         }
         
         .control-select {
-            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
-            border: 1px solid #555;
-            color: #fff;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.15);
+            color: #374151;
             padding: 0.35rem 1.8rem 0.35rem 0.55rem;
             border-radius: 6px;
             font-size: 0.7rem;
@@ -168,7 +166,7 @@
         .control-select:hover {
             border-color: #ff8000;
             box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
-            background: linear-gradient(135deg, #3a3a3a, #4a4a4a);
+            background: #F4F5FA;
             transform: translateY(-1px);
         }
         
@@ -176,18 +174,18 @@
             outline: none;
             border-color: #ff8000;
             box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.2);
-            background: linear-gradient(135deg, #3a3a3a, #4a4a4a);
+            background: #F4F5FA;
         }
         
         .control-select option {
-            background: #2a2a2a;
-            color: #fff;
+            background: #FFFFFF;
+            color: #374151;
             padding: 0.5rem;
             border: none;
         }
         
         .control-select option:hover {
-            background: #3a3a3a;
+            background: rgba(0,0,0,0.04);
         }
         
         .control-select option:checked {
@@ -216,7 +214,7 @@
         
         .time-display {
             font-size: 0.7rem;
-            color: #ccc;
+            color: #6B7280;
             font-weight: 500;
             white-space: nowrap;
         }
@@ -413,8 +411,8 @@
         
         /* KPI Card - Fully Responsive */
         .kpi-card {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.25rem, 0.5vh, 0.5rem);
             display: flex;
@@ -424,7 +422,7 @@
             text-align: center;
             min-height: 0;
             height: 100%;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
         }
@@ -467,15 +465,15 @@
         .kpi-value {
             font-size: 1.05rem;
             font-weight: 800;
-            color: #fff;
+            color: #1F2937;
             line-height: 1;
             margin-bottom: 0.15rem;
-            text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
         }
         
         .kpi-label {
             font-size: 0.65rem;
-            color: #888;
+            color: #6B7280;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             text-align: center;
@@ -546,8 +544,7 @@
         
         /* Target Section */
         .target-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF; border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.3rem, 0.7vh, 0.65rem);
             flex-shrink: 0;
@@ -557,7 +554,7 @@
             align-items: center;
             justify-content: space-between;
             gap: 0.75rem;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
         }
@@ -599,7 +596,7 @@
         
         .target-number {
             font-size: 1.3rem;
-            color: #fff;
+            color: #1F2937;
             font-weight: 700;
             line-height: 1;
             word-break: normal;
@@ -621,7 +618,7 @@
             color: #ff8000;
             line-height: 1;
             margin-bottom: 0.2rem;
-            text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
             word-break: break-word;
         }
         
@@ -643,13 +640,13 @@
         }
         
         .target-progress-bar {
-            background: #333;
+            background: rgba(0,0,0,0.08);
             height: 8px;
             border-radius: 4px;
             overflow: hidden;
             width: min(220px, 100%);
             max-width: 100%;
-            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.30);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
             position: relative;
         }
         
@@ -714,8 +711,8 @@
         
         /* Live Slideshow */
         .live-slideshow {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.35rem, 0.85vh, 0.95rem);
             flex: 1.2;
@@ -723,7 +720,7 @@
             flex-direction: column;
             min-height: 320px;
             max-height: 100%;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
         }
@@ -780,10 +777,10 @@
         .live-contractor-name {
             font-size: clamp(1.3rem, 2.6vw, 1.85rem);
             font-weight: 900;
-            color: #ffb347;
+            color: #FF7A00;
             margin-bottom: 0.15em;
             line-height: 1.12;
-            text-shadow: 0 2px 6px rgba(255, 255, 255, 0.25);
+            
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
@@ -805,15 +802,15 @@
             flex-direction: column;
             min-width: 0;
             padding: 0.28rem 0.32rem;
-            background: rgba(0, 0, 0, 0.120);
-            border: 1px solid rgba(0, 0, 0, 0.240);
+            background: rgba(255,122,0,0.04);
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             overflow: hidden;
         }
 
         .live-detail-label {
             font-size: 0.78em;
-            color: #aaa;
+            color: #9CA3AF;
             text-transform: uppercase;
             letter-spacing: 0.4px;
             margin-bottom: 0.18em;
@@ -821,25 +818,25 @@
         
         .live-detail-value {
             font-size: 0.95em;
-            color: #ddd;
+            color: #374151;
             font-weight: 500;
             line-height: 1.25;
             word-break: break-word;
         }
 
         .highlight-main {
-            color: #ffb347;
+            color: #FF7A00;
             font-weight: 800;
         }
 
         .highlight-secondary {
-            color: #f5a623;
+            color: #D97706;
             font-weight: 600;
         }
         
         .live-footer {
             font-size: 0.82rem;
-            color: rgba(255,255,255,0.78);
+            color: #6B7280;
             text-align: center;
             margin-top: 0.25rem;
             border-top: 1px solid rgba(0, 0, 0, 0.160);
@@ -862,13 +859,13 @@
             padding: 0.3rem 0.35rem;
             min-height: 2.2rem;
             border-radius: 6px;
-            border: 1px solid rgba(0, 0, 0, 0.160);
-            background: rgba(0, 0, 0, 0.120);
+            border: 1px solid rgba(0,0,0,0.07);
+            background: rgba(255,122,0,0.03);
         }
 
         .material-label {
             font-size: 0.68rem;
-            color: #aaa;
+            color: #9CA3AF;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             margin-bottom: 0.18rem;
@@ -876,7 +873,7 @@
 
         .material-value {
             font-size: 0.9rem;
-            color: #ccc;
+            color: #374151;
             font-weight: 500;
             line-height: 1.2;
             white-space: normal;
@@ -888,7 +885,7 @@
         .slideshow-loading-bar {
             width: 100%;
             height: 3px;
-            background: #333;
+            background: rgba(0,0,0,0.08);
             border-radius: 2px;
             margin-top: 0.5rem;
             overflow: hidden;
@@ -919,7 +916,7 @@
         .slideshow-countdown-bar {
             width: 100%;
             height: calc(4px * max(1, var(--slide-scale, 1) * 0.85));
-            background: #333;
+            background: rgba(0,0,0,0.08);
             border-radius: 2px;
             margin-top: 0.5rem;
             overflow: hidden;
@@ -953,7 +950,7 @@
         
         .slideshow-timer-text {
             font-size: calc(0.6rem * max(1, var(--slide-scale, 1) * 0.9));
-            color: #888;
+            color: #9CA3AF;
             text-align: center;
             margin-top: 0.3rem;
             font-weight: 500;
@@ -966,8 +963,8 @@
         
         /* Project Status Section */
         .project-status-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.35rem, 0.8vh, 0.8rem);
             flex: 0.85;
@@ -975,7 +972,7 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
         }
         
@@ -991,15 +988,15 @@
         
         /* Regional Combined Section with Toggle */
         .regional-combined-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.3rem, 0.6vh, 0.55rem);
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -1026,7 +1023,7 @@
         .chart-toggle-buttons {
             display: flex;
             gap: 0.3rem;
-            background: rgba(0, 0, 0, 0.150);
+            background: rgba(0,0,0,0.05);
             border-radius: 6px;
             padding: 0.2rem;
         }
@@ -1034,7 +1031,7 @@
         .toggle-btn {
             background: transparent;
             border: none;
-            color: #888;
+            color: #6B7280;
             padding: 0.4rem 0.8rem;
             border-radius: 4px;
             font-size: 0.75rem;
@@ -1059,15 +1056,15 @@
         
         /* Sources Chart Section */
         .sources-chart-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.3rem, 0.6vh, 0.55rem);
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -1086,15 +1083,15 @@
         
         /* Bar Graph Section */
         .bar-graph-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: 0.8rem;
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -1113,15 +1110,15 @@
         
         /* Pie Graph Section */
         .pie-graph-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: 0.8rem;
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
             width: 100%;
@@ -1208,7 +1205,7 @@
         }
         
         .target-progress-bar {
-            background: #333;
+            background: rgba(0,0,0,0.08);
             height: 4px;
             border-radius: 2px;
             overflow: hidden;
@@ -1232,7 +1229,7 @@
         /* Contractors List */
         .contractors-section {
             background: #F2F4F8;
-            border: 1px solid #333;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             padding: 0.8rem;
             flex: 1;
@@ -1243,15 +1240,15 @@
         
         /* Contractors List */
         .contractors-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.35rem, 0.8vh, 0.8rem);
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
         }
@@ -1268,7 +1265,7 @@
         
         .section-title {
             font-size: 0.85rem;
-            color: #888;
+            color: #6B7280;
             margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
@@ -1336,7 +1333,7 @@
             grid-template-columns: 30px 1fr 60px;
             gap: 0.4rem;
             padding: clamp(0.15rem, 0.3vh, 0.4rem) 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             align-items: center;
             transition: background-color 0.2s ease;
             flex-shrink: 1;
@@ -1349,13 +1346,13 @@
         
         .contractor-rank {
             font-size: 0.7rem;
-            color: #888;
+            color: #9CA3AF;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
@@ -1364,7 +1361,7 @@
             color: #ff8000;
             font-weight: 600;
             text-align: right;
-            text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
         }
         
         @media (max-width: 1280px) {
@@ -1388,7 +1385,7 @@
         /* Contractors List */
         .contractors-section {
             background: #F2F4F8;
-            border: 1px solid #333;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             padding: 0.8rem;
             flex: 1;
@@ -1399,15 +1396,15 @@
         
         /* Sales Funnel */
         .funnel-section {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
-            border: 1px solid #444;
+            background: #FFFFFF;
+            border: 1px solid rgba(0,0,0,0.09);
             border-radius: 8px;
             padding: clamp(0.35rem, 0.8vh, 0.8rem);
             flex: 1;
             display: flex;
             flex-direction: column;
             min-height: 0;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
             position: relative;
             overflow: hidden;
         }
@@ -1436,7 +1433,7 @@
             justify-content: space-between;
             align-items: center;
             padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             transition: background-color 0.2s ease;
             flex-shrink: 1;
             min-height: 0;
@@ -1452,9 +1449,9 @@
         
         .funnel-name {
             font-size: 0.85rem;
-            color: #fff;
+            color: #374151;
             font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.200);
+            
         }
         
         .funnel-stats {
@@ -1465,15 +1462,15 @@
         
         .funnel-count {
             font-size: 0.85rem;
-            color: #fff;
+            color: #374151;
             font-weight: 700;
             min-width: 30px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.200);
+            
         }
         
         .funnel-percentage {
             font-size: 0.8rem;
-            color: #888;
+            color: #9CA3AF;
             min-width: 45px;
         }
         
@@ -1524,10 +1521,10 @@
         .funnel-bar {
             width: 50px;
             height: 4px;
-            background: #333;
+            background: rgba(0,0,0,0.08);
             border-radius: 2px;
             overflow: hidden;
-            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.30);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
         }
         
         .funnel-bar-fill {
@@ -1551,7 +1548,7 @@
         /* Section Title */
         .section-title {
             font-size: 0.8rem;
-            color: #888;
+            color: #6B7280;
             margin-bottom: 0.4rem;
             display: flex;
             align-items: center;
@@ -1561,7 +1558,7 @@
         /* Contractors List */
         .contractors-section {
             background: #F2F4F8;
-            border: 1px solid #333;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             padding: 1rem;
             flex: 1;
@@ -1598,19 +1595,19 @@
             grid-template-columns: 40px 1fr 80px;
             gap: 0.6rem;
             padding: 0.5rem 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             align-items: center;
         }
         
         .contractor-rank {
             font-size: 0.8rem;
-            color: #888;
+            color: #9CA3AF;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.8rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
@@ -1649,7 +1646,7 @@
             justify-content: space-between;
             align-items: center;
             padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             flex-shrink: 1;
             min-height: 0;
         }
@@ -1660,7 +1657,7 @@
         
         .category-name {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
@@ -1672,7 +1669,7 @@
         
         .category-count {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 600;
             min-width: 25px;
         }
@@ -1686,14 +1683,14 @@
         
         .category-percentage {
             font-size: 0.65rem;
-            color: #888;
+            color: #9CA3AF;
             min-width: 40px;
         }
         
         .category-bar {
             width: 50px;
             height: 3px;
-            background: #333;
+            background: rgba(0,0,0,0.08);
             border-radius: 2px;
             overflow: hidden;
         }
@@ -1732,19 +1729,19 @@
             grid-template-columns: 30px 1fr 60px;
             gap: 0.5rem;
             padding: 0.4rem 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             align-items: center;
         }
         
         .contractor-rank {
             font-size: 0.7rem;
-            color: #888;
+            color: #9CA3AF;
             text-align: center;
         }
         
         .contractor-name {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
@@ -1768,7 +1765,7 @@
         /* Live Contractor */
         .live-contractor {
             background: #F2F4F8;
-            border: 1px solid #333;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             padding: 1rem;
             text-align: center;
@@ -1817,14 +1814,14 @@
         
         .live-contractor .live-detail-value {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
         /* Chart Sections */
         .chart-section {
             background: #F2F4F8;
-            border: 1px solid #333;
+            border: 1px solid rgba(0,0,0,0.08);
             border-radius: 6px;
             padding: 0.8rem;
             display: flex;
@@ -1848,7 +1845,7 @@
             justify-content: space-between;
             align-items: center;
             padding: clamp(0.15rem, 0.35vh, 0.5rem) 0;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(0,0,0,0.07);
             flex-shrink: 1;
             min-height: 0;
         }
@@ -1859,7 +1856,7 @@
         
         .category-name {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 500;
         }
         
@@ -1871,7 +1868,7 @@
         
         .category-count {
             font-size: 0.7rem;
-            color: #fff;
+            color: #374151;
             font-weight: 600;
             min-width: 25px;
         }
@@ -1885,14 +1882,14 @@
         
         .category-percentage {
             font-size: 0.65rem;
-            color: #888;
+            color: #9CA3AF;
             min-width: 40px;
         }
         
         .category-bar {
             width: 50px;
             height: 3px;
-            background: #333;
+            background: rgba(0,0,0,0.08);
             border-radius: 2px;
             overflow: hidden;
         }
@@ -2345,7 +2342,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: #FFFFFF;
+            background: rgba(0,0,0,0.92);
             z-index: 10000;
             display: none;
             justify-content: center;
@@ -2355,7 +2352,7 @@
         
         /* Pictures Modal (First Modal) */
         .priority-pictures-modal {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
+            background: #FFFFFF;
             border: 3px solid #ff8000;
             border-radius: 15px;
             width: 80vw;
@@ -2437,7 +2434,7 @@
         }
         
         .priority-pictures-footer {
-            background: linear-gradient(135deg, #2a2a2a, #F2F4F8);
+            background: #FFFFFF;
             padding: 1rem;
             text-align: center;
             color: #fff;
@@ -2447,7 +2444,7 @@
         
         /* Data Modal (Second Modal) */
         .priority-data-modal {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
+            background: #FFFFFF;
             border: 3px solid #ff8000;
             border-radius: 12px;
             width: 85vw;
@@ -2557,10 +2554,10 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 0;
-            background: linear-gradient(135deg, #2a2a2a, #F2F4F8);
+            background: #FFFFFF;
             border-top: 3px solid #ff8000;
             padding: 0;
-            box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.30);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
         }
         
         .priority-bottom-left,
@@ -2656,12 +2653,12 @@
             font-size: 1.5rem;
             color: #ff8000;
             font-weight: 900;
-            text-shadow: 0 2px 4px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
         }
         
         /* BRAND NEW PRIORITY DATA MODAL - COMPLETELY REWRITTEN */
         .priority-data-modal-new {
-            background: linear-gradient(135deg, #F2F4F8 0%, #2a2a2a 100%);
+            background: #FFFFFF;
             border: 3px solid #ff8000;
             border-radius: 10px;
             width: 90vw;
@@ -2810,7 +2807,7 @@
             font-size: 1.1rem;
             font-weight: 700;
             color: #ff8000;
-            text-shadow: 0 1px 2px rgba(255, 128, 0, 0.3);
+            text-shadow: none;
         }
         
         .priority-detail-value.large {
@@ -2856,13 +2853,13 @@
         
         .materials-list > div {
             padding: 0.28rem 0.32rem;
-            background: rgba(0, 0, 0, 0.120);
+            background: rgba(255,122,0,0.03);
             border-radius: 4px;
-            border: 1px solid rgba(0, 0, 0, 0.160);
+            border: 1px solid rgba(0,0,0,0.07);
         }
         
         .material-value {
-            color: #ccc;
+            color: #374151;
             font-weight: 500;
         }
         
