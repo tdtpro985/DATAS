@@ -132,93 +132,110 @@
         }
         
         .control-label {
-            font-size: 0.6rem;
-            color: #6B7280;
+            font-size: 0.58rem;
+            color: #FF7A00;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 500;
+            letter-spacing: 0.07em;
+            font-weight: 700;
             white-space: nowrap;
         }
-        
+
         .control-select {
-            background: #FFFFFF;
-            border: 1px solid rgba(0,0,0,0.15);
+            background: #F4F5FA;
+            border: 1.5px solid rgba(255,122,0,0.18);
+            border-left: 2.5px solid #FF7A00;
             color: #374151;
-            padding: 0.35rem 1.8rem 0.35rem 0.55rem;
+            padding: 0.28rem 1.7rem 0.28rem 0.55rem;
             border-radius: 6px;
             font-size: 0.7rem;
             cursor: pointer;
             min-width: 85px;
             max-width: 120px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.300);
-            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
             appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ff8000' stroke-width='2'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23FF7A00' stroke-width='2.5'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 0.4rem center;
-            background-size: 11px;
-            font-weight: 500;
+            background-size: 10px;
+            font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .control-select:hover {
-            border-color: #ff8000;
-            box-shadow: 0 4px 12px rgba(255, 128, 0, 0.3);
-            background: #F4F5FA;
-            transform: translateY(-1px);
+            border-color: #FF7A00;
+            border-left-color: #FF7A00;
+            box-shadow: 0 2px 8px rgba(255,122,0,0.14);
+            background: #FFF8F3;
         }
-        
+
         .control-select:focus {
             outline: none;
-            border-color: #ff8000;
-            box-shadow: 0 0 0 2px rgba(255, 128, 0, 0.2);
-            background: #F4F5FA;
+            border-color: #FF7A00;
+            border-left-color: #FF7A00;
+            box-shadow: 0 0 0 2.5px rgba(255,122,0,0.18);
+            background: #FFFFFF;
         }
-        
+
         .control-select option {
             background: #FFFFFF;
             color: #374151;
             padding: 0.5rem;
             border: none;
         }
-        
+
         .control-select option:hover {
-            background: rgba(0,0,0,0.04);
+            background: rgba(255,122,0,0.06);
         }
-        
+
         .control-select option:checked {
-            background: #ff8000;
+            background: #FF7A00;
             color: #fff;
         }
-        
+
         .sync-status {
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            font-size: 0.7rem;
-            color: #10b981;
+            font-size: 0.65rem;
+            color: #059669;
             white-space: nowrap;
+            background: rgba(16,185,129,0.08);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 20px;
+            padding: 0.2rem 0.55rem;
+            font-weight: 600;
         }
-        
+
         .sync-dot {
             width: 5px;
             height: 5px;
             background: #10b981;
             border-radius: 50%;
             animation: pulse 2s infinite;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.12);
             flex-shrink: 0;
         }
-        
+
         .time-display {
-            font-size: 0.7rem;
-            color: #6B7280;
-            font-weight: 500;
+            font-size: 0.68rem;
+            color: #FF7A00;
+            font-weight: 700;
             white-space: nowrap;
+            background: rgba(255,122,0,0.07);
+            border: 1px solid rgba(255,122,0,0.18);
+            border-radius: 20px;
+            padding: 0.2rem 0.55rem;
         }
         
+        /* Separator before status indicators */
+        .control-group:has(.sync-status) {
+            border-left: 1px solid rgba(0,0,0,0.08);
+            padding-left: clamp(0.4rem, 0.8vw, 0.6rem);
+            margin-left: clamp(0.1rem, 0.3vw, 0.2rem);
+        }
+
         /* Export Button - REMOVED */
         
         /* Responsive Header Adjustments */
