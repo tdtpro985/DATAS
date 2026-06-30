@@ -721,6 +721,8 @@ CREATE TABLE `projects` (
   `encoded_by` int(10) UNSIGNED DEFAULT NULL,
   `archived_at` datetime DEFAULT NULL,
   `archived_by` int(10) UNSIGNED DEFAULT NULL,
+  `is_actual_project` enum('yes','no') DEFAULT NULL,
+  `is_priority_encoded` enum('yes','no') DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   KEY `idx_archived_at` (`archived_at`),
@@ -918,6 +920,49 @@ CREATE TABLE `activity_logs` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `system_settings`
+--
+
+CREATE TABLE `system_settings` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `setting_key` varchar(100) NOT NULL,
+  `setting_value` text NOT NULL DEFAULT '',
+  `setting_type` enum('string','boolean','integer','float','json') NOT NULL DEFAULT 'string',
+  `description` varchar(500) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `system_settings`
+--
+
+INSERT INTO `system_settings` (`id`, `setting_key`, `setting_value`, `setting_type`, `description`, `created_at`, `updated_at`) VALUES
+(1, 'app_name', 'TDT Powersteel SILEP - DATAS', 'string', 'Application name displayed in the header', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(2, 'app_version', '8.8.9', 'string', 'Current application version', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(3, 'maintenance_mode', '0', 'boolean', 'Enable or disable maintenance mode', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(4, 'maintenance_message', 'System is currently under maintenance. Please check back later.', 'string', 'Message shown to users during maintenance mode', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(5, 'max_login_attempts', '5', 'integer', 'Maximum failed login attempts before lockout', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(6, 'session_timeout_minutes', '60', 'integer', 'Session timeout in minutes', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(7, 'password_min_length', '12', 'integer', 'Minimum password length required', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(8, 'require_2fa', '0', 'boolean', 'Require two-factor authentication for all users', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(9, 'enable_email_notifications', '1', 'boolean', 'Enable email notifications', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(10, 'enable_sms_notifications', '0', 'boolean', 'Enable SMS notifications', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(11, 'items_per_page', '50', 'integer', 'Default number of items displayed per page', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(12, 'enable_animations', '1', 'boolean', 'Enable UI animations and transitions', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(13, 'date_format', 'Y-m-d H:i:s', 'string', 'Date and time format for display', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(14, 'default_project_status', 'Prospect', 'string', 'Default status assigned to new projects', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(15, 'priority_project_threshold_days', '7', 'integer', 'Days threshold before a project is flagged as priority', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(16, 'auto_archive_days', '90', 'integer', 'Days of inactivity before a project is auto-archived', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(17, 'enable_activity_logging', '1', 'boolean', 'Enable activity logging for user actions', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(18, 'log_retention_days', '365', 'integer', 'Number of days to retain activity log entries', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(19, 'timezone', 'Asia/Manila', 'string', 'Application timezone (PHP timezone identifier)', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(20, 'currency_symbol', '₱', 'string', 'Currency symbol used for monetary display', '2026-05-28 16:14:50', '2026-05-28 16:14:50'),
+(21, 'currency_code', 'PHP', 'string', 'ISO 4217 currency code', '2026-05-28 16:14:50', '2026-05-28 16:14:50');
+
 --
 -- Indexes for dumped tables
 --
@@ -992,7 +1037,9 @@ ALTER TABLE `projects`
   ADD KEY `idx_encoded_by` (`encoded_by`),
   ADD KEY `idx_source` (`source`),
   ADD KEY `idx_publication_date` (`publication_date`),
-  ADD KEY `idx_notice_reference_number` (`notice_reference_number`);
+  ADD KEY `idx_notice_reference_number` (`notice_reference_number`),
+  ADD KEY `idx_is_actual_project` (`is_actual_project`),
+  ADD KEY `idx_is_priority_encoded` (`is_priority_encoded`);
 
 --
 -- Indexes for table `project_images`
@@ -1037,6 +1084,14 @@ ALTER TABLE `user_sessions`
   ADD KEY `idx_session_id` (`session_id`),
   ADD KEY `idx_user_id` (`user_id`),
   ADD KEY `idx_last_activity` (`last_activity`);
+
+--
+-- Indexes for table `system_settings`
+--
+ALTER TABLE `system_settings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_setting_key` (`setting_key`),
+  ADD KEY `idx_setting_key` (`setting_key`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -1101,6 +1156,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `user_sessions`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
+-- AUTO_INCREMENT for table `system_settings`
+--
+ALTER TABLE `system_settings`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- Constraints for dumped tables
